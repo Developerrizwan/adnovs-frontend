@@ -1,0 +1,36 @@
+const data = [
+  {
+    email: "test@tesing.com",
+    team_member: "11",
+    project_name: "project1",
+    client_name: "test",
+    mobile: "1234567891",
+    status: "complete",
+    date: "12 Feb 2023",
+    project_logo: "C:\\fakepath\\stephen-leonardi-skA1yCyBWY8-unsplash.jpg",
+    upload: "C:\\fakepath\\Sea - 4006.mp4",
+  },
+  {
+    email: "demo@demoing.com",
+    team_member: "21",
+    project_name: "project2",
+    client_name: "demo",
+    mobile: "1234062892",
+    status: "pending",
+    date: "17 Feb 2023",
+    project_logo: "C:\\fakepath\\stephen-leonardi-skA1yCyBWY8-unsplash.jpg",
+    upload: "C:\\fakepath\\Sea - 4006.mp4",
+  },
+  {
+    email: "test1@tesing.com",
+    team_member: "2",
+    client_name: "test1",
+    project_name: "project3",
+    status: "complete",
+    mobile: "9876543210",
+    date: "1 Feb 2023",
+    project_logo: "C:\\fakepath\\stephen-leonardi-skA1yCyBWY8-unsplash.jpg",
+    upload: "C:\\fakepath\\Sea - 4006.mp4",
+  },
+];
+export default data;
