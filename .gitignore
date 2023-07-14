@@ -20,7 +20,7 @@
 
 npm-debug.log*
 yarn-debug.log*
-package-lock.json
+# package-lock.json
 yarn.lock*
 yarn-error.log*
 Velzon-React-2.0.zip
