@@ -3,6 +3,7 @@ import { Col } from "reactstrap";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Link } from "react-router-dom";
+import whiteCircle from "../../assets/images/whiteCircle.png"
 
 // Import Images
 import logoLight from "../../assets/images/logo-light.png";
@@ -34,8 +35,9 @@ const AuthSlider = () => {
                 className="carousel slide"
                 id="qoutescarouselIndicators"
               > */}
-              <div className="carousel-inner text-left text-white pb-5 w-50">
+              <div className="carousel-inner text-left text-white w-75">
                 <div className="item">
+                <img className="mb-3" src={whiteCircle} alt="whiteCircle" />
                   <h2 className="text-light">Lorem Ipsum</h2>
                   <p className="fs-16 fst-italic">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.

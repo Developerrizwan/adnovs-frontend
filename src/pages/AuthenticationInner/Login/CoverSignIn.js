@@ -9,6 +9,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import NotificationManager from "../../../components/Common/NotificationManager";
 import { GoogleLogin } from "react-google-login";
 
+
 const CoverSignIn = (props) => {
   const dispatch = useDispatch();
   const { logError } = useSelector((state) => ({
@@ -91,19 +92,19 @@ const CoverSignIn = (props) => {
       <div className=" overflow-hidden ">
         <Row>
           <Col lg={12}>
-            <Card className="h-100">
-              <Row className="g-0 h-100">
+            <Card className="overflow-hidden h-100 mb-0">
+              <Row className="g-0" style={{height: "100vh"}}>
                 <AuthSlider />
 
                 <Col lg={6}>
                   <div className="p-lg-5 p-4">
                     <div>
-                      <h5 className="text-dark">Login</h5>
+                      <h1 className="text-dark">Login</h1>
                       {/* <p className="text-muted">
                         Sign in to continue to Neurowonk.
                       </p> */}
                     </div>
-                    <div id="loginDiv"></div>
+                    <div id="loginDiv" style={{textAlign: "-webkit-center", marginTop: "25px"}}></div>
                     <div className="mt-4 text-center">
                       <div>
                         

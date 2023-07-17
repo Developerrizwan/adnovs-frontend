@@ -94,10 +94,10 @@ const CoverSignUp = (props) => {
 
   return (
     <React.Fragment>
-      <div className="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
+      <div className="auth-page-wrapper">
         <div className="bg-overlay"></div>
-        <div className="auth-page-content overflow-hidden pt-lg-5">
-          <Container>
+        <div className="auth-page-content overflow-hidden pb-0">
+          {/* <Container> */}
             <Row>
               <Col lg={12}>
                 <Card className="overflow-hidden m-0">
@@ -107,13 +107,13 @@ const CoverSignUp = (props) => {
                     <Col lg={6}>
                       <div className="p-lg-5 p-4">
                         <div>
-                          <h5 className="text-dark">Sign Up</h5>
+                          <h1 className="text-dark">Sign Up</h1>
                           {/* <p className="text-muted">
                             Get your Neurowonk account now.
                           </p> */}
                         </div>
 
-                        <div id="loginDiv"></div>
+                        <div id="loginDiv" style={{textAlign: "-webkit-center", marginTop: "25px"}}></div>
                         <div className="mt-4 text-center">
                           <div>
                             {/* <GoogleLogin
@@ -206,7 +206,7 @@ const CoverSignUp = (props) => {
                           >
                             {({ values, errors, touched, setFieldValue }) => (
                               <Form className="av-tooltip tooltip-label-bottom">
-                                <Grid container>
+                                <Grid container spacing={2}>
                                   <Grid item lg={6} xs={12}>
                                     <div className="mb-3">
                                       <label
@@ -461,7 +461,7 @@ const CoverSignUp = (props) => {
                                     )}
                                 </div>
 
-                                <Grid container>
+                                <Grid container spacing={2}>
                                   <Grid item xs={12} lg={6}>
                                     <div className="mb-3">
                                       <label
@@ -616,10 +616,10 @@ const CoverSignUp = (props) => {
                 </Card>
               </Col>
             </Row>
-          </Container>
+          {/* </Container> */}
         </div>
 
-        <footer className="footer">
+        {/* <footer className="footer">
           <Container>
             <div className="row">
               <div className="col-lg-12">
@@ -632,7 +632,7 @@ const CoverSignUp = (props) => {
               </div>
             </div>
           </Container>
-        </footer>
+        </footer> */}
       </div>
     </React.Fragment>
   );
