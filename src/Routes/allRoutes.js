@@ -60,6 +60,7 @@ import AddProject from "../views/Project/AddProject";
 import ViewProject from "../views/Project/ViewProject";
 import Report from "../views/Project/Report";
 import Success from "../views/Plans/Success";
+import Jobs from "../views/Jobs";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -75,6 +76,7 @@ const authProtectedRoutes = [
   { path: "/companies", component: Companies },
   { path: "/team", component: Team },
   { path: "/client", component: Client },
+  { path: "/jobs", component: Jobs },
   { path: "/user-management", component: UserManagement },
   { path: "/project", component: Project },
   { path: "/project/add", component: AddProject },

@@ -116,7 +116,7 @@ const Navdata = () => {
       id: "client",
       label: "Jobs",
       icon: "ri-customer-service-line",
-      link: "/client",
+      link: "/jobs",
       src: "/jobs-sidebar.png",
       stateVariables: isClient,
       roles: ["superadmin", "admin", "user"],
