@@ -179,7 +179,7 @@ const TwoColumnLayout = (props) => {
             <div id="two-column-menu">
               <SimpleBar
                 className="twocolumn-iconview"
-                style={{ background: "#f3f3f9" }}
+                style={{ background: "#000", opacity: "0.5", color: "#fff" }}
               >
                 {/* <Link to="#" className="logo d-block mb-0">
                   <img src={logoLight} alt="" height="30" />

@@ -67,9 +67,9 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
           <div
             className="navbar-header"
             style={{
-              background: "rgb(15,11,97)",
-              background:
-                "linear-gradient(160deg, rgba(15,11,97,1) 0%, rgba(6,6,113,1) 27%, rgba(0,95,187,1) 71%, rgba(22,137,161,1) 100%)",
+              // background: "rgb(15,11,97)",
+              // background:
+              //   "linear-gradient(160deg, rgba(15,11,97,1) 0%, rgba(6,6,113,1) 27%, rgba(0,95,187,1) 71%, rgba(22,137,161,1) 100%)",
             }}
           >
             <div className="d-flex">
