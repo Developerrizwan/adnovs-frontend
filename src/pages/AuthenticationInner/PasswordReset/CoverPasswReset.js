@@ -70,8 +70,8 @@ const CoverPasswReset = () => {
 
                     <Col lg={6}>
                       <div className="p-lg-5 p-4">
-                        <h5 className="text-primary">Forgot Password?</h5>
-                        <p className="text-muted">Reset password with Neurowonk</p>
+                        <h5 className="text-dark">Enter your Email Address</h5>
+                        {/* <p className="text-muted">Reset password with Neurowonk</p> */}
 
                         <div className="mt-2 text-center">
                           <lord-icon
@@ -83,21 +83,21 @@ const CoverPasswReset = () => {
                           ></lord-icon>
                         </div>
 
-                        <div
+                        {/* <div
                           className="alert alert-borderless alert-warning text-center mb-2 mx-2"
                           role="alert"
                         >
                           Enter your email and instructions will be sent to you!
-                        </div>
+                        </div> */}
                         <div className="p-2">
                           <form>
                             <div className="mb-4">
-                              <label className="form-label">Email</label>
+                              <label className="form-label">Email Address</label>
                               <input
                                 type="email"
                                 className="form-control"
                                 id="email"
-                                placeholder="Enter email address"
+                                // placeholder="Enter email address"
                                 required
                                 onChange={(e) => setEmail(e.target.value)}
                               />
@@ -153,15 +153,15 @@ const CoverPasswReset = () => {
                           </form>
                         </div>
 
-                        <div className="mt-5 text-center">
+                        <div className="mt-5 text-left">
                           <p className="mb-0">
-                            Wait, I remember my password...{" "}
+                            Remember the password? 
                             <Link
                               to="/auth-signin-cover"
-                              className="fw-bold text-primary text-decoration-underline"
+                              className="fw-bold text-dark text-decoration-underline"
                             >
                               {" "}
-                              Click here{" "}
+                              Sign in{" "}
                             </Link>{" "}
                           </p>
                         </div>
@@ -173,7 +173,7 @@ const CoverPasswReset = () => {
             </Row>
           </Container>
         </div>
-        <footer className="footer">
+        {/* <footer className="footer">
           <Container>
             <Row>
               <Col lg={12}>
@@ -186,7 +186,7 @@ const CoverPasswReset = () => {
               </Col>
             </Row>
           </Container>
-        </footer>
+        </footer> */}
       </div>
     </React.Fragment>
   );

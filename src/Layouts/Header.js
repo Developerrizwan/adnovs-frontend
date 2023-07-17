@@ -77,20 +77,20 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
                 <Link to="/" className="logo logo-dark">
                   <span className="logo-sm h4 text-white">
                     {/* <img src={logoSm} alt="" height="22" /> */}
-                    Neurowonk
+                    ADNOV
                   </span>
                   <span className="logo-lg h4 text-white">
                     {/* <img src={logoDark} alt="" height="50" /> */}
-                    Neurowonk
+                    ADNOV
                   </span>
                 </Link>
 
                 <Link to="/" className="logo logo-light">
                   <span className="logo-sm">
-                    <img src={logoSm} alt="" height="22" />
+                    {/* <img src={logoSm} alt="" height="22" /> */}
                   </span>
                   <span className="logo-lg">
-                    <img src={logoLight} alt="" height="17" />
+                    {/* <img src={logoLight} alt="" height="17" /> */}
                   </span>
                 </Link>
               </div>

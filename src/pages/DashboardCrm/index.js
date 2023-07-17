@@ -164,12 +164,19 @@ const DashboardCrm = () => {
   return (
     <React.Fragment>
       <div className="page-content">
-        <Container fluid>
+        {/* <Container fluid>
           <BreadCrumb title="CRM" pageTitle="Dashboards" />
-        </Container>
+        </Container> */}
         <div>
           <Row>
-            <Colxx lg="6">
+            <Colxx lg="12">
+              <Card>
+                <Row>
+                  <Colxx lg="4"></Colxx>
+                </Row>
+              </Card>
+            </Colxx>
+            {/* <Colxx lg="6">
               <Row>
                 <Colxx xs="12" lg="6">
                   <Card
@@ -300,9 +307,9 @@ const DashboardCrm = () => {
                   </>
                 </Colxx>
               </Row>
-            </Colxx>
+            </Colxx> */}
 
-            <Colxx lg="6" xs="12">
+            {/* <Colxx lg="6" xs="12">
               <>
                 <Card
                   style={{
@@ -357,11 +364,11 @@ const DashboardCrm = () => {
                   </div>
                 </Card>
               </>
-            </Colxx>
+            </Colxx> */}
           </Row>
         </div>
 
-        <Row>
+        {/* <Row>
           <Colxx lg="1">
             <Card
               className="pt-3 h-100"
@@ -743,7 +750,7 @@ const DashboardCrm = () => {
               </Colxx>
             </Row>
           </Colxx>
-        </Row>
+        </Row> */}
       </div>
     </React.Fragment>
   );
