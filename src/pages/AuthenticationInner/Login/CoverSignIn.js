@@ -9,7 +9,6 @@ import ReCAPTCHA from "react-google-recaptcha";
 import NotificationManager from "../../../components/Common/NotificationManager";
 import { GoogleLogin } from "react-google-login";
 
-
 const CoverSignIn = (props) => {
   const dispatch = useDispatch();
   const { logError } = useSelector((state) => ({
@@ -93,10 +92,10 @@ const CoverSignIn = (props) => {
         <Row>
           <Col lg={12}>
             <Card className="overflow-hidden h-100 mb-0">
-              <Row className="g-0" style={{height: "100vh"}}>
+              <Row className="g-0" style={{ height: "100vh" }}>
                 <AuthSlider />
 
-                <Col lg={6}>
+                <Col lg={6} style={{ margin: "auto" }}>
                   <div className="p-lg-5 p-4">
                     <div>
                       <h1 className="text-dark">Login</h1>
@@ -104,42 +103,7 @@ const CoverSignIn = (props) => {
                         Sign in to continue to Neurowonk.
                       </p> */}
                     </div>
-                    <div id="loginDiv" style={{textAlign: "-webkit-center", marginTop: "25px"}}></div>
-                    <div className="mt-4 text-center">
-                      <div>
-                        
-
-                        {/* <GoogleLogin
-                              // render={(renderProps) => (
-                              //   <Button
-                              //     color="danger"
-                              //     to="#"
-                              //     className="btn-icon me-1"
-                              //     onClick={renderProps.onClick}
-                              //   >
-                              //     <i className="ri-google-fill fs-16" />
-                              //   </Button>
-                              // )}
-                              className="googleLogin"
-                              clientId="578586401941-afd5dm86n6sh978s3bi8f1hk37tsur3f.apps.googleusercontent.com"
-                              onSuccess={(res) =>
-                                console.log("dddddddddd", res)
-                              }
-                              onFailure={(err) => {
-                                console.log("eeeeeeer", err);
-                              }}
-                            /> */}
-                        <div className="signin-other-title mt-4">
-                          <h5
-                            className="fs-13 mb-4 title"
-                            style={{ color: "#666" }}
-                          >
-                            OR
-                          </h5>
-                        </div>
-                      </div>
-                    </div>
-
+                    
                     <div className="mt-4">
                       <Formik
                         initialValues={{
@@ -286,6 +250,44 @@ const CoverSignIn = (props) => {
                         )}
                       </Formik>
                     </div>
+
+                    <div className="mt-4 text-center">
+                      <div>
+                        {/* <GoogleLogin
+                              // render={(renderProps) => (
+                              //   <Button
+                              //     color="danger"
+                              //     to="#"
+                              //     className="btn-icon me-1"
+                              //     onClick={renderProps.onClick}
+                              //   >
+                              //     <i className="ri-google-fill fs-16" />
+                              //   </Button>
+                              // )}
+                              className="googleLogin"
+                              clientId="578586401941-afd5dm86n6sh978s3bi8f1hk37tsur3f.apps.googleusercontent.com"
+                              onSuccess={(res) =>
+                                console.log("dddddddddd", res)
+                              }
+                              onFailure={(err) => {
+                                console.log("eeeeeeer", err);
+                              }}
+                            /> */}
+                        <div className="signin-other-title mt-4">
+                          <h5
+                            className="fs-13 mb-4 title"
+                            style={{ color: "#666" }}
+                          >
+                            OR
+                          </h5>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      id="loginDiv"
+                      style={{ textAlign: "-webkit-center", marginTop: "25px" }}
+                    ></div>
 
                     <div className="mt-5 text-center">
                       <p className="mb-0">
