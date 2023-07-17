@@ -6,7 +6,7 @@ import apiAuth from "../../helpers/ApiAuth";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
-import AddTicket from "./AddTicket";
+import AddTicket from "./CreateInvoice";
 import TicketTable from "./TicketTable";
 import { Field } from "formik";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
@@ -94,26 +94,22 @@ const Ticket = (props) => {
   return (
     <React.Fragment>
       <div className="page-content">
-        {/* <Container fluid>
+        <Container fluid>
           <BreadCrumb
-            title="Ticket"
+            title="Project"
             pageTitle="Settings"
-            add_project={true}
-            add_project_select={true}
-            handleProjectChange={handleProjectChange}
-            projects={projects}
+            add_new={true}
+            // add_url_popup={true}
             createNew={() => {
               setCreateModal(true);
             }}
-            add_new={true}
-            add_url_popup={true}
-            selectedValue={selectedValue}
+            add_new_url={"/ticket/add"}
           />
-        </Container> */}
+        </Container>
 
         <Row>
           <Colxx lg="12">
-            {/* {tickets.length > 0 ? (
+            {tickets.length > 0 ? (
               <>
                 <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
                   <TicketTable
@@ -127,9 +123,7 @@ const Ticket = (props) => {
               </>
             ) : (
               <>{loading ? <div className="loading"></div> : <></>}</>
-            )} */}
-            {/* <PurchaseInvoice /> */}
-            <SalesInvoice />
+            )}
           </Colxx>
         </Row>
       </div>

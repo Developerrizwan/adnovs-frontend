@@ -1,0 +1,90 @@
+import React, { useEffect, useState } from "react";
+import { Row, Button, Label, Container } from "reactstrap";
+import * as Yup from "yup";
+import { Formik, Field, ErrorMessage } from "formik";
+import { Form } from "react-formik-ui";
+import { Colxx, Separator } from "../../components/Common/CustomBootstrap";
+import apiAuth from "../../helpers/ApiAuth";
+import NotificationManager from "../../components/Common/NotificationManager";
+import Select from "react-select";
+import BreadCrumb from "../../components/Common/BreadCrumb";
+import SalesInvoice from "./SalesInvoice";
+import PurchaseInvoice from "./PurchaseInvoice";
+
+const AddTicket = (props) => {
+  const [invoiceType, setInvoiceType] = useState("Sales Invoice");
+  const invoiceTypes = [
+    {
+      label: "Sales Invoice",
+      value: "Sales Invoice",
+    },
+    {
+      label: "Purchase Invoice",
+      value: "Purchase Invoice",
+    },
+  ];
+  const [loading, setLoading] = useState(false);
+
+  return (
+    <>
+      <Container fluid>
+        <BreadCrumb
+          title=""
+          pageTitle="Settings"
+          back_button={true}
+          history={props.history}
+        />
+      </Container>
+      <Row mb="4">
+        <Colxx lg="12">
+          <div className="card">
+            <div className="card-body">
+              <Formik>
+                {({ values, setFieldValue }) => (
+                  <Form className="av-tooltip tooltip-label-bottom ">
+                    <Row>
+                      <Colxx lg="4">
+                        <div className="form-group mb-3">
+                          <Label htmlFor="type">Invoice Type</Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            options={invoiceTypes?.map((type) => {
+                              return {
+                                label: type.label,
+                                value: type.label,
+                              };
+                            })}
+                            defaultValue={{ label: invoiceType }}
+                            onChange={(event) => {
+                              setInvoiceType(event.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="type"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Colxx>
+                    </Row>
+                    {invoiceType === "Sales Invoice" ? (
+                      <>
+                        <SalesInvoice />
+                      </>
+                    ) : (
+                      <PurchaseInvoice />
+                    )}
+                  </Form>
+                )}
+              </Formik>
+            </div>
+          </div>
+        </Colxx>
+      </Row>
+    </>
+  );
+};
+
+export default AddTicket;

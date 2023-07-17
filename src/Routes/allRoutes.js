@@ -60,6 +60,7 @@ import AddProject from "../views/Project/AddProject";
 import ViewProject from "../views/Project/ViewProject";
 import Report from "../views/Project/Report";
 import Success from "../views/Plans/Success";
+import AddTicket from "../views/Ticket/CreateInvoice";
 import Jobs from "../views/Jobs";
 
 const authProtectedRoutes = [
@@ -83,6 +84,7 @@ const authProtectedRoutes = [
   { path: "/project/:projectId/", component: ViewProject },
   { path: "/report/:reportId", component: Report },
   { path: "/ticket", component: Ticket },
+  { path: "/ticket/add", component: AddTicket },
   { path: "/plans/success", component: Success },
   { path: "/plans", component: Plans },
   { path: "/couponmanagement", component: CouponManagement },

@@ -59,7 +59,7 @@ const Project = (props) => {
   return (
     <React.Fragment>
       <div className="page-content">
-        {/* <Container fluid>
+        <Container fluid>
           <BreadCrumb
             title="Project"
             pageTitle="Settings"
@@ -70,7 +70,7 @@ const Project = (props) => {
             }}
             add_new_url={"/project/add"}
           />
-        </Container> */}
+        </Container>
 
         <Row>
           <Colxx lg="12">

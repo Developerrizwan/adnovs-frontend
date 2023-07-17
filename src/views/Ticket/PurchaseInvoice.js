@@ -8,8 +8,7 @@ import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import Select from "react-select";
 
-const SalesInvoice = (props) => {
-  const [is_password_hidden, set_is_password_hidden] = useState(false);
+const PurchaseInvoice = (props) => {
   const [loading, setLoading] = useState(false);
 
   return (
@@ -21,16 +20,12 @@ const SalesInvoice = (props) => {
               blNumber: "",
               consigneeName: "",
               date: "",
-              currency: "",
-              bayanNumber: "",
-              shipperName: "",
-              rate: "",
-              pod: "",
-              clientName: "",
-              fcAmount: "",
-              amount: "",
               poa: "",
-              remarks: "",
+              // status: "",
+              // resolved_by: "",
+              // resolution: "",
+              project: "",
+              // raised_by: 1,
             }}
             // validationSchema={Yup.object({
             //   blNumber: Yup.string()
@@ -39,43 +34,42 @@ const SalesInvoice = (props) => {
             //     .required("Required"),
             // })}
             onSubmit={(values, { resetForm }) => {
-              console.log("zxjsxsjcsc", values);
-              // const url = "/api/ticket/";
-              // apiAuth
-              //   .post(url, values)
-              //   .then((response) => {
-              //     console.log(response.data);
-              //     if (response.status === 201) {
-              //       NotificationManager.success(
-              //         "",
-              //         `Ticket Added Successfully`,
-              //         3000,
-              //         null,
-              //         null,
-              //         ""
-              //       );
-              //       props.closeAddPopup();
-              //     } else {
-              //       NotificationManager.error(
-              //         "",
-              //         `Ticket Add Error`,
-              //         3000,
-              //         null,
-              //         null,
-              //         ""
-              //       );
-              //     }
-              //   })
-              //   .catch((error) => {
-              //     NotificationManager.error(
-              //       "",
-              //       `Ticket Add Error`,
-              //       3000,
-              //       null,
-              //       null,
-              //       ""
-              //     );
-              //   });
+              const url = "/api/ticket/";
+              apiAuth
+                .post(url, values)
+                .then((response) => {
+                  console.log(response.data);
+                  if (response.status === 201) {
+                    NotificationManager.success(
+                      "",
+                      `Ticket Added Successfully`,
+                      3000,
+                      null,
+                      null,
+                      ""
+                    );
+                    props.closeAddPopup();
+                  } else {
+                    NotificationManager.error(
+                      "",
+                      `Ticket Add Error`,
+                      3000,
+                      null,
+                      null,
+                      ""
+                    );
+                  }
+                })
+                .catch((error) => {
+                  NotificationManager.error(
+                    "",
+                    `Ticket Add Error`,
+                    3000,
+                    null,
+                    null,
+                    ""
+                  );
+                });
             }}
           >
             {({ values, setFieldValue }) => (
@@ -85,7 +79,7 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="blNumber" className=" w-50">
+                        <Label htmlFor="blNumber" className="pe-2 w-50">
                           {" "}
                           BL Number
                         </Label>
@@ -108,7 +102,7 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="consigneeName" className=" w-50">
+                        <Label htmlFor="consigneeName" className="w-50 pe-2">
                           Consignee Name
                         </Label>
                         <Field
@@ -130,7 +124,7 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="consigneeName" className=" w-50">
+                        <Label htmlFor="consigneeName" className=" pe-2 w-50">
                           <span style={{ color: "red" }}>*</span> Date
                         </Label>
                         <Field
@@ -154,7 +148,7 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="currency" className=" w-50">
+                        <Label htmlFor="currency" className="pe-2 w-50">
                           Currency (SAR)
                         </Label>
                         <Field
@@ -176,7 +170,7 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="bayanNumber" className=" w-50">
+                        <Label htmlFor="bayanNumber" className="  w-50 pe-2">
                           Bayan Number
                         </Label>
                         <Field
@@ -198,7 +192,7 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="shipperName" className=" w-50">
+                        <Label htmlFor="shipperName" className=" w-50 p e-2">
                           Shipper Name
                         </Label>
                         <Field
@@ -223,16 +217,16 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="consigneeName" className=" w-50">
+                        <Label htmlFor="consigneeName" className="pe-2 w-50">
                           <span style={{ color: "red" }}>*</span>
-                          Branch
+                          Vendor Name
                         </Label>
                         <Field
                           className="form-control"
                           name="date"
                           placeholder="date"
                           type="text"
-                          value="JEDDAH"
+                          value="TEMP"
                         />
                       </div>
 
@@ -248,7 +242,7 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="rate" className=" w-50">
+                        <Label htmlFor="rate" className="pe-2 w-50">
                           Ex. Rate
                         </Label>
                         <Field
@@ -270,7 +264,7 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="pod" className=" w-50">
+                        <Label htmlFor="pod" className="pe-2 w-50">
                           POD
                         </Label>
                         <Field
@@ -295,7 +289,7 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="clientName" className=" w-50">
+                        <Label htmlFor="consigneeName" className=" w-50 pe-2">
                           Client Name
                         </Label>
                         <Field
@@ -328,7 +322,7 @@ const SalesInvoice = (props) => {
                         />
                       </div>
                       <ErrorMessage
-                        name="fcAmount"
+                        name="consigneeName"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -339,7 +333,8 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="amount" className=" w-50">
+                        <Label htmlFor="amount" className="pe-2 w-50">
+                          {" "}
                           Amount (SAR)
                         </Label>
                         <Field
@@ -363,7 +358,7 @@ const SalesInvoice = (props) => {
                     {" "}
                     <div className="form-group mb-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="poa" className=" w-50">
+                        <Label htmlFor="poa" className="pe-2  w-50">
                           POA
                         </Label>
                         <Field
@@ -385,9 +380,9 @@ const SalesInvoice = (props) => {
                 <Row>
                   <Colxx lg="6">
                     {" "}
-                    <div className="form-group mb-3">
+                    <div className="form-group my-3">
                       <div className="d-flex  align-items-center">
-                        <Label htmlFor="blNumber" className="pe-2">
+                        <Label htmlFor="blNumber" className="pe-2 ">
                           Remarks
                         </Label>
                         <Field
@@ -405,6 +400,96 @@ const SalesInvoice = (props) => {
                         )}
                       />
                     </div>
+                  </Colxx>
+                  <Colxx lg="6">
+                    <Row>
+                      <Colxx>
+                        <div className="form-group mb-3">
+                          <div className="d-flex  align-items-center">
+                            <Label htmlFor="blNumber" className="pe-2 ">
+                              Ref Date
+                            </Label>
+                            <Field
+                              name="remarks"
+                              className="form-control"
+                              // placeholder="Remarks"
+                              type="text"
+                            />
+                          </div>
+                          <ErrorMessage
+                            name="blNumber"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Colxx>
+                      <Colxx>
+                        <div className="form-group mb-3">
+                          <div className="d-flex  align-items-center">
+                            <Label htmlFor="blNumber" className="pe-2 ">
+                              Bill Amount
+                            </Label>
+                            <Field
+                              name="remarks"
+                              className="form-control"
+                              // placeholder="Remarks"
+                              type="text"
+                            />
+                          </div>
+                          <ErrorMessage
+                            name="blNumber"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Colxx>
+                    </Row>
+                    <Row>
+                      <Colxx>
+                        <div className="form-group mb-3">
+                          <div className="d-flex  align-items-center">
+                            <Label htmlFor="blNumber" className="pe-2 ">
+                              Due Date
+                            </Label>
+                            <Field
+                              name="remarks"
+                              className="form-control"
+                              // placeholder="Remarks"
+                              type="text"
+                            />
+                          </div>
+                          <ErrorMessage
+                            name="blNumber"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Colxx>
+                      <Colxx>
+                        <div className="form-group mb-3">
+                          <div className="d-flex  align-items-center">
+                            <Label htmlFor="blNumber" className="pe-2 ">
+                              Narration
+                            </Label>
+                            <Field
+                              name="remarks"
+                              className="form-control"
+                              // placeholder="Remarks"
+                              type="text"
+                            />
+                          </div>
+                          <ErrorMessage
+                            name="blNumber"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Colxx>
+                    </Row>
                   </Colxx>
                 </Row>
 
@@ -442,4 +527,4 @@ const SalesInvoice = (props) => {
   );
 };
 
-export default SalesInvoice;
+export default PurchaseInvoice;
