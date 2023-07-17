@@ -67,35 +67,14 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
           <div
             className="navbar-header"
             style={{
+              background: "white",
               // background: "rgb(15,11,97)",
               // background:
               //   "linear-gradient(160deg, rgba(15,11,97,1) 0%, rgba(6,6,113,1) 27%, rgba(0,95,187,1) 71%, rgba(22,137,161,1) 100%)",
             }}
           >
             <div className="d-flex">
-              <div className="">
-                <Link to="/" className="logo logo-dark">
-                  <span className="logo-sm h4 text-white">
-                    {/* <img src={logoSm} alt="" height="22" /> */}
-                    ADNOV
-                  </span>
-                  <span className="logo-lg h4 text-white">
-                    {/* <img src={logoDark} alt="" height="50" /> */}
-                    ADNOV
-                  </span>
-                </Link>
-
-                <Link to="/" className="logo logo-light">
-                  <span className="logo-sm">
-                    {/* <img src={logoSm} alt="" height="22" /> */}
-                  </span>
-                  <span className="logo-lg">
-                    {/* <img src={logoLight} alt="" height="17" /> */}
-                  </span>
-                </Link>
-              </div>
-
-              {/* <button
+              <button
                 onClick={toogleMenuBtn}
                 type="button"
                 className="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
@@ -108,7 +87,29 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
                 </span>
               </button>
 
-              <SearchOption /> */}
+              {/* <SearchOption /> */}
+
+              {/* <div className="">
+                <Link to="/" className="logo logo-dark">
+                  <span className="logo-sm h4 text-white">
+                    <img src={logoSm} alt="" height="22" />
+                    ADNOV
+                  </span>
+                  <span className="logo-lg h4 text-white">
+                    <img src={logoDark} alt="" height="50" />
+                    ADNOV
+                  </span>
+                </Link>
+
+                <Link to="/" className="logo logo-light">
+                  <span className="logo-sm">
+                    <img src={logoSm} alt="" height="22" />
+                  </span>
+                  <span className="logo-lg">
+                    <img src={logoLight} alt="" height="17" />
+                  </span>
+                </Link>
+              </div> */}
             </div>
 
             <div className="d-flex align-items-center">
@@ -150,7 +151,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }) => {
               {/* <WebAppsDropdown /> */}
 
               {/* FullScreenDropdown */}
-              <FullScreenDropdown />
+              {/* <FullScreenDropdown /> */}
 
               {/* Dark/Light Mode set */}
               {/* <LightDark

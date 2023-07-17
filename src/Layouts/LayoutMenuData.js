@@ -140,24 +140,24 @@ const Navdata = () => {
       roles: ["superadmin", "admin", "user"],
     },
 
+    // {
+    //   id: "profile",
+    //   label: "Users",
+    //   icon: "ri-account-circle-line",
+    //   link: "/profile",
+    //   src: "/account.png",
+    //   stateVariables: isMyAccount,
+    //   roles: ["superadmin", "admin", "user"],
+    // },
     {
-      id: "profile",
-      label: "Users",
+      id: "user-management",
+      label: "User Management",
       icon: "ri-account-circle-line",
       link: "/profile",
       src: "/users-sidebar.png",
       stateVariables: isMyAccount,
       roles: ["superadmin", "admin", "user"],
     },
-    // {
-    //   id: "user-management",
-    //   label: "User Management",
-    //   icon: "ri-file-user-line",
-    //   src: "/user.png",
-    //   link: "/user-management",
-    //   stateVariables: isUserManagement,
-    //   roles: ["superadmin", "admin"],
-    // },
 
     // {
     //   id: "plans",

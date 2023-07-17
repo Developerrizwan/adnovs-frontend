@@ -55,7 +55,7 @@ const Client = (props) => {
   return (
     <React.Fragment>
       <div className="page-content">
-        <Container fluid>
+        {/* <Container fluid>
           <BreadCrumb
             title="Clients"
             pageTitle="Settings"
@@ -67,13 +67,13 @@ const Client = (props) => {
               setCreateModal(true);
             }}
           />
-        </Container>
+        </Container> */}
 
         <Row>
           <Colxx lg="12">
             {clientData.length > 0 ? (
               <>
-                <Card style={{boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)"}}>
+                <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
                   <ClientTable
                     clientData={clientData}
                     pagination

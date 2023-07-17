@@ -59,7 +59,7 @@ const Project = (props) => {
   return (
     <React.Fragment>
       <div className="page-content">
-        <Container fluid>
+        {/* <Container fluid>
           <BreadCrumb
             title="Project"
             pageTitle="Settings"
@@ -70,13 +70,13 @@ const Project = (props) => {
             }}
             add_new_url={"/project/add"}
           />
-        </Container>
+        </Container> */}
 
         <Row>
           <Colxx lg="12">
             {projects.length > 0 ? (
               <>
-                <Card style={{boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)"}}>
+                <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
                   <ProjectTable
                     projects={projects}
                     deletProject={deletProject}

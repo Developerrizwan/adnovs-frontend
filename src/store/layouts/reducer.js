@@ -9,7 +9,7 @@ import {
   CHANGE_SIDEBAR_VIEW,
   CHANGE_SIDEBAR_IMAGE_TYPE,
   RESET_VALUE,
-} from './actionType';
+} from "./actionType";
 
 //constants
 import {
@@ -20,12 +20,12 @@ import {
   layoutPositionTypes,
   topbarThemeTypes,
   leftsidbarSizeTypes,
-  leftSidebarViewTypes,  
-  leftSidebarImageTypes  
+  leftSidebarViewTypes,
+  leftSidebarImageTypes,
 } from "../../components/constants/layout";
 
 const INIT_STATE = {
-  layoutType: layoutTypes.TWOCOLUMN,
+  layoutType: layoutTypes.VERTICAL,
   leftSidebarType: leftSidebarTypes.LIGHT,
   layoutModeType: layoutModeTypes.LIGHTMODE,
   layoutWidthType: layoutWidthTypes.FLUID,
@@ -84,19 +84,19 @@ const Layout = (state = INIT_STATE, action) => {
       return {
         ...state,
         leftSidebarViewType: action.payload,
-      }; 
-      
-     case CHANGE_SIDEBAR_IMAGE_TYPE: 
+      };
+
+    case CHANGE_SIDEBAR_IMAGE_TYPE:
       return {
         ...state,
         leftSidebarImageType: action.payload,
       };
-      
-      case RESET_VALUE:
+
+    case RESET_VALUE:
       return {
         ...state,
         resetValue: INIT_STATE,
-      };    
+      };
     default:
       return state;
   }

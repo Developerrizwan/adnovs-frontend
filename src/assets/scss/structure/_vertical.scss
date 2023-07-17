@@ -27,8 +27,9 @@
 .navbar-menu {
   width: $vertical-menu-width;
   z-index: $vertical-menu-z-index;
-  background: $vertical-menu-bg;
-  border-right: 1px solid $vertical-menu-border;
+  // background: $vertical-menu-bg;
+  background: #494a4d;
+  // border-right: 1px solid $vertical-menu-border;
   bottom: 0;
   margin-top: 0;
   position: fixed;
@@ -37,22 +38,31 @@
   padding: 0 0 calc(#{$header-height} + 25px) 0;
   transition: all 0.1s ease-out;
 
+  .dummy{
+    h1{
+      color: white;
+    }
+    
+  }
+
   .navbar-nav {
     .nav-link {
       display: flex;
       align-items: center;
       padding: $vertical-menu-item-padding-y $vertical-menu-item-padding-x;
-      color: $vertical-menu-item-color;
-      font-size: $vertical-menu-item-font-size;
+      // color: $vertical-menu-item-color;
+      color: white;
+      // font-size: $vertical-menu-item-font-size;
+      font-size: 18px;
       font-family: $vertical-menu-item-font-family;
 
-      &.active {
-        color: $vertical-menu-item-active-color;
-      }
+      // &.active {
+      //   color: $vertical-menu-item-active-color;
+      // }
 
-      &:hover {
-        color: $vertical-menu-item-hover-color;
-      }
+      // &:hover {
+      //   color: $vertical-menu-item-hover-color;
+      // }
 
       i {
         display: inline-block;

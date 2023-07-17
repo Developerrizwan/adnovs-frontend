@@ -11,6 +11,9 @@ import TicketTable from "./TicketTable";
 import { Field } from "formik";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
+import SalesInvoice from "./SalesInvoice";
+import PurchaseInvoice from "./PurchaseInvoice";
+
 const Ticket = (props) => {
   const [createModal, setCreateModal] = useState(false);
   const [tickets, setTickets] = useState([]);
@@ -91,7 +94,7 @@ const Ticket = (props) => {
   return (
     <React.Fragment>
       <div className="page-content">
-        <Container fluid>
+        {/* <Container fluid>
           <BreadCrumb
             title="Ticket"
             pageTitle="Settings"
@@ -106,11 +109,11 @@ const Ticket = (props) => {
             add_url_popup={true}
             selectedValue={selectedValue}
           />
-        </Container>
+        </Container> */}
 
         <Row>
           <Colxx lg="12">
-            {tickets.length > 0 ? (
+            {/* {tickets.length > 0 ? (
               <>
                 <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
                   <TicketTable
@@ -124,12 +127,14 @@ const Ticket = (props) => {
               </>
             ) : (
               <>{loading ? <div className="loading"></div> : <></>}</>
-            )}
+            )} */}
+            {/* <PurchaseInvoice /> */}
+            <SalesInvoice />
           </Colxx>
         </Row>
       </div>
 
-      <Modal
+      {/* <Modal
         id="signupModals"
         tabIndex="-1"
         className="modal-lg"
@@ -155,7 +160,7 @@ const Ticket = (props) => {
             }}
           />
         </ModalBody>
-      </Modal>
+      </Modal> */}
     </React.Fragment>
   );
 };

@@ -56,7 +56,7 @@ const UserManagement = (props) => {
   return (
     <React.Fragment>
       <div className="page-content">
-        <Container fluid>
+        {/* <Container fluid>
           <BreadCrumb
             title="User Management"
             pageTitle="Settings"
@@ -66,13 +66,13 @@ const UserManagement = (props) => {
               setCreateModal(true);
             }}
           />
-        </Container>
+        </Container> */}
 
         <Row>
           <Colxx lg="12">
             {memberData.length > 0 ? (
               <>
-                <Card style={{boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)"}}>
+                <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
                   <MemberTable
                     memberData={memberData}
                     pagination
