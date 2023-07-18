@@ -1,1 +1,1 @@
-export const smartsightAPI = "https://neurowonk.com/";
+export const smartsightAPI = "http://13.127.111.114";
