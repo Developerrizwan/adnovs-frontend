@@ -69,6 +69,8 @@ import ReceiptVoucher from "../views/Vouchers/ReceiptVoucher";
 import Invoices from "../views/Invoices";
 import Purchase from "../views/Invoices/Purchase";
 import Sales from "../views/Invoices/Sales";
+import ResetPassword from "../pages/AuthenticationInner/ResetPassword";
+import ResetSuccessful from "../pages/AuthenticationInner/ResetPassword/ResetSuccessful";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -90,9 +92,9 @@ const authProtectedRoutes = [
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
   { path: "/user-management", component: UserManagement },
-  { path: "/invoices", component:  Invoices},
-  { path: "/purchase", component: Purchase},
-  { path: "/sales", component: Sales},
+  { path: "/invoices", component: Invoices },
+  { path: "/purchase", component: Purchase },
+  { path: "/sales", component: Sales },
   { path: "/project", component: Project },
   { path: "/project/add", component: AddProject },
   { path: "/project/:projectId/", component: ViewProject },
@@ -123,6 +125,8 @@ const publicRoutes = [
   // Authentication Page
   { path: "/logout", component: Logout },
   { path: "/login", component: CoverSignIn },
+  { path: "/reset-password", component: ResetPassword },
+  { path: "/reset-password-successful", component: ResetSuccessful },
   { path: "/forgot-password", component: ForgetPasswordPage },
   { path: "/register", component: Register },
 

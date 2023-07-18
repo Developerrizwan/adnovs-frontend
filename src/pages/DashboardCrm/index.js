@@ -200,8 +200,8 @@ const DashboardCrm = () => {
                               position: "absolute",
                               width: "21px",
                               height: "21px",
-                              top: "40px",
-                              left: "40px",
+                              top: "42px",
+                              left: "42px",
                             }}
                           />
                         </Grid>
@@ -242,7 +242,7 @@ const DashboardCrm = () => {
                               width: "21px",
                               height: "21px",
                               top: "40px",
-                              left: "40px",
+                              left: "42px",
                             }}
                           />
                         </Grid>
@@ -283,7 +283,7 @@ const DashboardCrm = () => {
                               width: "21px",
                               height: "21px",
                               top: "40px",
-                              left: "40px",
+                              left: "42px",
                             }}
                           />
                         </Grid>
