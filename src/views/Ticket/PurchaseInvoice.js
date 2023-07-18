@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Row, Button, Label } from "reactstrap";
 import * as Yup from "yup";
-import { Grid } from "@mui/material";
+import { Card, Grid } from "@mui/material";
 import { Formik, Field, ErrorMessage } from "formik";
 import { Form } from "react-formik-ui";
 import { Colxx, Separator } from "../../components/Common/CustomBootstrap";
@@ -11,13 +12,24 @@ import Select from "react-select";
 
 const PurchaseInvoice = (props) => {
   const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
+  const goBack = () => {
+    history.goBack();
+  };
   return (
     <React.Fragment>
       <div className="page-content">
-        <h1 className="mb-4">Purchase Invoice</h1>
+        <div className="mb-5 mt-3" style={{display: "flex", justifyContent: "space-between"}}>
+        <h2 className="mx-5">Purchase Invoice</h2>
+        <button className="btn btn-danger" onClick={goBack}>Back</button>
+      </div>
         <Grid container spacing={2}>
           <Grid item lg={12}>
+          <Card
+          className="p-3"
+          style={{ background: "#EDEDED"}}
+        >
             <Formik
               initialValues={{
                 blNumber: "",
@@ -513,6 +525,7 @@ const PurchaseInvoice = (props) => {
                 </Form>
               )}
             </Formik>
+            </Card>
           </Grid>
         </Grid>
       </div>

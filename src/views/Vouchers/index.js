@@ -5,11 +5,12 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Select from "react-select";
 
-
-
 const Vouchers = (props) => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const[voucherType, setVoucherType] = useState("Payment")
+
   const history = useHistory();
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -23,10 +24,10 @@ const Vouchers = (props) => {
 ];
 
   const options = [
-    { value: "vouchers", label: "All" },
-    { value: "journal-voucher", label: "Journal Voucher" },
-    { value: "payment-voucher", label: "Payment Voucher" },
-    { value: "receipt-voucher", label: "Receipt Voucher" },
+    // { value: "vouchers", label: "All" },
+    { value: "Journal", label: "Journal" },
+    { value: "Payment", label: "Payment" },
+    { value: "Receipt", label: "Receipt" },
   ];
 
   const handleOptionChange = (selectedOption) => {
@@ -36,9 +37,9 @@ const Vouchers = (props) => {
   return (
     <React.Fragment>
       <div className="page-content">
-        <h1 className="mb-4 mx-4">All Vouchers</h1>
+        <h2 className="mb-5 mt-3 mx-5">All Vouchers</h2>
         <Grid container spacing={2}>
-          <Grid item lg={9} style={{placeItems: "center", margin: "auto"}}>
+          <Grid item lg={11} style={{placeItems: "center", margin: "auto"}}>
         <Card
           className="p-3"
           style={{ background: "#EDEDED" }}
@@ -125,16 +126,21 @@ const Vouchers = (props) => {
                         <span className="text-danger">*</span>
                       </label>
                       <Select
-                        options={options}
-                        onChange={handleOptionChange}
-                        styles={customStyles}
-                      />
-                      {/* <Select
-                        options={options}
-                        value={selectedOption}
-                        onChange={setSelectedOption}
-                        
-                      /> */}
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={options?.map((type) => {
+                              return {
+                                label: type.label,
+                                value: type.label,
+                              };
+                            })}
+                            defaultValue={{ label: voucherType }}
+                            onChange={(event) => {
+                              setVoucherType(event.value);
+                            }}
+                          />
+                      
                       {errors.voucherType && touched.voucherType && (
                         <div className="invalid-feedback d-block">
                           {errors.voucherType}

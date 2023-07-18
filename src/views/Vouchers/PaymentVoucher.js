@@ -29,12 +29,12 @@ const PaymentVoucher = (props) => {
     <React.Fragment>
       <div className="page-content">
         {/* <h1 className="mb-4 mx-4">Payment Voucher</h1> */}
-        <div className="mb-4" style={{display: "flex", justifyContent: "space-between"}}>
-        <h1 className="mx-4">Payment Voucher</h1>
+        <div className="mb-5 mt-3" style={{display: "flex", justifyContent: "space-between"}}>
+        <h2 className="mx-5">Payment Voucher</h2>
         <button className="btn btn-danger" onClick={goBack}>Back</button>
       </div>
         <Grid container spacing={2}>
-          <Grid item lg={9} style={{placeItems: "center", margin: "auto"}}>
+          <Grid item lg={11} style={{placeItems: "center", margin: "auto"}}>
         <Card
           className="p-3"
           style={{ background: "#EDEDED"}}

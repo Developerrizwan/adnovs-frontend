@@ -1,14 +1,99 @@
 import { Card, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import jobsImage from "../../assets/images/jobs-image.png";
+import Select from "react-select";
 
 const Jobs = (props) => {
+  const [jobType, setJobType] = useState("Job");
+  const [jobStatus, setJobStatus] = useState("Cargo Collected");
+  const options = [
+    {
+      label: "Job",
+      value: "Job",
+    },
+    {
+      label: "Enquiry",
+      value: "Enquiry",
+    },
+  ];
+
+  const statusOptions = [
+    {
+      label: "Cargo Collected",
+      value: "Cargo_Collected",
+    },
+    {
+      label: "Under Export Clearance",
+      value: "Under_Export_Clearance",
+    },
+    {
+      label: "Departed",
+      value: "Departed",
+    },
+    {
+      label: "In Transit",
+      value: "In_Transit",
+    },
+    {
+      label: "Arrived",
+      value: "Arrived",
+    },
+    {
+      label: "Under Import Clearance",
+      value: "Under_Import_Clearance",
+    },
+    {
+      label: "Do Collected",
+      value: "Do_Collected",
+    },
+    {
+      label: "Gate Pass Issued",
+      value: "Gate_Pass_Issued",
+    },
+    {
+      label: "Under Delivery",
+      value: "Under_Delivery",
+    },
+    {
+      label: "In Warehouse Storage",
+      value: "In_Warehouse_Storage",
+    },
+    {
+      label: "Delivered",
+      value: "Delivered",
+    },
+    {
+      label: "Invoiced",
+      value: "Invoiced",
+    },
+    {
+      label: "Finished",
+      value: "Finished",
+    },
+    {
+      label: "Cancelled",
+      value: "Cancelled",
+    },
+  ];
+  const history = useHistory();
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      background: "#EDEDED",
+    }),
+  };
+
+  const handleOptionChange = (selectedOption) => {
+    history.push(`/${selectedOption.value}`);
+  };
   return (
     <React.Fragment>
       <div className="page-content">
-        <h1 className="mb-4">Create New Job</h1>
+        <h2 className="mb-5 mt-3">Create New Job</h2>
         <Grid container spacing={2}>
           <Grid item lg={8}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
@@ -22,6 +107,7 @@ const Jobs = (props) => {
                   shipperName: "",
                   clientName: "",
                   remarks: "",
+                  jobType: "",
                 }}
                 validationSchema={Yup.object({
                   blNumber: Yup.string().required("BL Number is Required"),
@@ -48,6 +134,7 @@ const Jobs = (props) => {
                     .required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
+                  values.jobType = values.jobType ? values.jobType : undefined;
                   console.log("values", values);
                 }}
               >
@@ -188,6 +275,68 @@ const Jobs = (props) => {
                           {errors.poa && touched.poa && (
                             <div className="invalid-feedback d-block">
                               {errors.poa}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="jobType" className="form-label">
+                            Job Types
+                            <span className="text-danger">*</span>
+                          </label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={options?.map((type) => {
+                              return {
+                                label: type.label,
+                                value: type.label,
+                              };
+                            })}
+                            defaultValue={{ label: jobType }}
+                            onChange={(event) => {
+                              setJobType(event.value);
+                            }}
+                          />
+
+                          {errors.jobType && touched.jobType && (
+                            <div className="invalid-feedback d-block">
+                              {errors.jobType}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="jobStatus" className="form-label">
+                            Job Status
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={statusOptions?.map((type) => {
+                              return {
+                                label: type.label,
+                                value: type.label,
+                              };
+                            })}
+                            defaultValue={{ label: jobStatus }}
+                            onChange={(event) => {
+                              setJobStatus(event.value);
+                            }}
+                          />
+                          {errors.jobStatus && touched.jobStatus && (
+                            <div className="invalid-feedback d-block">
+                              {errors.jobStatus}
                             </div>
                           )}
                         </div>

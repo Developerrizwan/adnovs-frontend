@@ -13,15 +13,15 @@ import SalesInvoice from "./SalesInvoice";
 import PurchaseInvoice from "./PurchaseInvoice";
 
 const AddTicket = (props) => {
-  const [invoiceType, setInvoiceType] = useState("Sales Invoice");
+  const [invoiceType, setInvoiceType] = useState("Sales");
   const invoiceTypes = [
     {
-      label: "Sales Invoice",
-      value: "Sales Invoice",
+      label: "Sales",
+      value: "Sales",
     },
     {
-      label: "Purchase Invoice",
-      value: "Purchase Invoice",
+      label: "Purchase",
+      value: "Purchase",
     },
   ];
   const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ const AddTicket = (props) => {
       </Container>
       <Row mb="4">
         <Colxx lg="12">
-          <Card className="p-3" style={{ background: "#EDEDED" }}>
+          {/* <Card className="p-3" style={{ background: "#EDEDED" }}> */}
             <Formik>
               {({ values, setFieldValue }) => (
                 <Form className="av-tooltip tooltip-label-bottom ">
@@ -69,7 +69,7 @@ const AddTicket = (props) => {
                       </div>
                     </Colxx>
                   </Row>
-                  {invoiceType === "Sales Invoice" ? (
+                  {invoiceType === "Sales" ? (
                     <>
                       <SalesInvoice />
                     </>
@@ -79,7 +79,7 @@ const AddTicket = (props) => {
                 </Form>
               )}
             </Formik>
-          </Card>
+          {/* </Card> */}
         </Colxx>
       </Row>
     </>
