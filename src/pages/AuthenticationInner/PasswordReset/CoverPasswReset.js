@@ -19,7 +19,7 @@ const CoverPasswReset = () => {
     const sendEmail = {
       email: email,
     };
-    API.post("/api/forget-password/otp", sendEmail)
+    API.post("/api/forget-password/", sendEmail)
       .then((response) => {
         const data = response.data;
         setOpenFields(true);
@@ -68,9 +68,11 @@ const CoverPasswReset = () => {
                 <Row className="justify-content-center g-0 h-100">
                   <AuthSlider />
 
-                  <Col lg={6} style={{margin: "auto"}}>
+                  <Col lg={6} style={{ margin: "auto" }}>
                     <div className="p-lg-5 p-4">
-                      <h1 className="text-dark mb-3">Enter your Email Address</h1>
+                      <h1 className="text-dark mb-3">
+                        Enter your Email Address
+                      </h1>
                       {/* <p className="text-muted">Reset password with Neurowonk</p> */}
 
                       <div className="mt-2 text-center">

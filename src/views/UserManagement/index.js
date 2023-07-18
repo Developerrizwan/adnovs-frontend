@@ -1,40 +1,76 @@
 import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { Card, Container, Row } from "reactstrap";
 import BreadCrumb from "../../components/Common/BreadCrumb";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
-import { Colxx } from "../../components/Common/CustomBootstrap";
-import MemberTable from "./MemberTable";
-import AddMember from "./AddMember";
 import apiAuth from "../../helpers/ApiAuth";
+import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
+import axios from "axios";
+import UserManagementTable from "./UserManagementTable";
+import AddUser from "./AddUser";
+// import * as FileSaver from "file-saver";
+// import * as XLSX from "xlsx";
 
 const UserManagement = (props) => {
-  const [loading, setLoading] = useState(false);
   const [createModal, setCreateModal] = useState(false);
-  const [memberData, setMemberData] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
+  const [userPagination, setUserPagination] = useState({
+    rowsPerPage: 10,
+    totalRows: 0,
+    currentPage: 1,
+  });
+
+  // const FilteredUsers = users.filter((item) => {
+  //   const values = Object.values(item);
+  //   for (let i = 0; i < values.length; i++) {
+  //     const value = values[i];
+  //     if (
+  //       typeof value === "string" &&
+  //       value.toLowerCase().includes(searchValue.toLowerCase())
+  //     ) {
+  //       return true;
+  //     } else if (
+  //       typeof value === "number" &&
+  //       value.toString().includes(searchValue)
+  //     ) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // });
 
   useEffect(() => {
-    getMembers();
+    getUser(userPagination);
+    // deleteUser();
   }, []);
 
-  const getMembers = () => {
+  const getUser = (pgdata, val) => {
     apiAuth
-      .get("/api/user")
+      .get("/api/getusers/")
       .then((response) => {
-        let data = response.data;
-        setMemberData(data);
-        return data;
+        let data = response.data.results;
+        console.log("xswjhjwx", response);
+        setUserPagination({
+          ...pgdata,
+          totalRows: response.data.count,
+        });
+        setUsers(data);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const deleteMember = (id) => {
-    let url = `/api/user/${id}/`;
+  const deleteUser = (id) => {
+    let url = `/api/deleteuser/${id}`;
     apiAuth
       .delete(url)
       .then((response) => {
+        const newdata = response.data;
         NotificationManager.success(
           "",
           "User Deleted Successfully",
@@ -43,7 +79,7 @@ const UserManagement = (props) => {
           null,
           ""
         );
-        getMembers();
+        getUser(userPagination);
       })
       .catch(function (error) {
         console.log(error);
@@ -52,38 +88,87 @@ const UserManagement = (props) => {
         console.log(error.response?.headers);
       });
   };
+  // const handleExportData = () => {
+  //   let apiData = users.map((user) => {
+  //     let newuser = {
+  //       "User Name": user.name,
+  //       Email: user.email,
+  //       Mobile: user.mobile,
+  //       Role: user.groups?.length > 0 ? user.groups.join(",") : "",
+  //     };
+
+  //     return newuser;
+  //   });
+
+  //   const fileType =
+  //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+  //   const fileExtension = ".xlsx";
+  //   const fileName = "UserData";
+  //   const ws = XLSX.utils.json_to_sheet(apiData);
+  //   const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+  //   const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  //   const data = new Blob([excelBuffer], { type: fileType });
+  //   FileSaver.saveAs(data, fileName + fileExtension);
+  // };
 
   return (
     <React.Fragment>
       <div className="page-content">
-        {/* <Container fluid>
+        <Container fluid>
           <BreadCrumb
             title="User Management"
             pageTitle="Settings"
             add_new={true}
-            add_url_popup={true}
             createNew={() => {
               setCreateModal(true);
             }}
+            add_new_url={"/user-management/add"}
+            // upload_new={true}
+            // upload_new_url={"/user-management/upload"}
+            search_functionality={true}
+            searchValue={searchValue}
+            setSearchValue={(val) => {
+              setSearchValue(val);
+              getUser(userPagination, val);
+            }}
+            export_button={users.length > 0 ? true : false}
+            exportData={() => {
+              // handleExportData();
+            }}
           />
-        </Container> */}
-
+        </Container>
+        {/* <input
+          type="text"
+          value={filter}
+          onChange={handleFilterChange}
+          placeholder="Search..."
+        /> */}
         <Row>
           <Colxx lg="12">
-            {memberData.length > 0 ? (
-              <>
-                <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
-                  <MemberTable
-                    memberData={memberData}
-                    pagination
-                    deleteMember={deleteMember}
-                    getMembers={getMembers}
-                  />
-                </Card>
-              </>
-            ) : (
-              <>{loading ? <div className="loading"></div> : <></>}</>
-            )}
+            <>
+              {loading ? (
+                <div className="loading"></div>
+              ) : (
+                <>
+                  {" "}
+                  <Card>
+                    <UserManagementTable
+                      users={users}
+                      deleteUser={(val) => deleteUser(val)}
+                      userPagination={{ ...userPagination }}
+                      handlePagination={(data) => {
+                        setUserPagination(data);
+                        getUser(data);
+                      }}
+                      getUser={() => {
+                        setUsers([]);
+                        getUser(userPagination, searchValue);
+                      }}
+                    />
+                  </Card>
+                </>
+              )}
+            </>
           </Colxx>
         </Row>
       </div>
@@ -103,15 +188,14 @@ const UserManagement = (props) => {
             setCreateModal((prev) => !prev);
           }}
         >
-          Add Member
+          Add User
         </ModalHeader>
         <ModalBody>
-          <AddMember
+          <AddUser
             closeAddPopup={() => {
               setCreateModal(false);
-              getMembers();
+              //   getUser();
             }}
-            memberData={memberData}
           />
         </ModalBody>
       </Modal>

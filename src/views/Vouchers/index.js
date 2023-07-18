@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Select from "react-select";
+import apiAuth from "../../helpers/ApiAuth";
 
 const Vouchers = (props) => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -11,6 +12,7 @@ const Vouchers = (props) => {
     value: "Journal",
     label: "Journal",
   });
+  const [allVouchers, setAllVouchers] = useState([]);
 
   const history = useHistory();
 
@@ -37,6 +39,22 @@ const Vouchers = (props) => {
     history.push(`/${selectedOption.value}`);
   };
 
+  const getVouchers = () => {
+    apiAuth
+      .get("/api/get-voucher/")
+      .then((response) => {
+        let data = response.data;
+        console.log("vouchers", data);
+        setAllVouchers(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getVouchers();
+  }, []);
   return (
     <React.Fragment>
       <div className="page-content">

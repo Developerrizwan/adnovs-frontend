@@ -121,12 +121,31 @@ function* socialLogin({ payload: { data, history, type } }) {
   }
 }
 
-const postJwtPublicUser = async (email, username, country, password) =>
+const postJwtPublicUser = async (
+  // username,
+  password,
+  email,
+  first_name,
+  last_name,
+  company_name,
+  company_email,
+  company_address,
+  state,
+  country,
+  mobile
+) =>
   await API.post("/api/signup/", {
-    username: username,
-    email: email,
-    country: country,
+    // username: username,
     password: password,
+    email: email,
+    first_name: first_name,
+    last_name: last_name,
+    company_name: company_name,
+    company_email: company_email,
+    company_address: company_address,
+    state: state,
+    country: country,
+    mobile: mobile,
   })
     .then((authUser) => authUser)
     .catch((error) => {
@@ -139,13 +158,21 @@ const postJwtPublicUser = async (email, username, country, password) =>
     });
 
 function* registerPublicUser({ payload: { user, history } }) {
+  console.log("xsjjdjxs", user);
   try {
     const regUser = yield call(
       postJwtPublicUser,
+      user.password,
       user.email,
-      user.username,
-      user.country,
-      user.password
+      user.first_name,
+      user.last_name,
+      user.company_name,
+      user.company_email,
+      user.company_address,
+      user.state,
+      user.mobile,
+      user.country
+      // user.username,
     );
     // console.log(regUser, "regUser");
     // console.log(regUser.response, "regUser response");

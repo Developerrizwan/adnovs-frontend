@@ -72,6 +72,7 @@ import Sales from "../views/Invoices/Sales";
 import ResetPassword from "../pages/AuthenticationInner/ResetPassword";
 import ResetSuccessful from "../pages/AuthenticationInner/ResetPassword/ResetSuccessful";
 import RegisterSuccessful from "../pages/AuthenticationInner/Register/RegisterSuccessful";
+import AddJobs from "../views/Jobs/AddJob";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -88,14 +89,16 @@ const authProtectedRoutes = [
   { path: "/team", component: Team },
   { path: "/client", component: Client },
   { path: "/jobs", component: Jobs },
+  { path: "/jobs/add", component: AddJobs },
   { path: "/vouchers", component: Vouchers },
   { path: "/journal-voucher", component: JournalVoucher },
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
   { path: "/user-management", component: UserManagement },
   { path: "/invoices", component: Invoices },
+  { path: "/invoices/add", component: Sales },
   { path: "/purchase", component: Purchase },
-  { path: "/sales", component: Sales },
+  // { path: "/sales", component: Sales},
   { path: "/project", component: Project },
   { path: "/project/add", component: AddProject },
   { path: "/project/:projectId/", component: ViewProject },
@@ -136,7 +139,7 @@ const publicRoutes = [
   { path: "/auth-signin-cover", component: CoverSignIn },
   { path: "/auth-signup-basic", component: BasicSignUp },
   { path: "/auth-signup-cover", component: CoverSignUp },
-  { path: "/register-successful", component:  RegisterSuccessful},
+  { path: "/register-successful", component: RegisterSuccessful },
   { path: "/auth-pass-reset-basic", component: BasicPasswReset },
   { path: "/auth-pass-reset-cover", component: CoverPasswReset },
   { path: "/auth-lockscreen-basic", component: BasicLockScreen },

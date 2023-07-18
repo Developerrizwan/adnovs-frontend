@@ -19,6 +19,7 @@ const CoverSignUp = (props) => {
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
   const { logError } = useSelector((state) => ({
     logError: state.Login.error,
   }));
@@ -151,6 +152,9 @@ const CoverSignUp = (props) => {
                               .max(20, "Must be 20 characters or less")
                               .trim()
                               .required("Company Name is Required"),
+                            company_email: Yup.string()
+                              .email()
+                              .required("Company Email is Required"),
                             company_address: Yup.string()
                               .max(20, "Must be 20 characters or less")
                               .trim()
@@ -492,7 +496,7 @@ const CoverSignUp = (props) => {
                                       State
                                     </label>
                                     <Select
-                                      options={Country.getAllCountries().map(
+                                      options={State.getAllStates().map(
                                         (state) => {
                                           return {
                                             label: state.name,
@@ -500,10 +504,10 @@ const CoverSignUp = (props) => {
                                           };
                                         }
                                       )}
-                                      value={selectedCountry}
+                                      value={selectedState}
                                       onChange={(data) => {
                                         setFieldValue("state", data.label);
-                                        setSelectedCountry(data);
+                                        setSelectedState(data);
                                       }}
                                     />
                                     {errors.state && touched.state && (

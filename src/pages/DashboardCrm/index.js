@@ -41,10 +41,10 @@ const DashboardCrm = () => {
   const [completedClients, setCompletedClients] = useState(0);
   const [pendingClients, setPendingClients] = useState(0);
 
-  useEffect(() => {
-    getTeamMembers();
-    getProjects();
-  }, []);
+  // useEffect(() => {
+  //   getTeamMembers();
+  //   getProjects();
+  // }, []);
 
   const getTeamMembers = () => {
     apiAuth
@@ -248,7 +248,7 @@ const DashboardCrm = () => {
                         </Grid>
                         <Grid lg={4} xs={4}>
                           <h3 style={{ fontSize: "16px", fontWeight: "400" }}>
-                              Vouchers
+                            Vouchers
                           </h3>
                           <p style={{ fontSize: "30px", fontWeight: "700" }}>
                             17
