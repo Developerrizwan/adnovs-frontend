@@ -63,6 +63,9 @@ import Success from "../views/Plans/Success";
 import AddTicket from "../views/Ticket/CreateInvoice";
 import Jobs from "../views/Jobs";
 import Vouchers from "../views/Vouchers";
+import JournalVoucher from "../views/Vouchers/JournalVoucher";
+import PaymentVoucher from "../views/Vouchers/PaymentVoucher";
+import ReceiptVoucher from "../views/Vouchers/ReceiptVoucher";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -80,6 +83,9 @@ const authProtectedRoutes = [
   { path: "/client", component: Client },
   { path: "/jobs", component: Jobs },
   { path: "/vouchers", component: Vouchers },
+  { path: "/journal-voucher", component: JournalVoucher },
+  { path: "/payment-voucher", component: PaymentVoucher },
+  { path: "/receipt-voucher", component: ReceiptVoucher },
   { path: "/user-management", component: UserManagement },
   { path: "/project", component: Project },
   { path: "/project/add", component: AddProject },

@@ -9,7 +9,7 @@ const options = [
   { value: "option1", label: "Option1" },
 ];
 
-const JournalVoucher = (props) => {
+const ReceiptVoucher = (props) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
   const customStyles = {
@@ -310,4 +310,4 @@ const JournalVoucher = (props) => {
   );
 };
 
-export default JournalVoucher;
+export default ReceiptVoucher;
