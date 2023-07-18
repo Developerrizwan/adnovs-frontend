@@ -125,7 +125,7 @@ const Navdata = () => {
       id: "project",
       label: "Vouchers",
       icon: "ri-folder-chart-line",
-      link: "/project",
+      link: "/vouchers",
       src: "/voucher-sidebar.png",
       stateVariables: isProject,
       roles: ["superadmin", "admin", "user"],
