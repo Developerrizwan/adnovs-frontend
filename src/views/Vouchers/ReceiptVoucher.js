@@ -61,13 +61,13 @@ const ReceiptVoucher = (props) => {
             validationSchema={Yup.object({
               branch: Yup.string().required("Branch is Required"),
               book: Yup.string().required("Book is Required"),
-              fcAmount: Yup.string().required("FC Amount is Required"),
-              sarAmount: Yup.string().required("SAR Amount is Required"),
-              narration: Yup.string().required("Narration is Required"),
-              outstandingAmount: Yup.string().required(
-                "Outstanding Amount is Required"
-              ),
-              remarks: Yup.string().required("Remarks is Required"),
+            //   fcAmount: Yup.string().required("FC Amount is Required"),
+            //   sarAmount: Yup.string().required("SAR Amount is Required"),
+            //   narration: Yup.string().required("Narration is Required"),
+            //   outstandingAmount: Yup.string().required(
+            //     "Outstanding Amount is Required"
+            //   ),
+            //   remarks: Yup.string().required("Remarks is Required"),
             })}
             onSubmit={(values) => {
               values.party = values.party ? values.party : undefined;

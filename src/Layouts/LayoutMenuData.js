@@ -134,7 +134,7 @@ const Navdata = () => {
       id: "ticket",
       label: "Invoices",
       icon: "ri-ticket-line",
-      link: "/ticket",
+      link: "/invoices",
       src: "/invoices-sidebar.png",
       stateVariables: isTicket,
       roles: ["superadmin", "admin", "user"],

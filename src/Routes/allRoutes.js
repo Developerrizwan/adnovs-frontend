@@ -66,6 +66,9 @@ import Vouchers from "../views/Vouchers";
 import JournalVoucher from "../views/Vouchers/JournalVoucher";
 import PaymentVoucher from "../views/Vouchers/PaymentVoucher";
 import ReceiptVoucher from "../views/Vouchers/ReceiptVoucher";
+import Invoices from "../views/Invoices";
+import Purchase from "../views/Invoices/Purchase";
+import Sales from "../views/Invoices/Sales";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -87,6 +90,9 @@ const authProtectedRoutes = [
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
   { path: "/user-management", component: UserManagement },
+  { path: "/invoices", component:  Invoices},
+  { path: "/purchase", component: Purchase},
+  { path: "/sales", component: Sales},
   { path: "/project", component: Project },
   { path: "/project/add", component: AddProject },
   { path: "/project/:projectId/", component: ViewProject },

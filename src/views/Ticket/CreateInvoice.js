@@ -38,7 +38,7 @@ const AddTicket = (props) => {
       </Container>
       <Row mb="4">
         <Colxx lg="12">
-          {/* <Card className="p-3" style={{ background: "#EDEDED" }}> */}
+          <Card className="p-3" style={{ background: "#EDEDED" }}>
             <Formik>
               {({ values, setFieldValue }) => (
                 <Form className="av-tooltip tooltip-label-bottom ">
@@ -79,7 +79,7 @@ const AddTicket = (props) => {
                 </Form>
               )}
             </Formik>
-          {/* </Card> */}
+          </Card>
         </Colxx>
       </Row>
     </>

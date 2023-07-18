@@ -5,13 +5,9 @@ import * as Yup from "yup";
 import { Card, Grid } from "@mui/material";
 import { Formik, Field, ErrorMessage } from "formik";
 import { Form } from "react-formik-ui";
-import { Colxx, Separator } from "../../components/Common/CustomBootstrap";
-import apiAuth from "../../helpers/ApiAuth";
-import NotificationManager from "../../components/Common/NotificationManager";
 import Select from "react-select";
 
-const PurchaseInvoice = (props) => {
-  const [loading, setLoading] = useState(false);
+const Purchase = (props) => {
   const [invoiceType, setInvoiceType] = useState("Sales");
   const invoiceTypes = [
     {
@@ -77,6 +73,7 @@ const PurchaseInvoice = (props) => {
                   // bayanNumber: Yup.string().required("Bayan Number is Required"),
                   // pod: Yup.string().required("POD is Required"),
                   // poa: Yup.string().required("POA is Required"),
+                  date: Yup.string().required("Date is Required"),
                   vendorName: Yup.string().required("vendorName is Required"),
                   // consigneeName: Yup.string()
                   //   .max(20, "Must be 20 characters or less")
@@ -564,4 +561,4 @@ const PurchaseInvoice = (props) => {
   );
 };
 
-export default PurchaseInvoice;
+export default Purchase;

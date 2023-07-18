@@ -2,15 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Row, Button, Label } from "reactstrap";
 import * as Yup from "yup";
-import { Card, Grid } from "@mui/material";
 import { Formik, Field, ErrorMessage } from "formik";
 import { Form } from "react-formik-ui";
-import { Colxx, Separator } from "../../components/Common/CustomBootstrap";
-import apiAuth from "../../helpers/ApiAuth";
-import NotificationManager from "../../components/Common/NotificationManager";
+import { Card, Grid } from "@mui/material";
 import Select from "react-select";
 
-const PurchaseInvoice = (props) => {
+const Sales = (props) => {
+  const [is_password_hidden, set_is_password_hidden] = useState(false);
   const [loading, setLoading] = useState(false);
   const [invoiceType, setInvoiceType] = useState("Sales");
   const invoiceTypes = [
@@ -23,6 +21,7 @@ const PurchaseInvoice = (props) => {
       value: "Purchase",
     },
   ];
+
   const history = useHistory();
 
   const goBack = () => {
@@ -43,7 +42,7 @@ const PurchaseInvoice = (props) => {
           className="mb-5 mt-3"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <h2 className="mx-5">Purchase Invoice</h2>
+          <h2 className="mx-5">Sales Invoice</h2>
           <button className="btn btn-danger" onClick={goBack}>
             Back
           </button>
@@ -59,7 +58,7 @@ const PurchaseInvoice = (props) => {
                   currency: "",
                   bayanNumber: "",
                   shipperName: "",
-                  vendorName: "",
+                  branch: "",
                   rate: "",
                   pod: "",
                   clientName: "",
@@ -67,33 +66,21 @@ const PurchaseInvoice = (props) => {
                   amount: "",
                   poa: "",
                   remarks: "",
-                  refDate: "",
-                  dueDate: "",
-                  billAmount: "",
-                  narration: "",
                 }}
                 validationSchema={Yup.object({
-                  // blNumber: Yup.string().required("BL Number is Required"),
-                  // bayanNumber: Yup.string().required("Bayan Number is Required"),
-                  // pod: Yup.string().required("POD is Required"),
-                  // poa: Yup.string().required("POA is Required"),
-                  vendorName: Yup.string().required("vendorName is Required"),
-                  // consigneeName: Yup.string()
-                  //   .max(20, "Must be 20 characters or less")
-                  //   .trim()
-                  //   .required("Cosignee Name is Required"),
-                  // shipperName: Yup.string()
-                  //   .max(20, "Must be 20 characters or less")
-                  //   .trim()
-                  //   .required("Shipper Name is Required"),
-                  // clientName: Yup.string()
-                  //   .max(20, "Must be 20 characters or less")
-                  //   .trim()
-                  //   .required("Client Name is Required"),
-                  // remarks: Yup.string()
-                  //   .max(400, "Must be 400 characters or less")
-                  //   .trim()
-                  //   .required("Remarks is Required"),
+                //   blNumber: Yup.string().required("BL Number is Required"),
+                //   consigneeName: Yup.string().required("Consignee Name is Required"),
+                  date: Yup.string().required("Date is Required"),
+                //   currency: Yup.string().required("Currency is Required"),
+                //   bayanNumber: Yup.string().required("Bayan Number is Required"),
+                //   shipperName: Yup.string().required("Shipper Name is Required"),
+                  branch: Yup.string().required("Branch is Required"),
+                //   rate: Yup.string().required("Rate is Required"),
+                //   pod: Yup.string().required("POD is Required"),
+                //   clientName: Yup.string().required("Client Name is Required"),
+                //   fcAmount: Yup.string().required("FC Amount is Required"),
+                //   poa: Yup.string().required("POA is Required"),
+                //   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
                   console.log("values", values);
@@ -105,7 +92,10 @@ const PurchaseInvoice = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="blNumber"> BL Number</Label>
+                            <Label htmlFor="blNumber" className="pe-2 w-50">
+                              {" "}
+                              BL Number
+                            </Label>
                             <Field
                               className="form-control"
                               name="blNumber"
@@ -147,7 +137,10 @@ const PurchaseInvoice = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="consigneeName">
+                            <Label
+                              htmlFor="consigneeName"
+                              className=" pe-2 w-50"
+                            >
                               <span style={{ color: "red" }}>*</span> Date
                             </Label>
                             <Field
@@ -171,7 +164,9 @@ const PurchaseInvoice = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="currency">Currency (SAR)</Label>
+                            <Label htmlFor="currency" className="pe-2 w-50">
+                              Currency (SAR)
+                            </Label>
                             <Field
                               className="form-control "
                               name="currency"
@@ -243,20 +238,20 @@ const PurchaseInvoice = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="vendorName">
-                              Vendor Name
+                            <Label htmlFor="branch" className="pe-2 w-50">
+                              Branch
                               <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control"
-                              name="vendorName"
-                              value={"TEMP"}
+                              name="branch"
+                              value={"JEDDAH"}
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.vendorName && touched.vendorName && (
+                          {errors.branch && touched.branch && (
                             <div className="invalid-feedback d-block">
-                              {errors.vendorName}
+                              {errors.branch}
                             </div>
                           )}
                         </div>
@@ -265,7 +260,9 @@ const PurchaseInvoice = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="rate">Ex. Rate</Label>
+                            <Label htmlFor="rate" className="pe-2 w-50">
+                              Ex. Rate
+                            </Label>
                             <Field
                               className="form-control "
                               name="rate"
@@ -285,7 +282,9 @@ const PurchaseInvoice = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="pod">POD</Label>
+                            <Label htmlFor="pod" className="pe-2 w-50">
+                              POD
+                            </Label>
                             <Field
                               className="form-control "
                               name="pod"
@@ -332,7 +331,9 @@ const PurchaseInvoice = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="fcAmount">FC Amount</Label>
+                            <Label htmlFor="fcAmount" className="pe-2 w-50">
+                              FC Amount
+                            </Label>
                             <Field
                               className="form-control"
                               name="fcAmount"
@@ -352,7 +353,10 @@ const PurchaseInvoice = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="amount"> Amount (SAR)</Label>
+                            <Label htmlFor="amount" className="pe-2 w-50">
+                              {" "}
+                              Amount (SAR)
+                            </Label>
                             <Field
                               className="form-control"
                               name="amount"
@@ -421,7 +425,7 @@ const PurchaseInvoice = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
+                    <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="remarks" className="form-label">
                             Remarks
@@ -429,7 +433,6 @@ const PurchaseInvoice = (props) => {
                           </label>
                           <Field
                             as="textarea"
-                            rows="6"
                             className="form-control"
                             name="reamrks"
                             style={{ background: "#EDEDED" }}
@@ -440,92 +443,6 @@ const PurchaseInvoice = (props) => {
                             </div>
                           )}
                         </div>
-                      </Grid>
-
-                      <Grid item lg={8} xs={12}>
-                        <Grid container spacing={2}>
-                          <Grid item lg={6} xs={12}>
-                            <div className="form-group mb-3">
-                              <div>
-                                <Label htmlFor="refDate">Ref Date</Label>
-                                <Field
-                                  name="refDate"
-                                  className="form-control"
-                                  // placeholder="Remarks"
-                                  type="text"
-                                  style={{ background: "#EDEDED" }}
-                                />
-                              </div>
-                              <ErrorMessage
-                                name="refDate"
-                                render={(msg) => (
-                                  <div className="text-danger">{msg}</div>
-                                )}
-                              />
-                            </div>
-                          </Grid>
-                          <Grid item lg={6} xs={12}>
-                            <div className="form-group mb-3">
-                              <div>
-                                <Label htmlFor="billAmount">Bill Amount</Label>
-                                <Field
-                                  name="billAmount"
-                                  className="form-control"
-                                  // placeholder="Remarks"
-                                  type="text"
-                                  style={{ background: "#EDEDED" }}
-                                />
-                              </div>
-                              <ErrorMessage
-                                name="billAmount"
-                                render={(msg) => (
-                                  <div className="text-danger">{msg}</div>
-                                )}
-                              />
-                            </div>
-                          </Grid>
-
-                          <Grid item lg={6} xs={12}>
-                            <div className="form-group mb-3">
-                              <div>
-                                <Label htmlFor="dueDate">Due Date</Label>
-                                <Field
-                                  name="dueDate"
-                                  className="form-control"
-                                  // placeholder="Remarks"
-                                  type="text"
-                                  style={{ background: "#EDEDED" }}
-                                />
-                              </div>
-                              <ErrorMessage
-                                name="dueDate"
-                                render={(msg) => (
-                                  <div className="text-danger">{msg}</div>
-                                )}
-                              />
-                            </div>
-                          </Grid>
-                          <Grid item lg={6} xs={12}>
-                            <div className="form-group mb-3">
-                              <div>
-                                <Label htmlFor="narration">Narration</Label>
-                                <Field
-                                  name="narration"
-                                  className="form-control"
-                                  // placeholder="Remarks"
-                                  type="text"
-                                  style={{ background: "#EDEDED" }}
-                                />
-                              </div>
-                              <ErrorMessage
-                                name="narration"
-                                render={(msg) => (
-                                  <div className="text-danger">{msg}</div>
-                                )}
-                              />
-                            </div>
-                          </Grid>
-                        </Grid>
                       </Grid>
                     </Grid>
 
@@ -564,4 +481,4 @@ const PurchaseInvoice = (props) => {
   );
 };
 
-export default PurchaseInvoice;
+export default Sales;
