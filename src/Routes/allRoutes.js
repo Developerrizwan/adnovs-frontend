@@ -71,6 +71,7 @@ import Purchase from "../views/Invoices/Purchase";
 import Sales from "../views/Invoices/Sales";
 import ResetPassword from "../pages/AuthenticationInner/ResetPassword";
 import ResetSuccessful from "../pages/AuthenticationInner/ResetPassword/ResetSuccessful";
+import RegisterSuccessful from "../pages/AuthenticationInner/Register/RegisterSuccessful";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -135,6 +136,7 @@ const publicRoutes = [
   { path: "/auth-signin-cover", component: CoverSignIn },
   { path: "/auth-signup-basic", component: BasicSignUp },
   { path: "/auth-signup-cover", component: CoverSignUp },
+  { path: "/register-successful", component:  RegisterSuccessful},
   { path: "/auth-pass-reset-basic", component: BasicPasswReset },
   { path: "/auth-pass-reset-cover", component: CoverPasswReset },
   { path: "/auth-lockscreen-basic", component: BasicLockScreen },
