@@ -153,7 +153,7 @@ const Navdata = () => {
       id: "user-management",
       label: "User Management",
       icon: "ri-account-circle-line",
-      link: "/profile",
+      link: "/user-management",
       src: "/users-sidebar.png",
       stateVariables: isMyAccount,
       roles: ["superadmin", "admin", "user"],

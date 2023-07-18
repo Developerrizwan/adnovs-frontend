@@ -46,62 +46,46 @@ const postGetGoogleToken = async (gtoken) =>
     });
 
 function* loginUser({ payload: { user, history, type } }) {
-  history.push("/dashboard")
-  // try {
-  //   if (type) {
-  //     const loginUser = yield call(postGetGoogleToken, user.credential);
-  //     if (!loginUser.message) {
-  //       sessionStorage.setItem("authUser", JSON.stringify(loginUser));
-  //       localStorage.setItem("authUser", JSON.stringify(loginUser));
-  //       localStorage.setItem("jwt", loginUser.token);
-  //       localStorage.setItem("jwtRefresh", loginUser.token);
+  // history.push("/dashboard")
+  try {
+    if (type) {
+      const loginUser = yield call(postGetGoogleToken, user.credential);
+      if (!loginUser.message) {
+        sessionStorage.setItem("authUser", JSON.stringify(loginUser));
+        localStorage.setItem("authUser", JSON.stringify(loginUser));
+        localStorage.setItem("jwt", loginUser.token);
+        localStorage.setItem("jwtRefresh", loginUser.token);
 
-  //       // localStorage.setItem("dark_mode", loginUser.profile.dark_mode);
+        // localStorage.setItem("dark_mode", loginUser.profile.dark_mode);
 
-  //       // localStorage.setItem("profile_pic", loginUser.profile.profile_pic);
-  //       yield put(loginSuccess(loginUser));
+        // localStorage.setItem("profile_pic", loginUser.profile.profile_pic);
+        yield put(loginSuccess(loginUser));
 
-  //       history.push("/dashboard");
-  //     } else {
-  //       yield put(apiError(loginUser.message));
-  //     }
-  //     // sessionStorage.setItem("authUser", JSON.stringify(user));
-  //     // localStorage.setItem("jwt", user.credential);
-  //     // localStorage.setItem("jwtRefresh", user.credential);
+        history.push("/dashboard");
+      } else {
+        yield put(apiError(loginUser.message));
+      }
+    } else {
+      const loginUser = yield call(postJwtLogin, user.email, user.password);
+      if (!loginUser.message) {
+        sessionStorage.setItem("authUser", JSON.stringify(loginUser));
+        localStorage.setItem("authUser", JSON.stringify(loginUser));
+        localStorage.setItem("jwt", loginUser.token);
+        localStorage.setItem("jwtRefresh", loginUser.token);
 
-  //     // localStorage.setItem("dark_mode", user.profile?.dark_mode);
+        // localStorage.setItem("dark_mode", loginUser.profile.dark_mode);
 
-  //     // localStorage.setItem("profile_pic", user.profile?.profile_pic);
-  //     // yield put(
-  //     //   loginSuccess({
-  //     //     access: user.credential,
-  //     //     refresh: user.credential,
-  //     //     name: jwt(user.credential)["name"],
-  //     //     type: "google",
-  //     //   })
-  //     // );
-  //     // history.push("/dashboard");
-  //   } else {
-  //     const loginUser = yield call(postJwtLogin, user.email, user.password);
-  //     if (!loginUser.message) {
-  //       sessionStorage.setItem("authUser", JSON.stringify(loginUser));
-  //       localStorage.setItem("authUser", JSON.stringify(loginUser));
-  //       localStorage.setItem("jwt", loginUser.token);
-  //       localStorage.setItem("jwtRefresh", loginUser.token);
+        // localStorage.setItem("profile_pic", loginUser.profile.profile_pic);
+        yield put(loginSuccess(loginUser));
 
-  //       // localStorage.setItem("dark_mode", loginUser.profile.dark_mode);
-
-  //       // localStorage.setItem("profile_pic", loginUser.profile.profile_pic);
-  //       yield put(loginSuccess(loginUser));
-
-  //       history.push("/dashboard");
-  //     } else {
-  //       yield put(apiError(loginUser.message));
-  //     }
-  //   }
-  // } catch (error) {
-  //   yield put(apiError(error));
-  // }
+        history.push("/dashboard");
+      } else {
+        yield put(apiError(loginUser.message));
+      }
+    }
+  } catch (error) {
+    yield put(apiError(error));
+  }
 }
 
 function* logoutUser() {

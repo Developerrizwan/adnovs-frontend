@@ -93,8 +93,11 @@ const CoverSignUp = (props) => {
   }, [responseSuccessGoogle]);
 
   return (
-    <React.Fragment >
-      <div className="auth-page-wrapper" style={{overflowY: "hidden", height:"100vh"}}>
+    <React.Fragment>
+      <div
+        className="auth-page-wrapper"
+        style={{ overflowY: "hidden", height: "100vh" }}
+      >
         <div className="bg-overlay"></div>
         <div className="auth-page-content overflow-hidden pb-0">
           {/* <Container> */}
@@ -104,7 +107,7 @@ const CoverSignUp = (props) => {
                 <Row className="justify-content-center g-0">
                   <AuthSlider />
 
-                  <Col lg={6} style={{overflowY: "scroll", height:"100vh"}}>
+                  <Col lg={6} style={{ overflowY: "scroll", height: "100vh" }}>
                     <div className="p-lg-5 p-4">
                       <div>
                         <h1 className="text-dark">Sign Up</h1>
@@ -116,40 +119,40 @@ const CoverSignUp = (props) => {
                       <div className="mt-4">
                         <Formik
                           initialValues={{
-                            fName: "Manish",
-                            lName: "",
+                            first_name: "Manish",
+                            last_name: "",
                             email: "manish@darsa.ai",
                             password: "efgH123$",
                             confirmPassword: "efgH123$",
                             // username: "Manish",
-                            mobileNo: "",
-                            companyName: "",
-                            companyEmail: "",
-                            companyAddress: "",
+                            mobile: "",
+                            company_name: "",
+                            company_email: "",
+                            company_address: "",
                             state: undefined,
                             country: undefined,
                           }}
                           validationSchema={Yup.object({
-                            fName: Yup.string()
+                            first_name: Yup.string()
                               .max(20, "Must be 20 characters or less")
                               .trim()
                               .required("First name is Required"),
-                            lName: Yup.string()
+                            last_name: Yup.string()
                               .max(20, "Must be 20 characters or less")
                               .trim()
                               .required("Last name is Required"),
                             email: Yup.string()
                               .email()
                               .required("Email is Required"),
-                            mobileNo: Yup.string()
+                            mobile: Yup.string()
                               .max(10, "Must be 20 characters or less")
                               .trim()
                               .required("Mobile Number is Required"),
-                            companyName: Yup.string()
+                            company_name: Yup.string()
                               .max(20, "Must be 20 characters or less")
                               .trim()
                               .required("Company Name is Required"),
-                            companyAddress: Yup.string()
+                            company_address: Yup.string()
                               .max(20, "Must be 20 characters or less")
                               .trim()
                               .required("Company Address is Required"),
@@ -174,7 +177,7 @@ const CoverSignUp = (props) => {
                                 <Grid item lg={6} xs={12}>
                                   <div className="mb-3">
                                     <label
-                                      htmlFor="email"
+                                      htmlFor="first_name"
                                       className="form-label"
                                     >
                                       First Name
@@ -183,20 +186,21 @@ const CoverSignUp = (props) => {
                                     <Field
                                       className="form-control"
                                       // placeholder="Enter your first name"
-                                      name="fName"
+                                      name="first_name"
                                     />
-                                    {errors.fName && touched.fName && (
-                                      <div className="invalid-feedback d-block">
-                                        {errors.fName}
-                                      </div>
-                                    )}
+                                    {errors.first_name &&
+                                      touched.first_name && (
+                                        <div className="invalid-feedback d-block">
+                                          {errors.first_name}
+                                        </div>
+                                      )}
                                   </div>
                                 </Grid>
 
                                 <Grid item lg={6} xs={12}>
                                   <div className="mb-3">
                                     <label
-                                      htmlFor="email"
+                                      htmlFor="last_name"
                                       className="form-label"
                                     >
                                       Last Name
@@ -205,11 +209,11 @@ const CoverSignUp = (props) => {
                                     <Field
                                       className="form-control"
                                       // placeholder="Enter your Email"
-                                      name="lName"
+                                      name="last_name"
                                     />
-                                    {errors.lName && touched.lName && (
+                                    {errors.last_name && touched.last_name && (
                                       <div className="invalid-feedback d-block">
-                                        {errors.lName}
+                                        {errors.last_name}
                                       </div>
                                     )}
                                   </div>
@@ -241,7 +245,7 @@ const CoverSignUp = (props) => {
                                 <Grid item lg={6} xs={12}>
                                   <div className="mb-3">
                                     <label
-                                      htmlFor="mobileNo"
+                                      htmlFor="mobile"
                                       className="form-label"
                                     >
                                       Mobile Number
@@ -250,11 +254,11 @@ const CoverSignUp = (props) => {
                                     <Field
                                       className="form-control"
                                       // placeholder="Enter your Email"
-                                      name="mobileNo"
+                                      name="mobile"
                                     />
-                                    {errors.mobileNo && touched.mobileNo && (
+                                    {errors.mobile && touched.mobile && (
                                       <div className="invalid-feedback d-block">
-                                        {errors.mobileNo}
+                                        {errors.mobile}
                                       </div>
                                     )}
                                   </div>
@@ -380,59 +384,56 @@ const CoverSignUp = (props) => {
                                 </Grid>
                               </Grid>
 
-
-                            <Grid container spacing={2}>
-                              <Grid item lg={6} xs={12}>
-                              <div className="mb-3">
-                                <label
-                                  htmlFor="companyName"
-                                  className="form-label"
-                                >
-                                  Company Name
-                                  <span className="text-danger">*</span>
-                                </label>
-                                <Field
-                                  className="form-control"
-                                  // placeholder="Enter your Email"
-                                  name="companyName"
-                                />
-                                {errors.companyName && touched.companyName && (
-                                  <div className="invalid-feedback d-block">
-                                    {errors.companyName}
+                              <Grid container spacing={2}>
+                                <Grid item lg={6} xs={12}>
+                                  <div className="mb-3">
+                                    <label
+                                      htmlFor="company_name"
+                                      className="form-label"
+                                    >
+                                      Company Name
+                                      <span className="text-danger">*</span>
+                                    </label>
+                                    <Field
+                                      className="form-control"
+                                      // placeholder="Enter your Email"
+                                      name="company_name"
+                                    />
+                                    {errors.company_name &&
+                                      touched.company_name && (
+                                        <div className="invalid-feedback d-block">
+                                          {errors.company_name}
+                                        </div>
+                                      )}
                                   </div>
-                                )}
-                              </div>
+                                </Grid>
+                                <Grid item lg={6} xs={12}>
+                                  <div className="mb-3">
+                                    <label
+                                      htmlFor="company_email"
+                                      className="form-label"
+                                    >
+                                      Company Email Address
+                                      <span className="text-danger">*</span>
+                                    </label>
+                                    <Field
+                                      className="form-control"
+                                      // placeholder="Enter your Email"
+                                      name="company_email"
+                                    />
+                                    {errors.company_email &&
+                                      touched.company_email && (
+                                        <div className="invalid-feedback d-block">
+                                          {errors.company_email}
+                                        </div>
+                                      )}
+                                  </div>
+                                </Grid>
                               </Grid>
-                              <Grid item lg={6} xs={12}>
-                              <div className="mb-3">
-                                <label
-                                  htmlFor="companyEmail"
-                                  className="form-label"
-                                >
-                                  Company Email Address
-                                  <span className="text-danger">*</span>
-                                </label>
-                                <Field
-                                  className="form-control"
-                                  // placeholder="Enter your Email"
-                                  name="companyEmail"
-                                />
-                                {errors.companyEmail &&
-                                  touched.companyEmail && (
-                                    <div className="invalid-feedback d-block">
-                                      {errors.companyEmail}
-                                    </div>
-                                  )}
-                              </div>
-                              </Grid>
-                            </Grid>
-                              
-
-                             
 
                               <div className="mb-3">
                                 <label
-                                  htmlFor="companyAddress"
+                                  htmlFor="company_address"
                                   className="form-label"
                                 >
                                   Company Address
@@ -441,12 +442,12 @@ const CoverSignUp = (props) => {
                                 <Field
                                   className="form-control"
                                   // placeholder="Enter your Email"
-                                  name="companyAddress"
+                                  name="company_address"
                                 />
-                                {errors.companyAddress &&
-                                  touched.companyAddress && (
+                                {errors.company_address &&
+                                  touched.company_address && (
                                     <div className="invalid-feedback d-block">
-                                      {errors.companyAddress}
+                                      {errors.company_address}
                                     </div>
                                   )}
                               </div>
@@ -502,7 +503,7 @@ const CoverSignUp = (props) => {
                                       )}
                                       value={selectedCountry}
                                       onChange={(data) => {
-                                        setFieldValue("country", data.label);
+                                        setFieldValue("state", data.label);
                                         setSelectedCountry(data);
                                       }}
                                     />
@@ -591,26 +592,6 @@ const CoverSignUp = (props) => {
 
                       <div className="mt-4 text-center">
                         <div>
-                          {/* <GoogleLogin
-                              // render={(renderProps) => (
-                              //   <Button
-                              //     color="danger"
-                              //     to="#"
-                              //     className="btn-icon me-1"
-                              //     onClick={renderProps.onClick}
-                              //   >
-                              //     <i className="ri-google-fill fs-16" />
-                              //   </Button>
-                              // )}
-                              className="googleLogin"
-                              clientId="578586401941-afd5dm86n6sh978s3bi8f1hk37tsur3f.apps.googleusercontent.com"
-                              onSuccess={(res) =>
-                                console.log("dddddddddd", res)
-                              }
-                              onFailure={(err) => {
-                                console.log("eeeeeeer", err);
-                              }}
-                            /> */}
                           <div className="signin-other-title mt-4">
                             <h5
                               className="fs-13 mb-4 title"
