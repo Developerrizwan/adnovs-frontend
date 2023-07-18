@@ -1,33 +1,47 @@
 import { Card, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Select from "react-select";
 
-const options = [
+
+
+const Vouchers = (props) => {
+  const [selectedOption, setSelectedOption] = useState(null);
+  const history = useHistory();
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      background: "#EDEDED",
+    }),
+  };
+
+  const option = [
   { value: "all", label: "All" },
   { value: "option1", label: "Option1" },
 ];
 
-const Vouchers = (props) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+  const options = [
+    { value: "vouchers", label: "All" },
+    { value: "journal-voucher", label: "Journal Voucher" },
+    { value: "payment-voucher", label: "Payment Voucher" },
+    { value: "receipt-voucher", label: "Receipt Voucher" },
+  ];
 
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      background: "#EDEDED"
-    }),
+  const handleOptionChange = (selectedOption) => {
+    history.push(`/${selectedOption.value}`);
   };
 
   return (
     <React.Fragment>
       <div className="page-content">
         <h1 className="mb-4 mx-4">All Vouchers</h1>
-        {/* <Grid container spacing={2}>
-          <Grid item style={{placeItems: "center"}}> */}
+        <Grid container spacing={2}>
+          <Grid item lg={9} style={{placeItems: "center", margin: "auto"}}>
         <Card
           className="p-3"
-          style={{ background: "#EDEDED", width: "70%", margin: "auto" }}
+          style={{ background: "#EDEDED" }}
         >
           <Formik
             initialValues={{
@@ -112,10 +126,15 @@ const Vouchers = (props) => {
                       </label>
                       <Select
                         options={options}
-                        value={selectedOption}
-                        onChange={setSelectedOption}
+                        onChange={handleOptionChange}
                         styles={customStyles}
                       />
+                      {/* <Select
+                        options={options}
+                        value={selectedOption}
+                        onChange={setSelectedOption}
+                        
+                      /> */}
                       {errors.voucherType && touched.voucherType && (
                         <div className="invalid-feedback d-block">
                           {errors.voucherType}
@@ -131,7 +150,7 @@ const Vouchers = (props) => {
                         <span className="text-danger">*</span>
                       </label>
                       <Select
-                        options={options}
+                        options={option}
                         value={selectedOption}
                         onChange={setSelectedOption}
                         styles={customStyles}
@@ -212,7 +231,7 @@ const Vouchers = (props) => {
                         <span className="text-danger">*</span>
                       </label>
                       <Select
-                        options={options}
+                        options={option}
                         value={selectedOption}
                         onChange={setSelectedOption}
                         styles={customStyles}
@@ -253,7 +272,7 @@ const Vouchers = (props) => {
                         <span className="text-danger">*</span>
                       </label>
                       <Select
-                        options={options}
+                        options={option}
                         value={selectedOption}
                         onChange={setSelectedOption}
                         styles={customStyles}
@@ -276,7 +295,7 @@ const Vouchers = (props) => {
                         <span className="text-danger">*</span>
                       </label>
                       <Select
-                        options={options}
+                        options={option}
                         value={selectedOption}
                         onChange={setSelectedOption}
                         styles={customStyles}
@@ -300,11 +319,11 @@ const Vouchers = (props) => {
             )}
           </Formik>
         </Card>
-        {/* </Grid> */}
+        </Grid>
         {/* <Grid item lg={4} style={{ margin: "auto" }}>
             <img src={jobsImage} alt="" />
           </Grid> */}
-        {/* </Grid> */}
+        </Grid>
       </div>
     </React.Fragment>
   );

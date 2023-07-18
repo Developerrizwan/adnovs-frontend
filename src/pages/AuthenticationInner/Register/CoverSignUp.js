@@ -96,7 +96,6 @@ const CoverSignUp = (props) => {
     <React.Fragment>
       <div
         className="auth-page-wrapper"
-        style={{ overflowY: "hidden", height: "100vh" }}
       >
         <div className="bg-overlay"></div>
         <div className="auth-page-content overflow-hidden pb-0">

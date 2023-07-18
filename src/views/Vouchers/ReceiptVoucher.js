@@ -1,5 +1,6 @@
 import { Card, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Select from "react-select";
@@ -11,23 +12,37 @@ const options = [
 
 const ReceiptVoucher = (props) => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const history = useHistory();
 
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
-      background: "#EDEDED"
+      background: "#EDEDED",
     }),
+  };
+
+  const goBack = () => {
+    history.goBack();
   };
 
   return (
     <React.Fragment>
       <div className="page-content">
-        <h1 className="mb-4 mx-4">Receipt Voucher</h1>
-        {/* <Grid container spacing={2}>
-          <Grid item style={{placeItems: "center"}}> */}
+        {/* <h1 className="mb-4 mx-4">Receipt Voucher</h1> */}
+        <div
+          className="mb-4"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <h1 className="mx-4">Receipt Voucher</h1>
+          <button className="btn btn-danger" onClick={goBack}>
+            Back
+          </button>
+        </div>
+        <Grid container spacing={2}>
+          <Grid item lg={9} style={{placeItems: "center", margin: "auto"}}>
         <Card
           className="p-3"
-          style={{ background: "#EDEDED", width: "70%", margin: "auto" }}
+          style={{ background: "#EDEDED" }}
         >
           <Formik
             initialValues={{
@@ -295,11 +310,11 @@ const ReceiptVoucher = (props) => {
             )}
           </Formik>
         </Card>
-        {/* </Grid> */}
+        </Grid>
         {/* <Grid item lg={4} style={{ margin: "auto" }}>
             <img src={jobsImage} alt="" />
           </Grid> */}
-        {/* </Grid> */}
+        </Grid>
       </div>
     </React.Fragment>
   );
