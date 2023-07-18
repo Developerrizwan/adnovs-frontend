@@ -71,7 +71,7 @@ const Vouchers = (props) => {
                         <span className="text-danger">*</span>
                       </label>
                       <Field
-                        className="form-control jobs-field"
+                        className="form-control"
                         name="fromDate"
                         style={{ background: "#EDEDED" }}
                       />
