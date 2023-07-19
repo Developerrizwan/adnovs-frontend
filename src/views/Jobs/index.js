@@ -16,14 +16,31 @@ import JobTable from "./JobTable";
 const Jobs = (props) => {
   const [allJobs, setAllJobs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [jobPagination, setJobPagination] = useState({
+    rowsPerPage: 10,
+    totalRows: 0,
+    currentPage: 1,
+  });
 
-  const getJobs = () => {
+  const getJobs = (pgdata, val) => {
     setLoading(true);
     apiAuth
-      .get("/api/get-jobs/")
+      .get(
+        "/api/get-jobs/?" +
+          "&page=" +
+          pgdata?.currentPage +
+          "&search=" +
+          (val ? val : "")
+      )
+
       .then((response) => {
         let data = response.data;
         console.log("jobs", data);
+        setJobPagination({
+          ...pgdata,
+          totalRows: response.data.count,
+        });
         setAllJobs(data);
         setLoading(false);
       })
@@ -39,17 +56,27 @@ const Jobs = (props) => {
 
   const history = useHistory();
 
+  useEffect(() => {
+    getJobs(jobPagination);
+  }, []);
+
   return (
     <>
       <div className="page-content">
         <Container fluid>
           <BreadCrumb
             title=""
-            pageTitle="Settings"
+            pageTitle="Jobs"
             add_new={true}
             // add_url_popup={true}
-
             add_new_url={"/jobs/add"}
+            search_functionality={true}
+            searchValue={searchValue}
+            setSearchValue={(val) => {
+              setSearchValue(val);
+              getJobs(jobPagination, val);
+            }}
+            export_button={allJobs.length > 0 ? true : false}
           />
         </Container>
 
@@ -58,7 +85,19 @@ const Jobs = (props) => {
             {allJobs.length > 0 ? (
               <>
                 <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
-                  <JobTable allJobs={allJobs} history={props.history} />
+                  <JobTable
+                    allJobs={allJobs}
+                    history={props.history}
+                    jobPagination={{ ...jobPagination }}
+                    handlePagination={(data) => {
+                      setJobPagination(data);
+                      getJobs(data);
+                    }}
+                    getJobs={() => {
+                      setAllJobs([]);
+                      getJobs(jobPagination, searchValue);
+                    }}
+                  />
                 </Card>
               </>
             ) : (
