@@ -28,7 +28,7 @@ const ProfileDropdown = () => {
         localStorage.setItem("authUser", JSON.stringify(obj));
       }
 
-      setUserName(obj?.username);
+      setUserName(obj?.first_name);
     }
   }, [user]);
 

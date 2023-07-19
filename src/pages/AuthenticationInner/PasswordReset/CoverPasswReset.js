@@ -71,7 +71,7 @@ const CoverPasswReset = () => {
                   <Col lg={6} style={{ margin: "auto" }}>
                     <div className="p-lg-5 p-4">
                       <h1 className="text-dark mb-3">
-                        Enter your Email Address
+                        Enter your email address
                       </h1>
                       {/* <p className="text-muted">Reset password with Neurowonk</p> */}
 

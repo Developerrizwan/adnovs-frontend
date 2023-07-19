@@ -49,10 +49,16 @@ const UserManagement = (props) => {
 
   const getUser = (pgdata, val) => {
     apiAuth
-      .get("/api/getusers/")
+      .get(
+        "/api/get-users/?" +
+          "&page=" +
+          pgdata?.currentPage +
+          "&search=" +
+          (val ? val : "")
+      )
       .then((response) => {
         let data = response.data.results;
-        console.log("xswjhjwx", response);
+        // console.log("xswjhjwx", response);
         setUserPagination({
           ...pgdata,
           totalRows: response.data.count,

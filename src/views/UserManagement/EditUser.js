@@ -140,10 +140,10 @@ const EditUser = (props) => {
       (props.userData?.groups.includes("user") ||
         props.userData?.groups.includes("manager"))
     ) {
-      getStates();
-      getRegions();
-      getCities();
-      getWorkshop();
+      // getStates();
+      // getRegions();
+      // getCities();
+      // getWorkshop();
     }
   }, [props?.userData?.groups]);
 
@@ -153,7 +153,8 @@ const EditUser = (props) => {
         <Colxx lg="12">
           <Formik
             initialValues={{
-              name: props.userData?.name ? props.userData?.name : "",
+              first_name: props.userData?.first_name ? props.userData?.first_name : "",
+              last_name: props.userData?.last_name ? props.userData?.last_name : "",
               password: "",
               mobile: props.userData?.mobile ? props.userData?.mobile : "",
             }}
@@ -222,18 +223,36 @@ const EditUser = (props) => {
             {({ values, setFieldValue }) => (
               <Form className="av-tooltip tooltip-label-bottom ">
                 <Row>
-                  <Colxx lg="12">
+                  <Colxx lg="6">
                     {" "}
                     <div className="form-group mb-3">
-                      <Label htmlFor="name">Name</Label>
+                      <Label htmlFor="first_name">First Name</Label>
                       <Field
                         className="form-control"
-                        name="name"
-                        placeholder="Name"
+                        name="first_name"
+                        placeholder="First Name"
                         type="text"
                       />
                       <ErrorMessage
-                        name="name"
+                        name="first_name"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Colxx>
+                  <Colxx lg="6">
+                    {" "}
+                    <div className="form-group mb-3">
+                      <Label htmlFor="last_name">Last Name</Label>
+                      <Field
+                        className="form-control"
+                        name="last_name"
+                        placeholder="Last Name"
+                        type="text"
+                      />
+                      <ErrorMessage
+                        name="last_name"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -277,120 +296,6 @@ const EditUser = (props) => {
                       />
                     </div>
                   </Colxx>
-                  {(props?.userData?.groups?.includes("manager") ||
-                    props?.userData?.groups?.includes("user")) && (
-                    <>
-                      <Colxx lg="6">
-                        <div className="form-group mb-3">
-                          <Label htmlFor="workshop_id">Workshop</Label>
-                          <Select
-                            isMulti
-                            value={selectedworkshops}
-                            options={workshopData?.map((item) => {
-                              return {
-                                label: `${item.name} - ${item.short_code}`,
-                                value: item.id,
-                              };
-                            })}
-                            onChange={(data) => {
-                              setSelectedWorkshops(data);
-                              setFieldValue("workshop_id", data.value);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="workshop_id"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Colxx>
-                      <Colxx lg="6">
-                        <div className="form-group mb-3">
-                          <Label htmlFor="state">State</Label>
-                          <Select
-                            isMulti
-                            value={selectedStates}
-                            options={states?.map((item) => {
-                              return {
-                                label: item.state_name,
-                                value: item.id,
-                              };
-                            })}
-                            onChange={(data) => {
-                              setSelectedStates(data);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="state"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Colxx>
-                      <Colxx lg="6">
-                        <div className="form-group mb-3">
-                          <Label htmlFor="region">Region</Label>
-                          <Select
-                            isMulti
-                            value={selectedRegions}
-                            options={regions
-                              // ?.filter((rg) =>
-                              //   selectedStates?.some(
-                              //     (ss) => ss.value === rg.state?.id
-                              //   )
-                              // )
-                              .map((item) => {
-                                return {
-                                  label: item.region_name,
-                                  value: item.id,
-                                };
-                              })}
-                            onChange={(data) => {
-                              setSelectedRegions(data);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="region"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Colxx>
-                      <Colxx lg="6">
-                        <div className="form-group mb-3">
-                          <Label htmlFor="workshop_id">City</Label>
-                          <Select
-                            isMulti
-                            value={selectedCities}
-                            options={cities
-                              // ?.filter((ct) =>
-                              //   selectedRegions?.some(
-                              //     (sr) => sr.value === ct.region?.id
-                              //   )
-                              // )
-                              .map((item) => {
-                                return {
-                                  label: item.city_name,
-                                  value: item.id,
-                                };
-                              })}
-                            onChange={(data) => {
-                              setSelectedCities(data);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="city"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Colxx>
-                    </>
-                  )}
                 </Row>
                 <Separator className="mb-4 mt-4" />
                 <div

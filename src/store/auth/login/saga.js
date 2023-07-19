@@ -158,7 +158,6 @@ const postJwtPublicUser = async (
     });
 
 function* registerPublicUser({ payload: { user, history } }) {
-  console.log("xsjjdjxs", user);
   try {
     const regUser = yield call(
       postJwtPublicUser,
@@ -170,8 +169,8 @@ function* registerPublicUser({ payload: { user, history } }) {
       user.company_email,
       user.company_address,
       user.state,
-      user.mobile,
-      user.country
+      user.country,
+      user.mobile
       // user.username,
     );
     // console.log(regUser, "regUser");

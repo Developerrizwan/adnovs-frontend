@@ -17,7 +17,7 @@ const UserManagementTable = (props) => {
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13"> Name</span>,
-      selector: (row) => row.name,
+      selector: (row) => row.first_name + " " + row.last_name,
       sortable: true,
     },
     {
@@ -131,11 +131,7 @@ const UserManagementTable = (props) => {
         //     },
         //   },
         // ]}
-        columns={
-          localStorage.getItem("actionPerformer") === "true"
-            ? cols
-            : cols.slice(0, -1)
-        }
+        columns={cols}
         data={props.users}
         paginationPerPage={props.userPagination?.rowsPerPage}
         onChangePage={(p, t) => {

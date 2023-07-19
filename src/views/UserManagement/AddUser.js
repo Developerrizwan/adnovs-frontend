@@ -31,10 +31,6 @@ const AddUser = (props) => {
   const [workshopId, setWorkshopId] = useState([]);
 
   const RoleOptions = [
-    { value: "workshop", label: "Workshop" },
-    { value: "contact_center_user", label: "Contact Center User" },
-    { value: "contact_center_admin", label: "Contact Center Admin" },
-    { value: "manager", label: "Manager" },
     { value: "user", label: "User" },
     { value: "admin", label: "Admin" },
   ];
@@ -130,13 +126,13 @@ const AddUser = (props) => {
       });
   };
 
-  useEffect(() => {
-    getWorkshop();
-    getContactCenter();
-    getStates();
-    getRegions();
-    getCities();
-  }, []);
+  // useEffect(() => {
+  //   getWorkshop();
+  //   getContactCenter();
+  //   getStates();
+  //   getRegions();
+  //   getCities();
+  // }, []);
 
   return (
     <>
@@ -238,15 +234,33 @@ const AddUser = (props) => {
                         <Colxx lg="6">
                           {" "}
                           <div className="form-group mb-3">
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="first_name">First Name</Label>
                             <Field
                               className="form-control"
-                              name="name"
-                              placeholder="Name"
+                              name="first_name"
+                              placeholder="First Name"
                               type="text"
                             />
                             <ErrorMessage
-                              name="name"
+                              name="first_name"
+                              render={(msg) => (
+                                <div className="text-danger">{msg}</div>
+                              )}
+                            />
+                          </div>
+                        </Colxx>
+                        <Colxx lg="6">
+                          {" "}
+                          <div className="form-group mb-3">
+                            <Label htmlFor="last_name">Last Name</Label>
+                            <Field
+                              className="form-control"
+                              name="last_name"
+                              placeholder="Last Name"
+                              type="text"
+                            />
+                            <ErrorMessage
+                              name="last_name"
                               render={(msg) => (
                                 <div className="text-danger">{msg}</div>
                               )}
@@ -271,23 +285,6 @@ const AddUser = (props) => {
                           </div>
                         </Colxx>
 
-                        <Colxx lg="6">
-                          <div className="form-group mb-3">
-                            <Label htmlFor="user_name">User Name</Label>
-                            <Field
-                              className="form-control"
-                              name="user_name"
-                              placeholder="User Name"
-                              type="text"
-                            />
-                            <ErrorMessage
-                              name="user_name"
-                              render={(msg) => (
-                                <div className="text-danger">{msg}</div>
-                              )}
-                            />
-                          </div>
-                        </Colxx>
                         <Colxx lg="6">
                           <div className="form-group mb-3">
                             <Label htmlFor="mobile">Mobile Number</Label>
@@ -341,175 +338,6 @@ const AddUser = (props) => {
                             />
                           </div>
                         </Colxx>
-                        {selectedRole === "workshop" && (
-                          <Colxx lg="6">
-                            <div className="form-group mb-3">
-                              <Label htmlFor="workshop_id">Workshop</Label>
-                              <Select
-                                options={workshopData?.map((item) => {
-                                  return {
-                                    label: `${item.name} - ${item.short_code}`,
-                                    value: item.id,
-                                  };
-                                })}
-                                onChange={(data) => {
-                                  setFieldValue("workshop_id", data.value);
-                                }}
-                              />
-                              <ErrorMessage
-                                name="workshop_id"
-                                render={(msg) => (
-                                  <div className="text-danger">{msg}</div>
-                                )}
-                              />
-                            </div>
-                          </Colxx>
-                        )}
-                        {selectedRole?.includes("contact_center") && (
-                          <Colxx lg="6">
-                            <div className="form-group mb-3">
-                              <Label htmlFor="workshop_id">
-                                Contact Center
-                              </Label>
-                              <Select
-                                options={centerData?.map((item) => {
-                                  return {
-                                    label: item.name,
-                                    value: item.id,
-                                  };
-                                })}
-                                onChange={(data) => {
-                                  setCenterId(data.value);
-                                  setFieldValue(
-                                    "contact_center_id",
-                                    data.label
-                                  );
-                                }}
-                              />
-                              <ErrorMessage
-                                name="contact_center_id"
-                                render={(msg) => (
-                                  <div className="text-danger">{msg}</div>
-                                )}
-                              />
-                            </div>
-                          </Colxx>
-                        )}
-                        {(selectedRole === "manager" ||
-                          selectedRole === "user") && (
-                          <>
-                            <Colxx lg="6">
-                              <div className="form-group mb-3">
-                                <Label htmlFor="workshop_id">Workshop</Label>
-                                <Select
-                                  isMulti
-                                  options={workshopData?.map((item) => {
-                                    return {
-                                      label: `${item.name} - ${item.short_code}`,
-                                      value: item.id,
-                                    };
-                                  })}
-                                  onChange={(data) => {
-                                    setWorkshopId(data);
-                                    // setFieldValue("workshop_id", data.value);
-                                  }}
-                                />
-                                <ErrorMessage
-                                  name="workshop_id"
-                                  render={(msg) => (
-                                    <div className="text-danger">{msg}</div>
-                                  )}
-                                />
-                              </div>
-                            </Colxx>
-
-                            <Colxx lg="6">
-                              <div className="form-group mb-3">
-                                <Label htmlFor="region">Region</Label>
-                                <Select
-                                  isMulti
-                                  value={selectedRegion}
-                                  options={regions
-                                    // ?.filter((rg) =>
-                                    //   selectedState?.some(
-                                    //     (ss) => ss?.value === rg?.state?.id
-                                    //   )
-                                    // )
-                                    .map((item) => {
-                                      return {
-                                        label: item?.region_name,
-                                        value: item?.id,
-                                      };
-                                    })}
-                                  onChange={(data) => {
-                                    setSelectedRegion(data);
-                                  }}
-                                />
-                                <ErrorMessage
-                                  name="region"
-                                  render={(msg) => (
-                                    <div className="text-danger">{msg}</div>
-                                  )}
-                                />
-                              </div>
-                            </Colxx>
-
-                            <Colxx lg="6">
-                              <div className="form-group mb-3">
-                                <Label htmlFor="state">State</Label>
-                                <Select
-                                  isMulti
-                                  value={selectedState}
-                                  options={states?.map((item) => {
-                                    return {
-                                      label: item.state_name,
-                                      value: item.id,
-                                    };
-                                  })}
-                                  onChange={(data) => {
-                                    setSelectedState(data);
-                                  }}
-                                />
-                                <ErrorMessage
-                                  name="state"
-                                  render={(msg) => (
-                                    <div className="text-danger">{msg}</div>
-                                  )}
-                                />
-                              </div>
-                            </Colxx>
-
-                            <Colxx lg="6">
-                              <div className="form-group mb-3">
-                                <Label htmlFor="workshop_id">City</Label>
-                                <Select
-                                  isMulti
-                                  options={cities
-                                    // ?.filter((ct) =>
-                                    //   selectedRegion?.some(
-                                    //     (sr) => sr?.value === ct.region?.id
-                                    //   )
-                                    // )
-                                    .map((item) => {
-                                      return {
-                                        label: item?.city_name,
-                                        value: item?.id,
-                                      };
-                                    })}
-                                  onChange={(data) => {
-                                    setSelectedCity(data);
-                                  }}
-                                />
-                                <ErrorMessage
-                                  name="city"
-                                  render={(msg) => (
-                                    <div className="text-danger">{msg}</div>
-                                  )}
-                                />
-                              </div>
-                            </Colxx>
-                          </>
-                        )}
                       </Row>
                       <Separator className="mb-4 mt-4" />
                       <div
@@ -540,7 +368,7 @@ const AddUser = (props) => {
                           className="btn btn-light float-right"
                           type="reset"
                           onClick={() => {
-                            props.closeAddPopup();
+                            props.history.goBack();
                           }}
                         >
                           {" "}

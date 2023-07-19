@@ -73,6 +73,8 @@ import ResetPassword from "../pages/AuthenticationInner/ResetPassword";
 import ResetSuccessful from "../pages/AuthenticationInner/ResetPassword/ResetSuccessful";
 import RegisterSuccessful from "../pages/AuthenticationInner/Register/RegisterSuccessful";
 import AddJobs from "../views/Jobs/AddJob";
+import AddUser from "../views/UserManagement/AddUser";
+import EditUser from "../views/UserManagement/EditUser";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -94,6 +96,8 @@ const authProtectedRoutes = [
   { path: "/journal-voucher", component: JournalVoucher },
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
+  { path: "/user-management/add", component: AddUser },
+  { path: "/user-management/edit/:userId", component: EditUser },
   { path: "/user-management", component: UserManagement },
   { path: "/invoices", component: Invoices },
   { path: "/invoices/add", component: Sales },
