@@ -12,6 +12,7 @@ import { Form } from "react-formik-ui";
 import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import JobTable from "./JobTable";
+import NotificationManager from "../../components/Common/NotificationManager";
 
 const Jobs = (props) => {
   const [allJobs, setAllJobs] = useState([]);
@@ -41,7 +42,7 @@ const Jobs = (props) => {
           ...pgdata,
           totalRows: response.data.count,
         });
-        setAllJobs(data);
+        setAllJobs(data.results);
         setLoading(false);
       })
       .catch((error) => {
@@ -50,15 +51,35 @@ const Jobs = (props) => {
       });
   };
 
+  const deleteJob = (id) => {
+    let url = `/api/deleteuser/${id}`;
+    apiAuth
+      .delete(url)
+      .then((response) => {
+        const newdata = response.data;
+        NotificationManager.success(
+          "",
+          "Job Deleted Successfully",
+          3000,
+          null,
+          null,
+          ""
+        );
+        getJobs(jobPagination, searchValue);
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log(error.response?.data);
+        console.log(error.response?.status);
+        console.log(error.response?.headers);
+      });
+  };
+
   useEffect(() => {
-    getJobs();
+    getJobs(jobPagination, searchValue);
   }, []);
 
   const history = useHistory();
-
-  useEffect(() => {
-    getJobs(jobPagination);
-  }, []);
 
   return (
     <>
