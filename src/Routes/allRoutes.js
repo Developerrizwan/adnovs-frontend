@@ -75,6 +75,9 @@ import RegisterSuccessful from "../pages/AuthenticationInner/Register/RegisterSu
 import AddJobs from "../views/Jobs/AddJob";
 import AddUser from "../views/UserManagement/AddUser";
 import EditUser from "../views/UserManagement/EditUser";
+import AllVouchers from "../views/Vouchers/AllVouchers";
+import DebitVoucher from "../views/Vouchers/DebitVoucher";
+import CreditVoucher from "../views/Vouchers/CreditVoucher";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -93,9 +96,12 @@ const authProtectedRoutes = [
   { path: "/jobs", component: Jobs },
   { path: "/jobs/add", component: AddJobs },
   { path: "/vouchers", component: Vouchers },
+  { path: "/all-vouchers", component: AllVouchers },
   { path: "/journal-voucher", component: JournalVoucher },
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
+  { path: "/debit-voucher", component: DebitVoucher },
+  { path: "/credit-voucher", component: CreditVoucher },
   { path: "/user-management/add", component: AddUser },
   { path: "/user-management/edit/:userId", component: EditUser },
   { path: "/user-management", component: UserManagement },

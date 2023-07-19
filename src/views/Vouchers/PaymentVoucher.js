@@ -6,6 +6,9 @@ import * as Yup from "yup";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "../../App.css";
+import moment from "moment";
+import apiAuth from "../../helpers/ApiAuth";
+import NotificationManager from "../../components/Common/NotificationManager";
 
 const options = [
   { value: "all", label: "All" },
@@ -13,20 +16,47 @@ const options = [
 ];
 
 const PaymentVoucher = (props) => {
+  const history = useHistory();
+
+  const [jobs, setJobs] = useState([]);
+  const [jobOptions, setJobOptions] = useState([]);
+  const [selectedJob, setSelectedJob] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [startDate, setStartDate] = useState(new Date());
+  const [date, setDate] = useState(new Date());
+  const [glDate, setGlDate] = useState(new Date());
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Payment",
     label: "Payment",
   });
-  const history = useHistory();
 
   const VoucherOptions = [
     // { value: "vouchers", label: "All" },
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
+    { value: "Debit", label: "Debit" },
+    { value: "Credit", label: "Credit" },
   ];
+
+  useEffect(() => {
+    getJobs();
+  }, []);
+
+  const getJobs = () => {
+    apiAuth
+      .get("/api/master/job/")
+      .then((res) => {
+        const { data } = res;
+        let opts = data.map((dd) => {
+          return {
+            label: dd?.job_status,
+            value: dd?.id,
+          };
+        });
+        setJobOptions(opts);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const customStyles = {
     control: (provided, state) => ({
@@ -36,7 +66,21 @@ const PaymentVoucher = (props) => {
   };
 
   const goBack = () => {
-    history.goBack();
+    history.push("/vouchers");
+  };
+
+  const routePage = (event) => {
+    if (event.value === "Journal") {
+      history.push("/journal-voucher");
+    } else if (event.value === "Payment") {
+      history.push("/payment-voucher");
+    } else if (event.value === "Receipt") {
+      history.push("/receipt-voucher");
+    } else if (event.value === "Debit") {
+      history.push("/debit-voucher");
+    } else if (event.value === "Credit") {
+      history.push("/credit-voucher");
+    }
   };
 
   return (
@@ -57,68 +101,113 @@ const PaymentVoucher = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
+                  voucher_type: "Payment",
+                  job: "",
                   branch: "",
                   book: "",
                   date: "",
                   glDate: "",
-                  fcAmount: "",
-                  sarAmount: "",
-                  party: undefined,
-                  againstConcern: undefined,
-                  narration: "",
-                  outstandingAmount: "",
+                  fc_amount: "",
+                  amount_sar: "",
+                  party_account: "",
+                  against_concern: "",
+                  naration: "",
+                  outstanding_amount: "",
                   remarks: "",
                 }}
                 validationSchema={Yup.object({
+                  job: Yup.string().ensure().required("Job is Required"),
                   branch: Yup.string().required("Branch is Required"),
                   book: Yup.string().required("Book is Required"),
-                  fcAmount: Yup.string().required("FC Amount is Required"),
-                  sarAmount: Yup.string().required("SAR Amount is Required"),
-                  narration: Yup.string().required("Narration is Required"),
-                  outstandingAmount: Yup.string().required(
-                    "Outstanding Amount is Required"
-                  ),
+                  fc_amount: Yup.string().required("FC Amount is Required"),
+                  amount_sar: Yup.string().required("SAR Amount is Required"),
+                  naration: Yup.string().required("naration is Required"),
+                  // outstandingAmount: Yup.string().required(
+                  //   "Outstanding Amount is Required"
+                  // ),
                   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
-                  values.party = values.party ? values.party : undefined;
-                  values.againstConcern = values.againstConcern
-                    ? values.againstConcern
-                    : undefined;
-                  console.log("values", values);
+                  values["job"] = selectedJob.value;
+                  values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
+                  values["glDate"] = moment(glDate).format(
+                    "YYYY-MM-DDTHH:mm:ss"
+                  );
+                  apiAuth
+                    .post("/api/master/voucher/", values)
+                    .then((res) => {
+                      NotificationManager.success(
+                        "Payment Voucher",
+                        "Voucher Created Successfully",
+                        3000,
+                        null,
+                        null,
+                        ""
+                      );
+                      history.push("/vouchers");
+                    })
+                    .catch((err) => {
+                      NotificationManager.error(
+                        "Payment Voucher",
+                        "Voucher Create Error",
+                        3000,
+                        null,
+                        null,
+                        ""
+                      );
+                    });
                 }}
               >
                 {({ values, errors, touched, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
-                    <Grid item lg={6} xs={12}>
-                      <div className="mb-3">
-                        <label htmlFor="branch" className="form-label">
-                          Voucher Type
-                          <span className="text-danger">*</span>
-                        </label>
-                        <Select
-                          name="type"
-                          placeholder={"Select"}
-                          styles={customStyles}
-                          value={selectedVoucher}
-                          options={VoucherOptions}
-                          onChange={(event) => {
-                            if (event.value === "Journal") {
-                              history.push("/journal-voucher");
-                            } else if (event.value === "Payment") {
-                              history.push("/payment-voucher");
-                            } else {
-                              history.push("/receipt-voucher");
-                            }
-                            setSelectedVoucher(event.value);
-                          }}
-                        />
-                        {errors.branch && touched.branch && (
-                          <div className="invalid-feedback d-block">
-                            {errors.branch}
-                          </div>
-                        )}
-                      </div>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="voucher_type" className="form-label">
+                            Voucher Type
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="voucher_type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            value={selectedVoucher}
+                            options={VoucherOptions}
+                            onChange={(event) => {
+                              routePage(event);
+                              // setSelectedVoucher(event.value);
+                            }}
+                          />
+                          {errors.voucher_type && touched.voucher_type && (
+                            <div className="invalid-feedback d-block">
+                              {errors.voucher_type}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="party" className="form-label">
+                            Job Type
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="job"
+                            options={jobOptions}
+                            value={selectedJob}
+                            onChange={(data) => {
+                              setFieldValue("job", data.label);
+                              setSelectedJob(data);
+                            }}
+                            styles={customStyles}
+                          />
+                          {errors.party && touched.party && (
+                            <div className="invalid-feedback d-block">
+                              {errors.party}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
                     </Grid>
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
@@ -174,8 +263,8 @@ const PaymentVoucher = (props) => {
                             }}
                           >
                             <DatePicker
-                              selected={startDate}
-                              onChange={(date) => setStartDate(date)}
+                              selected={date}
+                              onChange={(date) => setDate(date)}
                             />
                             <span
                               style={{
@@ -220,8 +309,8 @@ const PaymentVoucher = (props) => {
                             }}
                           >
                             <DatePicker
-                              selected={startDate}
-                              onChange={(date) => setStartDate(date)}
+                              selected={glDate}
+                              onChange={(date) => setGlDate(date)}
                             />
                             <span
                               style={{
@@ -257,18 +346,18 @@ const PaymentVoucher = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="fcAmount" className="form-label">
+                          <label htmlFor="fc_amount" className="form-label">
                             FC Amount
                             <span className="text-danger">*</span>
                           </label>
                           <Field
                             className="form-control"
-                            name="fcAmount"
+                            name="fc_amount"
                             style={{ background: "#EDEDED" }}
                           />
-                          {errors.fcAmount && touched.fcAmount && (
+                          {errors.fc_amount && touched.fc_amount && (
                             <div className="invalid-feedback d-block">
-                              {errors.fcAmount}
+                              {errors.fc_amount}
                             </div>
                           )}
                         </div>
@@ -276,18 +365,18 @@ const PaymentVoucher = (props) => {
 
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="sarAmount" className="form-label">
+                          <label htmlFor="amount_sar" className="form-label">
                             Amount (SAR)
                             <span className="text-danger">*</span>
                           </label>
                           <Field
                             className="form-control"
-                            name="sarAmount"
+                            name="amount_sar"
                             style={{ background: "#EDEDED" }}
                           />
-                          {errors.sarAmount && touched.sarAmount && (
+                          {errors.amount_sar && touched.amount_sar && (
                             <div className="invalid-feedback d-block">
-                              {errors.sarAmount}
+                              {errors.amount_sar}
                             </div>
                           )}
                         </div>
@@ -318,7 +407,7 @@ const PaymentVoucher = (props) => {
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label
-                            htmlFor="againstConcern"
+                            htmlFor="against_concern"
                             className="form-label"
                           >
                             Against Concern
@@ -330,11 +419,12 @@ const PaymentVoucher = (props) => {
                             onChange={setSelectedOption}
                             styles={customStyles}
                           />
-                          {errors.againstConcern && touched.againstConcern && (
-                            <div className="invalid-feedback d-block">
-                              {errors.againstConcern}
-                            </div>
-                          )}
+                          {errors.against_concern &&
+                            touched.against_concern && (
+                              <div className="invalid-feedback d-block">
+                                {errors.against_concern}
+                              </div>
+                            )}
                         </div>
                       </Grid>
                     </Grid>
@@ -342,18 +432,18 @@ const PaymentVoucher = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="narration" className="form-label">
-                            Narration
+                          <label htmlFor="naration" className="form-label">
+                            naration
                             <span className="text-danger">*</span>
                           </label>
                           <Field
                             className="form-control"
-                            name="narration"
+                            name="naration"
                             style={{ background: "#EDEDED" }}
                           />
-                          {errors.narration && touched.narration && (
+                          {errors.naration && touched.naration && (
                             <div className="invalid-feedback d-block">
-                              {errors.narration}
+                              {errors.naration}
                             </div>
                           )}
                         </div>
@@ -362,7 +452,7 @@ const PaymentVoucher = (props) => {
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label
-                            htmlFor="outstandingAmount"
+                            htmlFor="outstanding_amount"
                             className="form-label"
                           >
                             Outstanding Amount
@@ -374,10 +464,10 @@ const PaymentVoucher = (props) => {
                             onChange={setSelectedOption}
                             styles={customStyles}
                           />
-                          {errors.outstandingAmount &&
-                            touched.outstandingAmount && (
+                          {errors.outstanding_amount &&
+                            touched.outstanding_amount && (
                               <div className="invalid-feedback d-block">
-                                {errors.outstandingAmount}
+                                {errors.outstanding_amount}
                               </div>
                             )}
                         </div>
@@ -392,7 +482,7 @@ const PaymentVoucher = (props) => {
                       <Field
                         as="textarea"
                         className="form-control"
-                        name="reamrks"
+                        name="remarks"
                         style={{ background: "#EDEDED" }}
                       />
                       {errors.remarks && touched.remarks && (

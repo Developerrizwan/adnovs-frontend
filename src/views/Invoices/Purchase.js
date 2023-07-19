@@ -45,7 +45,7 @@ const Purchase = (props) => {
           </button>
         </div>
         <Grid container spacing={2}>
-          <Grid item lg={11} style={{margin: "auto"}}>
+          <Grid item lg={11} style={{ margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
@@ -66,7 +66,7 @@ const Purchase = (props) => {
                   refDate: "",
                   dueDate: "",
                   billAmount: "",
-                  narration: "",
+                  naration: "",
                 }}
                 validationSchema={Yup.object({
                   // blNumber: Yup.string().required("BL Number is Required"),
@@ -390,30 +390,30 @@ const Purchase = (props) => {
                         </div>
                       </Grid>
                       <Grid item lg={4} xs={12}>
-                      <div className="form-group mb-3">
-                        <Label htmlFor="type">Invoice Type</Label>
-                        <Select
-                          name="type"
-                          placeholder={"Select"}
-                          styles={customStyles}
-                          options={invoiceTypes?.map((type) => {
-                            return {
-                              label: type.label,
-                              value: type.label,
-                            };
-                          })}
-                          defaultValue={{ label: invoiceType }}
-                          onChange={(event) => {
-                            setInvoiceType(event.value);
-                          }}
-                        />
-                        <ErrorMessage
-                          name="type"
-                          render={(msg) => (
-                            <div className="text-danger">{msg}</div>
-                          )}
-                        />
-                      </div>
+                        <div className="form-group mb-3">
+                          <Label htmlFor="type">Invoice Type</Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={invoiceTypes?.map((type) => {
+                              return {
+                                label: type.label,
+                                value: type.label,
+                              };
+                            })}
+                            defaultValue={{ label: invoiceType }}
+                            onChange={(event) => {
+                              setInvoiceType(event.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="type"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
                       </Grid>
                     </Grid>
 
@@ -505,9 +505,9 @@ const Purchase = (props) => {
                           <Grid item lg={6} xs={12}>
                             <div className="form-group mb-3">
                               <div>
-                                <Label htmlFor="narration">Narration</Label>
+                                <Label htmlFor="naration">naration</Label>
                                 <Field
-                                  name="narration"
+                                  name="naration"
                                   className="form-control"
                                   // placeholder="Remarks"
                                   type="text"
@@ -515,7 +515,7 @@ const Purchase = (props) => {
                                 />
                               </div>
                               <ErrorMessage
-                                name="narration"
+                                name="naration"
                                 render={(msg) => (
                                   <div className="text-danger">{msg}</div>
                                 )}

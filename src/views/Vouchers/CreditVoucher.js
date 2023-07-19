@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "../../App.css";
-import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
+import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 
 const options = [
@@ -15,7 +15,7 @@ const options = [
   { value: "option1", label: "Option1" },
 ];
 
-const JournalVoucher = (props) => {
+const CreditVoucher = (props) => {
   const history = useHistory();
 
   const [jobs, setJobs] = useState([]);
@@ -25,9 +25,25 @@ const JournalVoucher = (props) => {
   const [date, setDate] = useState(new Date());
   const [glDate, setGlDate] = useState(new Date());
   const [selectedVoucher, setSelectedVoucher] = useState({
-    value: "Journal",
-    label: "Journal",
+    value: "Credit",
+    label: "Credit",
   });
+
+  const VoucherOptions = [
+    // { value: "vouchers", label: "All" },
+    { value: "Journal", label: "Journal" },
+    { value: "Payment", label: "Payment" },
+    { value: "Receipt", label: "Receipt" },
+    { value: "Debit", label: "Debit" },
+    { value: "Credit", label: "Credit" },
+  ];
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      background: "#EDEDED",
+    }),
+  };
 
   useEffect(() => {
     getJobs();
@@ -47,22 +63,6 @@ const JournalVoucher = (props) => {
         setJobOptions(opts);
       })
       .catch((err) => console.log(err));
-  };
-
-  const VoucherOptions = [
-    // { value: "vouchers", label: "All" },
-    { value: "Journal", label: "Journal" },
-    { value: "Payment", label: "Payment" },
-    { value: "Receipt", label: "Receipt" },
-    { value: "Debit", label: "Debit" },
-    { value: "Credit", label: "Credit" },
-  ];
-
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      background: "#EDEDED",
-    }),
   };
 
   const goBack = () => {
@@ -90,7 +90,7 @@ const JournalVoucher = (props) => {
           className="mb-3"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <h2 className="mx-5">Journal Voucher</h2>
+          <h2 className="mx-5">Credit Voucher</h2>
           <button className="btn btn-danger" onClick={goBack}>
             Back
           </button>
@@ -101,7 +101,7 @@ const JournalVoucher = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  voucher_type: "Journal",
+                  voucher_type: "Credit",
                   job: "",
                   branch: "",
                   book: "",
@@ -122,13 +122,12 @@ const JournalVoucher = (props) => {
                   fc_amount: Yup.string().required("FC Amount is Required"),
                   amount_sar: Yup.string().required("SAR Amount is Required"),
                   naration: Yup.string().required("naration is Required"),
-                  // outstandingAmount: Yup.string().required(
+                  // outstanding_amount: Yup.string().required(
                   //   "Outstanding Amount is Required"
                   // ),
                   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
-                  values["job"] = selectedJob.value;
                   values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
                   values["glDate"] = moment(glDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
@@ -169,6 +168,7 @@ const JournalVoucher = (props) => {
                           </label>
                           <Select
                             name="voucher_type"
+                            placeholder={"Select"}
                             styles={customStyles}
                             value={selectedVoucher}
                             options={VoucherOptions}
@@ -186,7 +186,7 @@ const JournalVoucher = (props) => {
                       </Grid>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="party" className="form-label">
+                          <label htmlFor="job" className="form-label">
                             Job Type
                             <span className="text-danger">*</span>
                           </label>
@@ -200,9 +200,9 @@ const JournalVoucher = (props) => {
                             }}
                             styles={customStyles}
                           />
-                          {errors.party && touched.party && (
+                          {errors.job && touched.job && (
                             <div className="invalid-feedback d-block">
-                              {errors.party}
+                              {errors.job}
                             </div>
                           )}
                         </div>
@@ -407,7 +407,7 @@ const JournalVoucher = (props) => {
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label
-                            htmlFor="againstConcern"
+                            htmlFor="against_concern"
                             className="form-label"
                           >
                             Against Concern
@@ -419,11 +419,12 @@ const JournalVoucher = (props) => {
                             onChange={setSelectedOption}
                             styles={customStyles}
                           />
-                          {errors.againstConcern && touched.againstConcern && (
-                            <div className="invalid-feedback d-block">
-                              {errors.againstConcern}
-                            </div>
-                          )}
+                          {errors.against_concern &&
+                            touched.against_concern && (
+                              <div className="invalid-feedback d-block">
+                                {errors.against_concern}
+                              </div>
+                            )}
                         </div>
                       </Grid>
                     </Grid>
@@ -510,4 +511,4 @@ const JournalVoucher = (props) => {
   );
 };
 
-export default JournalVoucher;
+export default CreditVoucher;

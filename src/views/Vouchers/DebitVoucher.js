@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "../../App.css";
-import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
+import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 
 const options = [
@@ -15,19 +15,35 @@ const options = [
   { value: "option1", label: "Option1" },
 ];
 
-const JournalVoucher = (props) => {
+const DebitVoucher = (props) => {
   const history = useHistory();
 
   const [jobs, setJobs] = useState([]);
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [date, setDate] = useState(new Date());
+  const [date, setStartDate] = useState(new Date());
   const [glDate, setGlDate] = useState(new Date());
   const [selectedVoucher, setSelectedVoucher] = useState({
-    value: "Journal",
-    label: "Journal",
+    value: "Debit",
+    label: "Debit",
   });
+
+  const VoucherOptions = [
+    // { value: "vouchers", label: "All" },
+    { value: "Journal", label: "Journal" },
+    { value: "Payment", label: "Payment" },
+    { value: "Receipt", label: "Receipt" },
+    { value: "Debit", label: "Debit" },
+    { value: "Credit", label: "Credit" },
+  ];
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      background: "#EDEDED",
+    }),
+  };
 
   useEffect(() => {
     getJobs();
@@ -47,22 +63,6 @@ const JournalVoucher = (props) => {
         setJobOptions(opts);
       })
       .catch((err) => console.log(err));
-  };
-
-  const VoucherOptions = [
-    // { value: "vouchers", label: "All" },
-    { value: "Journal", label: "Journal" },
-    { value: "Payment", label: "Payment" },
-    { value: "Receipt", label: "Receipt" },
-    { value: "Debit", label: "Debit" },
-    { value: "Credit", label: "Credit" },
-  ];
-
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      background: "#EDEDED",
-    }),
   };
 
   const goBack = () => {
@@ -90,7 +90,7 @@ const JournalVoucher = (props) => {
           className="mb-3"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <h2 className="mx-5">Journal Voucher</h2>
+          <h2 className="mx-5">Debit Voucher</h2>
           <button className="btn btn-danger" onClick={goBack}>
             Back
           </button>
@@ -101,26 +101,26 @@ const JournalVoucher = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  voucher_type: "Journal",
+                  voucher_type: "Debit",
                   job: "",
                   branch: "",
                   book: "",
                   date: "",
                   glDate: "",
-                  fc_amount: "",
-                  amount_sar: "",
-                  party_account: "",
-                  against_concern: "",
+                  fcAmount: "",
+                  sarAmount: "",
+                  party: undefined,
+                  againstConcern: undefined,
                   naration: "",
-                  outstanding_amount: "",
+                  outstandingAmount: "",
                   remarks: "",
                 }}
                 validationSchema={Yup.object({
                   job: Yup.string().ensure().required("Job is Required"),
                   branch: Yup.string().required("Branch is Required"),
                   book: Yup.string().required("Book is Required"),
-                  fc_amount: Yup.string().required("FC Amount is Required"),
-                  amount_sar: Yup.string().required("SAR Amount is Required"),
+                  fcAmount: Yup.string().required("FC Amount is Required"),
+                  sarAmount: Yup.string().required("SAR Amount is Required"),
                   naration: Yup.string().required("naration is Required"),
                   // outstandingAmount: Yup.string().required(
                   //   "Outstanding Amount is Required"
@@ -128,7 +128,6 @@ const JournalVoucher = (props) => {
                   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
-                  values["job"] = selectedJob.value;
                   values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
                   values["glDate"] = moment(glDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
@@ -169,6 +168,7 @@ const JournalVoucher = (props) => {
                           </label>
                           <Select
                             name="voucher_type"
+                            placeholder={"Select"}
                             styles={customStyles}
                             value={selectedVoucher}
                             options={VoucherOptions}
@@ -191,7 +191,6 @@ const JournalVoucher = (props) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            name="job"
                             options={jobOptions}
                             value={selectedJob}
                             onChange={(data) => {
@@ -263,7 +262,7 @@ const JournalVoucher = (props) => {
                           >
                             <DatePicker
                               selected={date}
-                              onChange={(date) => setDate(date)}
+                              onChange={(data) => setStartDate(data)}
                             />
                             <span
                               style={{
@@ -309,7 +308,7 @@ const JournalVoucher = (props) => {
                           >
                             <DatePicker
                               selected={glDate}
-                              onChange={(date) => setGlDate(date)}
+                              onChange={(data) => setGlDate(data)}
                             />
                             <span
                               style={{
@@ -346,18 +345,18 @@ const JournalVoucher = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="fc_amount" className="form-label">
+                          <label htmlFor="fcAmount" className="form-label">
                             FC Amount
                             <span className="text-danger">*</span>
                           </label>
                           <Field
                             className="form-control"
-                            name="fc_amount"
+                            name="fcAmount"
                             style={{ background: "#EDEDED" }}
                           />
-                          {errors.fc_amount && touched.fc_amount && (
+                          {errors.fcAmount && touched.fcAmount && (
                             <div className="invalid-feedback d-block">
-                              {errors.fc_amount}
+                              {errors.fcAmount}
                             </div>
                           )}
                         </div>
@@ -365,18 +364,18 @@ const JournalVoucher = (props) => {
 
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="amount_sar" className="form-label">
+                          <label htmlFor="sarAmount" className="form-label">
                             Amount (SAR)
                             <span className="text-danger">*</span>
                           </label>
                           <Field
                             className="form-control"
-                            name="amount_sar"
+                            name="sarAmount"
                             style={{ background: "#EDEDED" }}
                           />
-                          {errors.amount_sar && touched.amount_sar && (
+                          {errors.sarAmount && touched.sarAmount && (
                             <div className="invalid-feedback d-block">
-                              {errors.amount_sar}
+                              {errors.sarAmount}
                             </div>
                           )}
                         </div>
@@ -451,7 +450,7 @@ const JournalVoucher = (props) => {
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label
-                            htmlFor="outstanding_amount"
+                            htmlFor="outstandingAmount"
                             className="form-label"
                           >
                             Outstanding Amount
@@ -463,10 +462,10 @@ const JournalVoucher = (props) => {
                             onChange={setSelectedOption}
                             styles={customStyles}
                           />
-                          {errors.outstanding_amount &&
-                            touched.outstanding_amount && (
+                          {errors.outstandingAmount &&
+                            touched.outstandingAmount && (
                               <div className="invalid-feedback d-block">
-                                {errors.outstanding_amount}
+                                {errors.outstandingAmount}
                               </div>
                             )}
                         </div>
@@ -510,4 +509,4 @@ const JournalVoucher = (props) => {
   );
 };
 
-export default JournalVoucher;
+export default DebitVoucher;

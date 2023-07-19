@@ -1,370 +1,210 @@
-import { Card, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import Select from "react-select";
+import { NavLink } from "react-router-dom";
+import { Card, Container, Row } from "reactstrap";
+import BreadCrumb from "../../components/Common/BreadCrumb";
 import apiAuth from "../../helpers/ApiAuth";
+import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { Colxx } from "../../components/Common/CustomBootstrap";
+import NotificationManager from "../../components/Common/NotificationManager";
+import axios from "axios";
+import VoucherTable from "./VoucherTable";
+// import AddUser from "./AddUser";
+// import * as FileSaver from "file-saver";
+// import * as XLSX from "xlsx";
 
 const Vouchers = (props) => {
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedVoucher, setSelectedVoucher] = useState({
-    value: "Journal",
-    label: "Journal",
+  const [createModal, setCreateModal] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchValue, setSearchValue] = useState("");
+  const [userPagination, setUserPagination] = useState({
+    rowsPerPage: 10,
+    totalRows: 0,
+    currentPage: 1,
   });
-  const [allVouchers, setAllVouchers] = useState([]);
 
-  const history = useHistory();
+  // const FilteredUsers = users.filter((item) => {
+  //   const values = Object.values(item);
+  //   for (let i = 0; i < values.length; i++) {
+  //     const value = values[i];
+  //     if (
+  //       typeof value === "string" &&
+  //       value.toLowerCase().includes(searchValue.toLowerCase())
+  //     ) {
+  //       return true;
+  //     } else if (
+  //       typeof value === "number" &&
+  //       value.toString().includes(searchValue)
+  //     ) {
+  //       return true;
+  //     }
+  //   }
+  //   return false;
+  // });
 
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      background: "#EDEDED",
-    }),
-  };
+  useEffect(() => {
+    getUser(userPagination);
+    // deleteUser();
+  }, []);
 
-  const option = [
-    { value: "all", label: "All" },
-    { value: "option1", label: "Option1" },
-  ];
-
-  const options = [
-    // { value: "vouchers", label: "All" },
-    { value: "Journal", label: "Journal" },
-    { value: "Payment", label: "Payment" },
-    { value: "Receipt", label: "Receipt" },
-  ];
-
-  const handleOptionChange = (selectedOption) => {
-    history.push(`/${selectedOption.value}`);
-  };
-
-  const getVouchers = () => {
+  const getUser = (pgdata, val) => {
     apiAuth
-      .get("/api/get-voucher/")
+      .get(
+        "/api/master/voucher/?" +
+          "&page=" +
+          pgdata?.currentPage +
+          "&search=" +
+          (val ? val : "")
+      )
       .then((response) => {
         let data = response.data;
-        console.log("vouchers", data);
-        setAllVouchers(data);
+        console.log("xswjhjwx", response);
+        setUserPagination({
+          ...pgdata,
+          totalRows: data.length,
+        });
+        setUsers(data);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  useEffect(() => {
-    getVouchers();
-  }, []);
+  const deleteUser = (id) => {
+    let url = `/api/deleteuser/${id}`;
+    apiAuth
+      .delete(url)
+      .then((response) => {
+        const newdata = response.data;
+        NotificationManager.success(
+          "",
+          "User Deleted Successfully",
+          3000,
+          null,
+          null,
+          ""
+        );
+        getUser(userPagination);
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log(error.response?.data);
+        console.log(error.response?.status);
+        console.log(error.response?.headers);
+      });
+  };
+  // const handleExportData = () => {
+  //   let apiData = users.map((user) => {
+  //     let newuser = {
+  //       "User Name": user.name,
+  //       Email: user.email,
+  //       Mobile: user.mobile,
+  //       Role: user.groups?.length > 0 ? user.groups.join(",") : "",
+  //     };
+
+  //     return newuser;
+  //   });
+
+  //   const fileType =
+  //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+  //   const fileExtension = ".xlsx";
+  //   const fileName = "UserData";
+  //   const ws = XLSX.utils.json_to_sheet(apiData);
+  //   const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+  //   const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  //   const data = new Blob([excelBuffer], { type: fileType });
+  //   FileSaver.saveAs(data, fileName + fileExtension);
+  // };
+
   return (
     <React.Fragment>
       <div className="page-content">
-        {/* <h2 className="mb-5 mt-3 mx-5">All Vouchers</h2> */}
-        <Grid container spacing={2}>
-          <Grid item lg={11} style={{ placeItems: "center", margin: "auto" }}>
-            <Card className="p-3" style={{ background: "#EDEDED" }}>
-              <Formik
-                initialValues={{
-                  //   fromDate: "",
-                  //   toDate: "",
-                  voucherType: undefined,
-                  account: undefined,
-                  status: "",
-                  shipmentNo: "",
-                  createdBranch: "",
-                  coa: undefined,
-                  controllingBranch: undefined,
-                  book: undefined,
-                  category: undefined,
-                }}
-                validationSchema={Yup.object({
-                  status: Yup.string().required("Status is Required"),
-                  shipmentNo: Yup.string().required(
-                    "Shipment Number is Required"
-                  ),
-                  createdBranch: Yup.string().required(
-                    "Created Branch is Required"
-                  ),
-                })}
-                onSubmit={(values) => {
-                  values.voucherType = values.voucherType
-                    ? values.voucherType
-                    : undefined;
-                  values.account = values.account
-                    ? values.voucherType
-                    : undefined;
-                  values.coa = values.coa ? values.coa : undefined;
-                  values.book = values.book ? values.book : undefined;
-                  values.category = values.category
-                    ? values.category
-                    : undefined;
-                  console.log("values", values);
-                }}
-              >
-                {({ values, errors, touched, setFieldValue }) => (
-                  <Form className="av-tooltip tooltip-label-bottom">
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="blNumber" className="form-label">
-                            From Date
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            className="form-control"
-                            name="fromDate"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.fromDate && touched.fromDate && (
-                            <div className="invalid-feedback d-block">
-                              {errors.fromDate}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="toDate" className="form-label">
-                            To Date
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            className="form-control"
-                            name="toDate"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.toDate && touched.toDate && (
-                            <div className="invalid-feedback d-block">
-                              {errors.toDate}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="voucherType" className="form-label">
-                            Voucher Type
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            name="type"
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            value={selectedVoucher}
-                            options={options?.map((type) => {
-                              return {
-                                label: type.label,
-                                value: type.label,
-                              };
-                            })}
-                            onChange={(event) => {
-                              if (event.value === "Journal") {
-                                history.push("/journal-voucher");
-                              } else if (event.value === "Payment") {
-                                history.push("/payment-voucher");
-                              } else {
-                                history.push("/receipt-voucher");
-                              }
-                              setSelectedVoucher(event.value);
-                            }}
-                          />
-
-                          {errors.voucherType && touched.voucherType && (
-                            <div className="invalid-feedback d-block">
-                              {errors.voucherType}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="account" className="form-label">
-                            Account
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            options={option}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
-                            styles={customStyles}
-                          />
-                          {errors.account && touched.account && (
-                            <div className="invalid-feedback d-block">
-                              {errors.account}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="status" className="form-label">
-                            Status
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            className="form-control"
-                            name="status"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.status && touched.status && (
-                            <div className="invalid-feedback d-block">
-                              {errors.status}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="shipmentNo" className="form-label">
-                            Shipment No
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            className="form-control"
-                            name="shipmentNo"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.shipmentNo && touched.shipmentNo && (
-                            <div className="invalid-feedback d-block">
-                              {errors.shipmentNo}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="createdBranch" className="form-label">
-                            Created Branch
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            className="form-control"
-                            name="createdBranch"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.createdBranch && touched.createdBranch && (
-                            <div className="invalid-feedback d-block">
-                              {errors.createdBranch}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="coa" className="form-label">
-                            COA
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            options={option}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
-                            styles={customStyles}
-                          />
-                          {errors.coa && touched.coa && (
-                            <div className="invalid-feedback d-block">
-                              {errors.coa}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="book" className="form-label">
-                            Book
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            className="form-control"
-                            name="book"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.book && touched.book && (
-                            <div className="invalid-feedback d-block">
-                              {errors.book}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label
-                            htmlFor="controllingBranch"
-                            className="form-label"
-                          >
-                            Controlling Branch
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            options={option}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
-                            styles={customStyles}
-                          />
-                          {errors.controllingBranch &&
-                            touched.controllingBranch && (
-                              <div className="invalid-feedback d-block">
-                                {errors.controllingBranch}
-                              </div>
-                            )}
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="category" className="form-label">
-                            Category
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            options={option}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
-                            styles={customStyles}
-                          />
-                          {errors.category && touched.category && (
-                            <div className="invalid-feedback d-block">
-                              {errors.category}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                      <Grid item lg={6}></Grid>
-                    </Grid>
-
-                    <div className="mt-4 mb-3">
-                      <button className="btn btn-success" type="submit">
-                        Submit
-                      </button>
-                    </div>
-                  </Form>
-                )}
-              </Formik>
-            </Card>
-          </Grid>
-          {/* <Grid item lg={4} style={{ margin: "auto" }}>
-            <img src={jobsImage} alt="" />
-          </Grid> */}
-        </Grid>
+        <Container fluid>
+          <BreadCrumb
+            title="Vouchers"
+            pageTitle="Settings"
+            add_new={true}
+            createNew={() => {
+              setCreateModal(true);
+            }}
+            add_new_url={"/journal-voucher"}
+            // upload_new={true}
+            // upload_new_url={"/user-management/upload"}
+            search_functionality={true}
+            searchValue={searchValue}
+            setSearchValue={(val) => {
+              setSearchValue(val);
+              getUser(userPagination, val);
+            }}
+            export_button={users.length > 0 ? true : false}
+            exportData={() => {
+              // handleExportData();
+            }}
+          />
+        </Container>
+        {/* <input
+          type="text"
+          value={filter}
+          onChange={handleFilterChange}
+          placeholder="Search..."
+        /> */}
+        <Row>
+          <Colxx lg="12">
+            <>
+              {loading ? (
+                <div className="loading"></div>
+              ) : (
+                <>
+                  {" "}
+                  <Card>
+                    <VoucherTable
+                      users={users}
+                      deleteUser={(val) => deleteUser(val)}
+                      userPagination={{ ...userPagination }}
+                      handlePagination={(data) => {
+                        setUserPagination(data);
+                        getUser(data);
+                      }}
+                      getUser={() => {
+                        setUsers([]);
+                        getUser(userPagination, searchValue);
+                      }}
+                    />
+                  </Card>
+                </>
+              )}
+            </>
+          </Colxx>
+        </Row>
       </div>
+
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={createModal}
+        toggle={() => {
+          setCreateModal((prev) => !prev);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setCreateModal((prev) => !prev);
+          }}
+        >
+          Add User
+        </ModalHeader>
+        <ModalBody>
+          {/* <AddUser
+            closeAddPopup={() => {
+              setCreateModal(false);
+              //   getUser();
+            }}
+          /> */}
+        </ModalBody>
+      </Modal>
     </React.Fragment>
   );
 };
