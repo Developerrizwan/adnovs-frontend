@@ -2,15 +2,18 @@ import { useState } from "react";
 import moment from "moment";
 import DataTable from "react-data-table-component";
 import {
+  Button,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  ModalFooter,
   UncontrolledDropdown,
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 
 const InvoiceTable = (props) => {
+  const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState([]);
   const [cols, setCols] = useState([
@@ -145,13 +148,16 @@ const InvoiceTable = (props) => {
                 <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
                 Edit
               </DropdownItem>
-              {/* <DropdownItem
+              <DropdownItem
                 className="remove-item-btn"
-                onClick={() => props.deleteUser(value.id)}
+                // onClick={() => props.deleteJob(value.id)}
+                onClick={() => {
+                  setDeleteModal(true);
+                }}
               >
-                <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
-                Delete{" "}
-              </DropdownItem> */}
+                <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                Delete
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         );
@@ -273,6 +279,37 @@ const InvoiceTable = (props) => {
          <></>
         </ModalBody>
       </Modal>
+
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={deleteModal}
+        toggle={() => {
+          setDeleteModal((prev) => !prev);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setDeleteModal((prev) => !prev);
+          }}
+        >
+          Delete Job
+        </ModalHeader>
+        <ModalBody>
+          <div>
+            <h4>Are you sure you want to delete?</h4>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+        <Button onClick={() => {
+        props.deleteInvoice(); 
+        setDeleteModal((prev) => !prev) }}>Yes</Button>
+        <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
+        </ModalFooter>
+      </Modal>
+
     </>
   );
 };

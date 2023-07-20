@@ -64,7 +64,7 @@ const Jobs = (props) => {
   };
 
   const deleteJob = (id) => {
-    let url = `/api/deleteuser/${id}`;
+    let url = `/api/master/job/${id}`;
     apiAuth
       .delete(url)
       .then((response) => {
@@ -128,6 +128,7 @@ const Jobs = (props) => {
                 <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
                   <JobTable
                     allJobs={allJobs}
+                    deleteJob={deleteJob}
                     history={props.history}
                     jobPagination={{ ...jobPagination }}
                     handlePagination={(data) => {

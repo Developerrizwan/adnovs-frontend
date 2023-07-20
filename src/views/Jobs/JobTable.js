@@ -3,9 +3,11 @@ import { useState } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import {
+  Button,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  ModalFooter,
   UncontrolledDropdown,
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
@@ -13,6 +15,7 @@ import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 const JobTable = (props) => {
   // const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState([]);
   const [cols, setCols] = useState([
     {
@@ -78,13 +81,16 @@ const JobTable = (props) => {
                 <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
                 Edit
               </DropdownItem>
-              {/* <DropdownItem
+              <DropdownItem
                 className="remove-item-btn"
-                onClick={() => props.deleteUser(value.id)}
+                // onClick={() => props.deleteJob(value.id)}
+                onClick={() => {
+                  setDeleteModal(true);
+                }}
               >
-                <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
-                Delete{" "}
-              </DropdownItem> */}
+                <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                Delete
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         );
@@ -187,7 +193,7 @@ const JobTable = (props) => {
             setEditModal((prev) => !prev);
           }}
         >
-          Edit User
+          Edit Job
         </ModalHeader>
         <ModalBody>
           {/* <EditUser
@@ -200,6 +206,37 @@ const JobTable = (props) => {
             history={props.history}
           /> */}
         </ModalBody>
+      </Modal>
+
+
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={deleteModal}
+        toggle={() => {
+          setDeleteModal((prev) => !prev);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setDeleteModal((prev) => !prev);
+          }}
+        >
+          Delete
+        </ModalHeader>
+        <ModalBody>
+          <div>
+            <h4>Are you sure you want to delete?</h4>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+        <Button onClick={() => {
+        props.deleteJob(); 
+        setDeleteModal((prev) => !prev) }}>Yes</Button>
+        <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
+        </ModalFooter>
       </Modal>
     </>
   );

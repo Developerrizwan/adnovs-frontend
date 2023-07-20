@@ -66,29 +66,29 @@ const Invoices = (props) => {
       });
   };
 
-  // const deleteInvoice = (id) => {
-  //   let url = `/api/deleteinvoice/${id}`;
-  //   apiAuth
-  //     .delete(url)
-  //     .then((response) => {
-  //       const newdata = response.data;
-  //       NotificationManager.success(
-  //         "",
-  //         "Invoice Deleted Successfully",
-  //         3000,
-  //         null,
-  //         null,
-  //         ""
-  //       );
-  //       getInvoices(invoicePagination);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //       console.log(error.response?.data);
-  //       console.log(error.response?.status);
-  //       console.log(error.response?.headers);
-  //     });
-  // };
+  const deleteInvoice = (id) => {
+    let url = `/api/master/invoice/${id}`;
+    apiAuth
+      .delete(url)
+      .then((response) => {
+        const newdata = response.data;
+        NotificationManager.success(
+          "",
+          "Invoice Deleted Successfully",
+          3000,
+          null,
+          null,
+          ""
+        );
+        getInvoices(invoicePagination);
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log(error.response?.data);
+        console.log(error.response?.status);
+        console.log(error.response?.headers);
+      });
+  };
 
   useEffect(() => {
     getInvoices(invoicePagination, searchValue);
@@ -139,7 +139,7 @@ const Invoices = (props) => {
                   <InvoiceTable
                     invoices={invoices}
                     history={props.history}
-                    // deleteInvoice={(val) => deleteInvoice(val)}
+                    deleteInvoice={deleteInvoice}
                     invoicePagination={{ ...invoicePagination }}
                     handlePagination={(data) => {
                       setInvoicePagination(data);

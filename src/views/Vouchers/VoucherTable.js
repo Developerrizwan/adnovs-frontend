@@ -3,14 +3,17 @@ import { useState } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import {
+  Button,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  ModalFooter,
   UncontrolledDropdown,
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 
 const VoucherTable = (props) => {
+  const [deleteModal, setDeleteModal] = useState(false);
   const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState([]);
@@ -100,13 +103,15 @@ const VoucherTable = (props) => {
                 <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
                 Edit
               </DropdownItem>
-              {/* <DropdownItem
+              <DropdownItem
                 className="remove-item-btn"
-                onClick={() => props.deleteUser(value.id)}
+                onClick={() => {
+                  setDeleteModal(true);
+                }}
               >
                 <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
                 Delete{" "}
-              </DropdownItem> */}
+              </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
         );
@@ -222,6 +227,36 @@ const VoucherTable = (props) => {
             history={props.history}
           /> */}
         </ModalBody>
+      </Modal>
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={deleteModal}
+        toggle={() => {
+          setDeleteModal((prev) => !prev);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setDeleteModal((prev) => !prev);
+          }}
+        >
+          Delete
+        </ModalHeader>
+        <ModalBody>
+          <div>
+            <h4>Are you sure you want to delete?</h4>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+        <Button 
+        onClick={() => {
+        props.deleteUser(); 
+        setDeleteModal((prev) => !prev) }}>Yes</Button>
+        <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
+        </ModalFooter>
       </Modal>
     </>
   );

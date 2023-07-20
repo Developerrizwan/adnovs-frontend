@@ -82,7 +82,7 @@ const Vouchers = (props) => {
   };
 
   const deleteUser = (id) => {
-    let url = `/api/deleteuser/${id}`;
+    let url = `/api/master/voucher/${id}`;
     apiAuth
       .delete(url)
       .then((response) => {
@@ -180,7 +180,7 @@ const Vouchers = (props) => {
                   <Card>
                     <VoucherTable
                       users={users}
-                      deleteUser={(val) => deleteUser(val)}
+                      deleteUser={deleteUser}
                       userPagination={{ ...userPagination }}
                       handlePagination={(data) => {
                         setUserPagination(data);
