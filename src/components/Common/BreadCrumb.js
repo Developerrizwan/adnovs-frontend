@@ -20,6 +20,19 @@ const BreadCrumb = ({
   add_project_label,
   handleProjectChange,
   projects,
+  invoiceTypes,
+  setInvoiceType,
+  add_invoice_select,
+  add_invoices,
+  handleInvoiceChange,
+  add_job_select,
+  add_jobs,
+  handleJobChange,
+  options,
+  add_voucher_select,
+  add_vouchers,
+  handleVoucherChange,
+  voucherOptions,
   selectedValue,
 }) => {
   const excelStyles = {
@@ -102,6 +115,69 @@ const BreadCrumb = ({
                         ? add_project_label
                         : "ProjectDropdown"}
                     </NavLink>
+                  )}
+                </div>
+              ) : (
+                <></>
+              )}
+
+              {add_invoices ? (
+                <div
+                  className="top-right-button-container float-right mr-5"
+                  style={{ marginRight: "10px", width: "150px" }}
+                >
+                  {add_invoice_select ? (
+                    <Select
+                      name="type"
+                      placeholder={"Select"}
+                      options={invoiceTypes}
+                      onChange={handleInvoiceChange}
+                      value={selectedValue}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              ) : (
+                <></>
+              )}
+
+              {add_jobs ? (
+                <div
+                  className="top-right-button-container float-right mr-5"
+                  style={{ marginRight: "10px", width: "150px" }}
+                >
+                  {add_job_select ? (
+                    <Select
+                      name="type"
+                      placeholder={"Select"}
+                      options={options}
+                      onChange={handleJobChange}
+                      value={selectedValue}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              ) : (
+                <></>
+              )}
+
+              {add_vouchers ? (
+                <div
+                  className="top-right-button-container float-right mr-5"
+                  style={{ marginRight: "10px", width: "150px" }}
+                >
+                  {add_voucher_select ? (
+                    <Select
+                      name="type"
+                      placeholder={"Select"}
+                      options={voucherOptions}
+                      onChange={handleVoucherChange}
+                      value={selectedValue}
+                    />
+                  ) : (
+                    <></>
                   )}
                 </div>
               ) : (

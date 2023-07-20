@@ -49,7 +49,7 @@ const JournalVoucher = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const VoucherOptions = [
+  const voucherOptions = [
     // { value: "vouchers", label: "All" },
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
@@ -171,7 +171,7 @@ const JournalVoucher = (props) => {
                             name="voucher_type"
                             styles={customStyles}
                             value={selectedVoucher}
-                            options={VoucherOptions}
+                            options={voucherOptions}
                             onChange={(event) => {
                               routePage(event);
                               // setSelectedVoucher(event.value);

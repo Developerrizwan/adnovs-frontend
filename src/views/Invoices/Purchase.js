@@ -6,8 +6,17 @@ import { Card, Grid } from "@mui/material";
 import { Formik, Field, ErrorMessage } from "formik";
 import { Form } from "react-formik-ui";
 import Select from "react-select";
+import moment from "moment";
+import DatePicker from "react-datepicker";
+import apiAuth from "../../helpers/ApiAuth";
+import NotificationManager from "../../components/Common/NotificationManager";
 
 const Purchase = (props) => {
+  const [jobOptions, setJobOptions] = useState([]);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [is_password_hidden, set_is_password_hidden] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState(new Date());
   const [invoiceType, setInvoiceType] = useState("Sales");
   const invoiceTypes = [
     {
@@ -32,6 +41,26 @@ const Purchase = (props) => {
     }),
   };
 
+  useEffect(() => {
+    getJobs();
+  }, []);
+
+  const getJobs = () => {
+    apiAuth
+      .get("/api/master/job/")
+      .then((res) => {
+        const { data } = res;
+        let opts = data.map((dd) => {
+          return {
+            label: dd?.job_status,
+            value: dd?.id,
+          };
+        });
+        setJobOptions(opts);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -49,41 +78,42 @@ const Purchase = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  blNumber: "",
-                  consigneeName: "",
+                  bl_number: "",
+                  consignee_name: "",
                   date: "",
-                  currency: "",
-                  bayanNumber: "",
-                  shipperName: "",
-                  vendorName: "",
-                  rate: "",
+                  currency_sar: "",
+                  bayan_number: "",
+                  shipper_name: "",
+                  vendor_name: "",
+                  ex_rate: "",
                   pod: "",
-                  clientName: "",
-                  fcAmount: "",
-                  amount: "",
+                  client_name: "",
+                  fc_amount: "",
+                  amount_sar: "",
                   poa: "",
                   remarks: "",
-                  refDate: "",
-                  dueDate: "",
-                  billAmount: "",
+                  ref_data: "",
+                  due_date: "",
+                  bill_amount: "",
                   naration: "",
+                  invoice_type: ""
                 }}
                 validationSchema={Yup.object({
-                  // blNumber: Yup.string().required("BL Number is Required"),
-                  // bayanNumber: Yup.string().required("Bayan Number is Required"),
+                  // bl_number: Yup.string().required("BL Number is Required"),
+                  // bayan_number: Yup.string().required("Bayan Number is Required"),
                   // pod: Yup.string().required("POD is Required"),
                   // poa: Yup.string().required("POA is Required"),
-                  date: Yup.string().required("Date is Required"),
-                  vendorName: Yup.string().required("vendorName is Required"),
-                  // consigneeName: Yup.string()
+                  // date: Yup.string().required("Date is Required"),
+                  vendor_name: Yup.string().required("vendor_name is Required"),
+                  // consignee_name: Yup.string()
                   //   .max(20, "Must be 20 characters or less")
                   //   .trim()
                   //   .required("Cosignee Name is Required"),
-                  // shipperName: Yup.string()
+                  // shipper_name: Yup.string()
                   //   .max(20, "Must be 20 characters or less")
                   //   .trim()
                   //   .required("Shipper Name is Required"),
-                  // clientName: Yup.string()
+                  // client_name: Yup.string()
                   //   .max(20, "Must be 20 characters or less")
                   //   .trim()
                   //   .required("Client Name is Required"),
@@ -92,8 +122,52 @@ const Purchase = (props) => {
                   //   .trim()
                   //   .required("Remarks is Required"),
                 })}
-                onSubmit={(values) => {
+                onSubmit={(values, reset) => {
+                  values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
+                  values["ref_data"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
+                  values["due_date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
+                  values["job"] = selectedJob.value;
+                  const company = JSON.parse(
+                    localStorage.getItem("authUser")
+                  )?.company_id;
+                  values["company"] = company;
                   console.log("values", values);
+
+                  const url = "/api/master/invoice/";
+                  apiAuth
+                    .post(url, values)
+                    .then((response) => {
+                      if (response.status === 201) {
+                        NotificationManager.success(
+                          "",
+                          `Invoice Created Successfully`,
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        props?.history?.push("/invoices");
+                      } else {
+                        NotificationManager.error(
+                          "",
+                          `Invoice Create Error`,
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                      }
+                    })
+                    .catch((error) => {
+                      NotificationManager.error(
+                        "",
+                        `Invoice Create Error`,
+                        3000,
+                        null,
+                        null,
+                        ""
+                      );
+                    });
                 }}
               >
                 {({ values, errors, touched, setFieldValue }) => (
@@ -102,18 +176,18 @@ const Purchase = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="blNumber"> BL Number</Label>
+                            <Label htmlFor="bl_number"> BL Number</Label>
                             <Field
                               className="form-control"
-                              name="blNumber"
+                              name="bl_number"
                               style={{ background: "#EDEDED" }}
-                              // placeholder="blNumber"
+                              // placeholder="bl_number"
                               type="text"
                             />
                           </div>
-                          {errors.blNumber && touched.blNumber && (
+                          {errors.bl_number && touched.bl_number && (
                             <div className="invalid-feedback d-block">
-                              {errors.blNumber}
+                              {errors.bl_number}
                             </div>
                           )}
                         </div>
@@ -122,42 +196,61 @@ const Purchase = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="consigneeName">
+                            <Label htmlFor="consignee_name">
                               Consignee Name
                             </Label>
                             <Field
                               className="form-control"
-                              name="consigneeName"
+                              name="consignee_name"
                               // placeholder="Consignee Name"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.consigneeName && touched.consigneeName && (
+                          {errors.consignee_name && touched.consignee_name && (
                             <div className="invalid-feedback d-block">
-                              {errors.consigneeName}
+                              {errors.consignee_name}
                             </div>
                           )}
                         </div>
                       </Grid>
 
                       <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <div>
-                            <Label htmlFor="consigneeName">
-                              <span style={{ color: "red" }}>*</span> Date
-                            </Label>
-                            <Field
-                              className="form-control "
-                              name="date"
-                              // placeholder="date"
-                              type="text"
-                              style={{ background: "#EDEDED" }}
+                      <div className="mb-3">
+                          <label htmlFor="date" className="form-label">
+                            Date
+                            <span className="text-danger">*</span>
+                          </label>
+                          <div
+                            style={{
+                              position: "relative",
+                              // cursor: "pointer",
+                            }}
+                          >
+                            <DatePicker
+                              selected={date}
+                              onChange={(date) => setDate(date)}
                             />
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                right: 10,
+                                fill: "red",
+                              }}
+                            >
+                              <img
+                                src="/calendar.svg"
+                                alt="calendar"
+                                width="20px"
+                                height="20px"
+                              />
+                            </span>
                           </div>
-                          {errors.consigneeName && touched.consigneeName && (
+
+                          {errors.date && touched.date && (
                             <div className="invalid-feedback d-block">
-                              {errors.consigneeName}
+                              {errors.date}
                             </div>
                           )}
                         </div>
@@ -168,18 +261,18 @@ const Purchase = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="currency">Currency (SAR)</Label>
+                            <Label htmlFor="currency_sar">Currency (SAR)</Label>
                             <Field
                               className="form-control "
-                              name="currency"
+                              name="currency_sar"
                               // placeholder="Currency"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.bayanNumber && touched.bayanNumber && (
+                          {errors.bayan_number && touched.bayan_number && (
                             <div className="invalid-feedback d-block">
-                              {errors.bayanNumber}
+                              {errors.bayan_number}
                             </div>
                           )}
                         </div>
@@ -189,22 +282,22 @@ const Purchase = (props) => {
                         <div className="mb-3">
                           <div>
                             <Label
-                              htmlFor="bayanNumber"
+                              htmlFor="bayan_number"
                               className="  w-50 pe-2"
                             >
                               Bayan Number
                             </Label>
                             <Field
                               className="form-control"
-                              name="bayanNumber"
+                              name="bayan_number"
                               // placeholder="Bayan Number"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.bayanNumber && touched.bayanNumber && (
+                          {errors.bayan_number && touched.bayan_number && (
                             <div className="invalid-feedback d-block">
-                              {errors.bayanNumber}
+                              {errors.bayan_number}
                             </div>
                           )}
                         </div>
@@ -214,22 +307,22 @@ const Purchase = (props) => {
                         <div className="mb-3">
                           <div>
                             <Label
-                              htmlFor="shipperName"
+                              htmlFor="shipper_name"
                               className=" w-50 p e-2"
                             >
                               Shipper Name
                             </Label>
                             <Field
                               className="form-control "
-                              name="shipperName"
+                              name="shipper_name"
                               // placeholder="shipper Name"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.shipperName && touched.shipperName && (
+                          {errors.shipper_name && touched.shipper_name && (
                             <div className="invalid-feedback d-block">
-                              {errors.shipperName}
+                              {errors.shipper_name}
                             </div>
                           )}
                         </div>
@@ -240,20 +333,20 @@ const Purchase = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="vendorName">
+                            <Label htmlFor="vendor_name">
                               Vendor Name
                               <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control"
-                              name="vendorName"
+                              name="vendor_name"
                               value={"TEMP"}
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.vendorName && touched.vendorName && (
+                          {errors.vendor_name && touched.vendor_name && (
                             <div className="invalid-feedback d-block">
-                              {errors.vendorName}
+                              {errors.vendor_name}
                             </div>
                           )}
                         </div>
@@ -262,18 +355,18 @@ const Purchase = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="rate">Ex. Rate</Label>
+                            <Label htmlFor="ex_rate">Ex. Rate</Label>
                             <Field
                               className="form-control "
-                              name="rate"
+                              name="ex_rate"
                               // placeholder="EX Rate"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.rate && touched.rate && (
+                          {errors.ex_rate && touched.ex_rate && (
                             <div className="invalid-feedback d-block">
-                              {errors.rate}
+                              {errors.ex_rate}
                             </div>
                           )}
                         </div>
@@ -305,22 +398,22 @@ const Purchase = (props) => {
                         <div className="mb-3">
                           <div>
                             <Label
-                              htmlFor="consigneeName"
+                              htmlFor="consignee_name"
                               className=" w-50 pe-2"
                             >
                               Client Name
                             </Label>
                             <Field
                               className="form-control "
-                              name="clientName"
+                              name="client_name"
                               // placeholder="Client Name"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.clientName && touched.clientName && (
+                          {errors.client_name && touched.client_name && (
                             <div className="invalid-feedback d-block">
-                              {errors.clientName}
+                              {errors.client_name}
                             </div>
                           )}
                         </div>
@@ -329,18 +422,18 @@ const Purchase = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="fcAmount">FC Amount</Label>
+                            <Label htmlFor="fc_amount">FC Amount</Label>
                             <Field
                               className="form-control"
-                              name="fcAmount"
+                              name="fc_amount"
                               // placeholder="FC Amount"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.fcAmount && touched.fcAmount && (
+                          {errors.fc_amount && touched.fc_amount && (
                             <div className="invalid-feedback d-block">
-                              {errors.fcAmount}
+                              {errors.fc_amount}
                             </div>
                           )}
                         </div>
@@ -349,18 +442,18 @@ const Purchase = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="amount"> Amount (SAR)</Label>
+                            <Label htmlFor="amount_sar"> Amount (SAR)</Label>
                             <Field
                               className="form-control"
-                              name="amount"
+                              name="amount_sar"
                               // placeholder="Amount"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.amount && touched.amount && (
+                          {errors.amount_sar && touched.amount_sar && (
                             <div className="invalid-feedback d-block">
-                              {errors.amount}
+                              {errors.amount_sar}
                             </div>
                           )}
                         </div>
@@ -390,29 +483,48 @@ const Purchase = (props) => {
                         </div>
                       </Grid>
                       <Grid item lg={4} xs={12}>
-                        <div className="form-group mb-3">
-                          <Label htmlFor="type">Invoice Type</Label>
+                      <div className="form-group mb-3">
+                          <Label htmlFor="invoice_type">Invoice Type</Label>
                           <Select
                             name="type"
                             placeholder={"Select"}
                             styles={customStyles}
-                            options={invoiceTypes?.map((type) => {
-                              return {
-                                label: type.label,
-                                value: type.label,
-                              };
-                            })}
-                            defaultValue={{ label: invoiceType }}
-                            onChange={(event) => {
-                              setInvoiceType(event.value);
+                            options={invoiceTypes}
+                            // defaultValue={{ label: invoiceType }}
+                            onChange={(data) => {
+                              setInvoiceType(data.value);
+                              setFieldValue("invoice_type", data.value);
                             }}
                           />
                           <ErrorMessage
-                            name="type"
+                            name="invoice_type"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
                           />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="job_type" className="form-label">
+                            Job Type
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="job"
+                            options={jobOptions}
+                            value={selectedJob}
+                            onChange={(data) => {
+                              setFieldValue("job", data.label);
+                              setSelectedJob(data);
+                            }}
+                            styles={customStyles}
+                          />
+                          {errors.job_type && touched.job_type && (
+                            <div className="invalid-feedback d-block">
+                              {errors.job_type}
+                            </div>
+                          )}
                         </div>
                       </Grid>
                     </Grid>
@@ -428,7 +540,7 @@ const Purchase = (props) => {
                             as="textarea"
                             rows="6"
                             className="form-control"
-                            name="reamrks"
+                            name="remarks"
                             style={{ background: "#EDEDED" }}
                           />
                           {errors.remarks && touched.remarks && (
@@ -442,31 +554,51 @@ const Purchase = (props) => {
                       <Grid item lg={8} xs={12}>
                         <Grid container spacing={2}>
                           <Grid item lg={6} xs={12}>
-                            <div className="form-group mb-3">
-                              <div>
-                                <Label htmlFor="refDate">Ref Date</Label>
-                                <Field
-                                  name="refDate"
-                                  className="form-control"
-                                  // placeholder="Remarks"
-                                  type="text"
-                                  style={{ background: "#EDEDED" }}
-                                />
-                              </div>
-                              <ErrorMessage
-                                name="refDate"
-                                render={(msg) => (
-                                  <div className="text-danger">{msg}</div>
-                                )}
+                          <div className="mb-3">
+                          <label htmlFor="date" className="form-label">
+                            Ref Date
+                            <span className="text-danger">*</span>
+                          </label>
+                          <div
+                            style={{
+                              position: "relative",
+                              // cursor: "pointer",
+                            }}
+                          >
+                            <DatePicker
+                              selected={date}
+                              onChange={(date) => setDate(date)}
+                            />
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                right: 10,
+                                fill: "red",
+                              }}
+                            >
+                              <img
+                                src="/calendar.svg"
+                                alt="calendar"
+                                width="20px"
+                                height="20px"
                               />
+                            </span>
+                          </div>
+
+                          {errors.ref_data && touched.ref_data && (
+                            <div className="invalid-feedback d-block">
+                              {errors.ref_data}
                             </div>
+                          )}
+                        </div>
                           </Grid>
                           <Grid item lg={6} xs={12}>
                             <div className="form-group mb-3">
                               <div>
-                                <Label htmlFor="billAmount">Bill Amount</Label>
+                                <Label htmlFor="bill_amount">Bill Amount</Label>
                                 <Field
-                                  name="billAmount"
+                                  name="bill_amount"
                                   className="form-control"
                                   // placeholder="Remarks"
                                   type="text"
@@ -474,7 +606,7 @@ const Purchase = (props) => {
                                 />
                               </div>
                               <ErrorMessage
-                                name="billAmount"
+                                name="bill_amount"
                                 render={(msg) => (
                                   <div className="text-danger">{msg}</div>
                                 )}
@@ -483,24 +615,44 @@ const Purchase = (props) => {
                           </Grid>
 
                           <Grid item lg={6} xs={12}>
-                            <div className="form-group mb-3">
-                              <div>
-                                <Label htmlFor="dueDate">Due Date</Label>
-                                <Field
-                                  name="dueDate"
-                                  className="form-control"
-                                  // placeholder="Remarks"
-                                  type="text"
-                                  style={{ background: "#EDEDED" }}
-                                />
-                              </div>
-                              <ErrorMessage
-                                name="dueDate"
-                                render={(msg) => (
-                                  <div className="text-danger">{msg}</div>
-                                )}
+                          <div className="mb-3">
+                          <label htmlFor="due_date" className="form-label">
+                            Due Date
+                            <span className="text-danger">*</span>
+                          </label>
+                          <div
+                            style={{
+                              position: "relative",
+                              // cursor: "pointer",
+                            }}
+                          >
+                            <DatePicker
+                              selected={date}
+                              onChange={(date) => setDate(date)}
+                            />
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                right: 10,
+                                fill: "red",
+                              }}
+                            >
+                              <img
+                                src="/calendar.svg"
+                                alt="calendar"
+                                width="20px"
+                                height="20px"
                               />
+                            </span>
+                          </div>
+
+                          {errors.due_date && touched.due_date && (
+                            <div className="invalid-feedback d-block">
+                              {errors.due_date}
                             </div>
+                          )}
+                        </div>
                           </Grid>
                           <Grid item lg={6} xs={12}>
                             <div className="form-group mb-3">

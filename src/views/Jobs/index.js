@@ -18,11 +18,23 @@ const Jobs = (props) => {
   const [allJobs, setAllJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
   const [jobPagination, setJobPagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
     currentPage: 1,
   });
+
+  const options = [
+    {
+      label: "Job",
+      value: "Job",
+    },
+    {
+      label: "Enquiry",
+      value: "Enquiry",
+    },
+  ];
 
   const getJobs = (pgdata, val) => {
     setLoading(true);
@@ -79,14 +91,18 @@ const Jobs = (props) => {
     getJobs(jobPagination, searchValue);
   }, []);
 
-  const history = useHistory();
+  const handleJobChange = (e) => {
+    setSelectedValue(e.value);
+    getJobs(e.value);
+    console.log("handleJobChange", selectedValue)
+  };
 
   return (
     <>
       <div className="page-content">
         <Container fluid>
           <BreadCrumb
-            title=""
+            title="Jobs"
             pageTitle="Jobs"
             add_new={true}
             // add_url_popup={true}
@@ -98,6 +114,10 @@ const Jobs = (props) => {
               getJobs(jobPagination, val);
             }}
             export_button={allJobs.length > 0 ? true : false}
+            handleJobChange={handleJobChange}
+            add_jobs={true}
+            add_job_select={true}
+            options={options}
           />
         </Container>
 

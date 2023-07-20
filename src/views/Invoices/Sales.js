@@ -6,11 +6,19 @@ import { Formik, Field, ErrorMessage } from "formik";
 import { Form } from "react-formik-ui";
 import { Card, Grid } from "@mui/material";
 import Select from "react-select";
+import moment from "moment";
+import DatePicker from "react-datepicker";
+import apiAuth from "../../helpers/ApiAuth";
+import NotificationManager from "../../components/Common/NotificationManager";
 
 const Sales = (props) => {
+  const [jobOptions, setJobOptions] = useState([]);
+  const [selectedJob, setSelectedJob] = useState(null);
   const [is_password_hidden, set_is_password_hidden] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState(new Date());
   const [invoiceType, setInvoiceType] = useState("Sales");
+
   const invoiceTypes = [
     {
       label: "Sales",
@@ -35,6 +43,26 @@ const Sales = (props) => {
     }),
   };
 
+  useEffect(() => {
+    getJobs();
+  }, []);
+
+  const getJobs = () => {
+    apiAuth
+      .get("/api/master/job/")
+      .then((res) => {
+        const { data } = res;
+        let opts = data.map((dd) => {
+          return {
+            label: dd?.job_status,
+            value: dd?.id,
+          };
+        });
+        setJobOptions(opts);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -48,42 +76,85 @@ const Sales = (props) => {
           </button>
         </div>
         <Grid container spacing={2}>
-          <Grid item lg={11} style={{margin: "auto"}}>
+          <Grid item lg={11} style={{ margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  blNumber: "",
-                  consigneeName: "",
+                  bl_number: "",
+                  consignee_name: "",
                   date: "",
-                  currency: "",
-                  bayanNumber: "",
-                  shipperName: "",
+                  currency_sar: "",
+                  bayan_Number: "",
+                  shipper_name: "",
                   branch: "",
-                  rate: "",
+                  ex_rate: "",
                   pod: "",
-                  clientName: "",
-                  fcAmount: "",
-                  amount: "",
+                  client_name: "",
+                  fc_amount: "",
+                  amount_sar: "",
                   poa: "",
                   remarks: "",
+                  invoice_type: "",
                 }}
                 validationSchema={Yup.object({
-                //   blNumber: Yup.string().required("BL Number is Required"),
-                //   consigneeName: Yup.string().required("Consignee Name is Required"),
-                  date: Yup.string().required("Date is Required"),
-                //   currency: Yup.string().required("Currency is Required"),
-                //   bayanNumber: Yup.string().required("Bayan Number is Required"),
-                //   shipperName: Yup.string().required("Shipper Name is Required"),
+                  //   bl_number: Yup.string().required("BL Number is Required"),
+                  //   consignee_name: Yup.string().required("Consignee Name is Required"),
+                  // date: Yup.string().required("Date is Required"),
+                  //   currency_sar: Yup.string().required("Currency is Required"),
+                  //   bayan_Number: Yup.string().required("Bayan Number is Required"),
+                  //   shipper_name: Yup.string().required("Shipper Name is Required"),
                   branch: Yup.string().required("Branch is Required"),
-                //   rate: Yup.string().required("Rate is Required"),
-                //   pod: Yup.string().required("POD is Required"),
-                //   clientName: Yup.string().required("Client Name is Required"),
-                //   fcAmount: Yup.string().required("FC Amount is Required"),
-                //   poa: Yup.string().required("POA is Required"),
-                //   remarks: Yup.string().required("Remarks is Required"),
+                  //   ex_rate: Yup.string().required("Rate is Required"),
+                  //   pod: Yup.string().required("POD is Required"),
+                  //   client_name: Yup.string().required("Client Name is Required"),
+                  //   fc_amount: Yup.string().required("FC Amount is Required"),
+                  //   poa: Yup.string().required("POA is Required"),
+                  //   remarks: Yup.string().required("Remarks is Required"),
                 })}
-                onSubmit={(values) => {
+                onSubmit={(values, reset) => {
+                  values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
+                  values["job"] = selectedJob.value;
+                  const company = JSON.parse(
+                    localStorage.getItem("authUser")
+                  )?.company_id;
+                  values["company"] = company;
                   console.log("values", values);
+
+                  const url = "/api/master/invoice/";
+                  apiAuth
+                    .post(url, values)
+                    .then((response) => {
+                      if (response.status === 201) {
+                        NotificationManager.success(
+                          "",
+                          `Invoice Created Successfully`,
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        props?.history?.push("/invoices");
+                      } else {
+                        NotificationManager.error(
+                          "",
+                          `Invoice Create Error`,
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                      }
+                    })
+                    .catch((error) => {
+                      NotificationManager.error(
+                        "",
+                        `Invoice Create Error`,
+                        3000,
+                        null,
+                        null,
+                        ""
+                      );
+                    });
                 }}
               >
                 {({ values, errors, touched, setFieldValue }) => (
@@ -92,21 +163,21 @@ const Sales = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="blNumber" className="pe-2 w-50">
+                            <Label htmlFor="bl_number" className="pe-2 w-50">
                               {" "}
                               BL Number
                             </Label>
                             <Field
                               className="form-control"
-                              name="blNumber"
+                              name="bl_number"
                               style={{ background: "#EDEDED" }}
-                              // placeholder="blNumber"
+                              // placeholder="bl_number"
                               type="text"
                             />
                           </div>
-                          {errors.blNumber && touched.blNumber && (
+                          {errors.bl_number && touched.bl_number && (
                             <div className="invalid-feedback d-block">
-                              {errors.blNumber}
+                              {errors.bl_number}
                             </div>
                           )}
                         </div>
@@ -115,20 +186,20 @@ const Sales = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="consigneeName">
+                            <Label htmlFor="consignee_name">
                               Consignee Name
                             </Label>
                             <Field
                               className="form-control"
-                              name="consigneeName"
+                              name="consignee_name"
                               // placeholder="Consignee Name"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.consigneeName && touched.consigneeName && (
+                          {errors.consignee_name && touched.consignee_name && (
                             <div className="invalid-feedback d-block">
-                              {errors.consigneeName}
+                              {errors.consignee_name}
                             </div>
                           )}
                         </div>
@@ -136,24 +207,40 @@ const Sales = (props) => {
 
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <div>
-                            <Label
-                              htmlFor="consigneeName"
-                              className=" pe-2 w-50"
-                            >
-                              <span style={{ color: "red" }}>*</span> Date
-                            </Label>
-                            <Field
-                              className="form-control "
-                              name="date"
-                              // placeholder="date"
-                              type="text"
-                              style={{ background: "#EDEDED" }}
+                          <label htmlFor="date" className="form-label">
+                            Date
+                            <span className="text-danger">*</span>
+                          </label>
+                          <div
+                            style={{
+                              position: "relative",
+                              // cursor: "pointer",
+                            }}
+                          >
+                            <DatePicker
+                              selected={date}
+                              onChange={(date) => setDate(date)}
                             />
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                right: 10,
+                                fill: "red",
+                              }}
+                            >
+                              <img
+                                src="/calendar.svg"
+                                alt="calendar"
+                                width="20px"
+                                height="20px"
+                              />
+                            </span>
                           </div>
-                          {errors.consigneeName && touched.consigneeName && (
+
+                          {errors.date && touched.date && (
                             <div className="invalid-feedback d-block">
-                              {errors.consigneeName}
+                              {errors.date}
                             </div>
                           )}
                         </div>
@@ -164,20 +251,20 @@ const Sales = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="currency" className="pe-2 w-50">
+                            <Label htmlFor="currency_sar" className="pe-2 w-50">
                               Currency (SAR)
                             </Label>
                             <Field
                               className="form-control "
-                              name="currency"
+                              name="currency_sar"
                               // placeholder="Currency"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.bayanNumber && touched.bayanNumber && (
+                          {errors.bayan_Number && touched.bayan_Number && (
                             <div className="invalid-feedback d-block">
-                              {errors.bayanNumber}
+                              {errors.bayan_Number}
                             </div>
                           )}
                         </div>
@@ -187,22 +274,22 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <div>
                             <Label
-                              htmlFor="bayanNumber"
+                              htmlFor="bayan_Number"
                               className="  w-50 pe-2"
                             >
                               Bayan Number
                             </Label>
                             <Field
                               className="form-control"
-                              name="bayanNumber"
+                              name="bayan_Number"
                               // placeholder="Bayan Number"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.bayanNumber && touched.bayanNumber && (
+                          {errors.bayan_Number && touched.bayan_Number && (
                             <div className="invalid-feedback d-block">
-                              {errors.bayanNumber}
+                              {errors.bayan_Number}
                             </div>
                           )}
                         </div>
@@ -212,22 +299,22 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <div>
                             <Label
-                              htmlFor="shipperName"
+                              htmlFor="shipper_name"
                               className=" w-50 p e-2"
                             >
                               Shipper Name
                             </Label>
                             <Field
                               className="form-control "
-                              name="shipperName"
+                              name="shipper_name"
                               // placeholder="shipper Name"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.shipperName && touched.shipperName && (
+                          {errors.shipper_name && touched.shipper_name && (
                             <div className="invalid-feedback d-block">
-                              {errors.shipperName}
+                              {errors.shipper_name}
                             </div>
                           )}
                         </div>
@@ -260,20 +347,20 @@ const Sales = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="rate" className="pe-2 w-50">
+                            <Label htmlFor="ex_rate" className="pe-2 w-50">
                               Ex. Rate
                             </Label>
                             <Field
                               className="form-control "
-                              name="rate"
+                              name="ex_rate"
                               // placeholder="EX Rate"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.rate && touched.rate && (
+                          {errors.ex_rate && touched.ex_rate && (
                             <div className="invalid-feedback d-block">
-                              {errors.rate}
+                              {errors.ex_rate}
                             </div>
                           )}
                         </div>
@@ -307,22 +394,22 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <div>
                             <Label
-                              htmlFor="consigneeName"
+                              htmlFor="consignee_name"
                               className=" w-50 pe-2"
                             >
                               Client Name
                             </Label>
                             <Field
                               className="form-control "
-                              name="clientName"
+                              name="client_name"
                               // placeholder="Client Name"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.clientName && touched.clientName && (
+                          {errors.client_name && touched.client_name && (
                             <div className="invalid-feedback d-block">
-                              {errors.clientName}
+                              {errors.client_name}
                             </div>
                           )}
                         </div>
@@ -331,20 +418,20 @@ const Sales = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="fcAmount" className="pe-2 w-50">
+                            <Label htmlFor="fc_amount" className="pe-2 w-50">
                               FC Amount
                             </Label>
                             <Field
                               className="form-control"
-                              name="fcAmount"
+                              name="fc_amount"
                               // placeholder="FC Amount"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.fcAmount && touched.fcAmount && (
+                          {errors.fc_amount && touched.fc_amount && (
                             <div className="invalid-feedback d-block">
-                              {errors.fcAmount}
+                              {errors.fc_amount}
                             </div>
                           )}
                         </div>
@@ -353,21 +440,21 @@ const Sales = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
-                            <Label htmlFor="amount" className="pe-2 w-50">
+                            <Label htmlFor="amount_sar" className="pe-2 w-50">
                               {" "}
                               Amount (SAR)
                             </Label>
                             <Field
                               className="form-control"
-                              name="amount"
+                              name="amount_sar"
                               // placeholder="Amount"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.amount && touched.amount && (
+                          {errors.amount_sar && touched.amount_sar && (
                             <div className="invalid-feedback d-block">
-                              {errors.amount}
+                              {errors.amount_sar}
                             </div>
                           )}
                         </div>
@@ -397,35 +484,55 @@ const Sales = (props) => {
                         </div>
                       </Grid>
                       <Grid item lg={4} xs={12}>
-                      <div className="form-group mb-3">
-                        <Label htmlFor="type">Invoice Type</Label>
-                        <Select
-                          name="type"
-                          placeholder={"Select"}
-                          styles={customStyles}
-                          options={invoiceTypes?.map((type) => {
-                            return {
-                              label: type.label,
-                              value: type.label,
-                            };
-                          })}
-                          defaultValue={{ label: invoiceType }}
-                          onChange={(event) => {
-                            setInvoiceType(event.value);
-                          }}
-                        />
-                        <ErrorMessage
-                          name="type"
-                          render={(msg) => (
-                            <div className="text-danger">{msg}</div>
+                        <div className="form-group mb-3">
+                          <Label htmlFor="invoice_type">Invoice Type</Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={invoiceTypes}
+                            // defaultValue={{ label: invoiceType }}
+                            onChange={(data) => {
+                              setInvoiceType(data.value);
+                              setFieldValue("invoice_type", data.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="invoice_type"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="job_type" className="form-label">
+                            Job Type
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="job"
+                            options={jobOptions}
+                            value={selectedJob}
+                            onChange={(data) => {
+                              setFieldValue("job", data.label);
+                              setSelectedJob(data);
+                            }}
+                            styles={customStyles}
+                          />
+                          {errors.job_type && touched.job_type && (
+                            <div className="invalid-feedback d-block">
+                              {errors.job_type}
+                            </div>
                           )}
-                        />
-                      </div>
+                        </div>
                       </Grid>
                     </Grid>
 
                     <Grid container spacing={2}>
-                    <Grid item lg={4} xs={12}>
+                    
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="remarks" className="form-label">
                             Remarks
@@ -434,7 +541,7 @@ const Sales = (props) => {
                           <Field
                             as="textarea"
                             className="form-control"
-                            name="reamrks"
+                            name="remarks"
                             style={{ background: "#EDEDED" }}
                           />
                           {errors.remarks && touched.remarks && (

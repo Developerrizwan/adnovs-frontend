@@ -17,11 +17,21 @@ const Vouchers = (props) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("");
   const [userPagination, setUserPagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
     currentPage: 1,
   });
+
+  const voucherOptions = [
+    // { value: "vouchers", label: "All" },
+    { value: "Journal", label: "Journal" },
+    { value: "Payment", label: "Payment" },
+    { value: "Receipt", label: "Receipt" },
+    { value: "Debit", label: "Debit" },
+    { value: "Credit", label: "Credit" },
+  ];
 
   // const FilteredUsers = users.filter((item) => {
   //   const values = Object.values(item);
@@ -117,6 +127,12 @@ const Vouchers = (props) => {
   //   FileSaver.saveAs(data, fileName + fileExtension);
   // };
 
+  const handleVoucherChange = (e) => {
+    setSelectedValue(e.value);
+    getUser(e.value);
+    console.log("handleVoucherChange", selectedValue)
+  };
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -141,6 +157,10 @@ const Vouchers = (props) => {
             exportData={() => {
               // handleExportData();
             }}
+            add_vouchers={true}
+            add_voucher_select={true}
+            voucherOptions={voucherOptions}
+            handleVoucherChange={handleVoucherChange}
           />
         </Container>
         {/* <input

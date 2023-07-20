@@ -11,7 +11,7 @@ import {
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 
 const JobTable = (props) => {
-  const [displayModal, setDisplayModal] = useState(false);
+  // const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState([]);
   const [cols, setCols] = useState([
