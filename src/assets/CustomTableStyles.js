@@ -25,6 +25,7 @@ export const customStyles = {
       justifyContent: "center",
       alignItems: "center",
       marginTop: "10px",
+      fontSize: "17px",
     },
   },
   contextMenu: {
@@ -44,7 +45,7 @@ export const customStyles = {
   },
   headRow: {
     style: {
-      color: "#1062fe",
+      // color: "#1062fe",
       backgroundColor: "#f3f3f9",
     },
   },

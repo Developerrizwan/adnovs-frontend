@@ -13,8 +13,8 @@ const Vouchers = (props) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedValue, setSelectedValue] = useState("");
-  const [userPagination, setUserPagination] = useState({
+  const [selectedValue, setSelectedValue] = useState("Journal");
+  const [voucherPagination, setVoucherPagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
     currentPage: 1,
@@ -29,13 +29,15 @@ const Vouchers = (props) => {
   ];
 
   useEffect(() => {
-    getUser(userPagination);
+    getVouchers(voucherPagination);
   }, []);
 
-  const getUser = (pgdata, val) => {
+  const getVouchers = (pgdata, val, type) => {
     apiAuth
       .get(
         "/api/master/voucher/?" +
+          "&type=" +
+          type +
           "&page=" +
           pgdata?.currentPage +
           "&search=" +
@@ -44,7 +46,7 @@ const Vouchers = (props) => {
       .then((response) => {
         let data = response.data;
         console.log("xswjhjwx", response);
-        setUserPagination({
+        setVoucherPagination({
           ...pgdata,
           totalRows: data.length,
         });
@@ -57,20 +59,20 @@ const Vouchers = (props) => {
   };
 
   const deleteUser = (id) => {
-    let url = `/api/master/voucher/${id}`;
+    let url = `/api/master/voucher/${id}/`;
     apiAuth
       .delete(url)
       .then((response) => {
         const newdata = response.data;
         NotificationManager.success(
           "",
-          "User Deleted Successfully",
+          "Voucher Deleted Successfully",
           3000,
           null,
           null,
           ""
         );
-        getUser(userPagination);
+        getVouchers(voucherPagination);
       })
       .catch(function (error) {
         console.log(error);
@@ -82,7 +84,7 @@ const Vouchers = (props) => {
 
   const handleVoucherChange = (e) => {
     setSelectedValue(e.value);
-    getUser(e.value);
+    getVouchers(voucherPagination, searchValue, e.value);
   };
 
   return (
@@ -101,12 +103,16 @@ const Vouchers = (props) => {
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getUser(userPagination, val);
+              getVouchers(voucherPagination, val);
             }}
             add_vouchers={true}
             add_voucher_select={true}
             voucherOptions={voucherOptions}
             handleVoucherChange={handleVoucherChange}
+            selectedValue={{
+              label: selectedValue,
+              value: selectedValue,
+            }}
           />
         </Container>
         <Row>
@@ -121,14 +127,18 @@ const Vouchers = (props) => {
                     <VoucherTable
                       users={users}
                       deleteUser={deleteUser}
-                      userPagination={{ ...userPagination }}
+                      voucherPagination={{ ...voucherPagination }}
                       handlePagination={(data) => {
-                        setUserPagination(data);
-                        getUser(data);
+                        setVoucherPagination(data);
+                        getVouchers(data);
                       }}
-                      getUser={() => {
+                      getVouchers={() => {
                         setUsers([]);
-                        getUser(userPagination, searchValue);
+                        getVouchers(
+                          voucherPagination,
+                          searchValue,
+                          selectedValue
+                        );
                       }}
                     />
                   </Card>
@@ -160,7 +170,7 @@ const Vouchers = (props) => {
           {/* <AddUser
             closeAddPopup={() => {
               setCreateModal(false);
-              //   getUser();
+              //   getVouchers();
             }}
           /> */}
         </ModalBody>
