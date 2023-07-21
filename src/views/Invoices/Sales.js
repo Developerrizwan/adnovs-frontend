@@ -17,7 +17,10 @@ const Sales = (props) => {
   const [is_password_hidden, set_is_password_hidden] = useState(false);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
-  const [invoiceType, setInvoiceType] = useState("Sales");
+  const [invoiceType, setInvoiceType] = useState({
+    label: "Sales",
+    value: "Sales",
+  });
 
   const invoiceTypes = [
     {
@@ -45,6 +48,15 @@ const Sales = (props) => {
 
   useEffect(() => {
     getJobs();
+    if (props?.isEdit) {
+      const selType = invoiceTypes.find(
+        (opt) => opt?.value === props.data?.invoice_type
+      );
+      setInvoiceType(selType);
+
+      const selJob = jobOptions.find((opt) => opt?.value === props.data?.job);
+      setSelectedJob(selJob);
+    }
   }, []);
 
   const getJobs = () => {
@@ -54,10 +66,11 @@ const Sales = (props) => {
         const { data } = res;
         let opts = data.map((dd) => {
           return {
-            label: dd?.job_status,
+            label: `${dd?.bl_number} - ${dd?.consignee_name}`,
             value: dd?.id,
           };
         });
+
         setJobOptions(opts);
       })
       .catch((err) => console.log(err));
@@ -86,21 +99,25 @@ const Sales = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  bl_number: "",
-                  consignee_name: "",
-                  date: "",
-                  currency_sar: "",
-                  bayan_Number: "",
-                  shipper_name: "",
-                  branch: "",
-                  ex_rate: "",
-                  pod: "",
-                  client_name: "",
-                  fc_amount: "",
-                  amount_sar: "",
-                  poa: "",
-                  remarks: "",
-                  invoice_type: "",
+                  bl_number: props.isEdit ? props.data?.bl_number : "",
+                  consignee_name: props.isEdit
+                    ? props.data?.consignee_name
+                    : "",
+                  date: props.isEdit ? props.data?.date : "",
+                  currency_sar: props.isEdit ? props.data?.currency_sar : "",
+                  bayan_Number: props.isEdit ? props.data?.bayan_Number : "",
+                  shipper_name: props.isEdit ? props.data?.shipper_name : "",
+                  branch: props.isEdit ? props.data?.branch : "JEDDAH",
+                  ex_rate: props.isEdit ? props.data?.ex_rate : "",
+                  pod: props.isEdit ? props.data?.pod : "",
+                  client_name: props.isEdit ? props.data?.client_name : "",
+                  fc_amount: props.isEdit ? props.data?.fc_amount : "",
+                  amount_sar: props.isEdit ? props.data?.amount_sar : "",
+                  poa: props.isEdit ? props.data?.poa : "",
+                  remarks: props.isEdit ? props.data?.remarks : "",
+                  invoice_type: props.isEdit
+                    ? props.data?.invoice_type
+                    : "Sales",
                 }}
                 validationSchema={Yup.object({
                   //   bl_number: Yup.string().required("BL Number is Required"),
@@ -109,7 +126,7 @@ const Sales = (props) => {
                   //   currency_sar: Yup.string().required("Currency is Required"),
                   //   bayan_Number: Yup.string().required("Bayan Number is Required"),
                   //   shipper_name: Yup.string().required("Shipper Name is Required"),
-                  branch: Yup.string().required("Branch is Required"),
+                  // branch: Yup.string().required("Branch is Required"),
                   //   ex_rate: Yup.string().required("Rate is Required"),
                   //   pod: Yup.string().required("POD is Required"),
                   //   client_name: Yup.string().required("Client Name is Required"),
@@ -126,41 +143,66 @@ const Sales = (props) => {
                   values["company"] = company;
                   console.log("values", values);
 
-                  const url = "/api/master/invoice/";
-                  apiAuth
-                    .post(url, values)
-                    .then((response) => {
-                      if (response.status === 201) {
-                        NotificationManager.success(
-                          "",
-                          `Invoice Created Successfully`,
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                        props?.history?.push("/invoices");
-                      } else {
-                        NotificationManager.error(
-                          "",
-                          `Invoice Create Error`,
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                      }
-                    })
-                    .catch((error) => {
-                      NotificationManager.error(
-                        "",
-                        `Invoice Create Error`,
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                    });
+                  props.isEdit
+                    ? apiAuth
+                        .patch(`/api/master/invoice/${props.data?.id}/`, values)
+                        .then((response) => {
+                          NotificationManager.success(
+                            "",
+                            `Invoice Updated Successfully`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                          props.isEdit
+                            ? props.closeAddPopup()
+                            : props?.history?.push("/invoices");
+                        })
+                        .catch((error) => {
+                          NotificationManager.error(
+                            "",
+                            `Invoice Update Error`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                        })
+                    : apiAuth
+                        .post("/api/master/invoice/", values)
+                        .then((response) => {
+                          if (response.status === 201) {
+                            NotificationManager.success(
+                              "",
+                              `Invoice Created Successfully`,
+                              3000,
+                              null,
+                              null,
+                              ""
+                            );
+                            props?.history?.push("/invoices");
+                          } else {
+                            NotificationManager.error(
+                              "",
+                              `Invoice Create Error`,
+                              3000,
+                              null,
+                              null,
+                              ""
+                            );
+                          }
+                        })
+                        .catch((error) => {
+                          NotificationManager.error(
+                            "",
+                            `Invoice Create Error`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                        });
                 }}
               >
                 {({ values, errors, touched, setFieldValue }) => (
@@ -338,7 +380,7 @@ const Sales = (props) => {
                             <Field
                               className="form-control"
                               name="branch"
-                              value={"JEDDAH"}
+                              // value={"JEDDAH"}
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
@@ -493,13 +535,13 @@ const Sales = (props) => {
                         <div className="form-group mb-3">
                           <Label htmlFor="invoice_type">Invoice Type</Label>
                           <Select
-                            name="type"
+                            // name="invoice_type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={invoiceTypes}
-                            // defaultValue={{ label: invoiceType }}
+                            value={invoiceType}
                             onChange={(data) => {
-                              setInvoiceType(data.value);
+                              setInvoiceType(data);
                               setFieldValue("invoice_type", data.value);
                             }}
                           />

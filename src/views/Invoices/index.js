@@ -47,7 +47,7 @@ const Invoices = (props) => {
           "&page=" +
           pgdata?.currentPage +
           "&search=" +
-         (val ? val : "") 
+          (val ? val : "")
       )
 
       .then((response) => {
@@ -67,7 +67,7 @@ const Invoices = (props) => {
   };
 
   const deleteInvoice = (id) => {
-    let url = `/api/master/invoice/${id}`;
+    let url = `/api/master/invoice/${id}/`;
     apiAuth
       .delete(url)
       .then((response) => {

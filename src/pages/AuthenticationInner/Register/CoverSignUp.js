@@ -117,11 +117,11 @@ const CoverSignUp = (props) => {
                       <div className="mt-4">
                         <Formik
                           initialValues={{
-                            first_name: "Manish",
+                            first_name: "",
                             last_name: "",
-                            email: "manish@darsa.ai",
+                            email: "",
                             password: "",
-                            confirmPassword: "efgH123$",
+                            confirmPassword: "",
                             // username: "Manish",
                             mobile: "",
                             company_name: "",
@@ -152,18 +152,18 @@ const CoverSignUp = (props) => {
                               )
                               .required("Enter your password again"),
                             mobile: Yup.string()
-                              .max(10, "Must be 20 characters or less")
+                              .max(10, "Must be 10 characters")
                               .trim()
                               .required("Mobile Number is Required"),
                             company_name: Yup.string()
-                              .max(20, "Must be 20 characters or less")
+                              // .max(20, "Must be 20 characters or less")
                               .trim()
                               .required("Company Name is Required"),
                             company_email: Yup.string()
                               .email()
                               .required("Company Email is Required"),
                             company_address: Yup.string()
-                              .max(20, "Must be 20 characters or less")
+                              // .max(70, "Must be 20 characters or less")
                               .trim()
                               .required("Company Address is Required"),
 
@@ -208,7 +208,7 @@ const CoverSignUp = (props) => {
                                     </label>
                                     <Field
                                       className="form-control"
-                                      // placeholder="Enter your first name"
+                                      placeholder="Robert"
                                       name="first_name"
                                     />
                                     {errors.first_name &&
@@ -231,7 +231,7 @@ const CoverSignUp = (props) => {
                                     </label>
                                     <Field
                                       className="form-control"
-                                      // placeholder="Enter your Email"
+                                      placeholder="Downey"
                                       name="last_name"
                                     />
                                     {errors.last_name && touched.last_name && (
@@ -255,7 +255,7 @@ const CoverSignUp = (props) => {
                                     </label>
                                     <Field
                                       className="form-control"
-                                      // placeholder="Enter your Email"
+                                      placeholder="robert@gmail.com"
                                       name="email"
                                     />
                                     {errors.email && touched.email && (
@@ -276,7 +276,7 @@ const CoverSignUp = (props) => {
                                     </label>
                                     <Field
                                       className="form-control"
-                                      // placeholder="Enter your Email"
+                                      placeholder="99876543210"
                                       name="mobile"
                                     />
                                     {errors.mobile && touched.mobile && (
@@ -321,7 +321,7 @@ const CoverSignUp = (props) => {
                                     <div className="position-relative auth-pass-inputgroup">
                                       <Field
                                         className="form-control"
-                                        // placeholder="Enter Password"
+                                        placeholder="aBcd1@34"
                                         type={
                                           showPassword ? "text" : "password"
                                         }
@@ -369,7 +369,7 @@ const CoverSignUp = (props) => {
                                     <div className="position-relative auth-pass-inputgroup">
                                       <Field
                                         className="form-control"
-                                        // placeholder="Enter Password"
+                                        placeholder="aBcd1@34"
                                         type={
                                           showPassword ? "text" : "password"
                                         }
@@ -419,7 +419,7 @@ const CoverSignUp = (props) => {
                                     </label>
                                     <Field
                                       className="form-control"
-                                      // placeholder="Enter your Email"
+                                      placeholder="FalconAVL"
                                       name="company_name"
                                     />
                                     {errors.company_name &&
@@ -441,7 +441,7 @@ const CoverSignUp = (props) => {
                                     </label>
                                     <Field
                                       className="form-control"
-                                      // placeholder="Enter your Email"
+                                      placeholder="falcon.org@gmail.com"
                                       name="company_email"
                                     />
                                     {errors.company_email &&
@@ -464,7 +464,7 @@ const CoverSignUp = (props) => {
                                 </label>
                                 <Field
                                   className="form-control"
-                                  // placeholder="Enter your Email"
+                                  placeholder="740 Ave Baker street, Manhattan"
                                   name="company_address"
                                 />
                                 {errors.company_address &&
@@ -529,14 +529,14 @@ const CoverSignUp = (props) => {
                                       <span className="text-danger">*</span>
                                     </label>
                                     <Select
-                                      options={State.getAllStates().map(
-                                        (state) => {
-                                          return {
-                                            label: state.name,
-                                            value: state.isoCode,
-                                          };
-                                        }
-                                      )}
+                                      options={State.getStatesOfCountry(
+                                        selectedCountry?.value
+                                      )?.map((state) => {
+                                        return {
+                                          label: state.name,
+                                          value: state.isoCode,
+                                        };
+                                      })}
                                       required
                                       value={selectedState}
                                       onChange={(data) => {

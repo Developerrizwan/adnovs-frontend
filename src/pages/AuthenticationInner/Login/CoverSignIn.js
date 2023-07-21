@@ -133,6 +133,7 @@ const CoverSignIn = (props) => {
                               <Field
                                 className="form-control"
                                 name="email"
+                                placeholder="robert@gmil.com"
                                 validate={validateEmail()}
                               />
                               {errors.email && touched.email && (
@@ -161,6 +162,7 @@ const CoverSignIn = (props) => {
                                 <Field
                                   className="form-control"
                                   type={showPassword ? "text" : "password"}
+                                  placeholder="aBcd1@34"
                                   name="password"
                                   validate={validatePassword()}
                                 />

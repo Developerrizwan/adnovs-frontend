@@ -157,6 +157,7 @@ const InvoiceTable = (props) => {
                 className="remove-item-btn"
                 // onClick={() => props.deleteJob(value.id)}
                 onClick={() => {
+                  setSelectedInvoice(value);
                   setDeleteModal(true);
                 }}
               >
@@ -281,7 +282,15 @@ const InvoiceTable = (props) => {
           Edit Invoice
         </ModalHeader>
         <ModalBody>
-          <Sales isEdit={true} />
+          <Sales
+            isEdit={true}
+            data={selectedInvoice}
+            closeAddPopup={() => {
+              setEditModal(false, () => {
+                props.getInvoices();
+              });
+            }}
+          />
         </ModalBody>
       </Modal>
 
@@ -310,7 +319,7 @@ const InvoiceTable = (props) => {
         <ModalFooter>
           <Button
             onClick={() => {
-              props.deleteInvoice();
+              props.deleteInvoice(selectedInvoice?.id);
               setDeleteModal((prev) => !prev);
             }}
           >
