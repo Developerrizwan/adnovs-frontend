@@ -11,10 +11,10 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
+import JournalVoucher from "./JournalVoucher";
 
 const VoucherTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
-  const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState([]);
   const [cols, setCols] = useState([
@@ -121,63 +121,6 @@ const VoucherTable = (props) => {
   return (
     <>
       <DataTable
-        // columns={[
-        //   {
-        //     name: <span className="font-weight-bold fs-13"> Name</span>,
-        //     selector: (row) => row.name,
-        //     sortable: true,
-        //   },
-        //   {
-        //     name: <span className="font-weight-bold fs-13">Email</span>,
-        //     selector: (row) => row.email,
-        //     sortable: true,
-        //   },
-        //   {
-        //     name: <span className="font-weight-bold fs-13">Mobile</span>,
-        //     selector: (row) => row.mobile,
-        //     sortable: true,
-        //   },
-        //   {
-        //     name: <span className="font-weight-bold fs-13">Role</span>,
-        //     selector: (row) => row.groups,
-        //     sortable: true,
-        //   },
-        //   {
-        //     name: <span className="font-weight-bold fs-13">Action</span>,
-        //     selector: (row) => row,
-        //     cell: (value) => {
-        //       return (
-        //         <UncontrolledDropdown className="dropdown d-inline-block">
-        //           <DropdownToggle
-        //             className="btn btn-soft-secondary btn-sm"
-        //             tag="button"
-        //           >
-        //             <i className="ri-more-fill align-middle"></i>
-        //           </DropdownToggle>
-        //           <DropdownMenu className="dropdown-menu-end">
-        //             <DropdownItem
-        //               className="edit-item-btn"
-        //               onClick={() => {
-        //                 setSelectedUser(value);
-        //                 setEditModal(true);
-        //               }}
-        //             >
-        //               <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
-        //               Edit
-        //             </DropdownItem>
-        //             {/* <DropdownItem
-        //               className="remove-item-btn"
-        //               onClick={() => props.deleteUser(value.id)}
-        //             >
-        //               <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
-        //               Delete{" "}
-        //             </DropdownItem> */}
-        //           </DropdownMenu>
-        //         </UncontrolledDropdown>
-        //       );
-        //     },
-        //   },
-        // ]}
         columns={cols}
         data={props.users}
         paginationPerPage={props.userPagination?.rowsPerPage}
@@ -214,10 +157,10 @@ const VoucherTable = (props) => {
             setEditModal((prev) => !prev);
           }}
         >
-          Edit User
+          Edit Voucher
         </ModalHeader>
         <ModalBody>
-          {/* <EditUser
+          <JournalVoucher
             closeAddPopup={() => {
               setEditModal(false);
               setSelectedUser(null);
@@ -225,7 +168,8 @@ const VoucherTable = (props) => {
             }}
             userData={selectedUser}
             history={props.history}
-          /> */}
+            isEdit={true}
+          />
         </ModalBody>
       </Modal>
       <Modal
@@ -251,11 +195,15 @@ const VoucherTable = (props) => {
           </div>
         </ModalBody>
         <ModalFooter>
-        <Button 
-        onClick={() => {
-        props.deleteUser(); 
-        setDeleteModal((prev) => !prev) }}>Yes</Button>
-        <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
+          <Button
+            onClick={() => {
+              props.deleteUser();
+              setDeleteModal((prev) => !prev);
+            }}
+          >
+            Yes
+          </Button>
+          <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
         </ModalFooter>
       </Modal>
     </>

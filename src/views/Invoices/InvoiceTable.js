@@ -11,6 +11,7 @@ import {
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
+import Sales from "./Sales";
 
 const InvoiceTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -26,13 +27,13 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Consignee Name</span>,
       selector: (row) => row.consignee_name,
       sortable: true,
-    },  
+    },
     {
       name: <span className="font-weight-bold fs-13">Date</span>,
       selector: (row) => row,
       cell: (value) => <span>{moment(value?.date).format("MM/DD/YYYY")}</span>,
     },
-    
+
     {
       name: <span className="font-weight-bold fs-13">Currency SAR</span>,
       selector: (row) => row.currency_sar,
@@ -118,12 +119,16 @@ const InvoiceTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">Ref Date</span>,
       selector: (row) => row,
-      cell: (value) => <span>{moment(value?.ref_data).format("MM/DD/YYYY")}</span>,
+      cell: (value) => (
+        <span>{moment(value?.ref_data).format("MM/DD/YYYY")}</span>
+      ),
     },
     {
       name: <span className="font-weight-bold fs-13">Due Date</span>,
       selector: (row) => row,
-      cell: (value) => <span>{moment(value?.due_date).format("MM/DD/YYYY")}</span>,
+      cell: (value) => (
+        <span>{moment(value?.due_date).format("MM/DD/YYYY")}</span>
+      ),
     },
     {
       name: <span className="font-weight-bold fs-13">Actions</span>,
@@ -193,7 +198,7 @@ const InvoiceTable = (props) => {
         //     selector: (row) => row.shipper_name,
         //     sortable: true,
         //   },
-          
+
         //   {
         //     name: (
         //       <span
@@ -276,7 +281,7 @@ const InvoiceTable = (props) => {
           Edit Invoice
         </ModalHeader>
         <ModalBody>
-         <></>
+          <Sales isEdit={true} />
         </ModalBody>
       </Modal>
 
@@ -303,13 +308,17 @@ const InvoiceTable = (props) => {
           </div>
         </ModalBody>
         <ModalFooter>
-        <Button onClick={() => {
-        props.deleteInvoice(); 
-        setDeleteModal((prev) => !prev) }}>Yes</Button>
-        <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
+          <Button
+            onClick={() => {
+              props.deleteInvoice();
+              setDeleteModal((prev) => !prev);
+            }}
+          >
+            Yes
+          </Button>
+          <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
         </ModalFooter>
       </Modal>
-
     </>
   );
 };

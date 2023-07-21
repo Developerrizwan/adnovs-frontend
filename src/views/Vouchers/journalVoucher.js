@@ -85,16 +85,22 @@ const JournalVoucher = (props) => {
 
   return (
     <React.Fragment>
-      <div className="page-content">
-        <div
-          className="mb-3"
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <h2 className="mx-5">Journal Voucher</h2>
-          <button className="btn btn-danger" onClick={goBack}>
-            Back
-          </button>
-        </div>
+      <div className={props.isEdit ? "" : "page-content"}>
+        {props.isEdit ? (
+          <></>
+        ) : (
+          <>
+            <div
+              className="mb-3"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <h2 className="mx-5">Journal Voucher</h2>
+              <button className="btn btn-danger" onClick={goBack}>
+                Back
+              </button>
+            </div>
+          </>
+        )}
 
         <Grid container spacing={2}>
           <Grid item lg={11} style={{ placeItems: "center", margin: "auto" }}>
@@ -493,7 +499,7 @@ const JournalVoucher = (props) => {
 
                     <div className="mt-4 mb-3">
                       <button className="btn btn-success" type="submit">
-                        Submit
+                        {props.isEdit ? "Update" : "Submit"}
                       </button>
                     </div>
                   </Form>

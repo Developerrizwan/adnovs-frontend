@@ -65,16 +65,22 @@ const Sales = (props) => {
 
   return (
     <React.Fragment>
-      <div className="page-content">
-        <div
-          className="mb-5 mt-3"
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <h2 className="mx-5">Sales Invoice</h2>
-          <button className="btn btn-danger" onClick={goBack}>
-            Back
-          </button>
-        </div>
+      <div className={props.isEdit ? "" : "page-content"}>
+        {props.isEdit ? (
+          <></>
+        ) : (
+          <>
+            <div
+              className="mb-5 mt-3"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <h2 className="mx-5">Sales Invoice</h2>
+              <button className="btn btn-danger" onClick={goBack}>
+                Back
+              </button>
+            </div>
+          </>
+        )}
         <Grid container spacing={2}>
           <Grid item lg={11} style={{ margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
@@ -531,7 +537,6 @@ const Sales = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                    
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="remarks" className="form-label">
@@ -574,7 +579,9 @@ const Sales = (props) => {
                           <span className="bounce2" />
                           <span className="bounce3" />
                         </span>
-                        <span className="label">Save</span>
+                        <span className="label">
+                          {props.isEdit ? "Update" : "Save"}
+                        </span>
                       </Button>{" "}
                     </div>
                   </Form>

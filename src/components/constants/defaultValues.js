@@ -1,1 +1,1 @@
-export const smartsightAPI = "http://13.127.111.114";
+export const smartsightAPI = "http://16.24.44.74";

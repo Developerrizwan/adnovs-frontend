@@ -6,11 +6,7 @@ import apiAuth from "../../helpers/ApiAuth";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
-import axios from "axios";
 import VoucherTable from "./VoucherTable";
-// import AddUser from "./AddUser";
-// import * as FileSaver from "file-saver";
-// import * as XLSX from "xlsx";
 
 const Vouchers = (props) => {
   const [createModal, setCreateModal] = useState(false);
@@ -25,7 +21,6 @@ const Vouchers = (props) => {
   });
 
   const voucherOptions = [
-    // { value: "vouchers", label: "All" },
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
@@ -33,28 +28,8 @@ const Vouchers = (props) => {
     { value: "Credit", label: "Credit" },
   ];
 
-  // const FilteredUsers = users.filter((item) => {
-  //   const values = Object.values(item);
-  //   for (let i = 0; i < values.length; i++) {
-  //     const value = values[i];
-  //     if (
-  //       typeof value === "string" &&
-  //       value.toLowerCase().includes(searchValue.toLowerCase())
-  //     ) {
-  //       return true;
-  //     } else if (
-  //       typeof value === "number" &&
-  //       value.toString().includes(searchValue)
-  //     ) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // });
-
   useEffect(() => {
     getUser(userPagination);
-    // deleteUser();
   }, []);
 
   const getUser = (pgdata, val) => {
@@ -104,33 +79,10 @@ const Vouchers = (props) => {
         console.log(error.response?.headers);
       });
   };
-  // const handleExportData = () => {
-  //   let apiData = users.map((user) => {
-  //     let newuser = {
-  //       "User Name": user.name,
-  //       Email: user.email,
-  //       Mobile: user.mobile,
-  //       Role: user.groups?.length > 0 ? user.groups.join(",") : "",
-  //     };
-
-  //     return newuser;
-  //   });
-
-  //   const fileType =
-  //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-  //   const fileExtension = ".xlsx";
-  //   const fileName = "UserData";
-  //   const ws = XLSX.utils.json_to_sheet(apiData);
-  //   const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-  //   const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-  //   const data = new Blob([excelBuffer], { type: fileType });
-  //   FileSaver.saveAs(data, fileName + fileExtension);
-  // };
 
   const handleVoucherChange = (e) => {
     setSelectedValue(e.value);
     getUser(e.value);
-    console.log("handleVoucherChange", selectedValue)
   };
 
   return (
@@ -145,17 +97,11 @@ const Vouchers = (props) => {
               setCreateModal(true);
             }}
             add_new_url={"/journal-voucher"}
-            // upload_new={true}
-            // upload_new_url={"/user-management/upload"}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
               getUser(userPagination, val);
-            }}
-            export_button={users.length > 0 ? true : false}
-            exportData={() => {
-              // handleExportData();
             }}
             add_vouchers={true}
             add_voucher_select={true}
@@ -163,12 +109,6 @@ const Vouchers = (props) => {
             handleVoucherChange={handleVoucherChange}
           />
         </Container>
-        {/* <input
-          type="text"
-          value={filter}
-          onChange={handleFilterChange}
-          placeholder="Search..."
-        /> */}
         <Row>
           <Colxx lg="12">
             <>
