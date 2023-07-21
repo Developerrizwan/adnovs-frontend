@@ -103,7 +103,7 @@ const CoverSignIn = (props) => {
                         Sign in to continue to Neurowonk.
                       </p> */}
                     </div>
-                    
+
                     <div className="mt-4">
                       <Formik
                         initialValues={{
@@ -111,7 +111,8 @@ const CoverSignIn = (props) => {
                           password: "",
                         }}
                         onSubmit={(values) => {
-                          dispatch(loginUser(values, props.history));
+                          if (values.email && values.password)
+                            dispatch(loginUser(values, props.history));
                         }}
                       >
                         {({ errors, touched }) => (
@@ -214,38 +215,6 @@ const CoverSignIn = (props) => {
                                 Sign In
                               </Button>
                             </div>
-
-                            {/* <div className="mt-4 text-center">
-                                  <div className="signin-other-title">
-                                    <h5 className="fs-14 mb-4 title">
-                                      Sign In with
-                                    </h5>
-                                  </div>
-
-                                  <div>
-                                    <Button
-                                      color="primary"
-                                      className="btn-icon me-1"
-                                    >
-                                      <i className="ri-facebook-fill fs-16"></i>
-                                    </Button>
-                                    <Button
-                                      color="danger"
-                                      className="btn-icon me-1"
-                                    >
-                                      <i className="ri-google-fill fs-16"></i>
-                                    </Button>
-                                    <Button
-                                      color="dark"
-                                      className="btn-icon me-1"
-                                    >
-                                      <i className="ri-github-fill fs-16"></i>
-                                    </Button>
-                                    <Button color="info" className="btn-icon">
-                                      <i className="ri-twitter-fill fs-16"></i>
-                                    </Button>
-                                  </div>
-                                </div> */}
                           </Form>
                         )}
                       </Formik>
@@ -253,26 +222,6 @@ const CoverSignIn = (props) => {
 
                     <div className="mt-4 text-center">
                       <div>
-                        {/* <GoogleLogin
-                              // render={(renderProps) => (
-                              //   <Button
-                              //     color="danger"
-                              //     to="#"
-                              //     className="btn-icon me-1"
-                              //     onClick={renderProps.onClick}
-                              //   >
-                              //     <i className="ri-google-fill fs-16" />
-                              //   </Button>
-                              // )}
-                              className="googleLogin"
-                              clientId="578586401941-afd5dm86n6sh978s3bi8f1hk37tsur3f.apps.googleusercontent.com"
-                              onSuccess={(res) =>
-                                console.log("dddddddddd", res)
-                              }
-                              onFailure={(err) => {
-                                console.log("eeeeeeer", err);
-                              }}
-                            /> */}
                         <div className="signin-other-title mt-4">
                           <h5
                             className="fs-13 mb-4 title"
@@ -308,23 +257,6 @@ const CoverSignIn = (props) => {
           </Col>
         </Row>
       </div>
-
-      {/* <footer className="footer">
-          <Container>
-            <Row>
-              <Col lg={12}>
-                <div className="text-center">
-                  <p className="mb-0">
-                    &copy; {new Date().getFullYear()} Neurowonk{" "}
-                    <i className="mdi mdi-heart text-danger"></i> by Nexactly AI
-                    Solutions
-                  </p>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </footer> */}
-      {/* </div> */}
     </React.Fragment>
   );
 };

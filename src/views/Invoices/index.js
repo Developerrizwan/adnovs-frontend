@@ -97,15 +97,10 @@ const Invoices = (props) => {
   const handleInvoiceChange = (e) => {
     setSelectedValue(e.value);
     getInvoices(e.value);
-    console.log("handleInvoiceChange", selectedValue)
   };
 
   return (
     <>
-      {/* <div className="page-content"> */}
-      {/* <Sales /> */}
-      {/* </div> */}
-
       <div className="page-content">
         <Container fluid>
           <BreadCrumb

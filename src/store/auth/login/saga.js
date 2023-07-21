@@ -46,7 +46,6 @@ const postGetGoogleToken = async (gtoken) =>
     });
 
 function* loginUser({ payload: { user, history, type } }) {
-  // history.push("/dashboard")
   try {
     if (type) {
       const loginUser = yield call(postGetGoogleToken, user.credential);
