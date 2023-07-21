@@ -36,7 +36,7 @@ const Jobs = (props) => {
     },
   ];
 
-  const getJobs = (pgdata, val) => {
+  const getJobs = (pgdata, val, type) => {
     setLoading(true);
     apiAuth
       .get(
@@ -44,7 +44,9 @@ const Jobs = (props) => {
           "&page=" +
           pgdata?.currentPage +
           "&search=" +
-          (val ? val : "")
+          (val ? val : "") +
+          "&type=" +
+          type
       )
 
       .then((response) => {
@@ -54,7 +56,7 @@ const Jobs = (props) => {
           ...pgdata,
           totalRows: response.data.count,
         });
-        setAllJobs(data.results);
+        setAllJobs(data.results.filter((job) => job.job_type === type));
         setLoading(false);
       })
       .catch((error) => {
@@ -64,7 +66,7 @@ const Jobs = (props) => {
   };
 
   const deleteJob = (id) => {
-    let url = `/api/master/job/${id}`;
+    let url = `/api/master/job/${id}/`;
     apiAuth
       .delete(url)
       .then((response) => {
@@ -93,8 +95,8 @@ const Jobs = (props) => {
 
   const handleJobChange = (e) => {
     setSelectedValue(e.value);
-    getJobs(e.value);
-    console.log("handleJobChange", selectedValue)
+    getJobs(jobPagination, searchValue, e.value);
+    console.log("handleJobChange", selectedValue);
   };
 
   return (

@@ -10,13 +10,14 @@ import {
   ModalFooter,
   UncontrolledDropdown,
 } from "reactstrap";
+import EditJob from "./EditJob";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
-
 const JobTable = (props) => {
   // const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState([]);
+  const [deletId, setDeletId] = useState();
+  const [selectedJob, setSelectedJob] = useState([]);
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13"> BL Number</span>,
@@ -74,7 +75,7 @@ const JobTable = (props) => {
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
-                  setSelectedUser(value);
+                  setSelectedJob(value);
                   setEditModal(true);
                 }}
               >
@@ -86,6 +87,7 @@ const JobTable = (props) => {
                 // onClick={() => props.deleteJob(value.id)}
                 onClick={() => {
                   setDeleteModal(true);
+                  setDeletId(value);
                 }}
               >
                 <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
@@ -196,18 +198,17 @@ const JobTable = (props) => {
           Edit Job
         </ModalHeader>
         <ModalBody>
-          {/* <EditUser
+          <EditJob
             closeAddPopup={() => {
               setEditModal(false);
-              setSelectedUser(null);
-              props.getUser();
+              setSelectedJob(null);
+              props.getJobs();
             }}
-            userData={selectedUser}
+            allJobs={selectedJob}
             history={props.history}
-          /> */}
+          />
         </ModalBody>
       </Modal>
-
 
       <Modal
         id="signupModals"
@@ -232,10 +233,15 @@ const JobTable = (props) => {
           </div>
         </ModalBody>
         <ModalFooter>
-        <Button onClick={() => {
-        props.deleteJob(); 
-        setDeleteModal((prev) => !prev) }}>Yes</Button>
-        <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
+          <Button
+            onClick={() => {
+              setDeleteModal((prev) => !prev);
+              props.deleteJob(deletId.id);
+            }}
+          >
+            Yes
+          </Button>
+          <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
         </ModalFooter>
       </Modal>
     </>

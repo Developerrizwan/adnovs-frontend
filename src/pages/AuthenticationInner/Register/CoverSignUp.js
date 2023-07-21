@@ -95,9 +95,7 @@ const CoverSignUp = (props) => {
 
   return (
     <React.Fragment>
-      <div
-        className="auth-page-wrapper"
-      >
+      <div className="auth-page-wrapper">
         <div className="bg-overlay"></div>
         <div className="auth-page-content overflow-hidden pb-0">
           {/* <Container> */}
@@ -122,15 +120,15 @@ const CoverSignUp = (props) => {
                             first_name: "Manish",
                             last_name: "",
                             email: "manish@darsa.ai",
-                            password: "efgH123$",
+                            password: "",
                             confirmPassword: "efgH123$",
                             // username: "Manish",
                             mobile: "",
                             company_name: "",
                             company_email: "",
                             company_address: "",
-                            state: undefined,
-                            country: undefined,
+                            state: "",
+                            country: "",
                           }}
                           validationSchema={Yup.object({
                             first_name: Yup.string()
@@ -144,6 +142,15 @@ const CoverSignUp = (props) => {
                             email: Yup.string()
                               .email()
                               .required("Email is Required"),
+                            password: Yup.string().required(
+                              "Password is Required"
+                            ),
+                            confirmPassword: Yup.string()
+                              .oneOf(
+                                [Yup.ref("password"), null],
+                                "Passwords must match"
+                              )
+                              .required("Enter your password again"),
                             mobile: Yup.string()
                               .max(10, "Must be 20 characters or less")
                               .trim()
@@ -159,6 +166,13 @@ const CoverSignUp = (props) => {
                               .max(20, "Must be 20 characters or less")
                               .trim()
                               .required("Company Address is Required"),
+
+                            country: Yup.string()
+                              .ensure()
+                              .required("Country is Required"),
+                            state: Yup.string()
+                              .ensure()
+                              .required("State is Required"),
                           })}
                           onSubmit={(values) => {
                             // values.mobile = values.mobile
@@ -174,7 +188,13 @@ const CoverSignUp = (props) => {
                             dispatch(registerPublicUser(values, props.history));
                           }}
                         >
-                          {({ values, errors, touched, setFieldValue }) => (
+                          {({
+                            values,
+                            errors,
+                            touched,
+                            setFieldValue,
+                            handleBlur,
+                          }) => (
                             <Form className="av-tooltip tooltip-label-bottom">
                               <Grid container spacing={2}>
                                 <Grid item lg={6} xs={12}>
@@ -456,13 +476,19 @@ const CoverSignUp = (props) => {
                               </div>
 
                               <Grid container spacing={2}>
-                                <Grid item xs={12} lg={6}>
+                                <Grid
+                                  item
+                                  xs={12}
+                                  lg={6}
+                                  style={{ zIndex: "200" }}
+                                >
                                   <div className="mb-3">
                                     <label
                                       htmlFor="country"
                                       className="form-label"
                                     >
                                       Country
+                                      <span className="text-danger">*</span>
                                     </label>
                                     <Select
                                       options={Country.getAllCountries().map(
@@ -473,6 +499,7 @@ const CoverSignUp = (props) => {
                                           };
                                         }
                                       )}
+                                      onBlur={handleBlur}
                                       value={selectedCountry}
                                       onChange={(data) => {
                                         setFieldValue("country", data.label);
@@ -487,13 +514,19 @@ const CoverSignUp = (props) => {
                                   </div>
                                 </Grid>
 
-                                <Grid item xs={12} lg={6}>
+                                <Grid
+                                  item
+                                  xs={12}
+                                  lg={6}
+                                  style={{ zIndex: "100" }}
+                                >
                                   <div className="mb-3">
                                     <label
                                       htmlFor="state"
                                       className="form-label"
                                     >
                                       State
+                                      <span className="text-danger">*</span>
                                     </label>
                                     <Select
                                       options={State.getAllStates().map(
@@ -504,6 +537,7 @@ const CoverSignUp = (props) => {
                                           };
                                         }
                                       )}
+                                      required
                                       value={selectedState}
                                       onChange={(data) => {
                                         setFieldValue("state", data.label);

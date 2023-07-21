@@ -93,7 +93,7 @@ const CoverPasswReset = () => {
                         </div> */}
                       <div className="p-2">
                         <form>
-                          <div className="mb-4">
+                          <div className="">
                             <label className="form-label">Email Address</label>
                             <input
                               type="email"
@@ -103,6 +103,20 @@ const CoverPasswReset = () => {
                               required
                               onChange={(e) => setEmail(e.target.value)}
                             />
+                            {openFields && (
+                              <div className="d-flex justify-content-end align-items-center mt-3">
+                                <button
+                                  className="btn btn-success"
+                                  onClick={(e) => {
+                                    // e.preventDefault();
+                                    // e.stopPropagation();
+                                    getOpt();
+                                  }}
+                                >
+                                  Resend OTP
+                                </button>
+                              </div>
+                            )}
                           </div>
 
                           {openFields && (

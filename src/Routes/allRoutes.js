@@ -73,6 +73,7 @@ import ResetPassword from "../pages/AuthenticationInner/ResetPassword";
 import ResetSuccessful from "../pages/AuthenticationInner/ResetPassword/ResetSuccessful";
 import RegisterSuccessful from "../pages/AuthenticationInner/Register/RegisterSuccessful";
 import AddJobs from "../views/Jobs/AddJob";
+// import EditJobs from "../views/Jobs/EditJob";
 import AddUser from "../views/UserManagement/AddUser";
 import EditUser from "../views/UserManagement/EditUser";
 import AllVouchers from "../views/Vouchers/AllVouchers";
@@ -95,6 +96,7 @@ const authProtectedRoutes = [
   { path: "/client", component: Client },
   { path: "/jobs", component: Jobs },
   { path: "/jobs/add", component: AddJobs },
+  // { path: "/jobs/edit/:jobId/", component: EditJobs },
   { path: "/vouchers", component: Vouchers },
   { path: "/all-vouchers", component: AllVouchers },
   { path: "/journal-voucher", component: JournalVoucher },

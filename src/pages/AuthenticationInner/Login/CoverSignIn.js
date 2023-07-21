@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import ReCAPTCHA from "react-google-recaptcha";
 import NotificationManager from "../../../components/Common/NotificationManager";
 import { GoogleLogin } from "react-google-login";
+import * as Yup from "yup";
 
 const CoverSignIn = (props) => {
   const dispatch = useDispatch();
@@ -110,6 +111,14 @@ const CoverSignIn = (props) => {
                           email: "",
                           password: "",
                         }}
+                        validationSchema={Yup.object({
+                          email: Yup.string()
+                            .email()
+                            .required("Email is Required"),
+                          password: Yup.string().required(
+                            "Password is Required"
+                          ),
+                        })}
                         onSubmit={(values) => {
                           if (values.email && values.password)
                             dispatch(loginUser(values, props.history));
