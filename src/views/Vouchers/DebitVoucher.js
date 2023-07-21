@@ -56,7 +56,7 @@ const DebitVoucher = (props) => {
         const { data } = res;
         let opts = data.map((dd) => {
           return {
-            label: dd?.job_status,
+            label: `${dd?.bl_number} - ${dd?.consignee_name}`,
             value: dd?.id,
           };
         });
@@ -431,7 +431,7 @@ const DebitVoucher = (props) => {
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="naration" className="form-label">
-                            naration
+                            Naration
                             <span className="text-danger">*</span>
                           </label>
                           <Field

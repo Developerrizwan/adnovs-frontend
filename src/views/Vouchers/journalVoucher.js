@@ -21,7 +21,10 @@ const JournalVoucher = (props) => {
   const [jobs, setJobs] = useState([]);
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState({
+    value: "all",
+    label: "All",
+  });
   const [date, setDate] = useState(new Date());
   const [glDate, setGlDate] = useState(new Date());
   const [selectedVoucher, setSelectedVoucher] = useState({
@@ -40,7 +43,7 @@ const JournalVoucher = (props) => {
         const { data } = res;
         let opts = data.map((dd) => {
           return {
-            label: dd?.job_status,
+            label: `${dd?.bl_number} - ${dd?.consignee_name}`,
             value: dd?.id,
           };
         });
@@ -107,22 +110,23 @@ const JournalVoucher = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  voucher_type: "Journal",
-                  job: "",
-                  branch: "",
-                  book: "",
-                  date: "",
-                  glDate: "",
-                  fc_amount: "",
-                  amount_sar: "",
-                  party_account: "",
-                  against_concern: "",
-                  naration: "",
-                  outstanding_amount: "",
-                  remarks: "",
+                  voucher_type: props.voucherData?.voucher_type || "Journal",
+                  job: String(props.voucherData?.job) || "",
+                  branch: props.voucherData?.branch || "",
+                  book: props.voucherData?.book || "Book",
+                  date: props.voucherData?.date || "",
+                  glDate: props.voucherData?.glDate || "",
+                  fc_amount: props.voucherData?.fc_amount || "",
+                  amount_sar: props.voucherData?.amount_sar || "",
+                  party_account: props.voucherData?.party_account || "",
+                  against_concern: props.voucherData?.against_concern || "",
+                  naration: props.voucherData?.naration || "",
+                  outstanding_amount:
+                    props.voucherData?.outstanding_amount || "",
+                  remarks: props.voucherData?.remarks || "",
                 }}
                 validationSchema={Yup.object({
-                  job: Yup.string().ensure().required("Job is Required"),
+                  // job: Yup.string().ensure().required("Job is Required"),
                   branch: Yup.string().required("Branch is Required"),
                   book: Yup.string().required("Book is Required"),
                   fc_amount: Yup.string().required("FC Amount is Required"),
@@ -134,34 +138,63 @@ const JournalVoucher = (props) => {
                   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
-                  values["job"] = selectedJob.value;
+                  // values["job"] = selectedJob.value;
                   values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
                   values["glDate"] = moment(glDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
                   );
-                  apiAuth
-                    .post("/api/master/voucher/", values)
-                    .then((res) => {
-                      NotificationManager.success(
-                        "Journal Voucher",
-                        "Voucher Created Successfully",
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                      history.push("/vouchers");
-                    })
-                    .catch((err) => {
-                      NotificationManager.error(
-                        "Journal Voucher",
-                        "Voucher Create Error",
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                    });
+                  if (props.isEdit && props.voucherData) {
+                    apiAuth
+                      .patch(
+                        `/api/master/voucher/${props.voucherData?.id}/`,
+                        values
+                      )
+                      .then((res) => {
+                        NotificationManager.success(
+                          "Journal Voucher",
+                          "Voucher Updated Successfully",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        props.closeAddPopup();
+                      })
+                      .catch((err) => {
+                        NotificationManager.error(
+                          "Journal Voucher",
+                          "Voucher Create Error",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                      });
+                  } else {
+                    apiAuth
+                      .post("/api/master/voucher/", values)
+                      .then((res) => {
+                        NotificationManager.success(
+                          "Journal Voucher",
+                          "Voucher Created Successfully",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        history.push("/vouchers");
+                      })
+                      .catch((err) => {
+                        NotificationManager.error(
+                          "Journal Voucher",
+                          "Voucher Create Error",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                      });
+                  }
                 }}
               >
                 {({ values, errors, touched, setFieldValue }) => (
@@ -201,7 +234,7 @@ const JournalVoucher = (props) => {
                             options={jobOptions}
                             value={selectedJob}
                             onChange={(data) => {
-                              setFieldValue("job", data.label);
+                              setFieldValue("job", data.value);
                               setSelectedJob(data);
                             }}
                             styles={customStyles}
@@ -438,7 +471,7 @@ const JournalVoucher = (props) => {
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="naration" className="form-label">
-                            naration
+                            Naration
                             <span className="text-danger">*</span>
                           </label>
                           <Field

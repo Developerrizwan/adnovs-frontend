@@ -18,7 +18,7 @@ const Jobs = (props) => {
   const [allJobs, setAllJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("Job");
   const [jobPagination, setJobPagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
@@ -90,13 +90,12 @@ const Jobs = (props) => {
   };
 
   useEffect(() => {
-    getJobs(jobPagination, searchValue);
+    getJobs(jobPagination, searchValue, selectedValue);
   }, []);
 
   const handleJobChange = (e) => {
     setSelectedValue(e.value);
     getJobs(jobPagination, searchValue, e.value);
-    console.log("handleJobChange", selectedValue);
   };
 
   return (
@@ -120,6 +119,10 @@ const Jobs = (props) => {
             add_jobs={true}
             add_job_select={true}
             options={options}
+            selectedValue={{
+              label: selectedValue,
+              value: selectedValue,
+            }}
           />
         </Container>
 

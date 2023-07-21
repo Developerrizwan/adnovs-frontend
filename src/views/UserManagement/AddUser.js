@@ -153,7 +153,7 @@ const AddUser = (props) => {
               <div className="card-body">
                 <Formik
                   initialValues={{
-                    name: "",
+                    first_name: "",
                     password: "",
                     user_name: "",
                     mobile: "",
@@ -166,7 +166,7 @@ const AddUser = (props) => {
                     region: [],
                   }}
                   validationSchema={Yup.object({
-                    name: Yup.string()
+                    first_name: Yup.string()
                       .max(20, "Must be 20 characters or less")
                       .trim()
                       .required("Required"),
@@ -180,17 +180,6 @@ const AddUser = (props) => {
                     email: Yup.string().email().required("Required"),
                   })}
                   onSubmit={(values, { resetForm }) => {
-                    if (selectedRole === "manager" || selectedRole === "user") {
-                      const states = selectedState.map((ss) => ss?.value);
-                      const region = selectedRegion.map((ss) => ss?.value);
-                      const city = selectedCity.map((ss) => ss?.value);
-                      values["state"] = states;
-                      values["region"] = region;
-                      values["city"] = city;
-                      values["workshops"] = workshopId.map((wk) => wk?.value);
-                    }
-                    values["contact_center_id"] = centerId;
-
                     const url = "/api/createuser/";
                     apiAuth
                       .post(url, values)

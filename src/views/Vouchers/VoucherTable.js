@@ -11,12 +11,15 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
+import { customStyles } from "../../assets/CustomTableStyles";
 import JournalVoucher from "./JournalVoucher";
 
 const VoucherTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState([]);
+  const [selectedVoucher, setSelectedVoucher] = useState([]);
+  const [deletId, setDeletId] = useState();
+
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13"> Voucher Type</span>,
@@ -96,7 +99,7 @@ const VoucherTable = (props) => {
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
-                  setSelectedUser(value);
+                  setSelectedVoucher(value);
                   setEditModal(true);
                 }}
               >
@@ -107,6 +110,7 @@ const VoucherTable = (props) => {
                 className="remove-item-btn"
                 onClick={() => {
                   setDeleteModal(true);
+                  setDeletId(value);
                 }}
               >
                 <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
@@ -121,26 +125,27 @@ const VoucherTable = (props) => {
   return (
     <>
       <DataTable
+        customStyles={customStyles}
         columns={cols}
         data={props.users}
-        paginationPerPage={props.userPagination?.rowsPerPage}
+        paginationPerPage={props.voucherPagination?.rowsPerPage}
         onChangePage={(p, t) => {
           props.handlePagination({
-            ...props.userPagination,
+            ...props.voucherPagination,
             currentPage: p,
           });
         }}
         onChangeRowsPerPage={(c, t) => {
           props.handlePagination({
-            ...props.userPagination,
+            ...props.voucherPagination,
             rowsPerPage: c,
             currentPage: t,
           });
         }}
         paginationServer
-        paginationDefaultPage={props.userPagination?.currentPage}
-        paginationTotalRows={props.userPagination?.totalRows}
-        pagination={props.users.length > 10 ? true : false}
+        paginationDefaultPage={props.voucherPagination?.currentPage}
+        paginationTotalRows={props.voucherPagination?.totalRows}
+        pagination={true}
       />
       <Modal
         id="signupModals"
@@ -163,10 +168,10 @@ const VoucherTable = (props) => {
           <JournalVoucher
             closeAddPopup={() => {
               setEditModal(false);
-              setSelectedUser(null);
-              props.getUser();
+              setSelectedVoucher(null);
+              props.getVouchers();
             }}
-            userData={selectedUser}
+            voucherData={selectedVoucher}
             history={props.history}
             isEdit={true}
           />
@@ -197,7 +202,7 @@ const VoucherTable = (props) => {
         <ModalFooter>
           <Button
             onClick={() => {
-              props.deleteUser();
+              props.deleteUser(deletId.id);
               setDeleteModal((prev) => !prev);
             }}
           >
