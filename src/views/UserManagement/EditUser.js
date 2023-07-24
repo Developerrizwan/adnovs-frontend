@@ -153,38 +153,50 @@ const EditUser = (props) => {
         <Colxx lg="12">
           <Formik
             initialValues={{
-              first_name: props.userData?.first_name ? props.userData?.first_name : "",
-              last_name: props.userData?.last_name ? props.userData?.last_name : "",
+              first_name: props.userData?.first_name
+                ? props.userData?.first_name
+                : "",
+              last_name: props.userData?.last_name
+                ? props.userData?.last_name
+                : "",
+              email: props.userData?.email ? props.userData?.email : "",
               password: "",
               mobile: props.userData?.mobile ? props.userData?.mobile : "",
             }}
             validationSchema={Yup.object({
-              name: Yup.string()
+              first_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
                 .required("Required"),
-              password: Yup.string(),
+              last_name: Yup.string()
+                .max(20, "Must be 20 characters or less")
+                .trim()
+                .required("Required"),
+              // password: Yup.string(),
               mobile: Yup.string().max(20, "Must be 50 characters or less"),
+              email: Yup.string().email().required("Required"),
             })}
             onSubmit={(values, { resetForm }) => {
-              const states = selectedStates.map((ss) => ss?.value);
-              const region = selectedRegions.map((ss) => ss?.value);
-              const city = selectedCities.map((ss) => ss?.value);
+              // const states = selectedStates.map((ss) => ss?.value);
+              // const region = selectedRegions.map((ss) => ss?.value);
+              // const city = selectedCities.map((ss) => ss?.value);
 
               const Obj = {
                 id: props.userData.id,
-                name: values.name,
-                password: values.password,
+                first_name: values.first_name,
+                last_name: values.last_name,
+                // password: values.password,
                 mobile: values.mobile,
+                email: values.email,
                 // role: values.role,
-                state: states,
-                region: region,
-                city: city,
-                workshops: selectedworkshops.map((sw) => sw?.value),
+                // state: states,
+                // region: region,
+                // city: city,
+                // workshops: selectedworkshops.map((sw) => sw?.value),
               };
-              const url = "/api/updateuser/";
+              const url = `/api/user/delete/${props.userData.id}/`;
               apiAuth
-                .put(url, Obj)
+                .patch(url, Obj)
                 .then((response) => {
                   if (response.status === 200) {
                     NotificationManager.success(
@@ -259,8 +271,26 @@ const EditUser = (props) => {
                       />
                     </div>
                   </Colxx>
-                  <Row>
-                    <Colxx lg="12">
+                  {/* <Row> */}
+                  <Colxx lg="12">
+                    <div className="form-group mb-3">
+                      <Label htmlFor="email">Email</Label>
+                      <Field
+                        className="form-control"
+                        name="email"
+                        placeholder="Email"
+                        type="text"
+                        disabled={true}
+                      />
+                      <ErrorMessage
+                        name="email"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Colxx>
+                  {/* <Colxx lg="6">
                       <div className="form-group mb-3">
                         <Label htmlFor="password">Password</Label>
                         <Field
@@ -276,8 +306,8 @@ const EditUser = (props) => {
                           )}
                         />
                       </div>
-                    </Colxx>
-                  </Row>
+                    </Colxx> */}
+                  {/* </Row> */}
 
                   <Colxx lg="12">
                     <div className="form-group mb-3">

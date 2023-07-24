@@ -154,56 +154,67 @@ const AddUser = (props) => {
                 <Formik
                   initialValues={{
                     first_name: "",
+                    last_name: "",
                     password: "",
-                    user_name: "",
+                    // user_name: "",
                     mobile: "",
                     email: "",
                     role: "",
-                    workshop_id: "",
-                    contact_center_id: "",
-                    city: [],
-                    state: [],
-                    region: [],
+                    // workshop_id: "",
+                    // contact_center_id: "",
+                    // city: [],
+                    // state: [],
+                    // region: [],
                   }}
                   validationSchema={Yup.object({
                     first_name: Yup.string()
                       .max(20, "Must be 20 characters or less")
                       .trim()
                       .required("Required"),
-                    password: Yup.string(),
+                    last_name: Yup.string()
+                      .max(20, "Must be 20 characters or less")
+                      .trim()
+                      .required("Required"),
+                    password: Yup.string().required("Required"),
                     role: Yup.string().required("Required!"),
-                    user_name: Yup.string().ensure(),
-                    mobile: Yup.string().max(
-                      20,
-                      "Must be 50 characters or less"
-                    ),
+                    // user_name: Yup.string().ensure(),
+                    mobile: Yup.string()
+                      .matches(
+                        /^[0-9]{10}$/,
+                        "Mobile number must be exactly 10 digits"
+                      )
+                      .required("Mobile number is required"),
                     email: Yup.string().email().required("Required"),
                   })}
                   onSubmit={(values, { resetForm }) => {
-                    const url = "/api/createuser/";
+                    const company = JSON.parse(
+                      localStorage.getItem("authUser")
+                    )?.company_id;
+                    values["company_id"] = company;
+                    const url = "/api/user-create/";
                     apiAuth
                       .post(url, values)
                       .then((response) => {
-                        if (response.status === 200) {
-                          NotificationManager.success(
-                            "",
-                            `User Added Successfully`,
-                            3000,
-                            null,
-                            null,
-                            ""
-                          );
-                          props?.history?.push("/user-management");
-                        } else {
-                          NotificationManager.error(
-                            "",
-                            `User Add Error`,
-                            3000,
-                            null,
-                            null,
-                            ""
-                          );
-                        }
+                        // if (response.status === 200) {
+                        NotificationManager.success(
+                          "",
+                          `User Added Successfully`,
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        props?.history?.push("/user-management");
+                        // } else {
+                        //   NotificationManager.error(
+                        //     "",
+                        //     `User Add Error`,
+                        //     3000,
+                        //     null,
+                        //     null,
+                        //     ""
+                        //   );
+                        // }
                       })
                       .catch((error) => {
                         NotificationManager.error(

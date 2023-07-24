@@ -72,7 +72,7 @@ const UserManagement = (props) => {
   };
 
   const deleteUser = (id) => {
-    let url = `/api/deleteuser/${id}`;
+    let url = `/api/user/delete/${id}/`;
     apiAuth
       .delete(url)
       .then((response) => {
@@ -85,7 +85,8 @@ const UserManagement = (props) => {
           null,
           ""
         );
-        getUser(userPagination);
+
+        getUser(userPagination, searchValue);
       })
       .catch(function (error) {
         console.log(error);
@@ -160,7 +161,7 @@ const UserManagement = (props) => {
                   <Card>
                     <UserManagementTable
                       users={users}
-                      deleteUser={(val) => deleteUser(val)}
+                      deleteUser={deleteUser}
                       userPagination={{ ...userPagination }}
                       handlePagination={(data) => {
                         setUserPagination(data);
