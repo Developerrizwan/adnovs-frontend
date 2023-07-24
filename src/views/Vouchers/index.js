@@ -14,8 +14,8 @@ const Vouchers = (props) => {
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [selectedVoucher, setSelectedVoucher] = useState({
-    value: "All",
-    label: "All",
+    value: "Journal",
+    label: "Journal",
   });
   const [voucherPagination, setVoucherPagination] = useState({
     rowsPerPage: 10,
@@ -24,7 +24,7 @@ const Vouchers = (props) => {
   });
 
   const voucherOptions = [
-    { value: "All", label: "All" },
+    // { value: "All", label: "All" },
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
@@ -33,10 +33,7 @@ const Vouchers = (props) => {
   ];
 
   useEffect(() => {
-    if (selectedVoucher.value === "All") getVouchers(voucherPagination);
-    else {
-      getSelVoucherData(selectedVoucher.value);
-    }
+    getSelVoucherData(selectedVoucher.value);
   }, [selectedVoucher.value]);
 
   // useEffect(() => {
@@ -54,37 +51,37 @@ const Vouchers = (props) => {
           totalRows: data.count,
         });
         setUsers(data.results);
-        // setLoading(false);
+        setLoading(false);
         console.log(response);
       })
       .catch((err) => console.log(err));
   };
 
-  const getVouchers = (pgdata, val, type) => {
-    apiAuth
-      .get(
-        "/api/master/voucher/?" +
-          "&type=" +
-          type +
-          "&page=" +
-          pgdata?.currentPage +
-          "&search=" +
-          (val ? val : "")
-      )
-      .then((response) => {
-        let data = response.data;
-        console.log("xswjhjwx", response);
-        setVoucherPagination({
-          ...pgdata,
-          totalRows: data.length,
-        });
-        setUsers(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const getVouchers = (pgdata, val, type) => {
+  //   apiAuth
+  //     .get(
+  //       "/api/master/voucher/?" +
+  //         "&type=" +
+  //         type +
+  //         "&page=" +
+  //         pgdata?.currentPage +
+  //         "&search=" +
+  //         (val ? val : "")
+  //     )
+  //     .then((response) => {
+  //       let data = response.data;
+  //       console.log("xswjhjwx", response);
+  //       setVoucherPagination({
+  //         ...pgdata,
+  //         totalRows: data.length,
+  //       });
+  //       setUsers(data);
+  //       setLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   const deleteUser = (id) => {
     let url = `/api/master/voucher/${id}/`;
@@ -100,7 +97,8 @@ const Vouchers = (props) => {
           null,
           ""
         );
-        getVouchers(voucherPagination);
+        getSelVoucherData(selectedVoucher.value);
+        // getVouchers(voucherPagination);
       })
       .catch(function (error) {
         console.log(error);
@@ -131,7 +129,8 @@ const Vouchers = (props) => {
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getVouchers(voucherPagination, val);
+              getSelVoucherData(selectedVoucher.value);
+              // getVouchers(voucherPagination, val);
             }}
             add_vouchers={true}
             add_voucher_select={true}
@@ -158,15 +157,17 @@ const Vouchers = (props) => {
                       voucherPagination={{ ...voucherPagination }}
                       handlePagination={(data) => {
                         setVoucherPagination(data);
-                        getVouchers(data);
+                        getSelVoucherData(selectedVoucher.value);
+                        // getVouchers(data);
                       }}
                       getVouchers={() => {
                         setUsers([]);
-                        getVouchers(
-                          voucherPagination,
-                          searchValue,
-                          selectedVoucher
-                        );
+                        getSelVoucherData(selectedVoucher.value);
+                        // getVouchers(
+                        //   voucherPagination,
+                        //   searchValue,
+                        //   selectedVoucher
+                        // );
                       }}
                     />
                   </Card>
