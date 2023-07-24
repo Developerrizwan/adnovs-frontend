@@ -27,15 +27,15 @@ const AddJobs = (props) => {
   const typeOptions = [
     {
       label: "Air Freight",
-      value: "Air_Freight",
+      value: "Air Freight",
     },
     {
       label: "Sea Freight",
-      value: "Sea_Freight",
+      value: "Sea Freight",
     },
     {
       label: "Land Freight",
-      value: "Land_Freight",
+      value: "Land Freight",
     },
     {
       label: "Transportation",
@@ -239,8 +239,8 @@ const AddJobs = (props) => {
                   values["company"] = company;
 
                   const url = "/api/master/job/";
-                  apiAuth.post(url, values);
-                  console
+                  apiAuth
+                    .post(url, values)
                     .then((response) => {
                       // if (response.status === 201) {
                       NotificationManager.success(
@@ -253,14 +253,14 @@ const AddJobs = (props) => {
                       );
                       props?.history?.push("/jobs");
                       // } else {
-                      NotificationManager.error(
-                        "",
-                        `Job Create Error`,
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
+                      // NotificationManager.error(
+                      //   "",
+                      //   `Job Create Error`,
+                      //   3000,
+                      //   null,
+                      //   null,
+                      //   ""
+                      // );
                       // }
                     })
                     .catch((error) => {

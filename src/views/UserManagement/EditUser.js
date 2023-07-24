@@ -161,20 +161,27 @@ const EditUser = (props) => {
                 : "",
               email: props.userData?.email ? props.userData?.email : "",
               password: "",
+
               mobile: props.userData?.mobile ? props.userData?.mobile : "",
             }}
             validationSchema={Yup.object({
               first_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
-                .required("Required"),
+                .required("First Name is Required"),
               last_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
-                .required("Required"),
+                .required("Last Name is Required"),
               // password: Yup.string(),
-              mobile: Yup.string().max(20, "Must be 50 characters or less"),
-              email: Yup.string().email().required("Required"),
+              mobile: Yup.string()
+                .matches(
+                  /^[0-9]{10}$/,
+                  "Mobile number must be exactly 10 digits"
+                )
+                .required("Mobile Number is Required"),
+              // mobile: Yup.string().max(20, "Must be 50 characters or less"),
+              email: Yup.string().email().required("Email is Required"),
             })}
             onSubmit={(values, { resetForm }) => {
               // const states = selectedStates.map((ss) => ss?.value);
