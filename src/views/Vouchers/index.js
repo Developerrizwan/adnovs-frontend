@@ -13,7 +13,10 @@ const Vouchers = (props) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedValue, setSelectedValue] = useState("Journal");
+  const [selectedVoucher, setSelectedVoucher] = useState({
+    value: "All",
+    label: "All",
+  });
   const [voucherPagination, setVoucherPagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
@@ -21,6 +24,7 @@ const Vouchers = (props) => {
   });
 
   const voucherOptions = [
+    { value: "All", label: "All" },
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
@@ -29,8 +33,32 @@ const Vouchers = (props) => {
   ];
 
   useEffect(() => {
-    getVouchers(voucherPagination);
-  }, []);
+    if (selectedVoucher.value === "All") getVouchers(voucherPagination);
+    else {
+      getSelVoucherData(selectedVoucher.value);
+    }
+  }, [selectedVoucher.value]);
+
+  // useEffect(() => {
+  //   getSelVoucherData();
+  // }, []);
+
+  const getSelVoucherData = (type) => {
+    apiAuth
+      .get(`/api/get-voucher/?type=${type}`)
+      .then((response) => {
+        let data = response.data;
+        console.log("xswjhjwx", response);
+        setVoucherPagination({
+          ...data,
+          totalRows: data.count,
+        });
+        setUsers(data.results);
+        // setLoading(false);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const getVouchers = (pgdata, val, type) => {
     apiAuth
@@ -82,10 +110,10 @@ const Vouchers = (props) => {
       });
   };
 
-  const handleVoucherChange = (e) => {
-    setSelectedValue(e.value);
-    getVouchers(voucherPagination, searchValue, e.value);
-  };
+  // const handleVoucherChange = (e) => {
+  //   setSelectedValue(e.value);
+  //   getVouchers(voucherPagination, searchValue, e.value);
+  // };
 
   return (
     <React.Fragment>
@@ -107,11 +135,11 @@ const Vouchers = (props) => {
             }}
             add_vouchers={true}
             add_voucher_select={true}
+            selectedValue={selectedVoucher}
             voucherOptions={voucherOptions}
-            handleVoucherChange={handleVoucherChange}
-            selectedValue={{
-              label: selectedValue,
-              value: selectedValue,
+            handleVoucherChange={(data) => {
+              console.log("ddddddd", data);
+              setSelectedVoucher(data);
             }}
           />
         </Container>
@@ -137,7 +165,7 @@ const Vouchers = (props) => {
                         getVouchers(
                           voucherPagination,
                           searchValue,
-                          selectedValue
+                          selectedVoucher
                         );
                       }}
                     />

@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "../../App.css";
-import moment from "moment";
 import apiAuth from "../../helpers/ApiAuth";
+import moment from "moment";
 import NotificationManager from "../../components/Common/NotificationManager";
 
 const options = [
@@ -21,26 +21,34 @@ const PaymentVoucher = (props) => {
   const [jobs, setJobs] = useState([]);
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState({
+    value: "all",
+    label: "All",
+  });
   const [date, setDate] = useState(new Date());
   const [glDate, setGlDate] = useState(new Date());
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Payment",
     label: "Payment",
   });
-
-  const VoucherOptions = [
-    // { value: "vouchers", label: "All" },
-    { value: "Journal", label: "Journal" },
-    { value: "Payment", label: "Payment" },
-    { value: "Receipt", label: "Receipt" },
-    { value: "Debit", label: "Debit" },
-    { value: "Credit", label: "Credit" },
-  ];
+  const [selectedParty, setSelectedParty] = useState(null);
+  const [selectedConcern, setSelectedConcern] = useState(null);
+  const [selOutAmtoption, setSelOutAmtoption] = useState(null);
 
   useEffect(() => {
     getJobs();
   }, []);
+
+  useEffect(() => {
+    if (props.isEdit && jobOptions.length) {
+      const sel = jobOptions.find((opt) => opt?.id === props.voucherData?.job);
+      setSelectedJob(sel);
+    }
+    if (props.isEdit && jobOptions.length) {
+      const sel = jobOptions.find((opt) => opt?.id === props.voucherData?.job);
+      setSelectedJob(sel);
+    }
+  }, [jobOptions, props]);
 
   const getJobs = () => {
     apiAuth
@@ -57,6 +65,32 @@ const PaymentVoucher = (props) => {
       })
       .catch((err) => console.log(err));
   };
+
+  const voucherOptions = [
+    { value: "Journal", label: "Journal" },
+    { value: "Payment", label: "Payment" },
+    { value: "Receipt", label: "Receipt" },
+    { value: "Debit", label: "Debit" },
+    { value: "Credit", label: "Credit" },
+  ];
+
+  const partyOptions = [
+    { value: "Party 1", label: "Party 1" },
+    { value: "Party 2", label: "Party 2" },
+    { value: "Party 3", label: "Party 3" },
+  ];
+
+  const concernOptions = [
+    { value: "ConcernOpt 1", label: "ConcernOpt 1" },
+    { value: "ConcernOpt 2", label: "ConcernOpt 2" },
+    { value: "ConcernOpt 3", label: "ConcernOpt 3" },
+  ];
+
+  const OutAmtOptions = [
+    { value: "OutAmtOpt 1", label: "OutAmtOpt 1" },
+    { value: "OutAmtOpt 2", label: "OutAmtOpt 2" },
+    { value: "OutAmtOpt 3", label: "OutAmtOpt 3" },
+  ];
 
   const customStyles = {
     control: (provided, state) => ({
@@ -85,38 +119,45 @@ const PaymentVoucher = (props) => {
 
   return (
     <React.Fragment>
-      <div className="page-content">
-        {/* <h1 className="mb-4 mx-4">Payment Voucher</h1> */}
-        <div
-          className="mb-3"
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <h2 className="mx-5">Payment Voucher</h2>
-          <button className="btn btn-danger" onClick={goBack}>
-            Back
-          </button>
-        </div>
+      <div className={props.isEdit ? "" : "page-content"}>
+        {props.isEdit ? (
+          <></>
+        ) : (
+          <>
+            <div
+              className="mb-3"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <h2 className="mx-5">Payment Voucher</h2>
+              <button className="btn btn-danger" onClick={goBack}>
+                Back
+              </button>
+            </div>
+          </>
+        )}
+
         <Grid container spacing={2}>
           <Grid item lg={11} style={{ placeItems: "center", margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  voucher_type: "Payment",
-                  job: "",
-                  branch: "",
-                  book: "",
-                  date: "",
-                  glDate: "",
-                  fc_amount: "",
-                  amount_sar: "",
-                  party_account: "",
-                  against_concern: "",
-                  naration: "",
-                  outstanding_amount: "",
-                  remarks: "",
+                  voucher_type: props.voucherData?.voucher_type || "Payment",
+                  job: String(props.voucherData?.job) || "",
+                  branch: props.voucherData?.branch || "",
+                  book: props.voucherData?.book || "Book",
+                  date: props.voucherData?.date || "",
+                  glDate: props.voucherData?.glDate || "",
+                  fc_amount: props.voucherData?.fc_amount || "",
+                  amount_sar: props.voucherData?.amount_sar || "",
+                  party_account: props.voucherData?.party_account || "",
+                  against_concern: props.voucherData?.against_concern || "",
+                  naration: props.voucherData?.naration || "",
+                  outstanding_amount:
+                    props.voucherData?.outstanding_amount || "",
+                  remarks: props.voucherData?.remarks || "",
                 }}
                 validationSchema={Yup.object({
-                  job: Yup.string().ensure().required("Job is Required"),
+                  // job: Yup.string().ensure().required("Job is Required"),
                   branch: Yup.string().required("Branch is Required"),
                   book: Yup.string().required("Book is Required"),
                   fc_amount: Yup.string().required("FC Amount is Required"),
@@ -128,34 +169,63 @@ const PaymentVoucher = (props) => {
                   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
-                  values["job"] = selectedJob.value;
+                  // values["job"] = selectedJob.value;
                   values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
                   values["glDate"] = moment(glDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
                   );
-                  apiAuth
-                    .post("/api/master/voucher/", values)
-                    .then((res) => {
-                      NotificationManager.success(
-                        "Payment Voucher",
-                        "Voucher Created Successfully",
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                      history.push("/vouchers");
-                    })
-                    .catch((err) => {
-                      NotificationManager.error(
-                        "Payment Voucher",
-                        "Voucher Create Error",
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                    });
+                  if (props.isEdit && props.voucherData) {
+                    apiAuth
+                      .patch(
+                        `/api/master/voucher/${props.voucherData?.id}/`,
+                        values
+                      )
+                      .then((res) => {
+                        NotificationManager.success(
+                          "Payment Voucher",
+                          "Voucher Updated Successfully",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        props.closeAddPopup();
+                      })
+                      .catch((err) => {
+                        NotificationManager.error(
+                          "Payment Voucher",
+                          "Voucher Create Error",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                      });
+                  } else {
+                    apiAuth
+                      .post("/api/master/voucher/", values)
+                      .then((res) => {
+                        NotificationManager.success(
+                          "Payment Voucher",
+                          "Voucher Created Successfully",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        history.push("/vouchers");
+                      })
+                      .catch((err) => {
+                        NotificationManager.error(
+                          "Payment Voucher",
+                          "Voucher Create Error",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                      });
+                  }
                 }}
               >
                 {({ values, errors, touched, setFieldValue }) => (
@@ -169,10 +239,9 @@ const PaymentVoucher = (props) => {
                           </label>
                           <Select
                             name="voucher_type"
-                            placeholder={"Select"}
                             styles={customStyles}
                             value={selectedVoucher}
-                            options={VoucherOptions}
+                            options={voucherOptions}
                             onChange={(event) => {
                               routePage(event);
                               // setSelectedVoucher(event.value);
@@ -187,7 +256,7 @@ const PaymentVoucher = (props) => {
                       </Grid>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="party" className="form-label">
+                          <label htmlFor="party_account" className="form-label">
                             Job Type
                             <span className="text-danger">*</span>
                           </label>
@@ -196,7 +265,7 @@ const PaymentVoucher = (props) => {
                             options={jobOptions}
                             value={selectedJob}
                             onChange={(data) => {
-                              setFieldValue("job", data.label);
+                              setFieldValue("job", data.value);
                               setSelectedJob(data);
                             }}
                             styles={customStyles}
@@ -329,11 +398,12 @@ const PaymentVoucher = (props) => {
                               />
                             </span>
                           </div>
+
                           {/* <Field
-                        className="form-control"
-                        name="glDate"
-                        style={{ background: "#EDEDED" }}
-                      /> */}
+                            className="form-control"
+                            name="glDate"
+                            style={{ background: "#EDEDED" }}
+                          /> */}
                           {errors.glDate && touched.glDate && (
                             <div className="invalid-feedback d-block">
                               {errors.glDate}
@@ -386,19 +456,22 @@ const PaymentVoucher = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="party" className="form-label">
+                          <label htmlFor="party_account" className="form-label">
                             Party A/c
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={options}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
+                            options={partyOptions}
+                            value={selectedParty}
+                            onChange={(data) => {
+                              setFieldValue("party_account", data.label);
+                              setSelectedParty(data);
+                            }}
                             styles={customStyles}
                           />
-                          {errors.party && touched.party && (
+                          {errors.party_account && touched.party_account && (
                             <div className="invalid-feedback d-block">
-                              {errors.party}
+                              {errors.party_account}
                             </div>
                           )}
                         </div>
@@ -414,9 +487,12 @@ const PaymentVoucher = (props) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={options}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
+                            options={concernOptions}
+                            value={selectedConcern}
+                            onChange={(data) => {
+                              setFieldValue("against_concern", data.label);
+                              setSelectedConcern(data);
+                            }}
                             styles={customStyles}
                           />
                           {errors.against_concern &&
@@ -459,9 +535,12 @@ const PaymentVoucher = (props) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={options}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
+                            options={OutAmtOptions}
+                            value={selOutAmtoption}
+                            onChange={(data) => {
+                              setFieldValue("outstanding_amount", data.label);
+                              setSelOutAmtoption(data);
+                            }}
                             styles={customStyles}
                           />
                           {errors.outstanding_amount &&
@@ -494,7 +573,7 @@ const PaymentVoucher = (props) => {
 
                     <div className="mt-4 mb-3">
                       <button className="btn btn-success" type="submit">
-                        Submit
+                        {props.isEdit ? "Update" : "Submit"}
                       </button>
                     </div>
                   </Form>

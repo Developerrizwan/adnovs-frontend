@@ -31,10 +31,24 @@ const JournalVoucher = (props) => {
     value: "Journal",
     label: "Journal",
   });
+  const [selectedParty, setSelectedParty] = useState(null);
+  const [selectedConcern, setSelectedConcern] = useState(null);
+  const [selOutAmtoption, setSelOutAmtoption] = useState(null);
 
   useEffect(() => {
     getJobs();
   }, []);
+
+  useEffect(() => {
+    if (props.isEdit && jobOptions.length) {
+      const sel = jobOptions.find((opt) => opt?.id === props.voucherData?.job);
+      setSelectedJob(sel);
+    }
+    if (props.isEdit && jobOptions.length) {
+      const sel = jobOptions.find((opt) => opt?.id === props.voucherData?.job);
+      setSelectedJob(sel);
+    }
+  }, [jobOptions, props]);
 
   const getJobs = () => {
     apiAuth
@@ -53,12 +67,29 @@ const JournalVoucher = (props) => {
   };
 
   const voucherOptions = [
-    // { value: "vouchers", label: "All" },
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
     { value: "Debit", label: "Debit" },
     { value: "Credit", label: "Credit" },
+  ];
+
+  const partyOptions = [
+    { value: "Party 1", label: "Party 1" },
+    { value: "Party 2", label: "Party 2" },
+    { value: "Party 3", label: "Party 3" },
+  ];
+
+  const concernOptions = [
+    { value: "ConcernOpt 1", label: "ConcernOpt 1" },
+    { value: "ConcernOpt 2", label: "ConcernOpt 2" },
+    { value: "ConcernOpt 3", label: "ConcernOpt 3" },
+  ];
+
+  const OutAmtOptions = [
+    { value: "OutAmtOpt 1", label: "OutAmtOpt 1" },
+    { value: "OutAmtOpt 2", label: "OutAmtOpt 2" },
+    { value: "OutAmtOpt 3", label: "OutAmtOpt 3" },
   ];
 
   const customStyles = {
@@ -225,7 +256,7 @@ const JournalVoucher = (props) => {
                       </Grid>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="party" className="form-label">
+                          <label htmlFor="party_account" className="form-label">
                             Job Type
                             <span className="text-danger">*</span>
                           </label>
@@ -425,19 +456,22 @@ const JournalVoucher = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="party" className="form-label">
+                          <label htmlFor="party_account" className="form-label">
                             Party A/c
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={options}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
+                            options={partyOptions}
+                            value={selectedParty}
+                            onChange={(data) => {
+                              setFieldValue("party_account", data.label);
+                              setSelectedParty(data);
+                            }}
                             styles={customStyles}
                           />
-                          {errors.party && touched.party && (
+                          {errors.party_account && touched.party_account && (
                             <div className="invalid-feedback d-block">
-                              {errors.party}
+                              {errors.party_account}
                             </div>
                           )}
                         </div>
@@ -446,23 +480,27 @@ const JournalVoucher = (props) => {
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label
-                            htmlFor="againstConcern"
+                            htmlFor="against_concern"
                             className="form-label"
                           >
                             Against Concern
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={options}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
+                            options={concernOptions}
+                            value={selectedConcern}
+                            onChange={(data) => {
+                              setFieldValue("against_concern", data.label);
+                              setSelectedConcern(data);
+                            }}
                             styles={customStyles}
                           />
-                          {errors.againstConcern && touched.againstConcern && (
-                            <div className="invalid-feedback d-block">
-                              {errors.againstConcern}
-                            </div>
-                          )}
+                          {errors.against_concern &&
+                            touched.against_concern && (
+                              <div className="invalid-feedback d-block">
+                                {errors.against_concern}
+                              </div>
+                            )}
                         </div>
                       </Grid>
                     </Grid>
@@ -497,9 +535,12 @@ const JournalVoucher = (props) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={options}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
+                            options={OutAmtOptions}
+                            value={selOutAmtoption}
+                            onChange={(data) => {
+                              setFieldValue("outstanding_amount", data.label);
+                              setSelOutAmtoption(data);
+                            }}
                             styles={customStyles}
                           />
                           {errors.outstanding_amount &&

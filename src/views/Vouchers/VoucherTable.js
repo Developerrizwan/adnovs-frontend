@@ -100,6 +100,7 @@ const VoucherTable = (props) => {
                 className="edit-item-btn"
                 onClick={() => {
                   setSelectedVoucher(value);
+                  console.log("wwwwwwwww", value);
                   setEditModal(true);
                 }}
               >
