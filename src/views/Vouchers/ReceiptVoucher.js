@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import "../../App.css";
-import moment from "moment";
 import apiAuth from "../../helpers/ApiAuth";
+import moment from "moment";
 import NotificationManager from "../../components/Common/NotificationManager";
 
 const options = [
@@ -21,26 +21,34 @@ const ReceiptVoucher = (props) => {
   const [jobs, setJobs] = useState([]);
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [partyOptions, setPartyOptions] = useState([]);
-  const [concernOptions, setConcernOptions] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState({
+    value: "all",
+    label: "All",
+  });
   const [date, setDate] = useState(new Date());
   const [glDate, setGlDate] = useState(new Date());
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Receipt",
     label: "Receipt",
   });
-
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      background: "#EDEDED",
-    }),
-  };
+  const [selectedParty, setSelectedParty] = useState(null);
+  const [selectedConcern, setSelectedConcern] = useState(null);
+  const [selOutAmtoption, setSelOutAmtoption] = useState(null);
 
   useEffect(() => {
     getJobs();
   }, []);
+
+  useEffect(() => {
+    if (props.isEdit && jobOptions.length) {
+      const sel = jobOptions.find((opt) => opt?.id === props.voucherData?.job);
+      setSelectedJob(sel);
+    }
+    if (props.isEdit && jobOptions.length) {
+      const sel = jobOptions.find((opt) => opt?.id === props.voucherData?.job);
+      setSelectedJob(sel);
+    }
+  }, [jobOptions, props]);
 
   const getJobs = () => {
     apiAuth
@@ -58,14 +66,38 @@ const ReceiptVoucher = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const VoucherOptions = [
-    // { value: "vouchers", label: "All" },
+  const voucherOptions = [
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
     { value: "Debit", label: "Debit" },
     { value: "Credit", label: "Credit" },
   ];
+
+  const partyOptions = [
+    { value: "Party 1", label: "Party 1" },
+    { value: "Party 2", label: "Party 2" },
+    { value: "Party 3", label: "Party 3" },
+  ];
+
+  const concernOptions = [
+    { value: "ConcernOpt 1", label: "ConcernOpt 1" },
+    { value: "ConcernOpt 2", label: "ConcernOpt 2" },
+    { value: "ConcernOpt 3", label: "ConcernOpt 3" },
+  ];
+
+  const OutAmtOptions = [
+    { value: "OutAmtOpt 1", label: "OutAmtOpt 1" },
+    { value: "OutAmtOpt 2", label: "OutAmtOpt 2" },
+    { value: "OutAmtOpt 3", label: "OutAmtOpt 3" },
+  ];
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      background: "#EDEDED",
+    }),
+  };
 
   const goBack = () => {
     history.push("/vouchers");
@@ -87,77 +119,113 @@ const ReceiptVoucher = (props) => {
 
   return (
     <React.Fragment>
-      <div className="page-content">
-        {/* <h1 className="mb-4 mx-4">Receipt Voucher</h1> */}
-        <div
-          className="mb-3"
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <h2 className="mx-5">Receipt Voucher</h2>
-          <button className="btn btn-danger" onClick={goBack}>
-            Back
-          </button>
-        </div>
+      <div className={props.isEdit ? "" : "page-content"}>
+        {props.isEdit ? (
+          <></>
+        ) : (
+          <>
+            <div
+              className="mb-3"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <h2 className="mx-5">Receipt Voucher</h2>
+              <button className="btn btn-danger" onClick={goBack}>
+                Back
+              </button>
+            </div>
+          </>
+        )}
+
         <Grid container spacing={2}>
           <Grid item lg={11} style={{ placeItems: "center", margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  voucher_type: "Receipt",
-                  job: "",
-                  branch: "",
-                  book: "",
-                  date: "",
-                  glDate: "",
-                  fc_amount: "",
-                  amount_sar: "",
-                  party_account: "",
-                  against_concern: "",
-                  naration: "",
-                  outstanding_amount: "",
-                  remarks: "",
+                  voucher_type: props.voucherData?.voucher_type || "Receipt",
+                  job: String(props.voucherData?.job) || "",
+                  branch: props.voucherData?.branch || "",
+                  book: props.voucherData?.book || "",
+                  date: props.voucherData?.date || "",
+                  glDate: props.voucherData?.glDate || "",
+                  fc_amount: props.voucherData?.fc_amount || "",
+                  amount_sar: props.voucherData?.amount_sar || "",
+                  party_account: props.voucherData?.party_account || "",
+                  against_concern: props.voucherData?.against_concern || "",
+                  naration: props.voucherData?.naration || "",
+                  outstanding_amount:
+                    props.voucherData?.outstanding_amount || "",
+                  remarks: props.voucherData?.remarks || "",
                 }}
                 validationSchema={Yup.object({
-                  job: Yup.string().ensure().required("Job is Required"),
+                  // job: Yup.string().ensure().required("Job is Required"),
                   branch: Yup.string().required("Branch is Required"),
                   book: Yup.string().required("Book is Required"),
                   fc_amount: Yup.string().required("FC Amount is Required"),
                   amount_sar: Yup.string().required("SAR Amount is Required"),
                   naration: Yup.string().required("naration is Required"),
-                  // outstanding_amount: Yup.string().required(
+                  // outstandingAmount: Yup.string().required(
                   //   "Outstanding Amount is Required"
                   // ),
                   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
-                  values["job"] = selectedJob.value;
+                  // values["job"] = selectedJob.value;
                   values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
                   values["glDate"] = moment(glDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
                   );
-                  apiAuth
-                    .post("/api/master/voucher/", values)
-                    .then((res) => {
-                      NotificationManager.success(
-                        "Journal Voucher",
-                        "Voucher Created Successfully",
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                      history.push("/vouchers");
-                    })
-                    .catch((err) => {
-                      NotificationManager.error(
-                        "Journal Voucher",
-                        "Voucher Create Error",
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                    });
+                  if (props.isEdit && props.voucherData) {
+                    apiAuth
+                      .patch(
+                        `/api/master/voucher/${props.voucherData?.id}/`,
+                        values
+                      )
+                      .then((res) => {
+                        NotificationManager.success(
+                          "Receipt Voucher",
+                          "Voucher Updated Successfully",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        props.closeAddPopup();
+                      })
+                      .catch((err) => {
+                        NotificationManager.error(
+                          "Receipt Voucher",
+                          "Voucher Create Error",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                      });
+                  } else {
+                    apiAuth
+                      .post("/api/master/voucher/", values)
+                      .then((res) => {
+                        NotificationManager.success(
+                          "Receipt Voucher",
+                          "Voucher Created Successfully",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        history.push("/vouchers");
+                      })
+                      .catch((err) => {
+                        NotificationManager.error(
+                          "Receipt Voucher",
+                          "Voucher Create Error",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                      });
+                  }
                 }}
               >
                 {({ values, errors, touched, setFieldValue }) => (
@@ -171,10 +239,9 @@ const ReceiptVoucher = (props) => {
                           </label>
                           <Select
                             name="voucher_type"
-                            placeholder={"Select"}
                             styles={customStyles}
                             value={selectedVoucher}
-                            options={VoucherOptions}
+                            options={voucherOptions}
                             onChange={(event) => {
                               routePage(event);
                               // setSelectedVoucher(event.value);
@@ -189,7 +256,7 @@ const ReceiptVoucher = (props) => {
                       </Grid>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="party" className="form-label">
+                          <label htmlFor="party_account" className="form-label">
                             Job Type
                             <span className="text-danger">*</span>
                           </label>
@@ -198,7 +265,7 @@ const ReceiptVoucher = (props) => {
                             options={jobOptions}
                             value={selectedJob}
                             onChange={(data) => {
-                              setFieldValue("job", data.label);
+                              setFieldValue("job", data.value);
                               setSelectedJob(data);
                             }}
                             styles={customStyles}
@@ -331,6 +398,7 @@ const ReceiptVoucher = (props) => {
                               />
                             </span>
                           </div>
+
                           {/* <Field
                             className="form-control"
                             name="glDate"
@@ -388,19 +456,22 @@ const ReceiptVoucher = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="party" className="form-label">
+                          <label htmlFor="party_account" className="form-label">
                             Party A/c
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={options}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
+                            options={partyOptions}
+                            value={selectedParty}
+                            onChange={(data) => {
+                              setFieldValue("party_account", data.label);
+                              setSelectedParty(data);
+                            }}
                             styles={customStyles}
                           />
-                          {errors.party && touched.party && (
+                          {errors.party_account && touched.party_account && (
                             <div className="invalid-feedback d-block">
-                              {errors.party}
+                              {errors.party_account}
                             </div>
                           )}
                         </div>
@@ -416,9 +487,12 @@ const ReceiptVoucher = (props) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={options}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
+                            options={concernOptions}
+                            value={selectedConcern}
+                            onChange={(data) => {
+                              setFieldValue("against_concern", data.label);
+                              setSelectedConcern(data);
+                            }}
                             styles={customStyles}
                           />
                           {errors.against_concern &&
@@ -461,9 +535,12 @@ const ReceiptVoucher = (props) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={options}
-                            value={selectedOption}
-                            onChange={setSelectedOption}
+                            options={OutAmtOptions}
+                            value={selOutAmtoption}
+                            onChange={(data) => {
+                              setFieldValue("outstanding_amount", data.label);
+                              setSelOutAmtoption(data);
+                            }}
                             styles={customStyles}
                           />
                           {errors.outstanding_amount &&
@@ -496,7 +573,7 @@ const ReceiptVoucher = (props) => {
 
                     <div className="mt-4 mb-3">
                       <button className="btn btn-success" type="submit">
-                        Submit
+                        {props.isEdit ? "Update" : "Submit"}
                       </button>
                     </div>
                   </Form>
