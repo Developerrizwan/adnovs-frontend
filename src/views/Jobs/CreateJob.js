@@ -8,9 +8,10 @@ import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
+import zIndex from "@mui/material/styles/zIndex";
 
-const EditJob = (props) => {
-  console.log("allJobs", props.allJobs);
+const CreateJob = (props) => {
+  console.log("scxscec", props.allJobs);
   const [jobType, setJobType] = useState("");
   const [jobStatus, setJobStatus] = useState("");
 
@@ -83,6 +84,66 @@ const EditJob = (props) => {
       value: "Cancelled",
     },
   ];
+
+  const containerTypes = [
+    {
+      label: "20DC",
+      value: "20DC",
+    },
+    {
+      label: "20RF",
+      value: "20RF",
+    },
+    {
+      label: "20ST",
+      value: "20ST",
+    },
+    {
+      label: "20OT",
+      value: "20OT",
+    },
+    {
+      label: "20HC",
+      value: "20HC",
+    },
+    {
+      label: "40DC",
+      value: "40DC",
+    },
+    {
+      label: "40DC",
+      value: "40DC",
+    },
+    {
+      label: "40RF",
+      value: "40RF",
+    },
+    {
+      label: "40ST",
+      value: "40ST",
+    },
+    {
+      label: "40OT",
+      value: "40OT",
+    },
+    {
+      label: "40HC",
+      value: "40HC",
+    },
+    {
+      label: "FLAT RACK",
+      value: "FLAT RACK",
+    },
+    {
+      label: "FTL",
+      value: "FTL",
+    },
+    {
+      label: "LTL",
+      value: "LTL",
+    },
+  ];
+
   const history = useHistory();
 
   const customStyles = {
@@ -113,6 +174,7 @@ const EditJob = (props) => {
                 : "",
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
+              por: props?.allJobs?.por ? props?.allJobs?.por : "",
               consignee_name: props?.allJobs?.consignee_name
                 ? props?.allJobs?.consignee_name
                 : "",
@@ -129,12 +191,16 @@ const EditJob = (props) => {
               job_status: props?.allJobs?.job_status
                 ? props?.allJobs?.job_status
                 : "",
+              container_type: props?.allJobs?.container_type
+                ? props?.allJobs?.container_type
+                : "",
             }}
             validationSchema={Yup.object({
               bl_number: Yup.string().required("BL Number is Required"),
               bayan_number: Yup.string().required("Bayan Number is Required"),
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
+              por: Yup.string().required("Place Of Recipet is Required"),
               consignee_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
@@ -153,6 +219,9 @@ const EditJob = (props) => {
                 .required("Remarks is Required"),
               job_type: Yup.string().required("Job Type is Required"),
               job_status: Yup.string().required("Job Status is Required"),
+              container_type: Yup.string().required(
+                "Container Type is Required"
+              ),
             })}
             onSubmit={(values, { reset }) => {
               const company = JSON.parse(
@@ -352,6 +421,55 @@ const EditJob = (props) => {
                   </Grid>
 
                   <Grid item lg={6} xs={12}>
+                    <div className="mb-3" style={{ zIndex: "500" }}>
+                      <Label htmlFor="container" className="form-label">
+                        Container/Consignment
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={containerTypes}
+                        // defaultValue={{ label: jobStatus }}
+                        onChange={(data) => {
+                          //   setJobStatus(data.value);
+                          setFieldValue("container_type", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="container_type"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="por" className="form-label">
+                        Place Of Recipet
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="por"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="por"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="job_type" className="form-label">
                         Job Types
@@ -409,8 +527,6 @@ const EditJob = (props) => {
                       />
                     </div>
                   </Grid>
-
-                  <Grid item lg={6} xs={12}></Grid>
                 </Grid>
 
                 <div className="mb-3">
@@ -467,4 +583,4 @@ const EditJob = (props) => {
   );
 };
 
-export default EditJob;
+export default CreateJob;

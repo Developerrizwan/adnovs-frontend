@@ -10,7 +10,7 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import { Label } from "reactstrap";
 
 const AddJobs = (props) => {
-  const [jobType, setJobType] = useState("");
+  const [jobType, setJobType] = useState("Enquiry");
   const [jobStatus, setJobStatus] = useState("");
 
   const options = [
@@ -27,15 +27,15 @@ const AddJobs = (props) => {
   const typeOptions = [
     {
       label: "Air Freight",
-      value: "Air Freight",
+      value: "Air_Freight",
     },
     {
       label: "Sea Freight",
-      value: "Sea Freight",
+      value: "Sea_Freight",
     },
     {
       label: "Land Freight",
-      value: "Land Freight",
+      value: "Land_Freight",
     },
     {
       label: "Transportation",
@@ -446,7 +446,7 @@ const AddJobs = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={options}
-                            // defaultValue={{ label: jobType }}
+                            defaultValue={{ label: jobType }}
                             // onChange={(event) => {
                             //   setJobType(event.value);
                             // }}

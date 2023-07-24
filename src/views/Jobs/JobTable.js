@@ -13,9 +13,11 @@ import {
 import EditJob from "./EditJob";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
+import CreateJob from "./CreateJob";
 const JobTable = (props) => {
   // const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const [jobTypeModal, setJobTypeModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deletId, setDeletId] = useState();
   const [selectedJob, setSelectedJob] = useState([]);
@@ -73,6 +75,20 @@ const JobTable = (props) => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
+              <DropdownItem
+                className="edit-item-btn"
+                onClick={() => {
+                  setSelectedJob(value);
+                  setJobTypeModal(true);
+                }}
+              >
+                <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                Create Job
+              </DropdownItem>
+
+              {/*  */}
+              {/*  */}
+
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
@@ -146,6 +162,36 @@ const JobTable = (props) => {
           <EditJob
             closeAddPopup={() => {
               setEditModal(false);
+              setSelectedJob(null);
+              props.getJobs();
+            }}
+            allJobs={selectedJob}
+            history={props.history}
+          />
+        </ModalBody>
+      </Modal>
+
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={jobTypeModal}
+        toggle={() => {
+          setJobTypeModal((prev) => !prev);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setJobTypeModal((prev) => !prev);
+          }}
+        >
+          Create Job
+        </ModalHeader>
+        <ModalBody>
+          <CreateJob
+            closeAddPopup={() => {
+              setJobTypeModal(false);
               setSelectedJob(null);
               props.getJobs();
             }}
