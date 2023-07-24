@@ -200,7 +200,7 @@ const CreateJob = (props) => {
               bayan_number: Yup.string().required("Bayan Number is Required"),
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
-              por: Yup.string().required("Place Of Recipet is Required"),
+              por: Yup.string().required("Place Of Receipt is Required"),
               consignee_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
