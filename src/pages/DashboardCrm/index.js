@@ -32,6 +32,11 @@ const DashboardCrm = () => {
     invoice_count: 0,
     job_count: 0,
     voucher_count: 0,
+    jobs_active: 0,
+    jobs_inactive: 0,
+    enquiry_count: 0,
+    enquiry_active: 0,
+    enquiry_inactive: 0,
   });
   document.title = "CRM Dashboard";
 
@@ -92,6 +97,206 @@ const DashboardCrm = () => {
                           </h3>
                           <p style={{ fontSize: "30px", fontWeight: "700" }}>
                             {countData?.job_count}
+                          </p>
+                        </Grid>
+                        <Grid lg={3} xs={3}></Grid>
+                        <Grid lg={2} xs={2}>
+                          <img src={threeDots} alt="three dots" />
+                        </Grid>
+                      </Grid>
+                    </Card>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Card style={{ marginBottom: "0", padding: "20px" }}>
+                      <Grid container>
+                        <Grid lg={4} xs={4}>
+                          <img
+                            src={greenCircle}
+                            alt="green ellipse"
+                            style={{
+                              position: "relative",
+                              width: "67px",
+                              height: "67px",
+                            }}
+                          />
+                          <img
+                            src={jobs}
+                            alt="jobicon"
+                            style={{
+                              position: "absolute",
+                              width: "21px",
+                              height: "21px",
+                              top: "42px",
+                              left: "42px",
+                            }}
+                          />
+                        </Grid>
+                        <Grid lg={3} xs={3}>
+                          <h3 style={{ fontSize: "16px", fontWeight: "400" }}>
+                            Active Jobs
+                          </h3>
+                          <p style={{ fontSize: "30px", fontWeight: "700" }}>
+                            {countData?.jobs_active}
+                          </p>
+                        </Grid>
+                        <Grid lg={3} xs={3}></Grid>
+                        <Grid lg={2} xs={2}>
+                          <img src={threeDots} alt="three dots" />
+                        </Grid>
+                      </Grid>
+                    </Card>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Card style={{ marginBottom: "0", padding: "20px" }}>
+                      <Grid container>
+                        <Grid lg={4} xs={4}>
+                          <img
+                            src={greenCircle}
+                            alt="green ellipse"
+                            style={{
+                              position: "relative",
+                              width: "67px",
+                              height: "67px",
+                            }}
+                          />
+                          <img
+                            src={jobs}
+                            alt="jobicon"
+                            style={{
+                              position: "absolute",
+                              width: "21px",
+                              height: "21px",
+                              top: "42px",
+                              left: "42px",
+                            }}
+                          />
+                        </Grid>
+                        <Grid lg={3} xs={3}>
+                          <h3 style={{ fontSize: "16px", fontWeight: "400" }}>
+                            Closed Jobs
+                          </h3>
+                          <p style={{ fontSize: "30px", fontWeight: "700" }}>
+                            {countData?.jobs_inactive}
+                          </p>
+                        </Grid>
+                        <Grid lg={3} xs={3}></Grid>
+                        <Grid lg={2} xs={2}>
+                          <img src={threeDots} alt="three dots" />
+                        </Grid>
+                      </Grid>
+                    </Card>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Card style={{ marginBottom: "0", padding: "20px" }}>
+                      <Grid container>
+                        <Grid lg={4} xs={4}>
+                          <img
+                            src={greenCircle}
+                            alt="green ellipse"
+                            style={{
+                              position: "relative",
+                              width: "67px",
+                              height: "67px",
+                            }}
+                          />
+                          <img
+                            src={jobs}
+                            alt="jobicon"
+                            style={{
+                              position: "absolute",
+                              width: "21px",
+                              height: "21px",
+                              top: "42px",
+                              left: "42px",
+                            }}
+                          />
+                        </Grid>
+                        <Grid lg={3} xs={3}>
+                          <h3 style={{ fontSize: "16px", fontWeight: "400" }}>
+                            Total Enquiry
+                          </h3>
+                          <p style={{ fontSize: "30px", fontWeight: "700" }}>
+                            {countData?.enquiry_count}
+                          </p>
+                        </Grid>
+                        <Grid lg={3} xs={3}></Grid>
+                        <Grid lg={2} xs={2}>
+                          <img src={threeDots} alt="three dots" />
+                        </Grid>
+                      </Grid>
+                    </Card>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Card style={{ marginBottom: "0", padding: "20px" }}>
+                      <Grid container>
+                        <Grid lg={4} xs={4}>
+                          <img
+                            src={greenCircle}
+                            alt="green ellipse"
+                            style={{
+                              position: "relative",
+                              width: "67px",
+                              height: "67px",
+                            }}
+                          />
+                          <img
+                            src={jobs}
+                            alt="jobicon"
+                            style={{
+                              position: "absolute",
+                              width: "21px",
+                              height: "21px",
+                              top: "42px",
+                              left: "42px",
+                            }}
+                          />
+                        </Grid>
+                        <Grid lg={3} xs={3}>
+                          <h3 style={{ fontSize: "16px", fontWeight: "400" }}>
+                            Active Enquiry
+                          </h3>
+                          <p style={{ fontSize: "30px", fontWeight: "700" }}>
+                            {countData?.enquiry_active}
+                          </p>
+                        </Grid>
+                        <Grid lg={3} xs={3}></Grid>
+                        <Grid lg={2} xs={2}>
+                          <img src={threeDots} alt="three dots" />
+                        </Grid>
+                      </Grid>
+                    </Card>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <Card style={{ marginBottom: "0", padding: "20px" }}>
+                      <Grid container>
+                        <Grid lg={4} xs={4}>
+                          <img
+                            src={greenCircle}
+                            alt="green ellipse"
+                            style={{
+                              position: "relative",
+                              width: "67px",
+                              height: "67px",
+                            }}
+                          />
+                          <img
+                            src={jobs}
+                            alt="jobicon"
+                            style={{
+                              position: "absolute",
+                              width: "21px",
+                              height: "21px",
+                              top: "42px",
+                              left: "42px",
+                            }}
+                          />
+                        </Grid>
+                        <Grid lg={3} xs={3}>
+                          <h3 style={{ fontSize: "16px", fontWeight: "400" }}>
+                            Closed Enquiry
+                          </h3>
+                          <p style={{ fontSize: "30px", fontWeight: "700" }}>
+                            {countData?.enquiry_inactive}
                           </p>
                         </Grid>
                         <Grid lg={3} xs={3}></Grid>
