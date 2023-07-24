@@ -451,7 +451,7 @@ const CreateJob = (props) => {
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="por" className="form-label">
-                        Place Of Recipet
+                        Place Of Receipt
                         <span className="text-danger">*</span>
                       </Label>
                       <Field
