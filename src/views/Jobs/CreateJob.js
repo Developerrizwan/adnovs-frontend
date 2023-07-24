@@ -11,9 +11,10 @@ import { Label, Button } from "reactstrap";
 import zIndex from "@mui/material/styles/zIndex";
 
 const CreateJob = (props) => {
-  console.log("scxscec", props.allJobs);
-  const [jobType, setJobType] = useState("");
-  const [jobStatus, setJobStatus] = useState("");
+  const [jobType, setJobType] = useState(null);
+  const [typevalue, setTypevalue] = useState(null);
+  const [scopeType, setScopeType] = useState(null);
+  const [jobStatus, setJobStatus] = useState(null);
 
   const options = [
     {
@@ -82,6 +83,79 @@ const CreateJob = (props) => {
     {
       label: "Cancelled",
       value: "Cancelled",
+    },
+  ];
+
+  const typeOptions = [
+    {
+      label: "Air Freight",
+      value: "Air_Freight",
+    },
+    {
+      label: "Sea Freight",
+      value: "Sea_Freight",
+    },
+    {
+      label: "Land Freight",
+      value: "Land_Freight",
+    },
+    {
+      label: "Transportation",
+      value: "Transportation",
+    },
+    {
+      label: "Warehousing",
+      value: "Warehousing",
+    },
+  ];
+  const scopeofworkOptions = [
+    {
+      label: "D2D",
+      value: "D2D",
+    },
+    {
+      label: "EXW",
+      value: "EXW",
+    },
+    {
+      label: "FOB",
+      value: "FOB",
+    },
+    {
+      label: "CIF",
+      value: "CIF",
+    },
+    {
+      label: "CNF",
+      value: "CNF",
+    },
+    {
+      label: "C&F",
+      value: "C&F",
+    },
+    {
+      label: "DDP",
+      value: "DDP",
+    },
+    {
+      label: "DAP",
+      value: "DAP",
+    },
+    {
+      label: "CPT",
+      value: "CPT",
+    },
+    {
+      label: "TRANS",
+      value: "TRANS",
+    },
+    {
+      label: "D-TRANS",
+      value: "D-TRANS",
+    },
+    {
+      label: "OTHERS",
+      value: "OTHERS",
     },
   ];
 
@@ -156,22 +230,43 @@ const CreateJob = (props) => {
     history.goBack();
   };
 
+  useEffect(() => {
+    const jobtype = options.find(
+      (item) => item.value === props.allJobs.job_type
+    );
+    setJobType(jobtype);
+    const scopeType = scopeofworkOptions.find(
+      (item) => item.value === props.allJobs.scope_of_work
+    );
+    setScopeType(scopeType);
+    const type = typeOptions.find((item) => item.value === props.allJobs.type);
+    setTypevalue(type);
+    const jobStatus = statusOptions.find(
+      (item) => item.value === props.allJobs.job_status
+    );
+    setJobStatus(jobStatus);
+  }, [
+    props.allJobs.job_type,
+    props.allJobs.scope_of_work,
+    props.allJobs.type,
+    props.allJobs.job_status,
+  ]);
+
   const handleOptionChange = (selectedOption) => {
     history.push(`/${selectedOption.value}`);
   };
-  console.log(" props.bl_number", props.bl_number);
   return (
     <React.Fragment>
       {props.allJobs ? (
         <Card className="p-3" style={{ background: "#EDEDED" }}>
           <Formik
             initialValues={{
-              bl_number: props?.allJobs?.bl_number
-                ? props?.allJobs?.bl_number
-                : "",
-              bayan_number: props?.allJobs?.bayan_number
-                ? props?.allJobs?.bayan_number
-                : "",
+              // bl_number: props?.allJobs?.bl_number
+              //   ? props?.allJobs?.bl_number
+              //   : "",
+              // bayan_number: props?.allJobs?.bayan_number
+              //   ? props?.allJobs?.bayan_number
+              //   : "",
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
               por: props?.allJobs?.por ? props?.allJobs?.por : "",
@@ -194,10 +289,14 @@ const CreateJob = (props) => {
               container_type: props?.allJobs?.container_type
                 ? props?.allJobs?.container_type
                 : "",
+              type: props?.allJobs?.type ? props?.allJobs?.type : "",
+              scope_of_work: props?.allJobs?.scope_of_work
+                ? props?.allJobs?.scope_of_work
+                : "",
             }}
             validationSchema={Yup.object({
-              bl_number: Yup.string().required("BL Number is Required"),
-              bayan_number: Yup.string().required("Bayan Number is Required"),
+              // bl_number: Yup.string().required("BL Number is Required"),
+              // bayan_number: Yup.string().required("Bayan Number is Required"),
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
               por: Yup.string().required("Place Of Receipt is Required"),
@@ -218,6 +317,8 @@ const CreateJob = (props) => {
                 .trim()
                 .required("Remarks is Required"),
               job_type: Yup.string().required("Job Type is Required"),
+              type: Yup.string().required("Type is Required"),
+              scope_of_work: Yup.string().required("Scope of work is Required"),
               job_status: Yup.string().required("Job Status is Required"),
               container_type: Yup.string().required(
                 "Container Type is Required"
@@ -268,7 +369,7 @@ const CreateJob = (props) => {
             {({ values, setFieldValue }) => (
               <Form className="av-tooltip tooltip-label-bottom">
                 <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
+                  {/* <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="bl_number" className="form-label">
                         BL Number
@@ -286,7 +387,7 @@ const CreateJob = (props) => {
                         )}
                       />
                     </div>
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
@@ -308,30 +409,6 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="bayan_number" className="form-label">
-                        Bayan Number
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="bayan_number"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="bayan_number"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="shipper_name" className="form-label">
@@ -481,18 +558,85 @@ const CreateJob = (props) => {
                         placeholder={"Select"}
                         styles={customStyles}
                         options={options}
+                        value={jobType}
                         // defaultValue={{ label: jobType }}
                         // onChange={(event) => {
                         //   setJobType(event.value);
                         // }}
                         onChange={(data) => {
-                          setJobType(data.value);
+                          setJobType(data);
                           setFieldValue("job_type", data.value);
                         }}
                       />
 
                       <ErrorMessage
                         name="job_type"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="type" className="form-label">
+                        Type
+                        <span className="text-danger">*</span>
+                      </Label>
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={typeOptions}
+                        value={typevalue}
+                        // defaultValue={{ label: jobType }}
+                        // onChange={(event) => {
+                        //   setJobType(event.value);
+                        // }}
+                        onChange={(data) => {
+                          setTypevalue(data);
+                          setFieldValue("type", data.value);
+                        }}
+                      />
+
+                      <ErrorMessage
+                        name="type"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="scope_of_work" className="form-label">
+                        Scope Of Work
+                        <span className="text-danger">*</span>
+                      </Label>
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={scopeofworkOptions}
+                        value={scopeType}
+                        // defaultValue={{ label: jobType }}
+                        // onChange={(event) => {
+                        //   setJobType(event.value);
+                        // }}
+                        onChange={(data) => {
+                          setScopeType(data);
+                          setFieldValue("scope_of_work", data.value);
+                        }}
+                      />
+
+                      <ErrorMessage
+                        name="scope_of_work"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -513,9 +657,10 @@ const CreateJob = (props) => {
                         placeholder={"Select"}
                         styles={customStyles}
                         options={statusOptions}
+                        value={jobStatus}
                         // defaultValue={{ label: jobStatus }}
                         onChange={(data) => {
-                          setJobStatus(data.value);
+                          setJobStatus(data);
                           setFieldValue("job_status", data.value);
                         }}
                       />

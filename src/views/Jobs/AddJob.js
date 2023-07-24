@@ -14,10 +14,10 @@ const AddJobs = (props) => {
   const [jobStatus, setJobStatus] = useState("");
 
   const options = [
-    {
-      label: "Job",
-      value: "Job",
-    },
+    // {
+    //   label: "Job",
+    //   value: "Job",
+    // },
     {
       label: "Enquiry",
       value: "Enquiry",
