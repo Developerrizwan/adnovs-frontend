@@ -120,14 +120,14 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Ref Date</span>,
       selector: (row) => row,
       cell: (value) => (
-        <span>{moment(value?.ref_data).format("MM/DD/YYYY")}</span>
+        <span>{moment(value?.date).format("MM/DD/YYYY")}</span>
       ),
     },
     {
       name: <span className="font-weight-bold fs-13">Due Date</span>,
       selector: (row) => row,
       cell: (value) => (
-        <span>{moment(value?.due_date).format("MM/DD/YYYY")}</span>
+        <span>{moment(value?.date).format("MM/DD/YYYY")}</span>
       ),
     },
     {
