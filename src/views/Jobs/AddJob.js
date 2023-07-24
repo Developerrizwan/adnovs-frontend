@@ -24,6 +24,79 @@ const AddJobs = (props) => {
     },
   ];
 
+  const typeOptions = [
+    {
+      label: "Air Freight",
+      value: "Air_Freight",
+    },
+    {
+      label: "Sea Freight",
+      value: "Sea_Freight",
+    },
+    {
+      label: "Land Freight",
+      value: "Land_Freight",
+    },
+    {
+      label: "Transportation",
+      value: "Transportation",
+    },
+    {
+      label: "Warehousing",
+      value: "Warehousing",
+    },
+  ];
+  const scopeofworkOptions = [
+    {
+      label: "D2D",
+      value: "D2D",
+    },
+    {
+      label: "EXW",
+      value: "EXW",
+    },
+    {
+      label: "FOB",
+      value: "FOB",
+    },
+    {
+      label: "CIF",
+      value: "CIF",
+    },
+    {
+      label: "CNF",
+      value: "CNF",
+    },
+    {
+      label: "C&F",
+      value: "C&F",
+    },
+    {
+      label: "DDP",
+      value: "DDP",
+    },
+    {
+      label: "DAP",
+      value: "DAP",
+    },
+    {
+      label: "CPT",
+      value: "CPT",
+    },
+    {
+      label: "TRANS",
+      value: "TRANS",
+    },
+    {
+      label: "D-TRANS",
+      value: "D-TRANS",
+    },
+    {
+      label: "OTHERS",
+      value: "OTHERS",
+    },
+  ];
+
   const statusOptions = [
     {
       label: "Cargo Collected",
@@ -98,7 +171,6 @@ const AddJobs = (props) => {
     history.push(`/${selectedOption.value}`);
   };
 
-
   return (
     <React.Fragment>
       <div className="page-content">
@@ -106,7 +178,7 @@ const AddJobs = (props) => {
           className="mb-5 mt-3"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <h2 className="mx-3">Create New Job</h2>
+          <h2 className="mx-3">Create New Enquiry</h2>
 
           <button className="btn btn-danger" onClick={goBack}>
             Back
@@ -117,8 +189,8 @@ const AddJobs = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  bl_number: "",
-                  bayan_number: "",
+                  // bl_number: "",
+                  // bayan_number: "",
                   pod: "",
                   poa: "",
                   consignee_name: "",
@@ -126,13 +198,15 @@ const AddJobs = (props) => {
                   client_name: "",
                   remarks: "",
                   job_type: "",
+                  type: "",
+                  scope_of_work: "",
                   job_status: "",
                 }}
                 validationSchema={Yup.object({
-                  bl_number: Yup.string().required("BL Number is Required"),
-                  bayan_number: Yup.string().required(
-                    "Bayan Number is Required"
-                  ),
+                  // bl_number: Yup.string().required("BL Number is Required"),
+                  // bayan_number: Yup.string().required(
+                  //   "Bayan Number is Required"
+                  // ),
                   pod: Yup.string().required("POD is Required"),
                   poa: Yup.string().required("POA is Required"),
                   consignee_name: Yup.string()
@@ -152,36 +226,42 @@ const AddJobs = (props) => {
                     .trim()
                     .required("Remarks is Required"),
                   job_type: Yup.string().required("Job Type is Required"),
+                  type: Yup.string().required("Type is Required"),
+                  scope_of_work: Yup.string().required(
+                    "Scope of work is Required"
+                  ),
                   job_status: Yup.string().required("Job Status is Required"),
                 })}
                 onSubmit={(values, { reset }) => {
-                  const company = JSON.parse(localStorage.getItem('authUser'))?.company_id
+                  const company = JSON.parse(
+                    localStorage.getItem("authUser")
+                  )?.company_id;
                   values["company"] = company;
 
                   const url = "/api/master/job/";
-                  apiAuth
-                    .post(url, values)
+                  apiAuth.post(url, values);
+                  console
                     .then((response) => {
-                      if (response.status === 201) {
-                        NotificationManager.success(
-                          "",
-                          `Job Created Successfully`,
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                        props?.history?.push("/jobs");
-                      } else {
-                        NotificationManager.error(
-                          "",
-                          `Job Create Error`,
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                      }
+                      // if (response.status === 201) {
+                      NotificationManager.success(
+                        "",
+                        `Job Created Successfully`,
+                        3000,
+                        null,
+                        null,
+                        ""
+                      );
+                      props?.history?.push("/jobs");
+                      // } else {
+                      NotificationManager.error(
+                        "",
+                        `Job Create Error`,
+                        3000,
+                        null,
+                        null,
+                        ""
+                      );
+                      // }
                     })
                     .catch((error) => {
                       NotificationManager.error(
@@ -198,7 +278,7 @@ const AddJobs = (props) => {
                 {({ values, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      {/* <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="bl_number" className="form-label">
                             BL Number
@@ -215,9 +295,8 @@ const AddJobs = (props) => {
                               <div className="text-danger">{msg}</div>
                             )}
                           />
-                          
                         </div>
-                      </Grid>
+                      </Grid> */}
 
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
@@ -233,7 +312,7 @@ const AddJobs = (props) => {
                             name="consignee_name"
                             style={{ background: "#EDEDED" }}
                           />
-                          
+
                           <ErrorMessage
                             name="consignee_name"
                             render={(msg) => (
@@ -242,30 +321,6 @@ const AddJobs = (props) => {
                           />
                         </div>
                       </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="bayan_number" className="form-label">
-                            Bayan Number
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Field
-                            className="form-control"
-                            name="bayan_number"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          
-                          <ErrorMessage
-                            name="bayan_number"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="shipper_name" className="form-label">
@@ -277,7 +332,7 @@ const AddJobs = (props) => {
                             name="shipper_name"
                             style={{ background: "#EDEDED" }}
                           />
-                         
+
                           <ErrorMessage
                             name="shipper_name"
                             render={(msg) => (
@@ -287,6 +342,31 @@ const AddJobs = (props) => {
                         </div>
                       </Grid>
                     </Grid>
+
+                    {/* <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="bayan_number" className="form-label">
+                            Bayan Number
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            className="form-control"
+                            name="bayan_number"
+                            style={{ background: "#EDEDED" }}
+                          />
+
+                          <ErrorMessage
+                            name="bayan_number"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+
+                     
+                    </Grid> */}
 
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
@@ -300,7 +380,7 @@ const AddJobs = (props) => {
                             name="pod"
                             style={{ background: "#EDEDED" }}
                           />
-                          
+
                           <ErrorMessage
                             name="pod"
                             render={(msg) => (
@@ -321,7 +401,7 @@ const AddJobs = (props) => {
                             name="client_name"
                             style={{ background: "#EDEDED" }}
                           />
-                          
+
                           <ErrorMessage
                             name="client_name"
                             render={(msg) => (
@@ -344,7 +424,7 @@ const AddJobs = (props) => {
                             name="poa"
                             style={{ background: "#EDEDED" }}
                           />
-                          
+
                           <ErrorMessage
                             name="poa"
                             render={(msg) => (
@@ -378,6 +458,70 @@ const AddJobs = (props) => {
 
                           <ErrorMessage
                             name="job_type"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="type" className="form-label">
+                            Type
+                            <span className="text-danger">*</span>
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={typeOptions}
+                            // defaultValue={{ label: jobType }}
+                            // onChange={(event) => {
+                            //   setJobType(event.value);
+                            // }}
+                            onChange={(data) => {
+                              setJobType(data.value);
+                              setFieldValue("type", data.value);
+                            }}
+                          />
+
+                          <ErrorMessage
+                            name="type"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="scope_of_work" className="form-label">
+                            Scope Of Work
+                            <span className="text-danger">*</span>
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={scopeofworkOptions}
+                            // defaultValue={{ label: jobType }}
+                            // onChange={(event) => {
+                            //   setJobType(event.value);
+                            // }}
+                            onChange={(data) => {
+                              setJobType(data.value);
+                              setFieldValue("scope_of_work", data.value);
+                            }}
+                          />
+
+                          <ErrorMessage
+                            name="scope_of_work"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
