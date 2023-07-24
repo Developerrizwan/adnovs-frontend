@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Row, Button, Label } from "reactstrap";
 import * as Yup from "yup";
+import { useHistory } from "react-router-dom";
+
 import { Formik, Field, ErrorMessage } from "formik";
 import { Form } from "react-formik-ui";
 import { Colxx, Separator } from "../../components/Common/CustomBootstrap";
@@ -15,6 +17,8 @@ import { Country, State, City } from "country-state-city";
 import NotificationManager from "../../components/Common/NotificationManager";
 
 const AddUser = (props) => {
+  const history = useHistory();
+
   const [is_password_hidden, set_is_password_hidden] = useState(false);
 
   const [selectedRole, setSelectedRole] = useState(null);
@@ -34,6 +38,13 @@ const AddUser = (props) => {
     { value: "user", label: "User" },
     { value: "admin", label: "Admin" },
   ];
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      background: "#EDEDED",
+    }),
+  };
 
   const getContactCenter = () => {
     apiAuth
@@ -134,20 +145,34 @@ const AddUser = (props) => {
   //   getCities();
   // }, []);
 
+  const goBack = () => {
+    history.goBack();
+  };
+
   return (
     <>
       <div className="page-content">
-        <Container fluid>
+        {/* <Container fluid>
           <BreadCrumb
             title="Add User"
             pageTitle="Settings"
             back_button={true}
             history={props.history}
           />
-        </Container>
+        </Container> */}
+        <div
+          className="mb-5 mt-3"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <h2 className="mx-3">Create User </h2>
+
+          <button className="btn btn-danger" onClick={goBack}>
+            Back
+          </button>
+        </div>
         <Row mb="4">
           <Colxx lg="12">
-            <div className="card" style={{ padding: "30px", margin: "30px" }}>
+            <Card className="p-3" style={{ background: "#EDEDED" }}>
               <h2>User Information</h2>
               <p>Fill User details here.</p>
               <div className="card-body">
@@ -170,21 +195,21 @@ const AddUser = (props) => {
                     first_name: Yup.string()
                       .max(20, "Must be 20 characters or less")
                       .trim()
-                      .required("Required"),
+                      .required("First Name is Required"),
                     last_name: Yup.string()
                       .max(20, "Must be 20 characters or less")
                       .trim()
-                      .required("Required"),
-                    password: Yup.string().required("Required"),
-                    role: Yup.string().required("Required!"),
+                      .required("Last Name is Required"),
+                    password: Yup.string().required("Password is Required"),
+                    role: Yup.string().required("Role is Required!"),
                     // user_name: Yup.string().ensure(),
                     mobile: Yup.string()
                       .matches(
                         /^[0-9]{10}$/,
                         "Mobile number must be exactly 10 digits"
                       )
-                      .required("Mobile number is required"),
-                    email: Yup.string().email().required("Required"),
+                      .required("Mobile Number is Required"),
+                    email: Yup.string().email().required("Email is Required"),
                   })}
                   onSubmit={(values, { resetForm }) => {
                     const company = JSON.parse(
@@ -240,6 +265,7 @@ const AddUser = (props) => {
                               name="first_name"
                               placeholder="First Name"
                               type="text"
+                              style={{ background: "#EDEDED" }}
                             />
                             <ErrorMessage
                               name="first_name"
@@ -258,6 +284,7 @@ const AddUser = (props) => {
                               name="last_name"
                               placeholder="Last Name"
                               type="text"
+                              style={{ background: "#EDEDED" }}
                             />
                             <ErrorMessage
                               name="last_name"
@@ -275,6 +302,7 @@ const AddUser = (props) => {
                               name="password"
                               placeholder="Password"
                               type="text"
+                              style={{ background: "#EDEDED" }}
                             />
                             <ErrorMessage
                               name="password"
@@ -293,6 +321,7 @@ const AddUser = (props) => {
                               name="mobile"
                               placeholder="Mobile Number"
                               type="text"
+                              style={{ background: "#EDEDED" }}
                             />
                             <ErrorMessage
                               name="mobile"
@@ -310,6 +339,7 @@ const AddUser = (props) => {
                               name="email"
                               placeholder="Email"
                               type="text"
+                              style={{ background: "#EDEDED" }}
                             />
                             <ErrorMessage
                               name="email"
@@ -329,6 +359,7 @@ const AddUser = (props) => {
                                 setSelectedRole(data.value);
                                 setFieldValue("role", data.value);
                               }}
+                              styles={customStyles}
                             />
                             <ErrorMessage
                               name="role"
@@ -348,12 +379,12 @@ const AddUser = (props) => {
                       >
                         <Button
                           type="submit"
-                          color="info"
-                          style={{ backgroundColor: "#29B6F6" }}
+                          color="success"
+                          // style={{ backgroundColor: "#29B6F6" }}
                           className={`btn-shadow btn-multiple-state float-right ${
                             props.loading ? "show-spinner" : ""
                           }`}
-                          size="lg"
+                          // size="lg"
                         >
                           <span className="spinner d-inline-block">
                             <span className="bounce1" />
@@ -361,10 +392,10 @@ const AddUser = (props) => {
                             <span className="bounce3" />
                           </span>
                           <span className="label">
-                            {props.addText || "Save"}
+                            {props.addText || "Submit"}
                           </span>
                         </Button>{" "}
-                        <Button
+                        {/* <Button
                           className="btn btn-light float-right"
                           type="reset"
                           onClick={() => {
@@ -373,13 +404,13 @@ const AddUser = (props) => {
                         >
                           {" "}
                           Cancel{" "}
-                        </Button>
+                        </Button> */}
                       </div>
                     </Form>
                   )}
                 </Formik>
               </div>
-            </div>
+            </Card>
           </Colxx>
         </Row>
       </div>
