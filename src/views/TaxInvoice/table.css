@@ -1,0 +1,9 @@
+.htmlTable table,
+th,
+td {
+  border: 1px solid black;
+}
+
+/* .html-table-borderless th, td {
+  border: none;
+} */

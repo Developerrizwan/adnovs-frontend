@@ -79,6 +79,8 @@ import EditUser from "../views/UserManagement/EditUser";
 import AllVouchers from "../views/Vouchers/AllVouchers";
 import DebitVoucher from "../views/Vouchers/DebitVoucher";
 import CreditVoucher from "../views/Vouchers/CreditVoucher";
+import TaxInvoice from "../views/TaxInvoice/TaxInvoice";
+import TaxInvoiceSecond from "../views/TaxInvoice/TaxInvoiceSecond";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -170,6 +172,9 @@ const publicRoutes = [
   { path: "/auth-pass-change-basic", component: BasicPasswCreate },
   { path: "/auth-pass-change-cover", component: CoverPasswCreate },
   { path: "/auth-offline", component: Offlinepage },
+
+  { path: "/tax-invoice", component: TaxInvoice },
+  { path: "/tax-invoice-second", component: TaxInvoiceSecond },
 ];
 
 export { authProtectedRoutes, publicRoutes };
