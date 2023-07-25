@@ -57,94 +57,74 @@ const TaxInvoiceSecond = () => {
             </div>
           </div>
 
-          <hr style={{ border: "1px solid #000" }} />
-
-          <div className="row">
-            <div className="col-lg-2">
-              <h5>Customer</h5>
-            </div>
-            <div className="col-lg-4" style={{ borderRight: "1px solid #000" }}>
-              <p>:AL ASSAS SPECIALIZED CO.</p>
-              <p>AL MUDUN, AL BAGDAHIYA AL GHARBIYA</p>
-              <p>Phone: </p>
-              <p>VAT No. : </p>
-              <p>Credit Term: </p>
-            </div>
-            <div className="col-lg-4">
-              <p>:AL ASSAS SPECIALIZED CO.</p>
-              <p>AL MUDUN, AL BAGDAHIYA AL GHARBIYA</p>
-              <p>Phone: </p>
-              <p>VAT No. : </p>
-            </div>
-            <div className="col-lg-2"></div>
-          </div>
-
-          <hr style={{ border: "1px solid #000" }} />
+          {/* <hr style={{ border: "1px solid #000" }} /> */}
 
           <div style={{overflowX: "auto"}}>
           <table className="htmlTable mt-2 w-100">
-            <tr style={{background: "#dadedf"}}>
-              <th>Charge Description</th>
-              <th>.Curr</th>
-              <th>Rate Per Unit</th>
-              <th>Unit</th>
-              <th>Curr. Amount</th>
-              <th>/ROE</th>
-              <th>Total Price excl. VAT</th>
-              <th>VAT%</th>
-              <th>VAT Amount</th>
-              <th>Total SAR</th>
+            <tr style={{borderBottom: "1px solid #d3d3d3"}}>
+              <th className="border-0">#</th>
+              <th className="border-0">Description</th>
+              <th className="border-0">Comments</th>
+              <th className="border-0">Quantity</th>
+              <th className="border-0">Rate</th>
+              <th className="border-0">Amount</th>
+              <th className="border-0">VAT%</th>
+              <th className="border-0">VAT</th>
+              <th className="border-0">Total</th>
             </tr>
-            <tr>
-              <td>SEA FREIGHT</td>
-              <td>USD</td>
-              <td>6,350.00</td>
-              <td>1</td>
-              <td>6,350.00</td>
-              <td>3.760000</td>
-              <td>23,876.00</td>
-              <td>0</td>
-              <td>0.00</td>
-              <td>23,876.00</td>
+            <tr style={{borderBottom: "1px solid #d3d3d3"}}>
+              <td className="border-0">1</td>
+              <td className="border-0">Port Charges</td>
+              <td className="border-0"></td>
+              <td className="border-0">1</td>
+              <td className="border-0">1,161.50</td>
+              <td className="border-0">1,161.50</td>
+              <td className="border-0">0.00%</td>
+              <td className="border-0">0.00</td>
+              <td className="border-0">1,161.50</td>
             </tr>
-            {/* <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr> */}
+            <tr style={{borderBottom: "1px solid #d3d3d3"}}>
+              <td className="border-0">1</td>
+              <td className="border-0">Port Charges</td>
+              <td className="border-0"></td>
+              <td className="border-0">1</td>
+              <td className="border-0">1,161.50</td>
+              <td className="border-0">1,161.50</td>
+              <td className="border-0">0.00%</td>
+              <td className="border-0">0.00</td>
+              <td className="border-0">1,161.50</td>
+            </tr>
           </table>
           </div>
 
-          
+         <hr className="mt-5" style={{ border: "1px solid #000" }} />
 
-          <table className="htmlTable mt-2">
-            <tr style={{background: "#dadedf"}}>
-              <th>Container Details</th>
-            </tr>
-            <tr>
-              <td>FCIU6538307, YMMU6330305</td>
-            </tr>
-          </table>
+         <div className="card" style={{border: "1px solid #000"}}>
+         <div className="row">
+            <div className="col-lg-2"></div>
+            <div className="col-lg-6">
+                <p>Total excl VAT</p>
+                <p>Value Added Tax</p>
+                <p>Total With VAT</p>
+            </div>
+            <div className="col-lg-4">
+                <p>2,518.05</p>
+                <p>45.00</p>
+                <p>2,563.05</p>
+            </div>
+         </div>
+         </div>
 
-          <div className="row mt-4">
+          <div className="row mt-2">
             <div className="col-lg-9">
-              <h5>Terms & Conditions</h5>
-              <p>
-                If any discrepancy in the invoice must be notified within 7 days
-                from the date of invoice. Otherwise, it shall be considered as
-                acknowledged.
-              </p>
-              <h5 className="mt-4">BANK DETAILS</h5>
-              <p>ACC NO :</p>
-              <p>IBAN NO : </p>
-              <p>SWIFT :</p>
+              <h5>Payment Method</h5>
+              <p>SAR Account Details:</p>
+              
+              <p>Account Name :</p>
+              <p>Bank Name : </p>
+              <p>Account No :</p>
+              <p>IBAN cod :</p>
+              <p>Swift Code :</p>
             </div>
             <div className="col-lg-3"></div>
           </div>
