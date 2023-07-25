@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
-import { Row, Button, Label, Container } from "reactstrap";
+import { Row, Container } from "reactstrap";
 import BreadCrumb from "../../components/Common/BreadCrumb";
-
-import * as Yup from "yup";
 import { Colxx } from "../../components/Common/CustomBootstrap";
 
-import { Card, Grid } from "@mui/material";
-import { Formik, Field, ErrorMessage } from "formik";
-import { Form } from "react-formik-ui";
-import Select from "react-select";
+import { Card } from "@mui/material";
 import apiAuth from "../../helpers/ApiAuth";
 import JobTable from "./JobTable";
 import NotificationManager from "../../components/Common/NotificationManager";
@@ -51,16 +45,24 @@ const Jobs = (props) => {
       )
 
       .then((response) => {
-        let data = response.data;
+        let data = response.data.results;
         setJobPagination({
           ...pgdata,
           totalRows: response.data.count,
         });
-        setAllJobs(data.results.filter((job) => job.job_type === type));
+        setAllJobs(data);
         setLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || "Job Get Error"}`,
+          3000,
+          null,
+          null,
+          ""
+        );
         setLoading(false);
       });
   };
@@ -79,14 +81,21 @@ const Jobs = (props) => {
           null,
           ""
         );
-        getJobs(jobPagination, searchValue);
-        // setSelectedValue()
+        getJobs(jobPagination, searchValue, selectedValue);
       })
       .catch(function (error) {
         console.log(error);
         console.log(error.response?.data);
         console.log(error.response?.status);
         console.log(error.response?.headers);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || "Job Delete Error"}`,
+          3000,
+          null,
+          null,
+          ""
+        );
       });
   };
 
@@ -107,13 +116,12 @@ const Jobs = (props) => {
             title={selectedValue}
             pageTitle="Jobs"
             add_new={true}
-            // add_url_popup={true}
             add_new_url={"/jobs/add"}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getJobs(jobPagination, val);
+              getJobs(jobPagination, val, selectedValue);
             }}
             export_button={allJobs.length > 0 ? true : false}
             handleJobChange={handleJobChange}
@@ -156,12 +164,12 @@ const Jobs = (props) => {
                       jobPagination={{ ...jobPagination }}
                       handlePagination={(data) => {
                         setJobPagination(data);
-                        getJobs(data);
+                        getJobs(data, searchValue, selectedValue);
                       }}
                       selectedValue={selectedValue}
                       getJobs={() => {
                         setAllJobs([]);
-                        getJobs(jobPagination, searchValue);
+                        getJobs(jobPagination, searchValue, selectedValue);
                       }}
                     />
                   )}

@@ -15,7 +15,6 @@ import { customStyles } from "../../assets/CustomTableStyles";
 import CreateJob from "./CreateJob";
 import EditEnquiry from "./EditEnquiry";
 const EnquiryTable = (props) => {
-  // const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [jobTypeModal, setJobTypeModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -32,11 +31,6 @@ const EnquiryTable = (props) => {
       selector: (row) => row.consignee_name,
       sortable: true,
     },
-    // {
-    //   name: <span className="font-weight-bold fs-13">Bayan Number</span>,
-    //   selector: (row) => row.bayan_number,
-    //   sortable: true,
-    // },
     {
       name: <span className="font-weight-bold fs-13">Shipper Name</span>,
       selector: (row) => row.shipper_name,
@@ -117,7 +111,6 @@ const EnquiryTable = (props) => {
               </DropdownItem>
               <DropdownItem
                 className="remove-item-btn"
-                // onClick={() => props.deleteJob(value.id)}
                 onClick={() => {
                   setDeleteModal(true);
                   setDeletId(value);

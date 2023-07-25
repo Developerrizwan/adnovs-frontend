@@ -12,7 +12,6 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
 
 const EditEnquiry = (props) => {
-  const [jobType, setJobType] = useState(null);
   const [typevalue, setTypevalue] = useState(null);
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
@@ -86,20 +85,20 @@ const EditEnquiry = (props) => {
 
   const podOptions = [
     {
-      label: "Shanghai  ",
-      value: "Shanghai ",
+      label: "Shanghai",
+      value: "Shanghai",
     },
     {
-      label: "Singapore ",
-      value: "Singapore ",
+      label: "Singapore",
+      value: "Singapore",
     },
     {
-      label: "Ningbo Zhoushan ",
-      value: "Ningbo Zhoushan ",
+      label: "Ningbo Zhoushan",
+      value: "Ningbo Zhoushan",
     },
     {
-      label: "Busan  ",
-      value: "Busan  ",
+      label: "Busan",
+      value: "Busan",
     },
     {
       label: "Jebel Ali",
@@ -134,35 +133,20 @@ const EditEnquiry = (props) => {
       value: "Felixstowe",
     },
     {
-      label: "Itaqui ",
-      value: "Itaqui ",
+      label: "Itaqui",
+      value: "Itaqui",
     },
     {
       label: "Durban",
       value: "Durban",
     },
     {
-      label: "Port Hedland ",
+      label: "Port Hedland",
       value: "Port Hedland",
     },
   ];
 
-  const options = [
-    // {
-    //   label: "Job",
-    //   value: "Job",
-    // },
-    {
-      label: "Enquiry",
-      value: "Enquiry",
-    },
-  ];
-
   useEffect(() => {
-    const jobtype = options.find(
-      (item) => item.value === props.allJobs.job_type
-    );
-    setJobType(jobtype);
     const scopeType = scopeofworkOptions.find(
       (item) => item.value === props.allJobs.scope_of_work
     );
@@ -181,14 +165,7 @@ const EditEnquiry = (props) => {
     );
 
     setPodValue(pod_Value);
-  }, [
-    props.allJobs.job_type,
-    props.allJobs.scope_of_work,
-    props.allJobs.type,
-    props.allJobs.job_status,
-    props.allJobs.poa,
-    props.allJobs.pod,
-  ]);
+  }, []);
 
   const typeOptions = [
     {
@@ -343,12 +320,6 @@ const EditEnquiry = (props) => {
         <Card className="p-3" style={{ background: "#EDEDED" }}>
           <Formik
             initialValues={{
-              // bl_number: props?.allJobs?.bl_number
-              //   ? props?.allJobs?.bl_number
-              //   : "",
-              // bayan_number: props?.allJobs?.bayan_number
-              //   ? props?.allJobs?.bayan_number
-              //   : "",
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
               consignee_name: props?.allJobs?.consignee_name
@@ -363,7 +334,7 @@ const EditEnquiry = (props) => {
               remarks: props?.allJobs?.remarks ? props?.allJobs?.remarks : "",
               job_type: props?.allJobs?.job_type
                 ? props?.allJobs?.job_type
-                : "",
+                : "Enquiry",
               job_status: props?.allJobs?.job_status
                 ? props?.allJobs?.job_status
                 : "",
@@ -405,8 +376,9 @@ const EditEnquiry = (props) => {
                 localStorage.getItem("authUser")
               )?.company_id;
               values["company"] = company;
-              values["eta"] = eta;
-              values["etd"] = etd;
+              if (eta) values["eta"] = eta;
+              if (etd) values["etd"] = etd;
+
               const url = `/api/master/job/${props.allJobs.id}/`;
               apiAuth
                 .patch(url, values)
@@ -414,7 +386,7 @@ const EditEnquiry = (props) => {
                   if (response.status === 200) {
                     NotificationManager.success(
                       "",
-                      `Job Created Successfully`,
+                      `Job Updated Successfully`,
                       3000,
                       null,
                       null,
@@ -424,7 +396,7 @@ const EditEnquiry = (props) => {
                   } else {
                     NotificationManager.error(
                       "",
-                      `Job Create Error`,
+                      `Job Update Error`,
                       3000,
                       null,
                       null,
@@ -435,7 +407,7 @@ const EditEnquiry = (props) => {
                 .catch((error) => {
                   NotificationManager.error(
                     "",
-                    `Job Create Error`,
+                    `Job Update Error`,
                     3000,
                     null,
                     null,
@@ -447,26 +419,6 @@ const EditEnquiry = (props) => {
             {({ values, setFieldValue }) => (
               <Form className="av-tooltip tooltip-label-bottom">
                 <Grid container spacing={2}>
-                  {/* <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="bl_number" className="form-label">
-                        BL Number
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control jobs-field"
-                        name="bl_number"
-                        style={{ background: "#EDEDED" }}
-                      />
-                      <ErrorMessage
-                        name="bl_number"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid> */}
-
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="consignee_name" className="form-label">
@@ -509,28 +461,7 @@ const EditEnquiry = (props) => {
                   </Grid>
                 </Grid>
 
-                <Grid container spacing={2}>
-                  {/* <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="bayan_number" className="form-label">
-                        Bayan Number
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="bayan_number"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="bayan_number"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid> */}
-                </Grid>
+                <Grid container spacing={2}></Grid>
 
                 <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
@@ -619,41 +550,6 @@ const EditEnquiry = (props) => {
                       />
                     </div>
                   </Grid>
-
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="job_type" className="form-label">
-                        Job Types
-                        <span className="text-danger">*</span>
-                      </Label>
-
-                      <Select
-                        name="type"
-                        placeholder={"Select"}
-                        styles={customStyles}
-                        options={options}
-                        value={jobType}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
-                        onChange={(data) => {
-                          setJobType(data);
-                          setFieldValue("job_type", data.value);
-                        }}
-                      />
-
-                      <ErrorMessage
-                        name="job_type"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="type" className="form-label">
@@ -717,9 +613,6 @@ const EditEnquiry = (props) => {
                       />
                     </div>
                   </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="eta" className="form-label">
@@ -772,9 +665,6 @@ const EditEnquiry = (props) => {
                       />
                     </div>
                   </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="job_status" className="form-label">
