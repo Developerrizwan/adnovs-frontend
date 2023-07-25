@@ -10,11 +10,11 @@ import {
   ModalFooter,
   UncontrolledDropdown,
 } from "reactstrap";
-import EditJob from "./EditJob";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 import CreateJob from "./CreateJob";
-const JobTable = (props) => {
+import EditEnquiry from "./EditEnquiry";
+const EnquiryTable = (props) => {
   // const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [jobTypeModal, setJobTypeModal] = useState(false);
@@ -23,26 +23,20 @@ const JobTable = (props) => {
   const [selectedJob, setSelectedJob] = useState([]);
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Job Number</span>,
-      selector: (row) => row.job_number,
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13"> BL Number</span>,
-      selector: (row) => row.bl_number,
+      name: <span className="font-weight-bold fs-13"> Enquiry Number</span>,
+      selector: (row) => row.enquiry_number,
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13"> Consigee Name</span>,
       selector: (row) => row.consignee_name,
       sortable: true,
-      width: "200px",
     },
-    {
-      name: <span className="font-weight-bold fs-13">Bayan Number</span>,
-      selector: (row) => row.bayan_number,
-      sortable: true,
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Bayan Number</span>,
+    //   selector: (row) => row.bayan_number,
+    //   sortable: true,
+    // },
     {
       name: <span className="font-weight-bold fs-13">Shipper Name</span>,
       selector: (row) => row.shipper_name,
@@ -52,6 +46,7 @@ const JobTable = (props) => {
       name: <span className="font-weight-bold fs-13">POD</span>,
       selector: (row) => row.pod,
       sortable: true,
+      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
@@ -59,14 +54,20 @@ const JobTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">ETA</span>,
+      name: <span className="font-weight-bold fs-13">ETA </span>,
       selector: (row) => moment(row.eta).format("YYYY-MM-DD HH:mm:ss"),
       sortable: true,
       width: "200px",
     },
     {
-      name: <span className="font-weight-bold fs-13">ETD</span>,
-      selector: (row) => moment(row.etd).format("YYYY-MM-DD HH:mm:ss"),
+      name: <span className="font-weight-bold fs-13">ETD </span>,
+      selector: (row) => moment(row.eta).format("YYYY-MM-DD HH:mm:ss"),
+      sortable: true,
+      width: "200px",
+    },
+    {
+      name: <span className="font-weight-bold fs-13">POA</span>,
+      selector: (row) => row.poa,
       sortable: true,
       width: "200px",
     },
@@ -76,28 +77,11 @@ const JobTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13"> Place Of Receipt</span>,
-      selector: (row) => row.por,
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Container</span>,
-      selector: (row) => row.container_type,
-      sortable: true,
-      width: "150px",
-    },
-    {
-      name: <span className="font-weight-bold fs-13">POA</span>,
-      selector: (row) => row.poa,
-      sortable: true,
-    },
-    {
       name: <span className="font-weight-bold fs-13">Remarks</span>,
       selector: (row) => row.remarks,
       sortable: true,
       width: "200px",
     },
-
     {
       name: <span className="font-weight-bold fs-13">Actions</span>,
       selector: (row) => row,
@@ -111,7 +95,7 @@ const JobTable = (props) => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
-              {/* <DropdownItem
+              <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
                   setSelectedJob(value);
@@ -120,11 +104,7 @@ const JobTable = (props) => {
               >
                 <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
                 Create Job
-              </DropdownItem> */}
-
-              {/*  */}
-              {/*  */}
-
+              </DropdownItem>
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
@@ -192,18 +172,18 @@ const JobTable = (props) => {
             setEditModal((prev) => !prev);
           }}
         >
-          Edit Job
+          Edit Enquiry
         </ModalHeader>
         <ModalBody>
-          <EditJob
+          <EditEnquiry
             closeAddPopup={() => {
               setEditModal(false);
               setSelectedJob(null);
               props.getJobs();
             }}
             allJobs={selectedJob}
-            history={props.history}
             selectedValue={props.selectedValue}
+            history={props.history}
           />
         </ModalBody>
       </Modal>
@@ -223,7 +203,7 @@ const JobTable = (props) => {
             setJobTypeModal((prev) => !prev);
           }}
         >
-          Create Job
+          Create New Job
         </ModalHeader>
         <ModalBody>
           <CreateJob
@@ -276,4 +256,4 @@ const JobTable = (props) => {
   );
 };
 
-export default JobTable;
+export default EnquiryTable;

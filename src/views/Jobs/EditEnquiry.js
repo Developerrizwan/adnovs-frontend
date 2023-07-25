@@ -4,29 +4,158 @@ import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
+
 import jobsImage from "../../assets/images/jobs-image.png";
 import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
 
-const EditJob = (props) => {
+const EditEnquiry = (props) => {
   const [jobType, setJobType] = useState(null);
   const [typevalue, setTypevalue] = useState(null);
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
-  const [containerTypesValue, setContainerTypesValue] = useState(null);
+  const [poaValue, setPoaValue] = useState(null);
+  const [podValue, setPodValue] = useState(null);
   const [eta, setEta] = useState(null);
   const [etd, setEtd] = useState(null);
-  const options = [
+
+  const poaOptions = [
     {
-      label: "Job",
-      value: "Job",
+      label: "Doha Hamad",
+      value: "Doha Hamad",
     },
+    {
+      label: "Tokyo Haneda",
+      value: "Tokyo Haneda",
+    },
+    {
+      label: "Singapore Changi",
+      value: "Singapore Changi",
+    },
+    {
+      label: "Tokyo Narita",
+      value: "Tokyo Narita",
+    },
+    {
+      label: "Seoul Incheon",
+      value: "Seoul Incheon",
+    },
+    {
+      label: "Paris CDG",
+      value: "Paris CDG",
+    },
+    {
+      label: "Istanbul",
+      value: "Istanbul",
+    },
+    {
+      label: "Munich",
+      value: "Munich",
+    },
+    {
+      label: "Zurich",
+      value: "Zurich",
+    },
+    {
+      label: "Kansai",
+      value: "Kansai",
+    },
+    {
+      label: "Centrair Nagoya",
+      value: "Centrair Nagoya",
+    },
+    {
+      label: "Helsinki Vantaa",
+      value: "Helsinki Vantaa",
+    },
+    {
+      label: "London Heathrow",
+      value: "London Heathrow",
+    },
+    {
+      label: "Dubai",
+      value: "Dubai",
+    },
+    {
+      label: "Amsterdam Schiphol",
+      value: "Amsterdam Schiphols",
+    },
+  ];
+
+  const podOptions = [
+    {
+      label: "Shanghai  ",
+      value: "Shanghai ",
+    },
+    {
+      label: "Singapore ",
+      value: "Singapore ",
+    },
+    {
+      label: "Ningbo Zhoushan ",
+      value: "Ningbo Zhoushan ",
+    },
+    {
+      label: "Busan  ",
+      value: "Busan  ",
+    },
+    {
+      label: "Jebel Ali",
+      value: "Jebel Ali",
+    },
+    {
+      label: "Rotterdam",
+      value: "Rotterdam",
+    },
+    {
+      label: "Port of Tanjung Pelepas",
+      value: "Port of Tanjung Pelepas",
+    },
+    {
+      label: "Los Angeles",
+      value: "Los Angeles",
+    },
+    {
+      label: "South Louisiana",
+      value: "South Louisiana",
+    },
+    {
+      label: "Antwerp",
+      value: "Antwerp",
+    },
+    {
+      label: "Hamburg ",
+      value: "Hamburg ",
+    },
+    {
+      label: "Felixstowe",
+      value: "Felixstowe",
+    },
+    {
+      label: "Itaqui ",
+      value: "Itaqui ",
+    },
+    {
+      label: "Durban",
+      value: "Durban",
+    },
+    {
+      label: "Port Hedland ",
+      value: "Port Hedland",
+    },
+  ];
+
+  const options = [
     // {
-    //   label: "Enquiry",
-    //   value: "Enquiry",
+    //   label: "Job",
+    //   value: "Job",
     // },
+    {
+      label: "Enquiry",
+      value: "Enquiry",
+    },
   ];
 
   useEffect(() => {
@@ -44,16 +173,21 @@ const EditJob = (props) => {
       (item) => item.value === props.allJobs.job_status
     );
     setJobStatus(jobStatus);
-    const container_type = containerTypes.find(
-      (item) => item.value === props.allJobs.container_type
+
+    const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
+    setPoaValue(poa);
+    const pod_Value = podOptions.find(
+      (item) => item.value === props.allJobs?.pod
     );
-    setContainerTypesValue(container_type);
+
+    setPodValue(pod_Value);
   }, [
     props.allJobs.job_type,
     props.allJobs.scope_of_work,
     props.allJobs.type,
     props.allJobs.job_status,
-    props.allJobs.container_type,
+    props.allJobs.poa,
+    props.allJobs.pod,
   ]);
 
   const typeOptions = [
@@ -126,65 +260,6 @@ const EditJob = (props) => {
     {
       label: "OTHERS",
       value: "OTHERS",
-    },
-  ];
-
-  const containerTypes = [
-    {
-      label: "20DC",
-      value: "20DC",
-    },
-    {
-      label: "20RF",
-      value: "20RF",
-    },
-    {
-      label: "20ST",
-      value: "20ST",
-    },
-    {
-      label: "20OT",
-      value: "20OT",
-    },
-    {
-      label: "20HC",
-      value: "20HC",
-    },
-    {
-      label: "40DC",
-      value: "40DC",
-    },
-    {
-      label: "40DC",
-      value: "40DC",
-    },
-    {
-      label: "40RF",
-      value: "40RF",
-    },
-    {
-      label: "40ST",
-      value: "40ST",
-    },
-    {
-      label: "40OT",
-      value: "40OT",
-    },
-    {
-      label: "40HC",
-      value: "40HC",
-    },
-    {
-      label: "FLAT RACK",
-      value: "FLAT RACK",
-    },
-    {
-      label: "FTL",
-      value: "FTL",
-    },
-    {
-      label: "LTL",
-      value: "LTL",
     },
   ];
 
@@ -268,12 +343,12 @@ const EditJob = (props) => {
         <Card className="p-3" style={{ background: "#EDEDED" }}>
           <Formik
             initialValues={{
-              bl_number: props?.allJobs?.bl_number
-                ? props?.allJobs?.bl_number
-                : "",
-              bayan_number: props?.allJobs?.bayan_number
-                ? props?.allJobs?.bayan_number
-                : "",
+              // bl_number: props?.allJobs?.bl_number
+              //   ? props?.allJobs?.bl_number
+              //   : "",
+              // bayan_number: props?.allJobs?.bayan_number
+              //   ? props?.allJobs?.bayan_number
+              //   : "",
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
               consignee_name: props?.allJobs?.consignee_name
@@ -289,10 +364,6 @@ const EditJob = (props) => {
               job_type: props?.allJobs?.job_type
                 ? props?.allJobs?.job_type
                 : "",
-              container_type: props?.allJobs?.container_type
-                ? props?.allJobs?.container_type
-                : "",
-              por: props?.allJobs?.por ? props?.allJobs?.por : "",
               job_status: props?.allJobs?.job_status
                 ? props?.allJobs?.job_status
                 : "",
@@ -300,12 +371,12 @@ const EditJob = (props) => {
               scope_of_work: props?.allJobs?.scope_of_work
                 ? props?.allJobs?.scope_of_work
                 : "",
-              eta: props?.allJobs?.eta ? props?.allJobs?.eta : null,
-              etd: props?.allJobs?.etd ? props?.allJobs?.etd : null,
+              eta: props?.allJobs?.eta ? props?.allJobs?.eta : "",
+              etd: props?.allJobs?.etd ? props?.allJobs?.etd : "",
             }}
             validationSchema={Yup.object({
-              bl_number: Yup.string().required("BL Number is Required"),
-              bayan_number: Yup.string().required("Bayan Number is Required"),
+              // bl_number: Yup.string().required("BL Number is Required"),
+              // bayan_number: Yup.string().required("Bayan Number is Required"),
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
               consignee_name: Yup.string()
@@ -324,14 +395,10 @@ const EditJob = (props) => {
                 .max(400, "Must be 400 characters or less")
                 .trim()
                 .required("Remarks is Required"),
-              por: Yup.string().required("Place Of Receipt is Required"),
               job_type: Yup.string().required("Job Type is Required"),
               type: Yup.string().required("Type is Required"),
               scope_of_work: Yup.string().required("Scope of work is Required"),
               job_status: Yup.string().required("Job Status is Required"),
-              container_type: Yup.string().required(
-                "Container Type is Required"
-              ),
             })}
             onSubmit={(values, { reset }) => {
               const company = JSON.parse(
@@ -380,7 +447,7 @@ const EditJob = (props) => {
             {({ values, setFieldValue }) => (
               <Form className="av-tooltip tooltip-label-bottom">
                 <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
+                  {/* <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="bl_number" className="form-label">
                         BL Number
@@ -398,7 +465,7 @@ const EditJob = (props) => {
                         )}
                       />
                     </div>
-                  </Grid>
+                  </Grid> */}
 
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
@@ -414,29 +481,6 @@ const EditJob = (props) => {
 
                       <ErrorMessage
                         name="consignee_name"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="bayan_number" className="form-label">
-                        Bayan Number
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="bayan_number"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="bayan_number"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -466,16 +510,50 @@ const EditJob = (props) => {
                 </Grid>
 
                 <Grid container spacing={2}>
+                  {/* <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="bayan_number" className="form-label">
+                        Bayan Number
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="bayan_number"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="bayan_number"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid> */}
+                </Grid>
+
+                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="pod" className="form-label">
                         POD
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="pod"
-                        style={{ background: "#EDEDED" }}
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={podOptions}
+                        value={podValue}
+                        // defaultValue={{ label: jobType }}
+                        // onChange={(event) => {
+                        //   setJobType(event.value);
+                        // }}
+                        onChange={(data) => {
+                          setPodValue(data);
+                          setFieldValue("pod", data.value);
+                        }}
                       />
 
                       <ErrorMessage
@@ -516,70 +594,32 @@ const EditJob = (props) => {
                         POA
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="poa"
-                        style={{ background: "#EDEDED" }}
-                      />
 
-                      <ErrorMessage
-                        name="poa"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3" style={{ zIndex: "500" }}>
-                      <Label htmlFor="container" className="form-label">
-                        Container/Consignment
-                        <span className="text-danger">*</span>
-                      </Label>
                       <Select
                         name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={containerTypes}
-                        value={containerTypesValue}
-                        // defaultValue={{ label: jobStatus }}
+                        options={poaOptions}
+                        value={poaValue}
+                        // defaultValue={{ label: jobType }}
+                        // onChange={(event) => {
+                        //   setJobType(event.value);
+                        // }}
                         onChange={(data) => {
-                          setContainerTypesValue(data);
-                          setFieldValue("container_type", data.value);
+                          setPoaValue(data);
+                          setFieldValue("poa", data.value);
                         }}
                       />
+
                       <ErrorMessage
-                        name="container_type"
+                        name="poa"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
                       />
                     </div>
                   </Grid>
-                </Grid>
 
-                <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="por" className="form-label">
-                        Place Of Receipt
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="por"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="por"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="job_type" className="form-label">
@@ -713,6 +753,7 @@ const EditJob = (props) => {
                         <span className="text-danger">*</span>
                       </Label>
                       <DatePicker
+                        // selected={moment(etd).format("YYYY-MM-DD HH:mm:ss")}
                         selected={etd}
                         onChange={(date) => {
                           setEtd(date);
@@ -818,4 +859,4 @@ const EditJob = (props) => {
   );
 };
 
-export default EditJob;
+export default EditEnquiry;
