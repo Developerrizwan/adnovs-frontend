@@ -8,8 +8,9 @@ import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
+import zIndex from "@mui/material/styles/zIndex";
 
-const EditJob = (props) => {
+const CreateJob = (props) => {
   const [jobType, setJobType] = useState(null);
   const [typevalue, setTypevalue] = useState(null);
   const [scopeType, setScopeType] = useState(null);
@@ -26,27 +27,64 @@ const EditJob = (props) => {
     },
   ];
 
-  useEffect(() => {
-    const jobtype = options.find(
-      (item) => item.value === props.allJobs.job_type
-    );
-    setJobType(jobtype);
-    const scopeType = scopeofworkOptions.find(
-      (item) => item.value === props.allJobs.scope_of_work
-    );
-    setScopeType(scopeType);
-    const type = typeOptions.find((item) => item.value === props.allJobs.type);
-    setTypevalue(type);
-    const jobStatus = statusOptions.find(
-      (item) => item.value === props.allJobs.job_status
-    );
-    setJobStatus(jobStatus);
-  }, [
-    props.allJobs.job_type,
-    props.allJobs.scope_of_work,
-    props.allJobs.type,
-    props.allJobs.job_status,
-  ]);
+  const statusOptions = [
+    {
+      label: "Cargo Collected",
+      value: "Cargo Collected",
+    },
+    {
+      label: "Under Export Clearance",
+      value: "Under Export Clearance",
+    },
+    {
+      label: "Departed",
+      value: "Departed",
+    },
+    {
+      label: "In Transit",
+      value: "In Transit",
+    },
+    {
+      label: "Arrived",
+      value: "Arrived",
+    },
+    {
+      label: "Under Import Clearance",
+      value: "Under Import Clearance",
+    },
+    {
+      label: "Do Collected",
+      value: "Do Collected",
+    },
+    {
+      label: "Gate Pass Issued",
+      value: "Gate Pass Issued",
+    },
+    {
+      label: "Under Delivery",
+      value: "Under Delivery",
+    },
+    {
+      label: "In Warehouse Storage",
+      value: "In Warehouse Storage",
+    },
+    {
+      label: "Delivered",
+      value: "Delivered",
+    },
+    {
+      label: "Invoiced",
+      value: "Invoiced",
+    },
+    {
+      label: "Finished",
+      value: "Finished",
+    },
+    {
+      label: "Cancelled",
+      value: "Cancelled",
+    },
+  ];
 
   const typeOptions = [
     {
@@ -121,64 +159,65 @@ const EditJob = (props) => {
     },
   ];
 
-  const statusOptions = [
+  const containerTypes = [
     {
-      label: "Cargo Collected",
-      value: "Cargo Collected",
+      label: "20DC",
+      value: "20DC",
     },
     {
-      label: "Under Export Clearance",
-      value: "Under Export Clearance",
+      label: "20RF",
+      value: "20RF",
     },
     {
-      label: "Departed",
-      value: "Departed",
+      label: "20ST",
+      value: "20ST",
     },
     {
-      label: "In Transit",
-      value: "In Transit",
+      label: "20OT",
+      value: "20OT",
     },
     {
-      label: "Arrived",
-      value: "Arrived",
+      label: "20HC",
+      value: "20HC",
     },
     {
-      label: "Under Import Clearance",
-      value: "Under Import Clearance",
+      label: "40DC",
+      value: "40DC",
     },
     {
-      label: "Do Collected",
-      value: "Do Collected",
+      label: "40DC",
+      value: "40DC",
     },
     {
-      label: "Gate Pass Issued",
-      value: "Gate Pass Issued",
+      label: "40RF",
+      value: "40RF",
     },
     {
-      label: "Under Delivery",
-      value: "Under Delivery",
+      label: "40ST",
+      value: "40ST",
     },
     {
-      label: "In Warehouse Storage",
-      value: "In Warehouse Storage",
+      label: "40OT",
+      value: "40OT",
     },
     {
-      label: "Delivered",
-      value: "Delivered",
+      label: "40HC",
+      value: "40HC",
     },
     {
-      label: "Invoiced",
-      value: "Invoiced",
+      label: "FLAT RACK",
+      value: "FLAT RACK",
     },
     {
-      label: "Finished",
-      value: "Finished",
+      label: "FTL",
+      value: "FTL",
     },
     {
-      label: "Cancelled",
-      value: "Cancelled",
+      label: "LTL",
+      value: "LTL",
     },
   ];
+
   const history = useHistory();
 
   const customStyles = {
@@ -191,10 +230,31 @@ const EditJob = (props) => {
     history.goBack();
   };
 
+  useEffect(() => {
+    const jobtype = options.find(
+      (item) => item.value === props.allJobs.job_type
+    );
+    setJobType(jobtype);
+    const scopeType = scopeofworkOptions.find(
+      (item) => item.value === props.allJobs.scope_of_work
+    );
+    setScopeType(scopeType);
+    const type = typeOptions.find((item) => item.value === props.allJobs.type);
+    setTypevalue(type);
+    const jobStatus = statusOptions.find(
+      (item) => item.value === props.allJobs.job_status
+    );
+    setJobStatus(jobStatus);
+  }, [
+    props.allJobs.job_type,
+    props.allJobs.scope_of_work,
+    props.allJobs.type,
+    props.allJobs.job_status,
+  ]);
+
   const handleOptionChange = (selectedOption) => {
     history.push(`/${selectedOption.value}`);
   };
-
   return (
     <React.Fragment>
       {props.allJobs ? (
@@ -209,6 +269,7 @@ const EditJob = (props) => {
               //   : "",
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
+              por: props?.allJobs?.por ? props?.allJobs?.por : "",
               consignee_name: props?.allJobs?.consignee_name
                 ? props?.allJobs?.consignee_name
                 : "",
@@ -225,6 +286,9 @@ const EditJob = (props) => {
               job_status: props?.allJobs?.job_status
                 ? props?.allJobs?.job_status
                 : "",
+              container_type: props?.allJobs?.container_type
+                ? props?.allJobs?.container_type
+                : "",
               type: props?.allJobs?.type ? props?.allJobs?.type : "",
               scope_of_work: props?.allJobs?.scope_of_work
                 ? props?.allJobs?.scope_of_work
@@ -235,6 +299,7 @@ const EditJob = (props) => {
               // bayan_number: Yup.string().required("Bayan Number is Required"),
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
+              por: Yup.string().required("Place Of Receipt is Required"),
               consignee_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
@@ -255,6 +320,9 @@ const EditJob = (props) => {
               type: Yup.string().required("Type is Required"),
               scope_of_work: Yup.string().required("Scope of work is Required"),
               job_status: Yup.string().required("Job Status is Required"),
+              container_type: Yup.string().required(
+                "Container Type is Required"
+              ),
             })}
             onSubmit={(values, { reset }) => {
               const company = JSON.parse(
@@ -364,29 +432,6 @@ const EditJob = (props) => {
                 </Grid>
 
                 <Grid container spacing={2}>
-                  {/* <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="bayan_number" className="form-label">
-                        Bayan Number
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="bayan_number"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="bayan_number"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid> */}
-                </Grid>
-
-                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="pod" className="form-label">
@@ -445,6 +490,55 @@ const EditJob = (props) => {
 
                       <ErrorMessage
                         name="poa"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3" style={{ zIndex: "500" }}>
+                      <Label htmlFor="container" className="form-label">
+                        Container/Consignment
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={containerTypes}
+                        // defaultValue={{ label: jobStatus }}
+                        onChange={(data) => {
+                          //   setJobStatus(data.value);
+                          setFieldValue("container_type", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="container_type"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="por" className="form-label">
+                        Place Of Receipt
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="por"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="por"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -529,14 +623,14 @@ const EditJob = (props) => {
                         name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        value={scopeType}
                         options={scopeofworkOptions}
+                        value={scopeType}
                         // defaultValue={{ label: jobType }}
                         // onChange={(event) => {
                         //   setJobType(event.value);
                         // }}
                         onChange={(data) => {
-                          setScopeType(data.value);
+                          setScopeType(data);
                           setFieldValue("scope_of_work", data.value);
                         }}
                       />
@@ -562,11 +656,11 @@ const EditJob = (props) => {
                         name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        value={jobStatus}
                         options={statusOptions}
+                        value={jobStatus}
                         // defaultValue={{ label: jobStatus }}
                         onChange={(data) => {
-                          setJobStatus(data.value);
+                          setJobStatus(data);
                           setFieldValue("job_status", data.value);
                         }}
                       />
@@ -578,8 +672,6 @@ const EditJob = (props) => {
                       />
                     </div>
                   </Grid>
-
-                  <Grid item lg={6} xs={12}></Grid>
                 </Grid>
 
                 <div className="mb-3">
@@ -636,4 +728,4 @@ const EditJob = (props) => {
   );
 };
 
-export default EditJob;
+export default CreateJob;
