@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import DatePicker from "react-datepicker";
 import jobsImage from "../../assets/images/jobs-image.png";
 import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
@@ -12,6 +13,8 @@ import { Label } from "reactstrap";
 const AddJobs = (props) => {
   const [jobType, setJobType] = useState("Enquiry");
   const [jobStatus, setJobStatus] = useState("");
+  const [eta, setEta] = useState(new Date());
+  const [etd, setEtd] = useState(new Date());
 
   const options = [
     // {
@@ -27,15 +30,15 @@ const AddJobs = (props) => {
   const typeOptions = [
     {
       label: "Air Freight",
-      value: "Air_Freight",
+      value: "Air Freight",
     },
     {
       label: "Sea Freight",
-      value: "Sea_Freight",
+      value: "Sea Freight",
     },
     {
       label: "Land Freight",
-      value: "Land_Freight",
+      value: "Land Freight",
     },
     {
       label: "Transportation",
@@ -155,6 +158,133 @@ const AddJobs = (props) => {
       value: "Cancelled",
     },
   ];
+
+  const poaOptions = [
+    {
+      label: "Doha Hamad",
+      value: "Doha Hamad",
+    },
+    {
+      label: "Tokyo Haneda",
+      value: "Tokyo Haneda",
+    },
+    {
+      label: "Singapore Changi",
+      value: "Singapore Changi",
+    },
+    {
+      label: "Tokyo Narita",
+      value: "Tokyo Narita",
+    },
+    {
+      label: "Seoul Incheon",
+      value: "Seoul Incheon",
+    },
+    {
+      label: "Paris CDG",
+      value: "Paris CDG",
+    },
+    {
+      label: "Istanbul",
+      value: "Istanbul",
+    },
+    {
+      label: "Munich",
+      value: "Munich",
+    },
+    {
+      label: "Zurich",
+      value: "Zurich",
+    },
+    {
+      label: "Kansai",
+      value: "Kansai",
+    },
+    {
+      label: "Centrair Nagoya",
+      value: "Centrair Nagoya",
+    },
+    {
+      label: "Helsinki Vantaa",
+      value: "Helsinki Vantaa",
+    },
+    {
+      label: "London Heathrow",
+      value: "London Heathrow",
+    },
+    {
+      label: "Dubai",
+      value: "Dubai",
+    },
+    {
+      label: "Amsterdam Schiphol",
+      value: "Amsterdam Schiphols",
+    },
+  ];
+
+  const podOptions = [
+    {
+      label: "Shanghai  ",
+      value: "Shanghai ",
+    },
+    {
+      label: "Singapore ",
+      value: "Singapore ",
+    },
+    {
+      label: "Ningbo Zhoushan ",
+      value: "Ningbo Zhoushan ",
+    },
+    {
+      label: "Busan  ",
+      value: "Busan  ",
+    },
+    {
+      label: "Jebel Ali",
+      value: "Jebel Ali",
+    },
+    {
+      label: "Rotterdam",
+      value: "Rotterdam",
+    },
+    {
+      label: "Port of Tanjung Pelepas",
+      value: "Port of Tanjung Pelepas",
+    },
+    {
+      label: "Los Angeles",
+      value: "Los Angeles",
+    },
+    {
+      label: "South Louisiana",
+      value: "South Louisiana",
+    },
+    {
+      label: "Antwerp",
+      value: "Antwerp",
+    },
+    {
+      label: "Hamburg ",
+      value: "Hamburg ",
+    },
+    {
+      label: "Felixstowe",
+      value: "Felixstowe",
+    },
+    {
+      label: "Itaqui ",
+      value: "Itaqui ",
+    },
+    {
+      label: "Durban",
+      value: "Durban",
+    },
+    {
+      label: "Port Hedland ",
+      value: "Port Hedland",
+    },
+  ];
+
   const history = useHistory();
 
   const customStyles = {
@@ -165,10 +295,6 @@ const AddJobs = (props) => {
   };
   const goBack = () => {
     history.goBack();
-  };
-
-  const handleOptionChange = (selectedOption) => {
-    history.push(`/${selectedOption.value}`);
   };
 
   return (
@@ -201,6 +327,9 @@ const AddJobs = (props) => {
                   type: "",
                   scope_of_work: "",
                   job_status: "",
+                  eta: null,
+                  etd: null,
+                  branch: "",
                 }}
                 validationSchema={Yup.object({
                   // bl_number: Yup.string().required("BL Number is Required"),
@@ -231,13 +360,16 @@ const AddJobs = (props) => {
                     "Scope of work is Required"
                   ),
                   job_status: Yup.string().required("Job Status is Required"),
+                  // eta: Yup.string().nullable().required("ETA is required"),
+                  // etd: Yup.string().nullable().required("ETD is required"),
                 })}
                 onSubmit={(values, { reset }) => {
                   const company = JSON.parse(
                     localStorage.getItem("authUser")
                   )?.company_id;
                   values["company"] = company;
-
+                  values["eta"] = eta;
+                  values["etd"] = etd;
                   const url = "/api/master/job/";
                   apiAuth
                     .post(url, values)
@@ -375,10 +507,20 @@ const AddJobs = (props) => {
                             POD
                             <span className="text-danger">*</span>
                           </Label>
-                          <Field
-                            className="form-control"
-                            name="pod"
-                            style={{ background: "#EDEDED" }}
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={podOptions}
+                            // defaultValue={{ label: jobType }}
+                            // onChange={(event) => {
+                            //   setJobType(event.value);
+                            // }}
+                            onChange={(data) => {
+                              // setJobType(data.value);
+                              setFieldValue("pod", data.value);
+                            }}
                           />
 
                           <ErrorMessage
@@ -419,10 +561,20 @@ const AddJobs = (props) => {
                             POA
                             <span className="text-danger">*</span>
                           </Label>
-                          <Field
-                            className="form-control"
-                            name="poa"
-                            style={{ background: "#EDEDED" }}
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={poaOptions}
+                            // defaultValue={{ label: jobType }}
+                            // onChange={(event) => {
+                            //   setJobType(event.value);
+                            // }}
+                            onChange={(data) => {
+                              // setJobType(data.value);
+                              setFieldValue("poa", data.value);
+                            }}
                           />
 
                           <ErrorMessage
@@ -522,6 +674,59 @@ const AddJobs = (props) => {
 
                           <ErrorMessage
                             name="scope_of_work"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="eta" className="form-label">
+                            ETA
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <DatePicker
+                            selected={eta}
+                            onChange={(date) => {
+                              setEta(date);
+                            }}
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={15}
+                            timeCaption="Time"
+                            dateFormat="d MMMM yyyy h:mm aa"
+                          />
+                          <ErrorMessage
+                            name="eta"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="etd" className="form-label">
+                            ETD
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <DatePicker
+                            selected={etd}
+                            onChange={(date) => {
+                              setEtd(date);
+                            }}
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={15}
+                            timeCaption="Time"
+                            dateFormat="d MMMM yyyy h:mm aa"
+                          />
+                          <ErrorMessage
+                            name="etd"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}

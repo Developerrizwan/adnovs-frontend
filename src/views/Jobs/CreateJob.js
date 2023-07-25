@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import DatePicker from "react-datepicker";
 import jobsImage from "../../assets/images/jobs-image.png";
 import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
@@ -11,20 +12,21 @@ import { Label, Button } from "reactstrap";
 import zIndex from "@mui/material/styles/zIndex";
 
 const CreateJob = (props) => {
-  const [jobType, setJobType] = useState(null);
+  const [jobType, setJobType] = useState("Job");
   const [typevalue, setTypevalue] = useState(null);
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
-
+  const [eta, setEta] = useState(new Date());
+  const [etd, setEtd] = useState(new Date());
   const options = [
     {
       label: "Job",
       value: "Job",
     },
-    {
-      label: "Enquiry",
-      value: "Enquiry",
-    },
+    // {
+    //   label: "Enquiry",
+    //   value: "Enquiry",
+    // },
   ];
 
   const statusOptions = [
@@ -89,15 +91,15 @@ const CreateJob = (props) => {
   const typeOptions = [
     {
       label: "Air Freight",
-      value: "Air_Freight",
+      value: "Air Freight",
     },
     {
       label: "Sea Freight",
-      value: "Sea_Freight",
+      value: "Sea Freight",
     },
     {
       label: "Land Freight",
-      value: "Land_Freight",
+      value: "Land Freight",
     },
     {
       label: "Transportation",
@@ -261,12 +263,12 @@ const CreateJob = (props) => {
         <Card className="p-3" style={{ background: "#EDEDED" }}>
           <Formik
             initialValues={{
-              // bl_number: props?.allJobs?.bl_number
-              //   ? props?.allJobs?.bl_number
-              //   : "",
-              // bayan_number: props?.allJobs?.bayan_number
-              //   ? props?.allJobs?.bayan_number
-              //   : "",
+              bl_number: props?.allJobs?.bl_number
+                ? props?.allJobs?.bl_number
+                : "",
+              bayan_number: props?.allJobs?.bayan_number
+                ? props?.allJobs?.bayan_number
+                : "",
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
               por: props?.allJobs?.por ? props?.allJobs?.por : "",
@@ -293,10 +295,14 @@ const CreateJob = (props) => {
               scope_of_work: props?.allJobs?.scope_of_work
                 ? props?.allJobs?.scope_of_work
                 : "",
+              eta: props?.allJobs?.eta ? props?.allJobs?.eta : null,
+              etd: props?.allJobs?.etd ? props?.allJobs?.etd : null,
+              branch: "JEDDHA",
             }}
             validationSchema={Yup.object({
-              // bl_number: Yup.string().required("BL Number is Required"),
-              // bayan_number: Yup.string().required("Bayan Number is Required"),
+              bl_number: Yup.string().required("BL Number is Required"),
+              branch: Yup.string().required("Branch is Required"),
+              bayan_number: Yup.string().required("Bayan Number is Required"),
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
               por: Yup.string().required("Place Of Receipt is Required"),
@@ -329,6 +335,8 @@ const CreateJob = (props) => {
                 localStorage.getItem("authUser")
               )?.company_id;
               values["company"] = company;
+              values["eta"] = eta;
+              values["etd"] = etd;
               const url = `/api/master/job/${props.allJobs.id}/`;
               apiAuth
                 .patch(url, values)
@@ -369,7 +377,7 @@ const CreateJob = (props) => {
             {({ values, setFieldValue }) => (
               <Form className="av-tooltip tooltip-label-bottom">
                 <Grid container spacing={2}>
-                  {/* <Grid item lg={6} xs={12}>
+                  <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="bl_number" className="form-label">
                         BL Number
@@ -387,7 +395,7 @@ const CreateJob = (props) => {
                         )}
                       />
                     </div>
-                  </Grid> */}
+                  </Grid>
 
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
@@ -403,6 +411,28 @@ const CreateJob = (props) => {
 
                       <ErrorMessage
                         name="consignee_name"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="bayan_number" className="form-label">
+                        Bayan Number
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="bayan_number"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="bayan_number"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -559,7 +589,7 @@ const CreateJob = (props) => {
                         styles={customStyles}
                         options={options}
                         value={jobType}
-                        // defaultValue={{ label: jobType }}
+                        defaultValue={{ label: jobType }}
                         // onChange={(event) => {
                         //   setJobType(event.value);
                         // }}
@@ -648,6 +678,61 @@ const CreateJob = (props) => {
                 <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
+                      <Label htmlFor="eta" className="form-label">
+                        ETA
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <DatePicker
+                        selected={eta}
+                        onChange={(date) => {
+                          setEta(date);
+                        }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="d MMMM yyyy h:mm aa"
+                      />
+                      <ErrorMessage
+                        name="eta"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="etd" className="form-label">
+                        ETD
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <DatePicker
+                        // selected={moment(etd).format("YYYY-MM-DD HH:mm:ss")}
+                        selected={etd}
+                        onChange={(date) => {
+                          setEtd(date);
+                        }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="d MMMM yyyy h:mm aa"
+                      />
+                      <ErrorMessage
+                        name="etd"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
                       <Label htmlFor="job_status" className="form-label">
                         Job Status
                         <span className="text-danger">*</span>
@@ -666,6 +751,27 @@ const CreateJob = (props) => {
                       />
                       <ErrorMessage
                         name="job_status"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="branch" className="form-label">
+                        Branch
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="branch"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="branch"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}

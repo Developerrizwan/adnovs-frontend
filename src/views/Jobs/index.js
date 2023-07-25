@@ -13,12 +13,13 @@ import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import JobTable from "./JobTable";
 import NotificationManager from "../../components/Common/NotificationManager";
+import EnquiryTable from "./EnquiryTable";
 
 const Jobs = (props) => {
   const [allJobs, setAllJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedValue, setSelectedValue] = useState("Job");
+  const [selectedValue, setSelectedValue] = useState("Enquiry");
   const [jobPagination, setJobPagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
@@ -51,7 +52,6 @@ const Jobs = (props) => {
 
       .then((response) => {
         let data = response.data;
-        console.log("jobs", data);
         setJobPagination({
           ...pgdata,
           totalRows: response.data.count,
@@ -80,6 +80,7 @@ const Jobs = (props) => {
           ""
         );
         getJobs(jobPagination, searchValue);
+        // setSelectedValue()
       })
       .catch(function (error) {
         console.log(error);
@@ -103,7 +104,7 @@ const Jobs = (props) => {
       <div className="page-content">
         <Container fluid>
           <BreadCrumb
-            title="Jobs"
+            title={selectedValue}
             pageTitle="Jobs"
             add_new={true}
             // add_url_popup={true}
@@ -131,20 +132,39 @@ const Jobs = (props) => {
             {allJobs.length > 0 ? (
               <>
                 <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
-                  <JobTable
-                    allJobs={allJobs}
-                    deleteJob={deleteJob}
-                    history={props.history}
-                    jobPagination={{ ...jobPagination }}
-                    handlePagination={(data) => {
-                      setJobPagination(data);
-                      getJobs(data);
-                    }}
-                    getJobs={() => {
-                      setAllJobs([]);
-                      getJobs(jobPagination, searchValue);
-                    }}
-                  />
+                  {selectedValue === "Job" ? (
+                    <JobTable
+                      allJobs={allJobs}
+                      deleteJob={deleteJob}
+                      history={props.history}
+                      jobPagination={{ ...jobPagination }}
+                      handlePagination={(data) => {
+                        setJobPagination(data);
+                        getJobs(data);
+                      }}
+                      selectedValue={selectedValue}
+                      getJobs={() => {
+                        setAllJobs([]);
+                        getJobs(jobPagination, searchValue);
+                      }}
+                    />
+                  ) : (
+                    <EnquiryTable
+                      allJobs={allJobs}
+                      deleteJob={deleteJob}
+                      history={props.history}
+                      jobPagination={{ ...jobPagination }}
+                      handlePagination={(data) => {
+                        setJobPagination(data);
+                        getJobs(data);
+                      }}
+                      selectedValue={selectedValue}
+                      getJobs={() => {
+                        setAllJobs([]);
+                        getJobs(jobPagination, searchValue);
+                      }}
+                    />
+                  )}
                 </Card>
               </>
             ) : (
