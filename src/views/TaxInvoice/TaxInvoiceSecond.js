@@ -81,160 +81,7 @@ const TaxInvoiceSecond = () => {
 
           <hr style={{ border: "1px solid #000" }} />
 
-          {/* <div className="row">
-            <div className="col-lg-4 col-xs-6">
-              <h5>Customer VAT No.</h5>
-              <h5>Invoice No.</h5>
-              <h5>Invoice Date</h5>
-              <h5>Payment Due Date</h5>
-            </div>
-
-            
-
-            <div className="col-lg-4 col-xs-6">
-              
-            </div>
-            <div className="col-lg-4"></div>
-          </div> */}
-
-          <table className="w-100 mt-2 border-0">
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Customer VAT No.
-              </td>
-            </tr>
-            <tr>
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Invoice No.
-              </td>
-            </tr>
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Invoice Date
-              </td>
-            </tr>
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Payment Due Date
-              </td>
-            </tr>
-          </table>
-
-          <hr style={{ border: "1px solid #000" }} />
-
-          <div className="row">
-            <div
-              className="col-lg-6 col-xs-12"
-              style={{ borderRight: "1px solid #000" }}
-            >
-              <table className="w-100 mt-2 border-0">
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Shipper
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr>
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Consignee
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Place of Origin
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Final Destination
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Vessel / Flight
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Voy / Flt
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Cust. P/O No.
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Remarks
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-              </table>
-            </div>
-            <div className="col-lg-6 col-xs-12">
-              <table className="w-100 mt-2 border-0">
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Job Number
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr>
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Job Date
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Master
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    House No.
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    ETD
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    ETA
-                  </td>
-                  <td className="border-0">:</td>
-                  <td className="border-0"></td>
-                </tr>
-              </table>
-            </div>
-          </div>
-
-          <div style={{overflowX: "scroll"}}>
+          <div style={{overflowX: "auto"}}>
           <table className="htmlTable mt-2 w-100">
             <tr style={{background: "#dadedf"}}>
               <th>Charge Description</th>
@@ -275,25 +122,7 @@ const TaxInvoiceSecond = () => {
           </table>
           </div>
 
-          <table className="w-100 mt-2 border-0">
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}></td>
-            </tr>
-            <tr>
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Total in: SAR
-              </td>
-            </tr>
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}></td>
-            </tr>
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}></td>
-            </tr>
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}></td>
-            </tr>
-          </table>
+          
 
           <table className="htmlTable mt-2">
             <tr style={{background: "#dadedf"}}>
@@ -303,23 +132,6 @@ const TaxInvoiceSecond = () => {
               <td>FCIU6538307, YMMU6330305</td>
             </tr>
           </table>
-
-         <div className="row">
-            <div className="col-lg-4 col-xs-12">
-            <table className="htmlTable mt-2 w-100">
-            <tr style={{background: "#dadedf"}}>
-              <th>No. of Containers</th>
-              <th>TYPE</th>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>20 DC</td>
-            </tr>
-          </table>
-            </div>
-            <div className="col-lg-8 col-xs-12"></div>
-         </div>
-          
 
           <div className="row mt-4">
             <div className="col-lg-9">
