@@ -70,8 +70,8 @@ const DebitVoucher = (props) => {
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
-    { value: "Debit", label: "Debit" },
-    { value: "Credit", label: "Credit" },
+    { value: "DEBIT NOTE", label: "DEBIT NOTE" },
+    { value: "CREDIT NOTE", label: "CREDIT NOTE" },
   ];
 
   const partyOptions = [
@@ -110,9 +110,9 @@ const DebitVoucher = (props) => {
       history.push("/payment-voucher");
     } else if (event.value === "Receipt") {
       history.push("/receipt-voucher");
-    } else if (event.value === "Debit") {
+    } else if (event.value === "DEBIT NOTE") {
       history.push("/debit-voucher");
-    } else if (event.value === "Credit") {
+    } else if (event.value === "CREDIT NOTE") {
       history.push("/credit-voucher");
     }
   };
@@ -128,7 +128,7 @@ const DebitVoucher = (props) => {
               className="mb-3"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h2 className="mx-5">Debit Voucher</h2>
+              <h2 className="mx-5">DEBIT NOTE</h2>
               <button className="btn btn-danger" onClick={goBack}>
                 Back
               </button>
@@ -141,7 +141,8 @@ const DebitVoucher = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  voucher_type: props.voucherData?.voucher_type || "Debit",
+                  voucher_type:
+                    props.voucherData?.voucher_type || "CREDIT NOTE",
                   job: String(props.voucherData?.job) || "",
                   branch: props.voucherData?.branch || "",
                   book: props.voucherData?.book || "Book",
@@ -182,7 +183,7 @@ const DebitVoucher = (props) => {
                       )
                       .then((res) => {
                         NotificationManager.success(
-                          "Debit Voucher",
+                          "DEBIT NOTE",
                           "Voucher Updated Successfully",
                           3000,
                           null,
@@ -193,7 +194,7 @@ const DebitVoucher = (props) => {
                       })
                       .catch((err) => {
                         NotificationManager.error(
-                          "Debit Voucher",
+                          "DEBIT NOTE",
                           "Voucher Create Error",
                           3000,
                           null,
@@ -206,7 +207,7 @@ const DebitVoucher = (props) => {
                       .post("/api/master/voucher/", values)
                       .then((res) => {
                         NotificationManager.success(
-                          "Debit Voucher",
+                          "DEBIT NOTE",
                           "Voucher Created Successfully",
                           3000,
                           null,
@@ -217,7 +218,7 @@ const DebitVoucher = (props) => {
                       })
                       .catch((err) => {
                         NotificationManager.error(
-                          "Debit Voucher",
+                          "DEBIT NOTE",
                           "Voucher Create Error",
                           3000,
                           null,

@@ -31,6 +31,7 @@ const JobTable = (props) => {
       name: <span className="font-weight-bold fs-13"> BL Number</span>,
       selector: (row) => row.bl_number,
       sortable: true,
+      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13"> Consigee Name</span>,
@@ -42,21 +43,25 @@ const JobTable = (props) => {
       name: <span className="font-weight-bold fs-13">Bayan Number</span>,
       selector: (row) => row.bayan_number,
       sortable: true,
+      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">Shipper Name</span>,
       selector: (row) => row.shipper_name,
       sortable: true,
+      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">POD</span>,
       selector: (row) => row.pod,
       sortable: true,
+      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
       selector: (row) => row.client_name,
       sortable: true,
+      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">ETA</span>,
@@ -67,6 +72,12 @@ const JobTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">ETD</span>,
       selector: (row) => moment(row.etd).format("YYYY-MM-DD HH:mm:ss"),
+      sortable: true,
+      width: "200px",
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Organization Type</span>,
+      selector: (row) => row.organization_type.join(", "),
       sortable: true,
       width: "200px",
     },
@@ -90,6 +101,7 @@ const JobTable = (props) => {
       name: <span className="font-weight-bold fs-13">POA</span>,
       selector: (row) => row.poa,
       sortable: true,
+      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">Remarks</span>,
