@@ -12,6 +12,7 @@ const Navdata = () => {
   const [isTicket, setIsTicket] = useState(false);
   const [isPlans, setIsPlans] = useState(false);
   const [isMyAccount, setisMyAccount] = useState(false);
+  const [isCoa, setIsCoa] = useState(false);
   const [isUserManagement, setisUserManagement] = useState(false);
   const [isCouponManagement, setisCouponManagement] = useState(false);
   const [isPaymentManagement, setisPaymentManagement] = useState(false);
@@ -71,6 +72,9 @@ const Navdata = () => {
     }
     if (iscurrentState !== "SubscriptionManagement") {
       setisSubscriptionManagement(false);
+    }
+    if (iscurrentState !== "Coa") {
+      setIsCoa(false);
     }
 
     if (iscurrentState === "Widgets") {
@@ -137,6 +141,15 @@ const Navdata = () => {
       link: "/invoices",
       src: "/invoices-sidebar.png",
       stateVariables: isTicket,
+      roles: ["superadmin", "admin", "user"],
+    },
+    {
+      id: "coa",
+      label: "Chart of Accounts",
+      icon: "ri-line-chart-fill",
+      link: "/coa",
+      // src: "/invoices-sidebar.png",
+      stateVariables: isCoa,
       roles: ["superadmin", "admin", "user"],
     },
 
