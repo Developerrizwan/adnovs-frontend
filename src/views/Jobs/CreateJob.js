@@ -1,4 +1,4 @@
-import { Card, Grid } from "@mui/material";
+import { Card, Grid, MenuItem } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -18,6 +18,7 @@ const CreateJob = (props) => {
   const [jobStatus, setJobStatus] = useState(null);
   const [eta, setEta] = useState(new Date());
   const [etd, setEtd] = useState(new Date());
+  const [organization_type, setOrganization_type] = useState([]);
   const options = [
     {
       label: "Job",
@@ -110,6 +111,176 @@ const CreateJob = (props) => {
       value: "Warehousing",
     },
   ];
+
+  const OrganizationTypeOptions = [
+    {
+      label: "Consignee",
+      value: "Consignee",
+    },
+    {
+      label: "Client",
+      value: "Client",
+    },
+    {
+      label: "Notify",
+      value: "Notify",
+    },
+    {
+      label: "Shipper",
+      value: "Shipper",
+    },
+    {
+      label: "Broker",
+      value: "Broker",
+    },
+    {
+      label: "Transporter",
+      value: "Transporter",
+    },
+    {
+      label: "Counterpart",
+      value: "Counterpart",
+    },
+    {
+      label: "Coloader",
+      value: "Coloader",
+    },
+    {
+      label: "Supplier",
+      value: "Supplier",
+    },
+    {
+      label: "Other",
+      value: "Other",
+    },
+  ];
+
+  const poaOptions = [
+    {
+      label: "Doha Hamad",
+      value: "Doha Hamad",
+    },
+    {
+      label: "Tokyo Haneda",
+      value: "Tokyo Haneda",
+    },
+    {
+      label: "Singapore Changi",
+      value: "Singapore Changi",
+    },
+    {
+      label: "Tokyo Narita",
+      value: "Tokyo Narita",
+    },
+    {
+      label: "Seoul Incheon",
+      value: "Seoul Incheon",
+    },
+    {
+      label: "Paris CDG",
+      value: "Paris CDG",
+    },
+    {
+      label: "Istanbul",
+      value: "Istanbul",
+    },
+    {
+      label: "Munich",
+      value: "Munich",
+    },
+    {
+      label: "Zurich",
+      value: "Zurich",
+    },
+    {
+      label: "Kansai",
+      value: "Kansai",
+    },
+    {
+      label: "Centrair Nagoya",
+      value: "Centrair Nagoya",
+    },
+    {
+      label: "Helsinki Vantaa",
+      value: "Helsinki Vantaa",
+    },
+    {
+      label: "London Heathrow",
+      value: "London Heathrow",
+    },
+    {
+      label: "Dubai",
+      value: "Dubai",
+    },
+    {
+      label: "Amsterdam Schiphol",
+      value: "Amsterdam Schiphols",
+    },
+  ];
+
+  const podOptions = [
+    {
+      label: "Shanghai",
+      value: "Shanghai",
+    },
+    {
+      label: "Singapore",
+      value: "Singapore",
+    },
+    {
+      label: "Ningbo Zhoushan",
+      value: "Ningbo Zhoushan",
+    },
+    {
+      label: "Busan",
+      value: "Busan",
+    },
+    {
+      label: "Jebel Ali",
+      value: "Jebel Ali",
+    },
+    {
+      label: "Rotterdam",
+      value: "Rotterdam",
+    },
+    {
+      label: "Port of Tanjung Pelepas",
+      value: "Port of Tanjung Pelepas",
+    },
+    {
+      label: "Los Angeles",
+      value: "Los Angeles",
+    },
+    {
+      label: "South Louisiana",
+      value: "South Louisiana",
+    },
+    {
+      label: "Antwerp",
+      value: "Antwerp",
+    },
+    {
+      label: "Hamburg",
+      value: "Hamburg",
+    },
+    {
+      label: "Felixstowe",
+      value: "Felixstowe",
+    },
+    {
+      label: "Itaqui",
+      value: "Itaqui",
+    },
+    {
+      label: "Durban",
+      value: "Durban",
+    },
+    {
+      label: "Port Hedland",
+      value: "Port Hedland",
+    },
+  ];
+
   const scopeofworkOptions = [
     {
       label: "D2D",
@@ -254,8 +425,12 @@ const CreateJob = (props) => {
     props.allJobs.job_status,
   ]);
 
-  const handleOptionChange = (selectedOption) => {
-    history.push(`/${selectedOption.value}`);
+  const handleMultiSelectChange = (data) => {
+    console.log(
+      "Selected labels:",
+      data.map((item) => item.label)
+    );
+    setOrganization_type(data.map((item) => item.label));
   };
   return (
     <React.Fragment>
@@ -295,8 +470,11 @@ const CreateJob = (props) => {
               scope_of_work: props?.allJobs?.scope_of_work
                 ? props?.allJobs?.scope_of_work
                 : "",
-              eta: props?.allJobs?.eta ? props?.allJobs?.eta : null,
-              etd: props?.allJobs?.etd ? props?.allJobs?.etd : null,
+              eta: props?.allJobs?.eta ? props?.allJobs?.eta : "",
+              etd: props?.allJobs?.etd ? props?.allJobs?.etd : "",
+              organization_type: props?.allJobs?.organization_type
+                ? props?.allJobs?.organization_type
+                : "",
               branch: "JEDDHA",
             }}
             validationSchema={Yup.object({
@@ -326,6 +504,9 @@ const CreateJob = (props) => {
               type: Yup.string().required("Type is Required"),
               scope_of_work: Yup.string().required("Scope of work is Required"),
               job_status: Yup.string().required("Job Status is Required"),
+              // organization_type: Yup.string().required(
+              //   "Organization Type is Required"
+              // ),
               container_type: Yup.string().required(
                 "Container Type is Required"
               ),
@@ -337,30 +518,31 @@ const CreateJob = (props) => {
               values["company"] = company;
               values["eta"] = eta;
               values["etd"] = etd;
-              const url = `/api/master/job/${props.allJobs.id}/`;
+              values["organization_type"] = organization_type;
+              const url = `/api/master/job/`;
               apiAuth
-                .patch(url, values)
+                .post(url, values)
                 .then((response) => {
-                  if (response.status === 200) {
-                    NotificationManager.success(
-                      "",
-                      `Job Created Successfully`,
-                      3000,
-                      null,
-                      null,
-                      ""
-                    );
-                    props.closeAddPopup();
-                  } else {
-                    NotificationManager.error(
-                      "",
-                      `Job Create Error`,
-                      3000,
-                      null,
-                      null,
-                      ""
-                    );
-                  }
+                  // if (response.status === 200) {
+                  NotificationManager.success(
+                    "",
+                    `Job Created Successfully`,
+                    3000,
+                    null,
+                    null,
+                    ""
+                  );
+                  props.closeAddPopup();
+                  // } else {
+                  // NotificationManager.error(
+                  //   "",
+                  //   `Job Create Error`,
+                  //   3000,
+                  //   null,
+                  //   null,
+                  //   ""
+                  // );
+                  // }
                 })
                 .catch((error) => {
                   NotificationManager.error(
@@ -468,10 +650,20 @@ const CreateJob = (props) => {
                         POD
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="pod"
-                        style={{ background: "#EDEDED" }}
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={podOptions}
+                        // defaultValue={{ label: jobType }}
+                        // onChange={(event) => {
+                        //   setJobType(event.value);
+                        // }}
+                        onChange={(data) => {
+                          // setJobType(data.value);
+                          setFieldValue("pod", data.value);
+                        }}
                       />
 
                       <ErrorMessage
@@ -512,10 +704,20 @@ const CreateJob = (props) => {
                         POA
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="poa"
-                        style={{ background: "#EDEDED" }}
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={poaOptions}
+                        // defaultValue={{ label: jobType }}
+                        // onChange={(event) => {
+                        //   setJobType(event.value);
+                        // }}
+                        onChange={(data) => {
+                          // setJobType(data.value);
+                          setFieldValue("poa", data.value);
+                        }}
                       />
 
                       <ErrorMessage
@@ -780,6 +982,35 @@ const CreateJob = (props) => {
                   </Grid>
                 </Grid>
 
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="organization_type" className="form-label">
+                        Organization Type
+                        <span className="text-danger">*</span>
+                      </Label>
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={OrganizationTypeOptions}
+                        isMulti
+                        value={organization_type.map((label) => ({
+                          label,
+                          value: label,
+                        }))}
+                        onChange={handleMultiSelectChange}
+                      />
+                      <ErrorMessage
+                        name=" organization_type"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
                 <div className="mb-3">
                   <Label htmlFor="remarks" className="form-label">
                     Remarks
@@ -811,7 +1042,7 @@ const CreateJob = (props) => {
                       <span className="bounce2" />
                       <span className="bounce3" />
                     </span>
-                    <span className="label">Update</span>
+                    <span className="label">Submit</span>
                   </Button>{" "}
                   <Button
                     colo="success"

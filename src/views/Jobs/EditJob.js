@@ -15,6 +15,8 @@ const EditJob = (props) => {
   const [typevalue, setTypevalue] = useState(null);
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
+  const [poaValue, setPoaValue] = useState(null);
+  const [podValue, setPodValue] = useState(null);
   const [containerTypesValue, setContainerTypesValue] = useState(null);
   const [eta, setEta] = useState(null);
   const [etd, setEtd] = useState(null);
@@ -27,6 +29,132 @@ const EditJob = (props) => {
     //   label: "Enquiry",
     //   value: "Enquiry",
     // },
+  ];
+
+  const poaOptions = [
+    {
+      label: "Doha Hamad",
+      value: "Doha Hamad",
+    },
+    {
+      label: "Tokyo Haneda",
+      value: "Tokyo Haneda",
+    },
+    {
+      label: "Singapore Changi",
+      value: "Singapore Changi",
+    },
+    {
+      label: "Tokyo Narita",
+      value: "Tokyo Narita",
+    },
+    {
+      label: "Seoul Incheon",
+      value: "Seoul Incheon",
+    },
+    {
+      label: "Paris CDG",
+      value: "Paris CDG",
+    },
+    {
+      label: "Istanbul",
+      value: "Istanbul",
+    },
+    {
+      label: "Munich",
+      value: "Munich",
+    },
+    {
+      label: "Zurich",
+      value: "Zurich",
+    },
+    {
+      label: "Kansai",
+      value: "Kansai",
+    },
+    {
+      label: "Centrair Nagoya",
+      value: "Centrair Nagoya",
+    },
+    {
+      label: "Helsinki Vantaa",
+      value: "Helsinki Vantaa",
+    },
+    {
+      label: "London Heathrow",
+      value: "London Heathrow",
+    },
+    {
+      label: "Dubai",
+      value: "Dubai",
+    },
+    {
+      label: "Amsterdam Schiphol",
+      value: "Amsterdam Schiphols",
+    },
+  ];
+
+  const podOptions = [
+    {
+      label: "Shanghai",
+      value: "Shanghai",
+    },
+    {
+      label: "Singapore",
+      value: "Singapore",
+    },
+    {
+      label: "Ningbo Zhoushan",
+      value: "Ningbo Zhoushan",
+    },
+    {
+      label: "Busan",
+      value: "Busan",
+    },
+    {
+      label: "Jebel Ali",
+      value: "Jebel Ali",
+    },
+    {
+      label: "Rotterdam",
+      value: "Rotterdam",
+    },
+    {
+      label: "Port of Tanjung Pelepas",
+      value: "Port of Tanjung Pelepas",
+    },
+    {
+      label: "Los Angeles",
+      value: "Los Angeles",
+    },
+    {
+      label: "South Louisiana",
+      value: "South Louisiana",
+    },
+    {
+      label: "Antwerp",
+      value: "Antwerp",
+    },
+    {
+      label: "Hamburg",
+      value: "Hamburg",
+    },
+    {
+      label: "Felixstowe",
+      value: "Felixstowe",
+    },
+    {
+      label: "Itaqui",
+      value: "Itaqui",
+    },
+    {
+      label: "Durban",
+      value: "Durban",
+    },
+    {
+      label: "Port Hedland",
+      value: "Port Hedland",
+    },
   ];
 
   useEffect(() => {
@@ -48,12 +176,21 @@ const EditJob = (props) => {
       (item) => item.value === props.allJobs.container_type
     );
     setContainerTypesValue(container_type);
+    const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
+    setPoaValue(poa);
+    const pod_Value = podOptions.find(
+      (item) => item.value === props.allJobs?.pod
+    );
+
+    setPodValue(pod_Value);
   }, [
     props.allJobs.job_type,
     props.allJobs.scope_of_work,
     props.allJobs.type,
     props.allJobs.job_status,
     props.allJobs.container_type,
+    props.allJobs.poa,
+    props.allJobs.pod,
   ]);
 
   const typeOptions = [
@@ -472,10 +609,21 @@ const EditJob = (props) => {
                         POD
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="pod"
-                        style={{ background: "#EDEDED" }}
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={podOptions}
+                        value={podValue}
+                        // defaultValue={{ label: jobType }}
+                        // onChange={(event) => {
+                        //   setJobType(event.value);
+                        // }}
+                        onChange={(data) => {
+                          setPodValue(data);
+                          setFieldValue("pod", data.value);
+                        }}
                       />
 
                       <ErrorMessage
@@ -516,10 +664,21 @@ const EditJob = (props) => {
                         POA
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="poa"
-                        style={{ background: "#EDEDED" }}
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={poaOptions}
+                        value={poaValue}
+                        // defaultValue={{ label: jobType }}
+                        // onChange={(event) => {
+                        //   setJobType(event.value);
+                        // }}
+                        onChange={(data) => {
+                          setPoaValue(data);
+                          setFieldValue("poa", data.value);
+                        }}
                       />
 
                       <ErrorMessage

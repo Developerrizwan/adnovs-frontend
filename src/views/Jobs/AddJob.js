@@ -1,4 +1,4 @@
-import { Card, Grid } from "@mui/material";
+import { Card, Grid, MenuItem } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -224,20 +224,20 @@ const AddJobs = (props) => {
 
   const podOptions = [
     {
-      label: "Shanghai  ",
-      value: "Shanghai ",
+      label: "Shanghai",
+      value: "Shanghai",
     },
     {
-      label: "Singapore ",
-      value: "Singapore ",
+      label: "Singapore",
+      value: "Singapore",
     },
     {
-      label: "Ningbo Zhoushan ",
-      value: "Ningbo Zhoushan ",
+      label: "Ningbo Zhoushan",
+      value: "Ningbo Zhoushan",
     },
     {
-      label: "Busan  ",
-      value: "Busan  ",
+      label: "Busan",
+      value: "Busan",
     },
     {
       label: "Jebel Ali",
@@ -264,23 +264,23 @@ const AddJobs = (props) => {
       value: "Antwerp",
     },
     {
-      label: "Hamburg ",
-      value: "Hamburg ",
+      label: "Hamburg",
+      value: "Hamburg",
     },
     {
       label: "Felixstowe",
       value: "Felixstowe",
     },
     {
-      label: "Itaqui ",
-      value: "Itaqui ",
+      label: "Itaqui",
+      value: "Itaqui",
     },
     {
       label: "Durban",
       value: "Durban",
     },
     {
-      label: "Port Hedland ",
+      label: "Port Hedland",
       value: "Port Hedland",
     },
   ];
