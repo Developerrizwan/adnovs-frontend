@@ -22,7 +22,7 @@ const TaxInvoiceSecond = () => {
               <p style={{ fontWeight: 600 }}>VAT NO : </p>
               <p style={{ fontWeight: 600 }}>CR NO : </p>
             </div>
-            <div className="col-lg-4">
+            <div className="col-lg-4" style={{ textAlign: "right" }}>
               <p>Al Boughdadia</p>
               <p>Jeddah, Saudi Arabia - 22234</p>
               <p style={{ fontWeight: 600 }}></p>
@@ -93,13 +93,24 @@ const TaxInvoiceSecond = () => {
                 <td className="border-0">0.00</td>
                 <td className="border-0">1,161.50</td>
               </tr>
+              <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
+                <td className="border-0">1</td>
+                <td className="border-0">Port Charges</td>
+                <td className="border-0"></td>
+                <td className="border-0">1</td>
+                <td className="border-0">1,161.50</td>
+                <td className="border-0">1,161.50</td>
+                <td className="border-0">0.00%</td>
+                <td className="border-0">0.00</td>
+                <td className="border-0">1,161.50</td>
+              </tr>
             </table>
           </div>
 
           <hr className="mt-5" style={{ border: "1px solid #000" }} />
 
           <div
-            className="card"
+            className="card mt-2"
             style={{ border: "1px solid #000", padding: "10px" }}
           >
             <div className="row">
