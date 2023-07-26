@@ -161,133 +161,7 @@ const AddJobs = (props) => {
     },
   ];
 
-  // const poaOptions = [
-  //   {
-  //     label: "Doha Hamad",
-  //     value: "Doha Hamad",
-  //   },
-  //   {
-  //     label: "Tokyo Haneda",
-  //     value: "Tokyo Haneda",
-  //   },
-  //   {
-  //     label: "Singapore Changi",
-  //     value: "Singapore Changi",
-  //   },
-  //   {
-  //     label: "Tokyo Narita",
-  //     value: "Tokyo Narita",
-  //   },
-  //   {
-  //     label: "Seoul Incheon",
-  //     value: "Seoul Incheon",
-  //   },
-  //   {
-  //     label: "Paris CDG",
-  //     value: "Paris CDG",
-  //   },
-  //   {
-  //     label: "Istanbul",
-  //     value: "Istanbul",
-  //   },
-  //   {
-  //     label: "Munich",
-  //     value: "Munich",
-  //   },
-  //   {
-  //     label: "Zurich",
-  //     value: "Zurich",
-  //   },
-  //   {
-  //     label: "Kansai",
-  //     value: "Kansai",
-  //   },
-  //   {
-  //     label: "Centrair Nagoya",
-  //     value: "Centrair Nagoya",
-  //   },
-  //   {
-  //     label: "Helsinki Vantaa",
-  //     value: "Helsinki Vantaa",
-  //   },
-  //   {
-  //     label: "London Heathrow",
-  //     value: "London Heathrow",
-  //   },
-  //   {
-  //     label: "Dubai",
-  //     value: "Dubai",
-  //   },
-  //   {
-  //     label: "Amsterdam Schiphol",
-  //     value: "Amsterdam Schiphols",
-  //   },
-  // ];
-
-  // const podOptions = [
-  //   {
-  //     label: "Shanghai",
-  //     value: "Shanghai",
-  //   },
-  //   {
-  //     label: "Singapore",
-  //     value: "Singapore",
-  //   },
-  //   {
-  //     label: "Ningbo Zhoushan",
-  //     value: "Ningbo Zhoushan",
-  //   },
-  //   {
-  //     label: "Busan",
-  //     value: "Busan",
-  //   },
-  //   {
-  //     label: "Jebel Ali",
-  //     value: "Jebel Ali",
-  //   },
-  //   {
-  //     label: "Rotterdam",
-  //     value: "Rotterdam",
-  //   },
-  //   {
-  //     label: "Port of Tanjung Pelepas",
-  //     value: "Port of Tanjung Pelepas",
-  //   },
-  //   {
-  //     label: "Los Angeles",
-  //     value: "Los Angeles",
-  //   },
-  //   {
-  //     label: "South Louisiana",
-  //     value: "South Louisiana",
-  //   },
-  //   {
-  //     label: "Antwerp",
-  //     value: "Antwerp",
-  //   },
-  //   {
-  //     label: "Hamburg",
-  //     value: "Hamburg",
-  //   },
-  //   {
-  //     label: "Felixstowe",
-  //     value: "Felixstowe",
-  //   },
-  //   {
-  //     label: "Itaqui",
-  //     value: "Itaqui",
-  //   },
-  //   {
-  //     label: "Durban",
-  //     value: "Durban",
-  //   },
-  //   {
-  //     label: "Port Hedland",
-  //     value: "Port Hedland",
-  //   },
-  // ];
-
-  const getPoaOptions = (pgdata, val, type) => {
+  const getPoaOptions = () => {
     apiAuth
       .get("api/master/poa/")
 
@@ -301,7 +175,7 @@ const AddJobs = (props) => {
       });
   };
 
-  const getPodOptions = (pgdata, val, type) => {
+  const getPodOptions = () => {
     apiAuth
       .get("api/master/pod/")
 
@@ -314,6 +188,20 @@ const AddJobs = (props) => {
         console.log(error);
       });
   };
+
+  const consigneeOptions = [
+    {
+      label: "Consignee",
+      value: "Consignee",
+    },
+  ];
+
+  const clientOptions = [
+    {
+      label: "Client",
+      value: "Client",
+    },
+  ];
 
   useEffect(() => {
     getPoaOptions();
@@ -373,18 +261,14 @@ const AddJobs = (props) => {
                   // ),
                   pod: Yup.string().required("POD is Required"),
                   poa: Yup.string().required("POA is Required"),
-                  consignee_name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Cosignee Name is Required"),
+                  consignee_name: Yup.string().required(
+                    "Cosignee Name is Required"
+                  ),
                   shipper_name: Yup.string()
                     .max(20, "Must be 20 characters or less")
                     .trim()
                     .required("Shipper Name is Required"),
-                  client_name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Client Name is Required"),
+                  client_name: Yup.string().required("Client Name is Required"),
                   remarks: Yup.string()
                     .max(400, "Must be 400 characters or less")
                     .trim()
@@ -474,10 +358,16 @@ const AddJobs = (props) => {
                             Consignee Name
                             <span className="text-danger">*</span>
                           </Label>
-                          <Field
-                            className="form-control"
-                            name="consignee_name"
-                            style={{ background: "#EDEDED" }}
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={consigneeOptions}
+                            onChange={(data) => {
+                              // setJobType(data.value);
+                              setFieldValue("consignee_name", data.value);
+                            }}
                           />
 
                           <ErrorMessage
@@ -488,6 +378,7 @@ const AddJobs = (props) => {
                           />
                         </div>
                       </Grid>
+
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="shipper_name" className="form-label">
@@ -550,7 +441,7 @@ const AddJobs = (props) => {
                             options={podOptions?.map((item) => {
                               return {
                                 label: item.name,
-                                value: item.id,
+                                value: item.name,
                               };
                             })}
                             // defaultValue={{ label: jobType }}
@@ -578,12 +469,15 @@ const AddJobs = (props) => {
                             Client Name
                             <span className="text-danger">*</span>
                           </Label>
-                          <Field
-                            className="form-control"
-                            name="client_name"
-                            style={{ background: "#EDEDED" }}
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={clientOptions}
+                            onChange={(data) => {
+                              setFieldValue("client_name", data.value);
+                            }}
                           />
-
                           <ErrorMessage
                             name="client_name"
                             render={(msg) => (
@@ -609,7 +503,7 @@ const AddJobs = (props) => {
                             options={poaOptions?.map((item) => {
                               return {
                                 label: item.name,
-                                value: item.id,
+                                value: item.name,
                               };
                             })}
                             // defaultValue={{ label: jobType }}

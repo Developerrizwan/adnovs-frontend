@@ -44,7 +44,7 @@ const EditJob = (props) => {
     // },
   ];
 
-  const getPoaOptions = (pgdata, val, type) => {
+  const getPoaOptions = () => {
     apiAuth
       .get("api/master/poa/")
 
@@ -58,7 +58,7 @@ const EditJob = (props) => {
       });
   };
 
-  const getPodOptions = (pgdata, val, type) => {
+  const getPodOptions = () => {
     apiAuth
       .get("api/master/pod/")
 
@@ -149,12 +149,18 @@ const EditJob = (props) => {
       );
       setContainerTypesValue(container_type);
       const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
-      setPoaValue(poa);
+      setPoaValue({
+        label: props.allJobs.poa,
+        value: props.allJobs.poa,
+      });
       const pod_Value = podOptions.find(
         (item) => item.value === props.allJobs?.pod
       );
 
-      setPodValue(pod_Value);
+      setPodValue({
+        label: props.allJobs.pod,
+        value: props.allJobs.pod,
+      });
     },
     [
       // props.allJobs.job_type,
@@ -593,7 +599,7 @@ const EditJob = (props) => {
                         options={podOptions?.map((item) => {
                           return {
                             label: item.name,
-                            value: item.id,
+                            value: item.name,
                           };
                         })}
                         value={podValue}
@@ -653,7 +659,7 @@ const EditJob = (props) => {
                         options={poaOptions?.map((item) => {
                           return {
                             label: item.name,
-                            value: item.id,
+                            value: item.name,
                           };
                         })}
                         value={poaValue}

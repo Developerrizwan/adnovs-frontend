@@ -28,6 +28,9 @@ const CreateJob = (props) => {
   const [organization_type, setOrganization_type] = useState([]);
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
+  const [consigneeNameValue, setConsigneeNameValue] = useState(null);
+  const [clientNameValue, setClientNameValue] = useState(null);
+
   const options = [
     {
       label: "Job",
@@ -119,6 +122,20 @@ const CreateJob = (props) => {
     },
   ];
 
+  const consigneeOptions = [
+    {
+      label: "Consignee",
+      value: "Consignee",
+    },
+  ];
+
+  const clientOptions = [
+    {
+      label: "Client",
+      value: "Client",
+    },
+  ];
+
   const OrganizationTypeOptions = [
     {
       label: "Consignee",
@@ -161,7 +178,7 @@ const CreateJob = (props) => {
       value: "Other",
     },
   ];
-  const getPoaOptions = (pgdata, val, type) => {
+  const getPoaOptions = () => {
     apiAuth
       .get("api/master/poa/")
 
@@ -174,7 +191,7 @@ const CreateJob = (props) => {
       });
   };
 
-  const getPodOptions = (pgdata, val, type) => {
+  const getPodOptions = () => {
     apiAuth
       .get("api/master/pod/")
 
@@ -331,12 +348,28 @@ const CreateJob = (props) => {
       setJobStatus(jobStatus);
 
       const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
-      setPoaValue(poa);
+      setPoaValue({
+        label: props.allJobs.poa,
+        value: props.allJobs.poa,
+      });
       const pod_Value = podOptions.find(
         (item) => item.value === props.allJobs?.pod
       );
 
-      setPodValue(pod_Value);
+      setPodValue({
+        label: props.allJobs.pod,
+        value: props.allJobs.pod,
+      });
+
+      const consignee_name = consigneeOptions.find(
+        (item) => item.value === props.allJobs?.consignee_name
+      );
+      setConsigneeNameValue(consignee_name);
+
+      const client_name = clientOptions.find(
+        (item) => item.value === props.allJobs?.client_name
+      );
+      setClientNameValue(client_name);
     },
     [
       // props.allJobs.job_type,
@@ -402,18 +435,14 @@ const CreateJob = (props) => {
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
               por: Yup.string().required("Place Of Receipt is Required"),
-              consignee_name: Yup.string()
-                .max(20, "Must be 20 characters or less")
-                .trim()
-                .required("Cosignee Name is Required"),
+              consignee_name: Yup.string().required(
+                "Cosignee Name is Required"
+              ),
               shipper_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
                 .required("Shipper Name is Required"),
-              client_name: Yup.string()
-                .max(20, "Must be 20 characters or less")
-                .trim()
-                .required("Client Name is Required"),
+              client_name: Yup.string().required("Client Name is Required"),
               remarks: Yup.string()
                 .max(400, "Must be 400 characters or less")
                 .trim()
@@ -492,10 +521,17 @@ const CreateJob = (props) => {
                         Consignee Name
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="consignee_name"
-                        style={{ background: "#EDEDED" }}
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        value={consigneeNameValue}
+                        options={consigneeOptions}
+                        onChange={(data) => {
+                          setConsigneeNameValue(data);
+                          setFieldValue("consignee_name", data.value);
+                        }}
                       />
 
                       <ErrorMessage
@@ -565,7 +601,7 @@ const CreateJob = (props) => {
                         options={podOptions?.map((item) => {
                           return {
                             label: item.name,
-                            value: item.id,
+                            value: item.name,
                           };
                         })}
                         value={podValue}
@@ -590,12 +626,17 @@ const CreateJob = (props) => {
                         Client Name
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="client_name"
-                        style={{ background: "#EDEDED" }}
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        value={clientNameValue}
+                        options={clientOptions}
+                        onChange={(data) => {
+                          setClientNameValue(data);
+                          setFieldValue("client_name", data.value);
+                        }}
                       />
-
                       <ErrorMessage
                         name="client_name"
                         render={(msg) => (
@@ -621,7 +662,7 @@ const CreateJob = (props) => {
                         options={poaOptions?.map((item) => {
                           return {
                             label: item.name,
-                            value: item.id,
+                            value: item.name,
                           };
                         })}
                         value={poaValue}

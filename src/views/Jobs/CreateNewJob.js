@@ -152,7 +152,21 @@ const CreateNewJob = (props) => {
     },
   ];
 
-  const getPoaOptions = (pgdata, val, type) => {
+  const consigneeOptions = [
+    {
+      label: "Consignee",
+      value: "Consignee",
+    },
+  ];
+
+  const clientOptions = [
+    {
+      label: "Client",
+      value: "Client",
+    },
+  ];
+
+  const getPoaOptions = () => {
     apiAuth
       .get("api/master/poa/")
 
@@ -166,7 +180,7 @@ const CreateNewJob = (props) => {
       });
   };
 
-  const getPodOptions = (pgdata, val, type) => {
+  const getPodOptions = () => {
     apiAuth
       .get("api/master/pod/")
 
@@ -358,18 +372,14 @@ const CreateNewJob = (props) => {
                   pod: Yup.string().required("POD is Required"),
                   poa: Yup.string().required("POA is Required"),
                   por: Yup.string().required("Place Of Receipt is Required"),
-                  consignee_name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Cosignee Name is Required"),
+                  consignee_name: Yup.string().required(
+                    "Cosignee Name is Required"
+                  ),
                   shipper_name: Yup.string()
                     .max(20, "Must be 20 characters or less")
                     .trim()
                     .required("Shipper Name is Required"),
-                  client_name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Client Name is Required"),
+                  client_name: Yup.string().required("Client Name is Required"),
                   remarks: Yup.string()
                     .max(400, "Must be 400 characters or less")
                     .trim()
@@ -453,10 +463,16 @@ const CreateNewJob = (props) => {
                             Consignee Name
                             <span className="text-danger">*</span>
                           </Label>
-                          <Field
-                            className="form-control"
-                            name="consignee_name"
-                            style={{ background: "#EDEDED" }}
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={consigneeOptions}
+                            onChange={(data) => {
+                              // setJobType(data.value);
+                              setFieldValue("consignee_name", data.value);
+                            }}
                           />
 
                           <ErrorMessage
@@ -526,7 +542,7 @@ const CreateNewJob = (props) => {
                             options={podOptions?.map((item) => {
                               return {
                                 label: item.name,
-                                value: item.id,
+                                value: item.name,
                               };
                             })}
                             // value={podValue}
@@ -551,12 +567,15 @@ const CreateNewJob = (props) => {
                             Client Name
                             <span className="text-danger">*</span>
                           </Label>
-                          <Field
-                            className="form-control"
-                            name="client_name"
-                            style={{ background: "#EDEDED" }}
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={clientOptions}
+                            onChange={(data) => {
+                              setFieldValue("client_name", data.value);
+                            }}
                           />
-
                           <ErrorMessage
                             name="client_name"
                             render={(msg) => (
@@ -582,7 +601,7 @@ const CreateNewJob = (props) => {
                             options={poaOptions?.map((item) => {
                               return {
                                 label: item.name,
-                                value: item.id,
+                                value: item.name,
                               };
                             })}
                             // value={poaValue}

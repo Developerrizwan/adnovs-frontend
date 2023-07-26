@@ -5,16 +5,15 @@ import { Colxx } from "../../components/Common/CustomBootstrap";
 
 import { Card } from "@mui/material";
 import apiAuth from "../../helpers/ApiAuth";
-import JobTable from "./JobTable";
 import NotificationManager from "../../components/Common/NotificationManager";
-import EnquiryTable from "./EnquiryTable";
+import OrganizationTable from "./Organizationtable";
 
 const Organization = (props) => {
-  const [allJobs, setAllJobs] = useState([]);
+  const [allOrganization, setAllOrganization] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedValue, setSelectedValue] = useState("Enquiry");
-  const [jobPagination, setJobPagination] = useState({
+  const [selectedValue, setSelectedValue] = useState("Consignee");
+  const [organizationPagination, setOrganizationPagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
     currentPage: 1,
@@ -22,20 +21,20 @@ const Organization = (props) => {
 
   const options = [
     {
-      label: "Job",
-      value: "Job",
+      label: "Consignee",
+      value: "Consignee",
     },
     {
-      label: "Enquiry",
-      value: "Enquiry",
+      label: "Client",
+      value: "Client",
     },
   ];
 
-  const getJobs = (pgdata, val, type) => {
+  const getOrganization = (pgdata, val, type) => {
     setLoading(true);
     apiAuth
       .get(
-        "/api/get-jobs/?" +
+        "/api/master/organization/?" +
           "&page=" +
           pgdata?.currentPage +
           "&search=" +
@@ -43,21 +42,20 @@ const Organization = (props) => {
           "&type=" +
           type
       )
-
       .then((response) => {
         let data = response.data.results;
-        setJobPagination({
+        setOrganizationPagination({
           ...pgdata,
           totalRows: response.data.count,
         });
-        setAllJobs(data);
+        setAllOrganization(data);
         setLoading(false);
       })
       .catch((error) => {
         console.log(error);
         NotificationManager.error(
           "",
-          `${error.response?.data?.Error || `${selectedValue} Get Error`}`,
+          `${error.response?.data?.Error || `Organization Get Error`}`,
           3000,
           null,
           null,
@@ -67,8 +65,12 @@ const Organization = (props) => {
       });
   };
 
-  const deleteJob = (id) => {
-    let url = `/api/master/job/${id}/`;
+  useEffect(() => {
+    getOrganization(organizationPagination, searchValue, selectedValue);
+  }, []);
+
+  const deleteOrganization = (id) => {
+    let url = `/api/master/organization/${id}/`;
     apiAuth
       .delete(url)
       .then((response) => {
@@ -81,7 +83,7 @@ const Organization = (props) => {
           null,
           ""
         );
-        getJobs(jobPagination, searchValue, selectedValue);
+        getOrganization(organizationPagination, searchValue, selectedValue);
       })
       .catch(function (error) {
         console.log(error);
@@ -99,13 +101,9 @@ const Organization = (props) => {
       });
   };
 
-  //   useEffect(() => {
-  //     getJobs(jobPagination, searchValue, selectedValue);
-  //   }, []);
-
   const handleJobChange = (e) => {
     setSelectedValue(e.value);
-    getJobs(jobPagination, searchValue, e.value);
+    getOrganization(organizationPagination, searchValue, e.value);
   };
 
   return (
@@ -113,17 +111,17 @@ const Organization = (props) => {
       <div className="page-content">
         <Container fluid>
           <BreadCrumb
-            title={selectedValue}
+            title={"Organization"}
             pageTitle="Organization"
             add_new={true}
-            add_new_url={"/Organization/add"}
+            add_new_url={"/organization/add"}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getJobs(jobPagination, val, selectedValue);
+              getOrganization(organizationPagination, val, selectedValue);
             }}
-            export_button={allJobs.length > 0 ? true : false}
+            export_button={allOrganization.length > 0 ? true : false}
             handleJobChange={handleJobChange}
             add_jobs={true}
             add_job_select={true}
@@ -137,42 +135,28 @@ const Organization = (props) => {
 
         <Row>
           <Colxx lg="12">
-            {allJobs.length > 0 ? (
+            {allOrganization.length > 0 ? (
               <>
                 <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
-                  {selectedValue === "Job" ? (
-                    <JobTable
-                      allJobs={allJobs}
-                      deleteJob={deleteJob}
-                      history={props.history}
-                      jobPagination={{ ...jobPagination }}
-                      handlePagination={(data) => {
-                        setJobPagination(data);
-                        getJobs(data);
-                      }}
-                      selectedValue={selectedValue}
-                      getJobs={() => {
-                        setAllJobs([]);
-                        getJobs(jobPagination, searchValue, selectedValue);
-                      }}
-                    />
-                  ) : (
-                    <EnquiryTable
-                      allJobs={allJobs}
-                      deleteJob={deleteJob}
-                      history={props.history}
-                      jobPagination={{ ...jobPagination }}
-                      handlePagination={(data) => {
-                        setJobPagination(data);
-                        getJobs(data, searchValue, selectedValue);
-                      }}
-                      selectedValue={selectedValue}
-                      getJobs={() => {
-                        setAllJobs([]);
-                        getJobs(jobPagination, searchValue, selectedValue);
-                      }}
-                    />
-                  )}
+                  <OrganizationTable
+                    allOrganization={allOrganization}
+                    deleteOrganization={deleteOrganization}
+                    history={props.history}
+                    organizationPagination={{ ...organizationPagination }}
+                    handlePagination={(data) => {
+                      setOrganizationPagination(data);
+                      getOrganization(data);
+                    }}
+                    selectedValue={selectedValue}
+                    getOrganization={() => {
+                      setAllOrganization([]);
+                      getOrganization(
+                        organizationPagination,
+                        searchValue,
+                        selectedValue
+                      );
+                    }}
+                  />
                 </Card>
               </>
             ) : (

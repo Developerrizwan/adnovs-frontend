@@ -25,8 +25,10 @@ const EditEnquiry = (props) => {
   const [etd, setEtd] = useState(etdDateObj);
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
+  const [consigneeNameValue, setConsigneeNameValue] = useState(null);
+  const [clientNameValue, setClientNameValue] = useState(null);
 
-  const getPoaOptions = (pgdata, val, type) => {
+  const getPoaOptions = () => {
     apiAuth
       .get("api/master/poa/")
 
@@ -39,7 +41,7 @@ const EditEnquiry = (props) => {
       });
   };
 
-  const getPodOptions = (pgdata, val, type) => {
+  const getPodOptions = () => {
     apiAuth
       .get("api/master/pod/")
 
@@ -57,25 +59,55 @@ const EditEnquiry = (props) => {
     getPodOptions();
   }, []);
 
+  const consigneeOptions = [
+    {
+      label: "Consignee",
+      value: "Consignee",
+    },
+  ];
+
+  const clientOptions = [
+    {
+      label: "Client",
+      value: "Client",
+    },
+  ];
+
   useEffect(() => {
     const scopeType = scopeofworkOptions.find(
       (item) => item.value === props.allJobs.scope_of_work
     );
     setScopeType(scopeType);
+
     const type = typeOptions.find((item) => item.value === props.allJobs.type);
     setTypevalue(type);
+
     const jobStatus = statusOptions.find(
       (item) => item.value === props.allJobs.job_status
     );
     setJobStatus(jobStatus);
 
-    const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
-    setPoaValue(poa);
-    const pod_Value = podOptions.find(
-      (item) => item.value === props.allJobs?.pod
-    );
+    // const poa_value = poaOptions.find((item) => item.id === props.allJobs.poa);
+    setPoaValue({
+      label: props.allJobs.poa,
+      value: props.allJobs.poa,
+    });
 
-    setPodValue(pod_Value);
+    const pod_Value = podOptions.find((item) => item.id === props.allJobs?.pod);
+    setPodValue({
+      label: props.allJobs.pod,
+      value: props.allJobs.pod,
+    });
+
+    const consignee_name = consigneeOptions.find(
+      (item) => item.value === props.allJobs?.consignee_name
+    );
+    setConsigneeNameValue(consignee_name);
+
+    const client_name = clientOptions.find(
+      (item) => item.value === props.allJobs?.client_name
+    );
+    setClientNameValue(client_name);
   }, []);
 
   const typeOptions = [
@@ -252,18 +284,14 @@ const EditEnquiry = (props) => {
             validationSchema={Yup.object({
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
-              consignee_name: Yup.string()
-                .max(20, "Must be 20 characters or less")
-                .trim()
-                .required("Cosignee Name is Required"),
+              consignee_name: Yup.string().required(
+                "Cosignee Name is Required"
+              ),
               shipper_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
                 .required("Shipper Name is Required"),
-              client_name: Yup.string()
-                .max(20, "Must be 20 characters or less")
-                .trim()
-                .required("Client Name is Required"),
+              client_name: Yup.string().required("Client Name is Required"),
               remarks: Yup.string()
                 .max(400, "Must be 400 characters or less")
                 .trim()
@@ -327,10 +355,17 @@ const EditEnquiry = (props) => {
                         Consignee Name
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="consignee_name"
-                        style={{ background: "#EDEDED" }}
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        value={consigneeNameValue}
+                        options={consigneeOptions}
+                        onChange={(data) => {
+                          setConsigneeNameValue(data);
+                          setFieldValue("consignee_name", data.value);
+                        }}
                       />
 
                       <ErrorMessage
@@ -378,7 +413,7 @@ const EditEnquiry = (props) => {
                         options={podOptions?.map((item) => {
                           return {
                             label: item.name,
-                            value: item.id,
+                            value: item.name,
                           };
                         })}
                         value={podValue}
@@ -403,12 +438,17 @@ const EditEnquiry = (props) => {
                         Client Name
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="client_name"
-                        style={{ background: "#EDEDED" }}
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        value={clientNameValue}
+                        options={clientOptions}
+                        onChange={(data) => {
+                          setClientNameValue(data);
+                          setFieldValue("client_name", data.value);
+                        }}
                       />
-
                       <ErrorMessage
                         name="client_name"
                         render={(msg) => (
@@ -434,7 +474,7 @@ const EditEnquiry = (props) => {
                         options={poaOptions?.map((item) => {
                           return {
                             label: item.name,
-                            value: item.id,
+                            value: item.name,
                           };
                         })}
                         value={poaValue}
