@@ -13,6 +13,8 @@ const Navdata = () => {
   const [isPlans, setIsPlans] = useState(false);
   const [isMyAccount, setisMyAccount] = useState(false);
   const [isCoa, setIsCoa] = useState(false);
+  const [isCostEntry, setIsCostEntry] = useState(false);
+  const [isCharge, setIsCharge] = useState(false);
   const [isUserManagement, setisUserManagement] = useState(false);
   const [isOrganization, setIsOrganization] = useState(false);
   const [isCouponManagement, setisCouponManagement] = useState(false);
@@ -80,6 +82,12 @@ const Navdata = () => {
     if (iscurrentState !== "Coa") {
       setIsCoa(false);
     }
+    if (iscurrentState !== "cost-entry") {
+      setIsCostEntry(false);
+    }
+    if (iscurrentState !== "charge") {
+      setIsCharge(false);
+    }
 
     if (iscurrentState === "Widgets") {
       history.push("/widgets");
@@ -99,6 +107,9 @@ const Navdata = () => {
     isCouponManagement,
     isPaymentManagement,
     isSubscriptionManagement,
+    isCoa,
+    isCostEntry,
+    isCharge,
     isOrganization,
   ]);
 
@@ -153,8 +164,23 @@ const Navdata = () => {
       label: "Chart of Accounts",
       icon: "ri-line-chart-fill",
       link: "/coa",
-      // src: "/invoices-sidebar.png",
       stateVariables: isCoa,
+      roles: ["superadmin", "admin", "user"],
+    },
+    {
+      id: "charge",
+      label: "Charge",
+      icon: "ri-money-dollar-box-line",
+      link: "/charge",
+      stateVariables: isCharge,
+      roles: ["superadmin", "admin", "user"],
+    },
+    {
+      id: "cost-entry",
+      label: "Cost Entry",
+      icon: "ri-wallet-3-line",
+      link: "/cost-entry",
+      stateVariables: isCostEntry,
       roles: ["superadmin", "admin", "user"],
     },
 

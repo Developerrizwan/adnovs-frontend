@@ -9,13 +9,10 @@ import "../../App.css";
 import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
 import NotificationManager from "../../components/Common/NotificationManager";
+import { getAllISOCodes } from "iso-country-currency";
 
 const AddCOA = (props) => {
   const history = useHistory();
-  const [isSubledgerRequired, setIsSubledgerRequired] = useState("No");
-  const [isChargeRequired, setIsChargeRequired] = useState("No");
-  const [isJobRequired, setIsJobRequired] = useState("No");
-  const [isAssetRequired, setIsAssetRequired] = useState("Yes");
   const [selStatus, setSelStatus] = useState({
     value: true,
     label: "Active",
@@ -42,14 +39,36 @@ const AddCOA = (props) => {
     value: "ASSET",
     label: "ASSET",
   });
-  const [selCurrency, setSelCurrency] = useState({
-    value: "curr 1",
-    label: "curr 1",
-  });
+  const [selCurrency, setSelCurrency] = useState(null);
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [groupOptions, setGroupOptions] = useState([]);
   const [subGroupOptions, setSubGroupOptions] = useState([]);
+  const [currencyOptions, setCurrencyOptions] = useState([]);
+
+  const coaTypeOptions = [
+    {
+      label: "Balance Sheet",
+      value: "Balance Sheet",
+    },
+    { label: "Profit/Loss", value: "Profit/Loss" },
+  ];
+
+  const directOrIndirectOptions = [
+    {
+      label: "Yes",
+      value: "Yes",
+    },
+    { label: "No", value: "No" },
+  ];
+
+  const drOrCrOptions = [
+    {
+      label: "Dr",
+      value: "Dr",
+    },
+    { label: "Cr", value: "Cr" },
+  ];
 
   const TypeOptions = [
     { value: "ASSET", label: "ASSET" },
@@ -59,23 +78,54 @@ const AddCOA = (props) => {
     { value: "LIABILITY", label: "LIABILITY" },
   ];
 
-  const currencyOptions = [
-    { label: "curr 1", value: "curr 1" },
-    { label: "curr 2", value: "curr 2" },
-    { label: "curr 3", value: "curr 3" },
-  ];
+  const getAllCurrencyCodes = () => {
+    let allCurrencies = getAllISOCodes();
+    allCurrencies = allCurrencies.map((cur) => {
+      return {
+        label: cur.currency + "  -  " + cur.countryName,
+        value: cur.currency + "  -  " + cur.countryName,
+      };
+    });
+    setCurrencyOptions(allCurrencies);
+  };
 
   useEffect(() => {
     getCategoryOptions();
     getGroupOptions();
+    getAllCurrencyCodes();
   }, []);
 
+  useEffect(() => {
+    if (
+      props.isEdit &&
+      categoryOptions.length &&
+      groupOptions.length &&
+      currencyOptions.length
+    ) {
+      getInitialValues();
+    }
+  }, [categoryOptions.length, groupOptions.length, currencyOptions.length]);
+
   const getInitialValues = () => {
-    // console.log("eeeeeee", props.account);
-    const selCat = categoryOptions.find(
-      (ct) => ct.value === props.account?.category
+    const selectedStatus = props.account.status
+      ? { label: "Active", value: true }
+      : { label: "Inactive", value: false };
+    setSelStatus(selectedStatus);
+
+    const selCoaType = coaTypeOptions.find(
+      (dd) => dd.value === props.account?.coa_type
     );
-    setSelCategory(selCat);
+    setIsCoaBsorPL(selCoaType);
+
+    const selDirectOrIndirect = directOrIndirectOptions.find(
+      (dd) => dd.value === props.account?.is_direct_indirect
+    );
+    setIsDirect(selDirectOrIndirect);
+
+    const drOrCr = drOrCrOptions.find(
+      (dd) => dd.value === props.account?.dr_cr
+    );
+    setIsDRorCR(drOrCr);
 
     const selGrp = groupOptions.find((ct) => ct.value === props.account?.group);
     setSelGroup(selGrp);
@@ -85,13 +135,18 @@ const AddCOA = (props) => {
     );
     setSelSubGroup(selSubGrp);
 
+    const selCat = categoryOptions.find(
+      (ct) => ct.value === props.account?.category
+    );
+    setSelCategory(selCat);
+
     const selType = TypeOptions.find((ty) => ty.value === props.account?.type);
     setSelType(selType);
 
-    const selCurr = TypeOptions.find(
-      (ty) => ty.value === props.account?.currency
+    const selCurr = currencyOptions.find(
+      (cur) => cur.value === props.account?.currency
     );
-    setSelType(selCurr);
+    setSelCurrency(selCurr);
   };
 
   const getCategoryOptions = () => {
@@ -165,18 +220,19 @@ const AddCOA = (props) => {
                   code: props.account?.code || "",
                   name: props.account?.name || "",
                   status: props.account?.status || false,
-                  subledger_requried: props.account?.subledger_requried || "No",
-                  charge_required: props.account?.charge_required || "No",
-                  job_required: props.account?.job_required || "No",
-                  asset_required: props.account?.asset_required || "No",
+                  subledger_requried:
+                    props.account?.subledger_requried || false,
+                  charge_required: props.account?.charge_required || false,
+                  job_required: props.account?.job_required || false,
+                  asset_required: props.account?.asset_required || false,
                   coa_type: props.account?.coa_type || "Balance Sheet",
                   is_direct_indirect:
                     props.account?.is_direct_indirect || "Yes",
                   dr_cr: props.account?.dr_cr || "Dr",
                   category: props.account?.category || "category 1",
-                  group: props.account?.group || "group 1",
-                  subgroup: props.account?.subgroup || "group 1",
-                  type: props.account?.type || "ASSET",
+                  group: props.account?.group || "",
+                  subgroup: props.account?.subgroup || "",
+                  type: props.account?.type || "",
                   short_name: props.account?.short_name || "",
                   long_name: props.account?.long_name || "",
                   language_name: props.account?.language_name || "",
@@ -188,14 +244,14 @@ const AddCOA = (props) => {
                 validationSchema={Yup.object({
                   code: Yup.string().required("Code is Required"),
                   name: Yup.string().required("Name is Required"),
-                  // status: Yup.boolean().required("Status is Required"),
-                  subledger_requried: Yup.string()
-                    .ensure()
-                    .required("Required!"),
-                  // .required("Required!"),
-                  charge_required: Yup.string().ensure().required("Required!"),
-                  job_required: Yup.string().ensure().required("Required!"),
-                  asset_required: Yup.string().ensure().required("Required!"),
+                  status: Yup.boolean().required("Status is Required"),
+                  // subledger_requried: Yup.string()
+                  //   .ensure()
+                  //   .required("Required!"),
+                  // // .required("Required!"),
+                  // charge_required: Yup.string().ensure().required("Required!"),
+                  // job_required: Yup.string().ensure().required("Required!"),
+                  // asset_required: Yup.string().ensure().required("Required!"),
                   coa_type: Yup.string().ensure().required("Required!"),
                   is_direct_indirect: Yup.string()
                     .ensure()
@@ -210,8 +266,6 @@ const AddCOA = (props) => {
                   language_name: Yup.string(),
                 })}
                 onSubmit={(values) => {
-                  values.status = selStatus.value;
-                  // console.log("rrrrr", values);
                   if (props.isEdit && props.account) {
                     apiAuth
                       .patch(`/api/master/coa/${props.account?.id}/`, values)
@@ -322,7 +376,6 @@ const AddCOA = (props) => {
                             ]}
                             onChange={(data) => {
                               setFieldValue("status", data.value);
-                              // console.log("eeeee", data);
                               setSelStatus(data);
                             }}
                           />
@@ -343,13 +396,7 @@ const AddCOA = (props) => {
                             name="coa_type"
                             styles={customStyles}
                             value={isCoaBsorPL}
-                            options={[
-                              {
-                                label: "Balance Sheet",
-                                value: "Balance Sheet",
-                              },
-                              { label: "Profit/Loss", value: "Profit/Loss" },
-                            ]}
+                            options={coaTypeOptions}
                             onChange={(data) => {
                               setFieldValue("coa_type", data.label);
                               setIsCoaBsorPL(data);
@@ -375,13 +422,7 @@ const AddCOA = (props) => {
                             name="is_direct_indirect"
                             styles={customStyles}
                             value={isDirect}
-                            options={[
-                              {
-                                label: "Yes",
-                                value: "Yes",
-                              },
-                              { label: "No", value: "No" },
-                            ]}
+                            options={directOrIndirectOptions}
                             onChange={(data) => {
                               setFieldValue("is_direct_indirect", data.label);
                               setIsDirect(data);
@@ -411,35 +452,30 @@ const AddCOA = (props) => {
                             sx={{
                               marginLeft: "10px",
                             }}
-                            value={isSubledgerRequired}
+                            value={values["subledger_requried"]}
                             exclusive
                             onChange={(e, data) => {
                               setFieldValue("subledger_requried", data);
-                              setIsSubledgerRequired(data);
                             }}
                             aria-label="Platform"
                           >
                             <ToggleButton
-                              selected={isSubledgerRequired === "No"}
                               sx={{
-                                backgroundColor:
-                                  isSubledgerRequired !== "No"
-                                    ? "white"
-                                    : "green",
+                                backgroundColor: values["subledger_requried"]
+                                  ? "white"
+                                  : "green",
                               }}
-                              value="No"
+                              value={false}
                             >
                               No
                             </ToggleButton>
                             <ToggleButton
-                              selected={isSubledgerRequired === "Yes"}
                               sx={{
-                                backgroundColor:
-                                  isSubledgerRequired !== "Yes"
-                                    ? "white"
-                                    : "green",
+                                backgroundColor: values["subledger_requried"]
+                                  ? "green"
+                                  : "white",
                               }}
-                              value="Yes"
+                              value={true}
                             >
                               Yes
                             </ToggleButton>
@@ -460,33 +496,30 @@ const AddCOA = (props) => {
                             sx={{
                               marginLeft: "10px",
                             }}
-                            value={isChargeRequired}
+                            value={values["charge_required"]}
                             exclusive
                             onChange={(e, data) => {
                               setFieldValue("charge_required", data);
-                              setIsChargeRequired(data);
                             }}
                             aria-label="Platform"
                           >
                             <ToggleButton
-                              selected={isChargeRequired === "No"}
                               sx={{
-                                backgroundColor:
-                                  isChargeRequired === "No" ? "green" : "white",
+                                backgroundColor: values["charge_required"]
+                                  ? "white"
+                                  : "green",
                               }}
-                              value="No"
+                              value={false}
                             >
                               No
                             </ToggleButton>
                             <ToggleButton
-                              selected={isChargeRequired === "Yes"}
                               sx={{
-                                backgroundColor:
-                                  isChargeRequired === "Yes"
-                                    ? "green"
-                                    : "white",
+                                backgroundColor: values["charge_required"]
+                                  ? "green"
+                                  : "white",
                               }}
-                              value="Yes"
+                              value={true}
                             >
                               Yes
                             </ToggleButton>
@@ -504,31 +537,30 @@ const AddCOA = (props) => {
                             sx={{
                               marginLeft: "10px",
                             }}
-                            value={isJobRequired}
+                            value={values["job_required"]}
                             exclusive
                             onChange={(e, data) => {
                               setFieldValue("job_required", data);
-                              setIsJobRequired(data);
                             }}
                             aria-label="Platform"
                           >
                             <ToggleButton
-                              selected={isJobRequired === "No"}
                               sx={{
-                                backgroundColor:
-                                  isJobRequired !== "No" ? "white" : "green",
+                                backgroundColor: values["job_required"]
+                                  ? "white"
+                                  : "green",
                               }}
-                              value="No"
+                              value={false}
                             >
                               No
                             </ToggleButton>
                             <ToggleButton
-                              selected={isJobRequired === "Yes"}
                               sx={{
-                                backgroundColor:
-                                  isJobRequired !== "Yes" ? "white" : "green",
+                                backgroundColor: values["job_required"]
+                                  ? "green"
+                                  : "white",
                               }}
-                              value="Yes"
+                              value={true}
                             >
                               Yes
                             </ToggleButton>
@@ -550,34 +582,30 @@ const AddCOA = (props) => {
                             sx={{
                               marginLeft: "10px",
                             }}
-                            value={isAssetRequired}
+                            value={values["asset_required"]}
                             exclusive
                             onChange={(e, data) => {
-                              // console.log("data", data);
-                              setFieldValue("subledger_requried", data);
-                              setIsAssetRequired(data);
+                              setFieldValue("asset_required", data);
                             }}
                             aria-label="Platform"
                           >
                             <ToggleButton
-                              selected={isAssetRequired === "No"}
                               sx={{
-                                backgroundColor:
-                                  String(isAssetRequired) === "No"
-                                    ? "green"
-                                    : "white",
+                                backgroundColor: values["asset_required"]
+                                  ? "white"
+                                  : "green",
                               }}
-                              value="No"
+                              value={false}
                             >
                               No
                             </ToggleButton>
                             <ToggleButton
-                              selected={isAssetRequired === "Yes"}
                               sx={{
-                                backgroundColor:
-                                  isAssetRequired === "Yes" ? "green" : "white",
+                                backgroundColor: values["asset_required"]
+                                  ? "green"
+                                  : "white",
                               }}
-                              value="Yes"
+                              value={true}
                             >
                               Yes
                             </ToggleButton>
@@ -596,10 +624,7 @@ const AddCOA = (props) => {
                           <Select
                             name="dr_cr"
                             value={isDRorCR}
-                            options={[
-                              { label: "Dr", value: "Dr" },
-                              { label: "Cr", value: "Cr" },
-                            ]}
+                            options={drOrCrOptions}
                             styles={customStyles}
                             onChange={(data) => {
                               setFieldValue("dr_cr", data.label);
@@ -721,7 +746,6 @@ const AddCOA = (props) => {
                             options={TypeOptions}
                             onChange={(data) => {
                               setFieldValue("type", data.label);
-                              // console.log("eeeeeeee", data);
                               setSelType(data);
                             }}
                           />
@@ -788,7 +812,7 @@ const AddCOA = (props) => {
                             value={selCurrency}
                             options={currencyOptions}
                             onChange={(data) => {
-                              setFieldValue("currency", data.label);
+                              setFieldValue("currency", data.value);
                               setSelCurrency(data);
                             }}
                           />

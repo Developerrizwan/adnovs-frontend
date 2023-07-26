@@ -6,13 +6,13 @@ import apiAuth from "../../helpers/ApiAuth";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
-import CaoTable from "./CaoTable";
+import CostEntryTable from "./CostEntryTable";
 
-const ChartOfAccounts = (props) => {
-  const [createModal, setCreateModal] = useState(false);
+const CostEntry = (props) => {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
+
   const [pagination, setPagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
@@ -25,7 +25,7 @@ const ChartOfAccounts = (props) => {
 
   const getAccounts = (pgdata, val) => {
     apiAuth
-      .get(`/api/master/coa/?page=${pgdata?.currentPage}`)
+      .get(`/api/master/cost_entry/?page=${pgdata?.currentPage}`)
       .then((response) => {
         let data = response.data;
         // console.log("xswjhjwx", response);
@@ -39,15 +39,15 @@ const ChartOfAccounts = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const deleteAccount = (id) => {
-    let url = `/api/master/coa/${id}/`;
+  const deleteColumn = (id) => {
+    let url = `/api/master/cost_entry/${id}/`;
     apiAuth
       .delete(url)
       .then((response) => {
         const newdata = response.data;
         NotificationManager.success(
           "",
-          "Account Deleted Successfully",
+          "Entry Deleted Successfully",
           3000,
           null,
           null,
@@ -68,13 +68,10 @@ const ChartOfAccounts = (props) => {
       <div className="page-content">
         <Container fluid>
           <BreadCrumb
-            title="Chart of Accounts"
+            title="Cost Entry"
             pageTitle="Settings"
             add_new={true}
-            createNew={() => {
-              setCreateModal(true);
-            }}
-            add_new_url={"/coa/add"}
+            add_new_url={"/cost-entry/add"}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
@@ -92,9 +89,9 @@ const ChartOfAccounts = (props) => {
                 <>
                   {" "}
                   <Card>
-                    <CaoTable
+                    <CostEntryTable
                       accounts={accounts}
-                      deleteAccount={(id) => deleteAccount(id)}
+                      deleteColumn={(id) => deleteColumn(id)}
                       handlePagination={(data) => {
                         setPagination(data);
                         getAccounts(pagination, searchValue);
@@ -110,35 +107,8 @@ const ChartOfAccounts = (props) => {
           </Colxx>
         </Row>
       </div>
-
-      <Modal
-        id="signupModals"
-        tabIndex="-1"
-        className="modal-lg"
-        isOpen={createModal}
-        toggle={() => {
-          setCreateModal((prev) => !prev);
-        }}
-      >
-        <ModalHeader
-          className="p-3"
-          toggle={() => {
-            setCreateModal((prev) => !prev);
-          }}
-        >
-          Add User
-        </ModalHeader>
-        <ModalBody>
-          {/* <AddUser
-            closeAddPopup={() => {
-              setCreateModal(false);
-              //   getVouchers();
-            }}
-          /> */}
-        </ModalBody>
-      </Modal>
     </React.Fragment>
   );
 };
 
-export default ChartOfAccounts;
+export default CostEntry;
