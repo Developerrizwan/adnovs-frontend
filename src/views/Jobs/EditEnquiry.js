@@ -4,147 +4,58 @@ import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-
-import jobsImage from "../../assets/images/jobs-image.png";
 import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
 
 const EditEnquiry = (props) => {
+  const etaTime = props.allJobs.eta;
+  const etdTime = props.allJobs.etd;
+
+  const etaDateObj = new Date(etaTime);
+  const etdDateObj = new Date(etdTime);
+
   const [typevalue, setTypevalue] = useState(null);
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
   const [poaValue, setPoaValue] = useState(null);
   const [podValue, setPodValue] = useState(null);
-  const [eta, setEta] = useState(null);
-  const [etd, setEtd] = useState(null);
+  const [eta, setEta] = useState(etaDateObj);
+  const [etd, setEtd] = useState(etdDateObj);
+  const [poaOptions, setPoaOptions] = useState([]);
+  const [podOptions, setPodOptions] = useState([]);
 
-  const poaOptions = [
-    {
-      label: "Doha Hamad",
-      value: "Doha Hamad",
-    },
-    {
-      label: "Tokyo Haneda",
-      value: "Tokyo Haneda",
-    },
-    {
-      label: "Singapore Changi",
-      value: "Singapore Changi",
-    },
-    {
-      label: "Tokyo Narita",
-      value: "Tokyo Narita",
-    },
-    {
-      label: "Seoul Incheon",
-      value: "Seoul Incheon",
-    },
-    {
-      label: "Paris CDG",
-      value: "Paris CDG",
-    },
-    {
-      label: "Istanbul",
-      value: "Istanbul",
-    },
-    {
-      label: "Munich",
-      value: "Munich",
-    },
-    {
-      label: "Zurich",
-      value: "Zurich",
-    },
-    {
-      label: "Kansai",
-      value: "Kansai",
-    },
-    {
-      label: "Centrair Nagoya",
-      value: "Centrair Nagoya",
-    },
-    {
-      label: "Helsinki Vantaa",
-      value: "Helsinki Vantaa",
-    },
-    {
-      label: "London Heathrow",
-      value: "London Heathrow",
-    },
-    {
-      label: "Dubai",
-      value: "Dubai",
-    },
-    {
-      label: "Amsterdam Schiphol",
-      value: "Amsterdam Schiphols",
-    },
-  ];
+  const getPoaOptions = (pgdata, val, type) => {
+    apiAuth
+      .get("api/master/poa/")
 
-  const podOptions = [
-    {
-      label: "Shanghai",
-      value: "Shanghai",
-    },
-    {
-      label: "Singapore",
-      value: "Singapore",
-    },
-    {
-      label: "Ningbo Zhoushan",
-      value: "Ningbo Zhoushan",
-    },
-    {
-      label: "Busan",
-      value: "Busan",
-    },
-    {
-      label: "Jebel Ali",
-      value: "Jebel Ali",
-    },
-    {
-      label: "Rotterdam",
-      value: "Rotterdam",
-    },
-    {
-      label: "Port of Tanjung Pelepas",
-      value: "Port of Tanjung Pelepas",
-    },
-    {
-      label: "Los Angeles",
-      value: "Los Angeles",
-    },
-    {
-      label: "South Louisiana",
-      value: "South Louisiana",
-    },
-    {
-      label: "Antwerp",
-      value: "Antwerp",
-    },
-    {
-      label: "Hamburg ",
-      value: "Hamburg ",
-    },
-    {
-      label: "Felixstowe",
-      value: "Felixstowe",
-    },
-    {
-      label: "Itaqui",
-      value: "Itaqui",
-    },
-    {
-      label: "Durban",
-      value: "Durban",
-    },
-    {
-      label: "Port Hedland",
-      value: "Port Hedland",
-    },
-  ];
+      .then((response) => {
+        let data = response.data.results;
+        setPoaOptions(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getPodOptions = (pgdata, val, type) => {
+    apiAuth
+      .get("api/master/pod/")
+
+      .then((response) => {
+        let data = response.data.results;
+        setPodOptions(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getPoaOptions();
+    getPodOptions();
+  }, []);
 
   useEffect(() => {
     const scopeType = scopeofworkOptions.find(
@@ -306,13 +217,6 @@ const EditEnquiry = (props) => {
       background: "#EDEDED",
     }),
   };
-  const goBack = () => {
-    history.goBack();
-  };
-
-  const handleOptionChange = (selectedOption) => {
-    history.push(`/${selectedOption.value}`);
-  };
 
   return (
     <React.Fragment>
@@ -346,8 +250,6 @@ const EditEnquiry = (props) => {
               etd: props?.allJobs?.etd ? props?.allJobs?.etd : "",
             }}
             validationSchema={Yup.object({
-              // bl_number: Yup.string().required("BL Number is Required"),
-              // bayan_number: Yup.string().required("Bayan Number is Required"),
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
               consignee_name: Yup.string()
@@ -386,7 +288,7 @@ const EditEnquiry = (props) => {
                   if (response.status === 200) {
                     NotificationManager.success(
                       "",
-                      `Job Updated Successfully`,
+                      ` Enquiry Updated Successfully`,
                       3000,
                       null,
                       null,
@@ -396,7 +298,7 @@ const EditEnquiry = (props) => {
                   } else {
                     NotificationManager.error(
                       "",
-                      `Job Update Error`,
+                      `Enquiry Update Error`,
                       3000,
                       null,
                       null,
@@ -407,7 +309,7 @@ const EditEnquiry = (props) => {
                 .catch((error) => {
                   NotificationManager.error(
                     "",
-                    `Job Update Error`,
+                    `Enquiry Update Error`,
                     3000,
                     null,
                     null,
@@ -461,8 +363,6 @@ const EditEnquiry = (props) => {
                   </Grid>
                 </Grid>
 
-                <Grid container spacing={2}></Grid>
-
                 <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
@@ -475,12 +375,13 @@ const EditEnquiry = (props) => {
                         name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={podOptions}
+                        options={podOptions?.map((item) => {
+                          return {
+                            label: item.name,
+                            value: item.id,
+                          };
+                        })}
                         value={podValue}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
                         onChange={(data) => {
                           setPodValue(data);
                           setFieldValue("pod", data.value);
@@ -530,12 +431,13 @@ const EditEnquiry = (props) => {
                         name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={poaOptions}
+                        options={poaOptions?.map((item) => {
+                          return {
+                            label: item.name,
+                            value: item.id,
+                          };
+                        })}
                         value={poaValue}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
                         onChange={(data) => {
                           setPoaValue(data);
                           setFieldValue("poa", data.value);
@@ -563,10 +465,6 @@ const EditEnquiry = (props) => {
                         styles={customStyles}
                         options={typeOptions}
                         value={typevalue}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
                         onChange={(data) => {
                           setTypevalue(data);
                           setFieldValue("type", data.value);
@@ -595,10 +493,6 @@ const EditEnquiry = (props) => {
                         styles={customStyles}
                         value={scopeType}
                         options={scopeofworkOptions}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
                         onChange={(data) => {
                           setScopeType(data.value);
                           setFieldValue("scope_of_work", data.value);
@@ -677,7 +571,6 @@ const EditEnquiry = (props) => {
                         styles={customStyles}
                         value={jobStatus}
                         options={statusOptions}
-                        // defaultValue={{ label: jobStatus }}
                         onChange={(data) => {
                           setJobStatus(data.value);
                           setFieldValue("job_status", data.value);

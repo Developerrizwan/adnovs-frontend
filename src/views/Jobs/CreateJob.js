@@ -1,34 +1,41 @@
-import { Card, Grid, MenuItem } from "@mui/material";
+import { Card, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import jobsImage from "../../assets/images/jobs-image.png";
 import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
-import zIndex from "@mui/material/styles/zIndex";
 
 const CreateJob = (props) => {
+  const etaTime = props.allJobs.eta;
+  const etdTime = props.allJobs.etd;
+
+  const etaDateObj = new Date(etaTime);
+  const etdDateObj = new Date(etdTime);
+
   const [jobType, setJobType] = useState("Job");
   const [typevalue, setTypevalue] = useState(null);
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
-  const [eta, setEta] = useState(new Date());
-  const [etd, setEtd] = useState(new Date());
+  const [poaValue, setPoaValue] = useState(null);
+  const [branchValue, setBranchValue] = useState("JEDDHA");
+  const [podValue, setPodValue] = useState(null);
+  const [eta, setEta] = useState(etaDateObj);
+  const [etd, setEtd] = useState(etdDateObj);
   const [organization_type, setOrganization_type] = useState([]);
+  const [poaOptions, setPoaOptions] = useState([]);
+  const [podOptions, setPodOptions] = useState([]);
   const options = [
     {
       label: "Job",
       value: "Job",
     },
-    // {
-    //   label: "Enquiry",
-    //   value: "Enquiry",
-    // },
   ];
+
+  const branchOptions = () => [{ label: "JEDDHA", value: "JEDDHA" }];
 
   const statusOptions = [
     {
@@ -154,132 +161,36 @@ const CreateJob = (props) => {
       value: "Other",
     },
   ];
+  const getPoaOptions = (pgdata, val, type) => {
+    apiAuth
+      .get("api/master/poa/")
 
-  const poaOptions = [
-    {
-      label: "Doha Hamad",
-      value: "Doha Hamad",
-    },
-    {
-      label: "Tokyo Haneda",
-      value: "Tokyo Haneda",
-    },
-    {
-      label: "Singapore Changi",
-      value: "Singapore Changi",
-    },
-    {
-      label: "Tokyo Narita",
-      value: "Tokyo Narita",
-    },
-    {
-      label: "Seoul Incheon",
-      value: "Seoul Incheon",
-    },
-    {
-      label: "Paris CDG",
-      value: "Paris CDG",
-    },
-    {
-      label: "Istanbul",
-      value: "Istanbul",
-    },
-    {
-      label: "Munich",
-      value: "Munich",
-    },
-    {
-      label: "Zurich",
-      value: "Zurich",
-    },
-    {
-      label: "Kansai",
-      value: "Kansai",
-    },
-    {
-      label: "Centrair Nagoya",
-      value: "Centrair Nagoya",
-    },
-    {
-      label: "Helsinki Vantaa",
-      value: "Helsinki Vantaa",
-    },
-    {
-      label: "London Heathrow",
-      value: "London Heathrow",
-    },
-    {
-      label: "Dubai",
-      value: "Dubai",
-    },
-    {
-      label: "Amsterdam Schiphol",
-      value: "Amsterdam Schiphols",
-    },
-  ];
+      .then((response) => {
+        let data = response.data.results;
+        setPoaOptions(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-  const podOptions = [
-    {
-      label: "Shanghai",
-      value: "Shanghai",
-    },
-    {
-      label: "Singapore",
-      value: "Singapore",
-    },
-    {
-      label: "Ningbo Zhoushan",
-      value: "Ningbo Zhoushan",
-    },
-    {
-      label: "Busan",
-      value: "Busan",
-    },
-    {
-      label: "Jebel Ali",
-      value: "Jebel Ali",
-    },
-    {
-      label: "Rotterdam",
-      value: "Rotterdam",
-    },
-    {
-      label: "Port of Tanjung Pelepas",
-      value: "Port of Tanjung Pelepas",
-    },
-    {
-      label: "Los Angeles",
-      value: "Los Angeles",
-    },
-    {
-      label: "South Louisiana",
-      value: "South Louisiana",
-    },
-    {
-      label: "Antwerp",
-      value: "Antwerp",
-    },
-    {
-      label: "Hamburg",
-      value: "Hamburg",
-    },
-    {
-      label: "Felixstowe",
-      value: "Felixstowe",
-    },
-    {
-      label: "Itaqui",
-      value: "Itaqui",
-    },
-    {
-      label: "Durban",
-      value: "Durban",
-    },
-    {
-      label: "Port Hedland",
-      value: "Port Hedland",
-    },
-  ];
+  const getPodOptions = (pgdata, val, type) => {
+    apiAuth
+      .get("api/master/pod/")
+
+      .then((response) => {
+        let data = response.data.results;
+        setPodOptions(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getPoaOptions();
+    getPodOptions();
+  }, []);
 
   const scopeofworkOptions = [
     {
@@ -399,37 +310,43 @@ const CreateJob = (props) => {
       background: "#EDEDED",
     }),
   };
-  const goBack = () => {
-    history.goBack();
-  };
 
-  useEffect(() => {
-    const jobtype = options.find(
-      (item) => item.value === props.allJobs.job_type
-    );
-    setJobType(jobtype);
-    const scopeType = scopeofworkOptions.find(
-      (item) => item.value === props.allJobs.scope_of_work
-    );
-    setScopeType(scopeType);
-    const type = typeOptions.find((item) => item.value === props.allJobs.type);
-    setTypevalue(type);
-    const jobStatus = statusOptions.find(
-      (item) => item.value === props.allJobs.job_status
-    );
-    setJobStatus(jobStatus);
-  }, [
-    props.allJobs.job_type,
-    props.allJobs.scope_of_work,
-    props.allJobs.type,
-    props.allJobs.job_status,
-  ]);
+  useEffect(
+    () => {
+      const jobtype = options.find(
+        (item) => item.value === props.allJobs.job_type
+      );
+      setJobType(jobtype);
+      const scopeType = scopeofworkOptions.find(
+        (item) => item.value === props.allJobs.scope_of_work
+      );
+      setScopeType(scopeType);
+      const type = typeOptions.find(
+        (item) => item.value === props.allJobs.type
+      );
+      setTypevalue(type);
+      const jobStatus = statusOptions.find(
+        (item) => item.value === props.allJobs.job_status
+      );
+      setJobStatus(jobStatus);
+
+      const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
+      setPoaValue(poa);
+      const pod_Value = podOptions.find(
+        (item) => item.value === props.allJobs?.pod
+      );
+
+      setPodValue(pod_Value);
+    },
+    [
+      // props.allJobs.job_type,
+      // props.allJobs.scope_of_work,
+      // props.allJobs.type,
+      // props.allJobs.job_status,
+    ]
+  );
 
   const handleMultiSelectChange = (data) => {
-    console.log(
-      "Selected labels:",
-      data.map((item) => item.label)
-    );
     setOrganization_type(data.map((item) => item.label));
   };
   return (
@@ -457,9 +374,10 @@ const CreateJob = (props) => {
                 ? props?.allJobs?.client_name
                 : "",
               remarks: props?.allJobs?.remarks ? props?.allJobs?.remarks : "",
-              job_type: props?.allJobs?.job_type
-                ? props?.allJobs?.job_type
-                : "",
+              job_type:
+                //  props?.allJobs?.job_type
+                //   ? props?.allJobs?.job_type
+                "Job",
               job_status: props?.allJobs?.job_status
                 ? props?.allJobs?.job_status
                 : "",
@@ -470,8 +388,8 @@ const CreateJob = (props) => {
               scope_of_work: props?.allJobs?.scope_of_work
                 ? props?.allJobs?.scope_of_work
                 : "",
-              eta: props?.allJobs?.eta ? props?.allJobs?.eta : "",
-              etd: props?.allJobs?.etd ? props?.allJobs?.etd : "",
+              eta: props?.allJobs?.eta ? props?.allJobs?.eta : new Date(),
+              etd: props?.allJobs?.etd ? props?.allJobs?.etd : new Date(),
               organization_type: props?.allJobs?.organization_type
                 ? props?.allJobs?.organization_type
                 : "",
@@ -523,7 +441,6 @@ const CreateJob = (props) => {
               apiAuth
                 .post(url, values)
                 .then((response) => {
-                  // if (response.status === 200) {
                   NotificationManager.success(
                     "",
                     `Job Created Successfully`,
@@ -533,16 +450,6 @@ const CreateJob = (props) => {
                     ""
                   );
                   props.closeAddPopup();
-                  // } else {
-                  // NotificationManager.error(
-                  //   "",
-                  //   `Job Create Error`,
-                  //   3000,
-                  //   null,
-                  //   null,
-                  //   ""
-                  // );
-                  // }
                 })
                 .catch((error) => {
                   NotificationManager.error(
@@ -655,13 +562,15 @@ const CreateJob = (props) => {
                         name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={podOptions}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
+                        options={podOptions?.map((item) => {
+                          return {
+                            label: item.name,
+                            value: item.id,
+                          };
+                        })}
+                        value={podValue}
                         onChange={(data) => {
-                          // setJobType(data.value);
+                          setPodValue(data);
                           setFieldValue("pod", data.value);
                         }}
                       />
@@ -709,13 +618,15 @@ const CreateJob = (props) => {
                         name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={poaOptions}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
+                        options={poaOptions?.map((item) => {
+                          return {
+                            label: item.name,
+                            value: item.id,
+                          };
+                        })}
+                        value={poaValue}
                         onChange={(data) => {
-                          // setJobType(data.value);
+                          setPoaValue(data);
                           setFieldValue("poa", data.value);
                         }}
                       />
@@ -740,9 +651,7 @@ const CreateJob = (props) => {
                         placeholder={"Select"}
                         styles={customStyles}
                         options={containerTypes}
-                        // defaultValue={{ label: jobStatus }}
                         onChange={(data) => {
-                          //   setJobStatus(data.value);
                           setFieldValue("container_type", data.value);
                         }}
                       />
@@ -780,40 +689,6 @@ const CreateJob = (props) => {
 
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="job_type" className="form-label">
-                        Job Types
-                        <span className="text-danger">*</span>
-                      </Label>
-
-                      <Select
-                        name="type"
-                        placeholder={"Select"}
-                        styles={customStyles}
-                        options={options}
-                        value={jobType}
-                        defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
-                        onChange={(data) => {
-                          setJobType(data);
-                          setFieldValue("job_type", data.value);
-                        }}
-                      />
-
-                      <ErrorMessage
-                        name="job_type"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
                       <Label htmlFor="type" className="form-label">
                         Type
                         <span className="text-danger">*</span>
@@ -825,10 +700,6 @@ const CreateJob = (props) => {
                         styles={customStyles}
                         options={typeOptions}
                         value={typevalue}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
                         onChange={(data) => {
                           setTypevalue(data);
                           setFieldValue("type", data.value);
@@ -843,7 +714,9 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
+                </Grid>
 
+                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="scope_of_work" className="form-label">
@@ -857,10 +730,6 @@ const CreateJob = (props) => {
                         styles={customStyles}
                         options={scopeofworkOptions}
                         value={scopeType}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
                         onChange={(data) => {
                           setScopeType(data);
                           setFieldValue("scope_of_work", data.value);
@@ -875,9 +744,7 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
-                </Grid>
 
-                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="eta" className="form-label">
@@ -903,7 +770,9 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
+                </Grid>
 
+                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="etd" className="form-label">
@@ -930,9 +799,7 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
-                </Grid>
 
-                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="job_status" className="form-label">
@@ -959,30 +826,36 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
+                </Grid>
 
+                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="branch" className="form-label">
                         Branch
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="branch"
-                        style={{ background: "#EDEDED" }}
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={branchOptions}
+                        // value={"JEDDHA"}
+                        defaultValue={{ label: branchValue }}
+                        onChange={(data) => {
+                          // setBranchValue(data);
+                          setFieldValue("branch", data.value);
+                        }}
                       />
-
                       <ErrorMessage
-                        name="branch"
+                        name="job_status"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
                       />
                     </div>
                   </Grid>
-                </Grid>
 
-                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="organization_type" className="form-label">

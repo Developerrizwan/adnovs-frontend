@@ -9,7 +9,7 @@ import JobTable from "./JobTable";
 import NotificationManager from "../../components/Common/NotificationManager";
 import EnquiryTable from "./EnquiryTable";
 
-const Jobs = (props) => {
+const Organization = (props) => {
   const [allJobs, setAllJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -99,9 +99,9 @@ const Jobs = (props) => {
       });
   };
 
-  useEffect(() => {
-    getJobs(jobPagination, searchValue, selectedValue);
-  }, []);
+  //   useEffect(() => {
+  //     getJobs(jobPagination, searchValue, selectedValue);
+  //   }, []);
 
   const handleJobChange = (e) => {
     setSelectedValue(e.value);
@@ -114,11 +114,9 @@ const Jobs = (props) => {
         <Container fluid>
           <BreadCrumb
             title={selectedValue}
-            pageTitle="Jobs"
+            pageTitle="Organization"
             add_new={true}
-            add_new_url={
-              selectedValue === "Job" ? "/jobs/createjob" : "/jobs/add"
-            }
+            add_new_url={"/Organization/add"}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
@@ -187,4 +185,4 @@ const Jobs = (props) => {
   );
 };
 
-export default Jobs;
+export default Organization;

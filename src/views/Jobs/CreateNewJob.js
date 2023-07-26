@@ -10,97 +10,22 @@ import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label } from "reactstrap";
 
-const AddJobs = (props) => {
-  const [jobType, setJobType] = useState("Enquiry");
-  const [jobStatus, setJobStatus] = useState("");
+const CreateNewJob = (props) => {
+  const [jobType, setJobType] = useState("Job");
+  const [branchValue, setBranchValue] = useState("JEDDHA");
   const [eta, setEta] = useState(new Date());
   const [etd, setEtd] = useState(new Date());
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
-
+  const [organization_type, setOrganization_type] = useState([]);
   const options = [
-    // {
-    //   label: "Job",
-    //   value: "Job",
-    // },
     {
-      label: "Enquiry",
-      value: "Enquiry",
+      label: "Job",
+      value: "Job",
     },
   ];
 
-  const typeOptions = [
-    {
-      label: "Air Freight",
-      value: "Air Freight",
-    },
-    {
-      label: "Sea Freight",
-      value: "Sea Freight",
-    },
-    {
-      label: "Land Freight",
-      value: "Land Freight",
-    },
-    {
-      label: "Transportation",
-      value: "Transportation",
-    },
-    {
-      label: "Warehousing",
-      value: "Warehousing",
-    },
-  ];
-  const scopeofworkOptions = [
-    {
-      label: "D2D",
-      value: "D2D",
-    },
-    {
-      label: "EXW",
-      value: "EXW",
-    },
-    {
-      label: "FOB",
-      value: "FOB",
-    },
-    {
-      label: "CIF",
-      value: "CIF",
-    },
-    {
-      label: "CNF",
-      value: "CNF",
-    },
-    {
-      label: "C&F",
-      value: "C&F",
-    },
-    {
-      label: "DDP",
-      value: "DDP",
-    },
-    {
-      label: "DAP",
-      value: "DAP",
-    },
-    {
-      label: "CPT",
-      value: "CPT",
-    },
-    {
-      label: "TRANS",
-      value: "TRANS",
-    },
-    {
-      label: "D-TRANS",
-      value: "D-TRANS",
-    },
-    {
-      label: "OTHERS",
-      value: "OTHERS",
-    },
-  ];
+  const branchOptions = () => [{ label: "JEDDHA", value: "JEDDHA" }];
 
   const statusOptions = [
     {
@@ -161,131 +86,71 @@ const AddJobs = (props) => {
     },
   ];
 
-  // const poaOptions = [
-  //   {
-  //     label: "Doha Hamad",
-  //     value: "Doha Hamad",
-  //   },
-  //   {
-  //     label: "Tokyo Haneda",
-  //     value: "Tokyo Haneda",
-  //   },
-  //   {
-  //     label: "Singapore Changi",
-  //     value: "Singapore Changi",
-  //   },
-  //   {
-  //     label: "Tokyo Narita",
-  //     value: "Tokyo Narita",
-  //   },
-  //   {
-  //     label: "Seoul Incheon",
-  //     value: "Seoul Incheon",
-  //   },
-  //   {
-  //     label: "Paris CDG",
-  //     value: "Paris CDG",
-  //   },
-  //   {
-  //     label: "Istanbul",
-  //     value: "Istanbul",
-  //   },
-  //   {
-  //     label: "Munich",
-  //     value: "Munich",
-  //   },
-  //   {
-  //     label: "Zurich",
-  //     value: "Zurich",
-  //   },
-  //   {
-  //     label: "Kansai",
-  //     value: "Kansai",
-  //   },
-  //   {
-  //     label: "Centrair Nagoya",
-  //     value: "Centrair Nagoya",
-  //   },
-  //   {
-  //     label: "Helsinki Vantaa",
-  //     value: "Helsinki Vantaa",
-  //   },
-  //   {
-  //     label: "London Heathrow",
-  //     value: "London Heathrow",
-  //   },
-  //   {
-  //     label: "Dubai",
-  //     value: "Dubai",
-  //   },
-  //   {
-  //     label: "Amsterdam Schiphol",
-  //     value: "Amsterdam Schiphols",
-  //   },
-  // ];
+  const typeOptions = [
+    {
+      label: "Air Freight",
+      value: "Air Freight",
+    },
+    {
+      label: "Sea Freight",
+      value: "Sea Freight",
+    },
+    {
+      label: "Land Freight",
+      value: "Land Freight",
+    },
+    {
+      label: "Transportation",
+      value: "Transportation",
+    },
+    {
+      label: "Warehousing",
+      value: "Warehousing",
+    },
+  ];
 
-  // const podOptions = [
-  //   {
-  //     label: "Shanghai",
-  //     value: "Shanghai",
-  //   },
-  //   {
-  //     label: "Singapore",
-  //     value: "Singapore",
-  //   },
-  //   {
-  //     label: "Ningbo Zhoushan",
-  //     value: "Ningbo Zhoushan",
-  //   },
-  //   {
-  //     label: "Busan",
-  //     value: "Busan",
-  //   },
-  //   {
-  //     label: "Jebel Ali",
-  //     value: "Jebel Ali",
-  //   },
-  //   {
-  //     label: "Rotterdam",
-  //     value: "Rotterdam",
-  //   },
-  //   {
-  //     label: "Port of Tanjung Pelepas",
-  //     value: "Port of Tanjung Pelepas",
-  //   },
-  //   {
-  //     label: "Los Angeles",
-  //     value: "Los Angeles",
-  //   },
-  //   {
-  //     label: "South Louisiana",
-  //     value: "South Louisiana",
-  //   },
-  //   {
-  //     label: "Antwerp",
-  //     value: "Antwerp",
-  //   },
-  //   {
-  //     label: "Hamburg",
-  //     value: "Hamburg",
-  //   },
-  //   {
-  //     label: "Felixstowe",
-  //     value: "Felixstowe",
-  //   },
-  //   {
-  //     label: "Itaqui",
-  //     value: "Itaqui",
-  //   },
-  //   {
-  //     label: "Durban",
-  //     value: "Durban",
-  //   },
-  //   {
-  //     label: "Port Hedland",
-  //     value: "Port Hedland",
-  //   },
-  // ];
+  const OrganizationTypeOptions = [
+    {
+      label: "Consignee",
+      value: "Consignee",
+    },
+    {
+      label: "Client",
+      value: "Client",
+    },
+    {
+      label: "Notify",
+      value: "Notify",
+    },
+    {
+      label: "Shipper",
+      value: "Shipper",
+    },
+    {
+      label: "Broker",
+      value: "Broker",
+    },
+    {
+      label: "Transporter",
+      value: "Transporter",
+    },
+    {
+      label: "Counterpart",
+      value: "Counterpart",
+    },
+    {
+      label: "Coloader",
+      value: "Coloader",
+    },
+    {
+      label: "Supplier",
+      value: "Supplier",
+    },
+    {
+      label: "Other",
+      value: "Other",
+    },
+  ];
 
   const getPoaOptions = (pgdata, val, type) => {
     apiAuth
@@ -320,7 +185,121 @@ const AddJobs = (props) => {
     getPodOptions();
   }, []);
 
+  const scopeofworkOptions = [
+    {
+      label: "D2D",
+      value: "D2D",
+    },
+    {
+      label: "EXW",
+      value: "EXW",
+    },
+    {
+      label: "FOB",
+      value: "FOB",
+    },
+    {
+      label: "CIF",
+      value: "CIF",
+    },
+    {
+      label: "CNF",
+      value: "CNF",
+    },
+    {
+      label: "C&F",
+      value: "C&F",
+    },
+    {
+      label: "DDP",
+      value: "DDP",
+    },
+    {
+      label: "DAP",
+      value: "DAP",
+    },
+    {
+      label: "CPT",
+      value: "CPT",
+    },
+    {
+      label: "TRANS",
+      value: "TRANS",
+    },
+    {
+      label: "D-TRANS",
+      value: "D-TRANS",
+    },
+    {
+      label: "OTHERS",
+      value: "OTHERS",
+    },
+  ];
+
+  const containerTypes = [
+    {
+      label: "20DC",
+      value: "20DC",
+    },
+    {
+      label: "20RF",
+      value: "20RF",
+    },
+    {
+      label: "20ST",
+      value: "20ST",
+    },
+    {
+      label: "20OT",
+      value: "20OT",
+    },
+    {
+      label: "20HC",
+      value: "20HC",
+    },
+    {
+      label: "40DC",
+      value: "40DC",
+    },
+    {
+      label: "40DC",
+      value: "40DC",
+    },
+    {
+      label: "40RF",
+      value: "40RF",
+    },
+    {
+      label: "40ST",
+      value: "40ST",
+    },
+    {
+      label: "40OT",
+      value: "40OT",
+    },
+    {
+      label: "40HC",
+      value: "40HC",
+    },
+    {
+      label: "FLAT RACK",
+      value: "FLAT RACK",
+    },
+    {
+      label: "FTL",
+      value: "FTL",
+    },
+    {
+      label: "LTL",
+      value: "LTL",
+    },
+  ];
+
   const history = useHistory();
+
+  const goBack = () => {
+    history.goBack();
+  };
 
   const customStyles = {
     control: (provided, state) => ({
@@ -328,8 +307,9 @@ const AddJobs = (props) => {
       background: "#EDEDED",
     }),
   };
-  const goBack = () => {
-    history.goBack();
+
+  const handleMultiSelectChange = (data) => {
+    setOrganization_type(data.map((item) => item.label));
   };
 
   return (
@@ -339,7 +319,7 @@ const AddJobs = (props) => {
           className="mb-5 mt-3"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <h2 className="mx-3">Create New Enquiry</h2>
+          <h2 className="mx-3">Create New Job</h2>
 
           <button className="btn btn-danger" onClick={goBack}>
             Back
@@ -350,29 +330,34 @@ const AddJobs = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  // bl_number: "",
-                  // bayan_number: "",
+                  bl_number: "",
+                  bayan_number: "",
                   pod: "",
                   poa: "",
+                  por: "",
                   consignee_name: "",
                   shipper_name: "",
                   client_name: "",
                   remarks: "",
-                  job_type: "Enquiry",
+                  job_type: "Job",
+                  job_status: "",
+                  container_type: "",
                   type: "",
                   scope_of_work: "",
-                  job_status: "",
                   eta: null,
                   etd: null,
-                  branch: "",
+                  organization_type: "",
+                  branch: "JEDDHA",
                 }}
                 validationSchema={Yup.object({
-                  // bl_number: Yup.string().required("BL Number is Required"),
-                  // bayan_number: Yup.string().required(
-                  //   "Bayan Number is Required"
-                  // ),
+                  bl_number: Yup.string().required("BL Number is Required"),
+                  branch: Yup.string().required("Branch is Required"),
+                  bayan_number: Yup.string().required(
+                    "Bayan Number is Required"
+                  ),
                   pod: Yup.string().required("POD is Required"),
                   poa: Yup.string().required("POA is Required"),
+                  por: Yup.string().required("Place Of Receipt is Required"),
                   consignee_name: Yup.string()
                     .max(20, "Must be 20 characters or less")
                     .trim()
@@ -389,14 +374,18 @@ const AddJobs = (props) => {
                     .max(400, "Must be 400 characters or less")
                     .trim()
                     .required("Remarks is Required"),
-                  // job_type: Yup.string().required("Job Type is Required"),
+                  job_type: Yup.string().required("Job Type is Required"),
                   type: Yup.string().required("Type is Required"),
                   scope_of_work: Yup.string().required(
                     "Scope of work is Required"
                   ),
                   job_status: Yup.string().required("Job Status is Required"),
-                  // eta: Yup.string().nullable().required("ETA is required"),
-                  // etd: Yup.string().nullable().required("ETD is required"),
+                  // organization_type: Yup.string().required(
+                  //   "Organization Type is Required"
+                  // ),
+                  container_type: Yup.string().required(
+                    "Container Type is Required"
+                  ),
                 })}
                 onSubmit={(values, { reset }) => {
                   const company = JSON.parse(
@@ -405,35 +394,25 @@ const AddJobs = (props) => {
                   values["company"] = company;
                   values["eta"] = eta;
                   values["etd"] = etd;
-                  const url = "/api/master/job/";
+                  values["organization_type"] = organization_type;
+                  const url = `/api/master/job/`;
                   apiAuth
                     .post(url, values)
                     .then((response) => {
-                      // if (response.status === 201) {
                       NotificationManager.success(
                         "",
-                        `Enquiry Created Successfully`,
+                        `Job Created Successfully`,
                         3000,
                         null,
                         null,
                         ""
                       );
                       props?.history?.push("/jobs");
-                      // } else {
-                      // NotificationManager.error(
-                      //   "",
-                      //   `Job Create Error`,
-                      //   3000,
-                      //   null,
-                      //   null,
-                      //   ""
-                      // );
-                      // }
                     })
                     .catch((error) => {
                       NotificationManager.error(
                         "",
-                        `Enquiry Create Error`,
+                        `Job Create Error`,
                         3000,
                         null,
                         null,
@@ -445,7 +424,7 @@ const AddJobs = (props) => {
                 {({ values, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
-                      {/* <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="bl_number" className="form-label">
                             BL Number
@@ -463,7 +442,7 @@ const AddJobs = (props) => {
                             )}
                           />
                         </div>
-                      </Grid> */}
+                      </Grid>
 
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
@@ -482,6 +461,28 @@ const AddJobs = (props) => {
 
                           <ErrorMessage
                             name="consignee_name"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="bayan_number" className="form-label">
+                            Bayan Number
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            className="form-control"
+                            name="bayan_number"
+                            style={{ background: "#EDEDED" }}
+                          />
+
+                          <ErrorMessage
+                            name="bayan_number"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
@@ -510,31 +511,6 @@ const AddJobs = (props) => {
                       </Grid>
                     </Grid>
 
-                    {/* <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="bayan_number" className="form-label">
-                            Bayan Number
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Field
-                            className="form-control"
-                            name="bayan_number"
-                            style={{ background: "#EDEDED" }}
-                          />
-
-                          <ErrorMessage
-                            name="bayan_number"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-
-                     
-                    </Grid> */}
-
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
@@ -553,12 +529,9 @@ const AddJobs = (props) => {
                                 value: item.id,
                               };
                             })}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
+                            // value={podValue}
                             onChange={(data) => {
-                              // setJobType(data.value);
+                              //   setPodValue(data);
                               setFieldValue("pod", data.value);
                             }}
                           />
@@ -612,12 +585,9 @@ const AddJobs = (props) => {
                                 value: item.id,
                               };
                             })}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
+                            // value={poaValue}
                             onChange={(data) => {
-                              // setJobType(data.value);
+                              //   setPoaValue(data);
                               setFieldValue("poa", data.value);
                             }}
                           />
@@ -631,36 +601,53 @@ const AddJobs = (props) => {
                         </div>
                       </Grid>
 
-                      {/* <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="job_type" className="form-label">
-                            Job Types
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3" style={{ zIndex: "500" }}>
+                          <Label htmlFor="container" className="form-label">
+                            Container/Consignment
                             <span className="text-danger">*</span>
                           </Label>
-
                           <Select
                             name="type"
                             placeholder={"Select"}
                             styles={customStyles}
-                            options={options}
-                            defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
+                            options={containerTypes}
                             onChange={(data) => {
-                              setJobType(data.value);
-                              setFieldValue("job_type", data.value);
+                              setFieldValue("container_type", data.value);
                             }}
                           />
-
                           <ErrorMessage
-                            name="job_type"
+                            name="container_type"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
                           />
                         </div>
-                      </Grid> */}
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="por" className="form-label">
+                            Place Of Receipt
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            className="form-control"
+                            name="por"
+                            style={{ background: "#EDEDED" }}
+                          />
+
+                          <ErrorMessage
+                            name="por"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="type" className="form-label">
@@ -673,12 +660,9 @@ const AddJobs = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={typeOptions}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
+                            // value={typevalue}
                             onChange={(data) => {
-                              setJobType(data.value);
+                              //   setTypevalue(data);
                               setFieldValue("type", data.value);
                             }}
                           />
@@ -694,6 +678,34 @@ const AddJobs = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="scope_of_work" className="form-label">
+                            Scope Of Work
+                            <span className="text-danger">*</span>
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={scopeofworkOptions}
+                            // value={scopeType}
+                            onChange={(data) => {
+                              //   setScopeType(data);
+                              setFieldValue("scope_of_work", data.value);
+                            }}
+                          />
+
+                          <ErrorMessage
+                            name="scope_of_work"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="eta" className="form-label">
@@ -719,7 +731,9 @@ const AddJobs = (props) => {
                           />
                         </div>
                       </Grid>
+                    </Grid>
 
+                    <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="etd" className="form-label">
@@ -727,6 +741,7 @@ const AddJobs = (props) => {
                             <span className="text-danger">*</span>
                           </Label>
                           <DatePicker
+                            // selected={moment(etd).format("YYYY-MM-DD HH:mm:ss")}
                             selected={etd}
                             onChange={(date) => {
                               setEtd(date);
@@ -745,9 +760,7 @@ const AddJobs = (props) => {
                           />
                         </div>
                       </Grid>
-                    </Grid>
 
-                    <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="job_status" className="form-label">
@@ -759,9 +772,10 @@ const AddJobs = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={statusOptions}
+                            // value={jobStatus}
                             // defaultValue={{ label: jobStatus }}
                             onChange={(data) => {
-                              setJobStatus(data.value);
+                              // setJobStatus(data);
                               setFieldValue("job_status", data.value);
                             }}
                           />
@@ -773,10 +787,43 @@ const AddJobs = (props) => {
                           />
                         </div>
                       </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="scope_of_work" className="form-label">
-                            Scope Of Work
+                          <Label htmlFor="branch" className="form-label">
+                            Branch
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={branchOptions}
+                            // value={"JEDDHA"}
+                            defaultValue={{ label: branchValue }}
+                            onChange={(data) => {
+                              // setBranchValue(data);
+                              setFieldValue("branch", data.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="job_status"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label
+                            htmlFor="organization_type"
+                            className="form-label"
+                          >
+                            Organization Type
                             <span className="text-danger">*</span>
                           </Label>
 
@@ -784,19 +831,16 @@ const AddJobs = (props) => {
                             name="type"
                             placeholder={"Select"}
                             styles={customStyles}
-                            options={scopeofworkOptions}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
-                            onChange={(data) => {
-                              setJobType(data.value);
-                              setFieldValue("scope_of_work", data.value);
-                            }}
+                            options={OrganizationTypeOptions}
+                            isMulti
+                            value={organization_type.map((label) => ({
+                              label,
+                              value: label,
+                            }))}
+                            onChange={handleMultiSelectChange}
                           />
-
                           <ErrorMessage
-                            name="scope_of_work"
+                            name=" organization_type"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
@@ -843,4 +887,4 @@ const AddJobs = (props) => {
   );
 };
 
-export default AddJobs;
+export default CreateNewJob;

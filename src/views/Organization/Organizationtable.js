@@ -12,9 +12,8 @@ import {
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
-import CreateJob from "./CreateJob";
-import EditEnquiry from "./EditEnquiry";
-const EnquiryTable = (props) => {
+import EditOrganization from "./EditOrganization";
+const OrganizationTable = (props) => {
   const [editModal, setEditModal] = useState(false);
   const [jobTypeModal, setJobTypeModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -194,7 +193,7 @@ const EnquiryTable = (props) => {
           Edit Enquiry
         </ModalHeader>
         <ModalBody>
-          <EditEnquiry
+          <EditOrganization
             closeAddPopup={() => {
               setEditModal(false);
               setSelectedJob(null);
@@ -202,36 +201,6 @@ const EnquiryTable = (props) => {
             }}
             allJobs={selectedJob}
             selectedValue={props.selectedValue}
-            history={props.history}
-          />
-        </ModalBody>
-      </Modal>
-
-      <Modal
-        id="signupModals"
-        tabIndex="-1"
-        className="modal-lg"
-        isOpen={jobTypeModal}
-        toggle={() => {
-          setJobTypeModal((prev) => !prev);
-        }}
-      >
-        <ModalHeader
-          className="p-3"
-          toggle={() => {
-            setJobTypeModal((prev) => !prev);
-          }}
-        >
-          Create New Job
-        </ModalHeader>
-        <ModalBody>
-          <CreateJob
-            closeAddPopup={() => {
-              setJobTypeModal(false);
-              setSelectedJob(null);
-              props.getJobs();
-            }}
-            allJobs={selectedJob}
             history={props.history}
           />
         </ModalBody>
@@ -275,4 +244,4 @@ const EnquiryTable = (props) => {
   );
 };
 
-export default EnquiryTable;
+export default OrganizationTable;

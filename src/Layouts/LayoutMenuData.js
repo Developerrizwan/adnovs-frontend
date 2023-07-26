@@ -14,6 +14,7 @@ const Navdata = () => {
   const [isMyAccount, setisMyAccount] = useState(false);
   const [isCoa, setIsCoa] = useState(false);
   const [isUserManagement, setisUserManagement] = useState(false);
+  const [isOrganization, setIsOrganization] = useState(false);
   const [isCouponManagement, setisCouponManagement] = useState(false);
   const [isPaymentManagement, setisPaymentManagement] = useState(false);
   const [isSubscriptionManagement, setisSubscriptionManagement] =
@@ -64,6 +65,9 @@ const Navdata = () => {
     if (iscurrentState !== "UserManagement") {
       setisUserManagement(false);
     }
+    if (iscurrentState !== "Organization") {
+      setIsOrganization(false);
+    }
     if (iscurrentState !== "CouponManagement") {
       setisCouponManagement(false);
     }
@@ -95,6 +99,7 @@ const Navdata = () => {
     isCouponManagement,
     isPaymentManagement,
     isSubscriptionManagement,
+    isOrganization,
   ]);
 
   const menuItems = [
@@ -162,6 +167,15 @@ const Navdata = () => {
     //   stateVariables: isMyAccount,
     //   roles: ["superadmin", "admin", "user"],
     // },
+    {
+      id: "Organization",
+      label: "Organization",
+      icon: "ri-team-line",
+      link: "/organization",
+      src: "/team.png",
+      stateVariables: isMyAccount,
+      roles: ["superadmin", "admin", "user"],
+    },
     {
       id: "user-management",
       label: "User Management",

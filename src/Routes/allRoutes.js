@@ -83,6 +83,7 @@ import TaxInvoice from "../views/TaxInvoice/TaxInvoice";
 import TaxInvoiceSecond from "../views/TaxInvoice/TaxInvoiceSecond";
 import ChartOfAccounts from "../views/ChartOfAccounts";
 import AddCOA from "../views/ChartOfAccounts/AddCOA";
+import CreateNewJob from "../views/Jobs/CreateNewJob";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -100,6 +101,7 @@ const authProtectedRoutes = [
   { path: "/client", component: Client },
   { path: "/jobs", component: Jobs },
   { path: "/jobs/add", component: AddJobs },
+  { path: "/jobs/createjob", component: CreateNewJob },
   // { path: "/jobs/edit/:jobId/", component: EditJobs },
   { path: "/coa", component: ChartOfAccounts },
   { path: "/add-coa", component: AddCOA },
