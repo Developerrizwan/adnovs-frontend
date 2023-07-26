@@ -83,6 +83,10 @@ import TaxInvoice from "../views/TaxInvoice/TaxInvoice";
 import TaxInvoiceSecond from "../views/TaxInvoice/TaxInvoiceSecond";
 import ChartOfAccounts from "../views/ChartOfAccounts";
 import AddCOA from "../views/ChartOfAccounts/AddCOA";
+import CostEntry from "../views/Cost Entry";
+import AddCostEntry from "../views/Cost Entry/AddCostEntry";
+import AddCharge from "../views/Charge/AddCharge";
+import Charge from "../views/Charge";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -101,8 +105,12 @@ const authProtectedRoutes = [
   { path: "/jobs", component: Jobs },
   { path: "/jobs/add", component: AddJobs },
   // { path: "/jobs/edit/:jobId/", component: EditJobs },
+  { path: "/coa/add", component: AddCOA },
   { path: "/coa", component: ChartOfAccounts },
-  { path: "/add-coa", component: AddCOA },
+  { path: "/cost-entry/add", component: AddCostEntry },
+  { path: "/cost-entry", component: CostEntry },
+  { path: "/charge/add", component: AddCharge },
+  { path: "/charge", component: Charge },
   { path: "/vouchers", component: Vouchers },
   { path: "/all-vouchers", component: AllVouchers },
   { path: "/journal-voucher", component: JournalVoucher },

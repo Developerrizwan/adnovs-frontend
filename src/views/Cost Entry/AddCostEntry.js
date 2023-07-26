@@ -1,0 +1,583 @@
+import { Card, Grid, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import Select from "react-select";
+import DatePicker from "react-datepicker";
+import "../../App.css";
+import apiAuth from "../../helpers/ApiAuth";
+import moment from "moment";
+import NotificationManager from "../../components/Common/NotificationManager";
+import { getAllISOCodes } from "iso-country-currency";
+
+const AddCostEntry = (props) => {
+  const history = useHistory();
+
+  const [selCurrency, setSelCurrency] = useState(null);
+  const [selStatus, setSelStatus] = useState(null);
+  const [selJob, setSelJob] = useState(null);
+  const [isDRorCR, setIsDRorCR] = useState(null);
+  const [selCharge, setSelCharge] = useState(null);
+  const [selShipment, setSelShipment] = useState(null);
+  const [selSaleOrCost, setSelSaleOrCost] = useState(null);
+  const [selProrate, setSelProrate] = useState(null);
+  const [tax, setTax] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
+
+  const [currencyOptions, setCurrencyOptions] = useState([]);
+  const [jobOptions, setJobOptions] = useState([]);
+  const [shipmentOptions, setShipmentOptions] = useState([]);
+  const [chargeOptions, setChargeOptions] = useState([]);
+
+  const SaleOrCostOptions = [
+    {
+      label: "Sale",
+      value: "Sale",
+    },
+    { label: "Cost", value: "Cost" },
+  ];
+
+  const drOrCrOptions = [
+    {
+      label: "Dr",
+      value: "Dr",
+    },
+    { label: "Cr", value: "Cr" },
+  ];
+
+  const prorateOptions = [
+    {
+      label: "Chargeable Unit",
+      value: "Chargeable Unit",
+    },
+    { label: "Shipment Basis", value: "Shipment Basis" },
+  ];
+
+  const taxOptions = [
+    {
+      label: "VAT 0%",
+      value: 0,
+    },
+    { label: "VAT 5%", value: 5 },
+    { label: "VAT 10%", value: 10 },
+    { label: "VAT 15%", value: 15 },
+  ];
+
+  const getChargeData = () => {
+    apiAuth
+      .get(`/api/master/charge/?page=${1}`)
+      .then((response) => {
+        let {
+          data: { results },
+        } = response;
+        results = results.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setChargeOptions(results);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const getAllCurrencyCodes = () => {
+    let allCurrencies = getAllISOCodes();
+    allCurrencies = allCurrencies.map((cur) => {
+      return {
+        label: cur.currency + "  -  " + cur.countryName,
+        value: cur.currency + "  -  " + cur.countryName,
+      };
+    });
+    setCurrencyOptions(allCurrencies);
+  };
+
+  const getJobOptions = (val) => {
+    apiAuth
+      .get(`/api/get-jobs/?&page=${1}&search=${val || ""}&type=Job`)
+      .then((res) => {
+        const { data } = res;
+        let jobOpts = data.results.map((opt) => {
+          return {
+            label: opt?.job_number,
+            value: opt?.id,
+          };
+        });
+        setJobOptions(jobOpts);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // useEffect(() => {
+  //   if (searchValue.length) getJobOptions(searchValue);
+  // }, [searchValue]);
+
+  useEffect(() => {
+    getAllCurrencyCodes();
+    getJobOptions();
+    getChargeData();
+  }, []);
+
+  useEffect(() => {
+    if (props.isEdit && currencyOptions.length) {
+      getInitialValues();
+    }
+  }, [currencyOptions.length]);
+
+  const getInitialValues = () => {
+    const selectedStatus = props.entry.job_no
+      ? { label: "Active", value: true }
+      : { label: "Inactive", value: false };
+    setSelStatus(selectedStatus);
+
+    const selCurr = currencyOptions.find(
+      (cur) => cur.value === props.entry?.currency
+    );
+    setSelCurrency(selCurr);
+
+    const selectedTax = taxOptions.find(
+      (cur) => cur.value === props.entry?.tax_group_code
+    );
+    setTax(selectedTax);
+  };
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      background: "#EDEDED",
+    }),
+  };
+
+  const goBack = () => {
+    history.push("/cost-entry");
+  };
+
+  return (
+    <React.Fragment>
+      <div className={props.isEdit ? "" : "page-content"}>
+        {props.isEdit ? (
+          <></>
+        ) : (
+          <>
+            <div
+              className="mb-3"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <h2 className="mx-5">Cost Entry</h2>
+              <button className="btn btn-danger" onClick={goBack}>
+                Back
+              </button>
+            </div>
+          </>
+        )}
+
+        <Grid container spacing={2}>
+          <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
+            <Card className="p-3" style={{ background: "#EDEDED" }}>
+              <Formik
+                initialValues={{
+                  charge: props.entry?.charge || 0,
+                  description: props.entry?.description || "",
+                  job_no: props.entry?.job_no || 0,
+                  shipment_no: props.entry?.shipment_no || "",
+                  currency: props.entry?.currency || "",
+                  ex_rate: props.entry?.ex_rate || "",
+                  fcy_amount: props.entry?.fcy_amount || "",
+                  amount: props.entry?.amount || "",
+                  sale_cost: props.entry?.sale_cost || "",
+                  dr_cr: props.entry?.dr_cr || "Dr",
+                  prorate_method: props.entry?.prorate_method || "",
+                  tax_group_code: props.entry?.tax_group_code || "",
+                }}
+                validationSchema={Yup.object({
+                  // charge: Yup.string().ensure().required("Code is Required"),
+                  // description: Yup.string().required("Required!"),
+                  // // job_no: Yup.boolean().required("Status is Required"),
+                  // coa_type: Yup.string().ensure().required("Required!"),
+                  // is_direct_indirect: Yup.string()
+                  //   .ensure()
+                  //   .required("Required!"),
+                  // dr_cr: Yup.string().ensure().required("Required!"),
+                  // category: Yup.string().ensure().required("Required!"),
+                  // group: Yup.string().ensure().required("Required!"),
+                  // subgroup: Yup.string(),
+                  // type: Yup.string().ensure().required("Required!"),
+                  // short_name: Yup.string(),
+                  // long_name: Yup.string(),
+                  // language_name: Yup.string(),
+                })}
+                onSubmit={(values) => {
+                  console.log("values", values);
+                  // console.log("rrrrr", values);
+                  if (props.isEdit && props.entry) {
+                    apiAuth
+                      .patch(
+                        `/api/master/cost_entry/${props.entry?.id}/`,
+                        values
+                      )
+                      .then((res) => {
+                        NotificationManager.success(
+                          "",
+                          "Cost Entry Updated Successfully",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        props.closeAddPopup();
+                      })
+                      .catch((err) => {
+                        NotificationManager.error(
+                          "",
+                          "Cost Entry Update Error",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                      });
+                  } else {
+                    apiAuth
+                      .post("/api/master/cost_entry/", values)
+                      .then((res) => {
+                        NotificationManager.success(
+                          "",
+                          "Cost Entry Created Successfully",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        history.push("/cost-entry");
+                      })
+                      .catch((err) => {
+                        NotificationManager.error(
+                          "",
+                          "Cost Entry Create Error",
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                      });
+                  }
+                }}
+              >
+                {({ values, errors, touched, setFieldValue }) => (
+                  <Form className="av-tooltip tooltip-label-bottom">
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="charge" className="form-label">
+                            Charge
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            styles={customStyles}
+                            options={chargeOptions}
+                            value={selCharge}
+                            onChange={(data) => {
+                              setFieldValue("charge", data.value);
+                              setSelCharge(data);
+                            }}
+                          />
+                          {errors.charge && touched.charge && (
+                            <div className="invalid-feedback d-block">
+                              {errors.charge}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="description" className="form-label">
+                            Description
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Field
+                            placeholder="Description"
+                            className="form-control"
+                            name="description"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.description && touched.description && (
+                            <div className="invalid-feedback d-block">
+                              {errors.description}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="job_no" className="form-label">
+                            Job No
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="job_no"
+                            styles={customStyles}
+                            value={selJob}
+                            options={jobOptions}
+                            onInputChange={(val) => {
+                              getJobOptions(val);
+                            }}
+                            onChange={(data) => {
+                              setFieldValue("job_no", data.value);
+                              setSelJob(data);
+                            }}
+                          />
+                          {errors.job_no && touched.job_no && (
+                            <div className="invalid-feedback d-block">
+                              {errors.job_no}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="shipment_no" className="form-label">
+                            Shipment No
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Field
+                            placeholder="Shipment No"
+                            className="form-control"
+                            name="shipment_no"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {/* <Select
+                            name="shipment_no"
+                            styles={customStyles}
+                            value={selShipment}
+                            options={shipmentOptions}
+                            onChange={(data) => {
+                              setFieldValue("shipment_no", data.value);
+                              setSelShipment(data);
+                            }}
+                          /> */}
+                          {errors.shipment_no && touched.shipment_no && (
+                            <div className="invalid-feedback d-block">
+                              {errors.shipment_no}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="currency" className="form-label">
+                            Currency
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="currency"
+                            styles={customStyles}
+                            value={selCurrency}
+                            options={currencyOptions}
+                            onChange={(data) => {
+                              setFieldValue("currency", data.value);
+                              // console.log("eeeee", data);
+                              setSelCurrency(data);
+                            }}
+                          />
+                          {errors.currency && touched.currency && (
+                            <div className="invalid-feedback d-block">
+                              {errors.currency}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="ex_rate" className="form-label">
+                            Ex.Rate
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <Field
+                            className="form-control"
+                            placeholder="Rate"
+                            name="ex_rate"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.ex_rate && touched.ex_rate && (
+                            <div className="invalid-feedback d-block">
+                              {errors.ex_rate}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="fcy_amount" className="form-label">
+                            FCY Amount
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <Field
+                            className="form-control"
+                            placeholder="FCY Amount"
+                            name="fcy_amount"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.fcy_amount && touched.fcy_amount && (
+                            <div className="invalid-feedback d-block">
+                              {errors.fcy_amount}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="amount" className="form-label">
+                            Amount(SAR)
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <Field
+                            className="form-control"
+                            placeholder="Amount(SAR)"
+                            name="amount"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.amount && touched.amount && (
+                            <div className="invalid-feedback d-block">
+                              {errors.amount}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label
+                            htmlFor="prorate_method"
+                            className="form-label"
+                          >
+                            Prorate Method
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="prorate_method"
+                            placeholder="Select"
+                            styles={customStyles}
+                            value={selProrate}
+                            options={prorateOptions}
+                            onChange={(data) => {
+                              setFieldValue("prorate_method", data.value);
+                              // console.log("eeeee", data);
+                              setSelProrate(data);
+                            }}
+                          />
+                          {errors.prorate_method && touched.prorate_method && (
+                            <div className="invalid-feedback d-block">
+                              {errors.prorate_method}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label
+                            htmlFor="tax_group_code"
+                            className="form-label"
+                          >
+                            Tax Group Code
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="tax_group_code"
+                            styles={customStyles}
+                            value={tax}
+                            options={taxOptions}
+                            onChange={(data) => {
+                              setFieldValue("tax_group_code", data.value);
+                              setTax(data);
+                            }}
+                          />
+                          {errors.tax_group_code && touched.tax_group_code && (
+                            <div className="invalid-feedback d-block">
+                              {errors.tax_group_code}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="sale_cost" className="form-label">
+                            Sale/Cost
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="sale_cost"
+                            placeholder="Select"
+                            styles={customStyles}
+                            value={selSaleOrCost}
+                            options={SaleOrCostOptions}
+                            onChange={(data) => {
+                              setFieldValue("sale_cost", data.value);
+                              // console.log("eeeee", data);
+                              setSelSaleOrCost(data);
+                            }}
+                          />
+                          {errors.sale_cost && touched.sale_cost && (
+                            <div className="invalid-feedback d-block">
+                              {errors.sale_cost}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="dr_cr" className="form-label">
+                            Dr/Cr
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="dr_cr"
+                            styles={customStyles}
+                            value={isDRorCR}
+                            options={drOrCrOptions}
+                            onChange={(data) => {
+                              setFieldValue("dr_cr", data.value);
+                              setIsDRorCR(data);
+                            }}
+                          />
+                          {errors.dr_cr && touched.dr_cr && (
+                            <div className="invalid-feedback d-block">
+                              {errors.dr_cr}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <div className="mt-4 mb-3">
+                      <button className="btn btn-success" type="submit">
+                        {props.isEdit ? "Update" : "Submit"}
+                      </button>
+                    </div>
+                  </Form>
+                )}
+              </Formik>
+            </Card>
+          </Grid>
+          {/* <Grid item lg={4} style={{ margin: "auto" }}>
+            <img src={jobsImage} alt="" />
+          </Grid> */}
+        </Grid>
+      </div>
+    </React.Fragment>
+  );
+};
+
+export default AddCostEntry;
