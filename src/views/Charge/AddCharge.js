@@ -63,7 +63,7 @@ const AddCharge = (props) => {
     setSelCoa(selectedCoa);
 
     const selectedTax = taxOptions.find(
-      (cur) => cur.value === props.charge?.tax
+      (cur) => cur.value === Number(props.charge?.tax)
     );
     setTax(selectedTax);
   };
@@ -76,7 +76,7 @@ const AddCharge = (props) => {
   };
 
   const goBack = () => {
-    history.push("/cost-charge");
+    history.push("/charge");
   };
 
   return (
@@ -99,7 +99,7 @@ const AddCharge = (props) => {
         )}
         {/* {console.log("wwwwwww", props.charge)} */}
         <Grid container spacing={2}>
-          <Grid item lg={11} style={{ placeItems: "center", margin: "auto" }}>
+          <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
@@ -118,7 +118,7 @@ const AddCharge = (props) => {
                   code: Yup.string().required("Code is Required"),
                   name: Yup.string().required("Name is Required"),
                   status: Yup.boolean().required("Status is Required"),
-                  iata_code: Yup.string().required("Required!"),
+                  // iata_code: Yup.string().required("Required!"),
                 })}
                 onSubmit={(values) => {
                   console.log("values", values);
@@ -266,7 +266,7 @@ const AddCharge = (props) => {
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="coa" className="form-label">
-                            Coa
+                            COA
                           </label>
                           <Select
                             name="type"
