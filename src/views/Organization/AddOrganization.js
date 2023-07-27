@@ -42,7 +42,6 @@ const AddOrganization = (props) => {
       .then((response) => {
         let data = response.data.results;
         setCoavalue(data);
-        console.log("coa", data);
       })
       .catch((error) => {
         console.log(error);
@@ -73,7 +72,7 @@ const AddOrganization = (props) => {
                 initialValues={{
                   name: "",
                   type: "",
-                  // coa: "",
+                  coa: "",
                   language_name: "",
                   address: "",
                   vat_trn_number: "",
@@ -106,7 +105,7 @@ const AddOrganization = (props) => {
                     .trim()
                     .required("Remarks is Required"),
                   type: Yup.string().required("Type is Required"),
-                  //   coa: Yup.number().required("COA is Required"),
+                  coa: Yup.string().required("COA is Required"),
                 })}
                 onSubmit={(values, { reset }) => {
                   const company = JSON.parse(
@@ -114,7 +113,6 @@ const AddOrganization = (props) => {
                   )?.company_id;
                   values["company"] = company;
                   // values["coa"] = coavalue.map((item) => item.id);
-                  values["coa"] = 7;
                   console.log("values", values);
                   const url = "/api/master/organization/";
                   apiAuth
@@ -303,20 +301,26 @@ const AddOrganization = (props) => {
                           />
                         </div>
                       </Grid>
-                      {/* <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="coa" className="form-label">
                             COA
                             <span className="text-danger">*</span>
                           </Label>
-
-                          <Field
-                            className="form-control"
-                            name="coa"
-                            type="number"
-                            style={{ background: "#EDEDED" }}
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            options={coavalue?.map((item) => {
+                              return {
+                                label: item.id,
+                                value: item.id,
+                              };
+                            })}
+                            styles={customStyles}
+                            onChange={(data) => {
+                              setFieldValue("coa", data.value);
+                            }}
                           />
-
                           <ErrorMessage
                             name="coa"
                             render={(msg) => (
@@ -324,7 +328,7 @@ const AddOrganization = (props) => {
                             )}
                           />
                         </div>
-                      </Grid> */}
+                      </Grid>
                     </Grid>
 
                     <div className="mb-3">

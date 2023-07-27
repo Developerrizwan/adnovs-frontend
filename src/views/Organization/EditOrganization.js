@@ -16,6 +16,7 @@ const EditOrganization = (props) => {
     }),
   };
   const [coavalue, setCoavalue] = useState([]);
+  const [coaData, setCoaData] = useState(null);
   const [typeValue, setTypevalue] = useState(null);
 
   const typeOptions = [
@@ -35,7 +36,6 @@ const EditOrganization = (props) => {
       .then((response) => {
         let data = response.data.results;
         setCoavalue(data);
-        console.log("coa", data);
       })
       .catch((error) => {
         console.log(error);
@@ -43,8 +43,17 @@ const EditOrganization = (props) => {
   };
 
   useEffect(() => {
-    const type = typeOptions.find((item) => item.value === props.allJobs?.type);
+    const type = typeOptions.find(
+      (item) => item.value === props.organizationData?.type
+    );
     setTypevalue(type);
+    const coa_type = coavalue?.find(
+      (item) => item.coa === props.organizationData?.coa
+    );
+    setCoaData({
+      label: props.organizationData?.coa,
+      value: props.organizationData?.coa,
+    });
   }, []);
 
   useEffect(() => {
@@ -62,7 +71,7 @@ const EditOrganization = (props) => {
               type: props?.organizationData?.type
                 ? props?.organizationData?.type
                 : "",
-              // coa: "",
+              coa: "",
               language_name: props?.organizationData?.language_name
                 ? props?.organizationData?.language_name
                 : "",
@@ -107,14 +116,13 @@ const EditOrganization = (props) => {
                 .trim()
                 .required("Remarks is Required"),
               type: Yup.string().required("Type is Required"),
-              //   coa: Yup.number().required("COA is Required"),
+              coa: Yup.string().required("COA is Required"),
             })}
             onSubmit={(values, { reset }) => {
               const company = JSON.parse(
                 localStorage.getItem("authUser")
               )?.company_id;
               values["company"] = company;
-              values["coa"] = 6;
               const url = `/api/master/organization/${props.organizationData.id}/`;
               apiAuth
                 .patch(url, values)
@@ -312,28 +320,36 @@ const EditOrganization = (props) => {
                       />
                     </div>
                   </Grid>
-                  {/* <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="coa" className="form-label">
-                            COA
-                            <span className="text-danger">*</span>
-                          </Label>
-
-                          <Field
-                            className="form-control"
-                            name="coa"
-                            type="number"
-                            style={{ background: "#EDEDED" }}
-                          />
-
-                          <ErrorMessage
-                            name="coa"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid> */}
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="coa" className="form-label">
+                        COA
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        options={coavalue?.map((item) => {
+                          return {
+                            label: item.id,
+                            value: item.id,
+                          };
+                        })}
+                        value={coaData}
+                        styles={customStyles}
+                        onChange={(data) => {
+                          setCoaData(data);
+                          setFieldValue("coa", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="coa"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
                 </Grid>
 
                 <div className="mb-3">

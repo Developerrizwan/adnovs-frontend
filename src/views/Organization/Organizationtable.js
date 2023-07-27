@@ -15,7 +15,6 @@ import { customStyles } from "../../assets/CustomTableStyles";
 import EditOrganization from "./EditOrganization";
 const OrganizationTable = (props) => {
   const [editModal, setEditModal] = useState(false);
-  const [jobTypeModal, setJobTypeModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deletId, setDeletId] = useState();
   const [selectedJob, setSelectedJob] = useState([]);
@@ -82,16 +81,6 @@ const OrganizationTable = (props) => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
-              <DropdownItem
-                className="edit-item-btn"
-                onClick={() => {
-                  setSelectedJob(value);
-                  setJobTypeModal(true);
-                }}
-              >
-                <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                Create Job
-              </DropdownItem>
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
