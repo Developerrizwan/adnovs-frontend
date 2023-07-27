@@ -13,8 +13,12 @@ const TaxInvoice = () => {
           style={{ padding: "5px", border: "2px solid #000" }}
         >
           <div className="row" style={{ placeItems: "center" }}>
-            <div className="col-lg-6">
-              <img src={shipLogo} alt="" width={200} />
+            <div className="col-lg-6 mb-4">
+              <img
+                src={shipLogo}
+                alt=""
+                width={200}
+              />
             </div>
             <div className="col-lg-6" style={{ textAlign: "right" }}>
               <h2 style={{ color: "#3d78e3", fontWeight: 900 }}>
@@ -80,33 +84,33 @@ const TaxInvoice = () => {
             </div>
             <div className="col-lg-4"></div>
           </div> */}
-         <div style={{ overflowX: "auto" }}>
-          <table className="w-100 mt-2 border-0">
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Customer VAT No.
-              </td>
-              <td className="border-0">32674785495</td>
-            </tr>
-            <tr>
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Invoice No.
-              </td>
-              <td className="border-0">ADN/INV/64/U3874</td>
-            </tr>
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Invoice Date
-              </td>
-              <td className="border-0">08-Jun-2023 (created)</td>
-            </tr>
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Payment Due Date
-              </td>
-              <td className="border-0">08-Jun-2023</td>
-            </tr>
-          </table>
+          <div style={{ overflowX: "auto" }}>
+            <table className="w-100 mt-2 border-0">
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Customer VAT No.
+                </td>
+                <td className="border-0">32674785495</td>
+              </tr>
+              <tr>
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Invoice No.
+                </td>
+                <td className="border-0">ADN/INV/64/U3874</td>
+              </tr>
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Invoice Date
+                </td>
+                <td className="border-0">08-Jun-2023 (created)</td>
+              </tr>
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Payment Due Date
+                </td>
+                <td className="border-0">08-Jun-2023</td>
+              </tr>
+            </table>
           </div>
 
           <hr style={{ border: "1px solid #000" }} />
@@ -114,7 +118,7 @@ const TaxInvoice = () => {
           <div className="row">
             <div
               className="col-lg-6 col-xs-12"
-              style={{ borderRight: "1px solid #000"}}
+              style={{ borderRight: "1px solid #000" }}
             >
               <table className="w-100 mt-2 border-0">
                 <tr className="border-0">
@@ -324,38 +328,38 @@ const TaxInvoice = () => {
             </table>
           </div>
 
-          <div style={{overflowX: "auto"}}>
-          <table className="w-100 mt-2 border-0">
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Thirty-Two Thousand Three Hundred Seventy-Eight Only
-              </td>
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Total in: SAR
-              </td>
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                31,718.99
-              </td>
-              {/* <td className="border-0"></td> */}
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                660.00
-              </td>
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                32,378.99
-              </td>
-            </tr>
-          </table>
+          <div style={{ overflowX: "auto" }}>
+            <table className="w-100 mt-2 border-0">
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Thirty-Two Thousand Three Hundred Seventy-Eight Only
+                </td>
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Total in: SAR
+                </td>
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  31,718.99
+                </td>
+                {/* <td className="border-0"></td> */}
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  660.00
+                </td>
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  32,378.99
+                </td>
+              </tr>
+            </table>
           </div>
 
-       <div style={{overflowX: "auto"}}>
-          <table className="htmlTable mt-2 w-100">
-            <tr style={{ background: "#dadedf" }}>
-              <th>Container Details</th>
-            </tr>
-            <tr>
-              <td>FCIU6538307, YMMU6330305</td>
-            </tr>
-          </table>
+          <div style={{ overflowX: "auto" }}>
+            <table className="htmlTable mt-2 w-100">
+              <tr style={{ background: "#dadedf" }}>
+                <th>Container Details</th>
+              </tr>
+              <tr>
+                <td>FCIU6538307, YMMU6330305</td>
+              </tr>
+            </table>
           </div>
 
           <div className="row">
