@@ -14,6 +14,7 @@ import { getAllISOCodes } from "iso-country-currency";
 const AddCostEntry = (props) => {
   const history = useHistory();
 
+  const [selVoucher, setSelVoucher] = useState(null);
   const [selCurrency, setSelCurrency] = useState(null);
   const [selStatus, setSelStatus] = useState(null);
   const [selJob, setSelJob] = useState(null);
@@ -29,6 +30,14 @@ const AddCostEntry = (props) => {
   const [jobOptions, setJobOptions] = useState([]);
   const [shipmentOptions, setShipmentOptions] = useState([]);
   const [chargeOptions, setChargeOptions] = useState([]);
+
+  const voucherOptions = [
+    { value: "Journal", label: "Journal" },
+    { value: "Payment", label: "Payment" },
+    { value: "Receipt", label: "Receipt" },
+    { value: "Debit", label: "Debit" },
+    { value: "Credit", label: "Credit" },
+  ];
 
   const SaleOrCostOptions = [
     {
@@ -75,6 +84,7 @@ const AddCostEntry = (props) => {
           return {
             label: dd?.name,
             value: dd?.id,
+            description: dd?.description,
           };
         });
         setChargeOptions(results);
@@ -120,12 +130,27 @@ const AddCostEntry = (props) => {
   }, []);
 
   useEffect(() => {
-    if (props.isEdit && currencyOptions.length) {
+    if (
+      props.isEdit &&
+      currencyOptions.length &&
+      jobOptions.length &&
+      chargeOptions.length
+    ) {
       getInitialValues();
     }
-  }, [currencyOptions.length]);
+  }, [currencyOptions.length, jobOptions.length, chargeOptions.length]);
 
   const getInitialValues = () => {
+    const selectedCharge = chargeOptions.find(
+      (dd) => dd.value === props.entry?.charge
+    );
+    setSelCharge(selectedCharge);
+
+    const selectedJob = jobOptions.find(
+      (dd) => dd.value === props.entry?.job_no
+    );
+    setSelJob(selectedJob);
+
     const selectedStatus = props.entry.job_no
       ? { label: "Active", value: true }
       : { label: "Inactive", value: false };
@@ -137,9 +162,25 @@ const AddCostEntry = (props) => {
     setSelCurrency(selCurr);
 
     const selectedTax = taxOptions.find(
-      (cur) => cur.value === props.entry?.tax_group_code
+      (cur) => cur.value === Number(props.entry?.tax_group_code)
     );
+
     setTax(selectedTax);
+
+    const selectedProrate = prorateOptions.find(
+      (cur) => cur.value === props.entry?.prorate_method
+    );
+    setSelProrate(selectedProrate);
+
+    const selectedSorC = SaleOrCostOptions.find(
+      (cur) => cur.value === props.entry?.sale_cost
+    );
+    setSelSaleOrCost(selectedSorC);
+
+    const selectedDr = drOrCrOptions.find(
+      (cur) => cur.value === props.entry?.dr_cr
+    );
+    setIsDRorCR(selectedDr);
   };
 
   const customStyles = {
@@ -173,10 +214,11 @@ const AddCostEntry = (props) => {
         )}
 
         <Grid container spacing={2}>
-          <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
+          <Grid item lg={11} style={{ placeItems: "center", margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
+                  voucher_type: props.entry?.voucher_type || "Journal",
                   charge: props.entry?.charge || 0,
                   description: props.entry?.description || "",
                   job_no: props.entry?.job_no || 0,
@@ -186,30 +228,24 @@ const AddCostEntry = (props) => {
                   fcy_amount: props.entry?.fcy_amount || "",
                   amount: props.entry?.amount || "",
                   sale_cost: props.entry?.sale_cost || "",
-                  dr_cr: props.entry?.dr_cr || "Dr",
+                  dr_cr: props.entry?.dr_cr || "",
                   prorate_method: props.entry?.prorate_method || "",
                   tax_group_code: props.entry?.tax_group_code || "",
                 }}
                 validationSchema={Yup.object({
-                  // charge: Yup.string().ensure().required("Code is Required"),
-                  // description: Yup.string().required("Required!"),
-                  // // job_no: Yup.boolean().required("Status is Required"),
-                  // coa_type: Yup.string().ensure().required("Required!"),
-                  // is_direct_indirect: Yup.string()
-                  //   .ensure()
-                  //   .required("Required!"),
-                  // dr_cr: Yup.string().ensure().required("Required!"),
-                  // category: Yup.string().ensure().required("Required!"),
-                  // group: Yup.string().ensure().required("Required!"),
-                  // subgroup: Yup.string(),
-                  // type: Yup.string().ensure().required("Required!"),
-                  // short_name: Yup.string(),
-                  // long_name: Yup.string(),
-                  // language_name: Yup.string(),
+                  voucher_type: Yup.string().ensure().required("Required!"),
+                  // charge: Yup.number().typeError().required("Required!"),
+                  description: Yup.string().required("Required!"),
+                  // job_no: Yup.number().required("Required!"),
+                  shipment_no: Yup.string().required("Required!"),
+                  currency: Yup.string().ensure().required("Required!"),
+                  prorate_method: Yup.string().ensure().required("Required!"),
+                  tax_group_code: Yup.string().ensure().required("Required!"),
+                  sale_cost: Yup.string().ensure().required("Required!"),
+                  dr_cr: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
                   console.log("values", values);
-                  // console.log("rrrrr", values);
                   if (props.isEdit && props.entry) {
                     apiAuth
                       .patch(
@@ -269,6 +305,30 @@ const AddCostEntry = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
+                          <label htmlFor="voucher_type" className="form-label">
+                            Voucher Type
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            styles={customStyles}
+                            options={voucherOptions}
+                            value={selVoucher}
+                            onChange={(data) => {
+                              setFieldValue("voucher_type", data.value);
+                              setSelVoucher(data);
+                            }}
+                          />
+                          {errors.voucher_type && touched.voucher_type && (
+                            <div className="invalid-feedback d-block">
+                              {errors.voucher_type}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
                           <label htmlFor="charge" className="form-label">
                             Charge
                             <span className="text-danger">*</span>
@@ -279,6 +339,7 @@ const AddCostEntry = (props) => {
                             value={selCharge}
                             onChange={(data) => {
                               setFieldValue("charge", data.value);
+                              setFieldValue("description", data.description);
                               setSelCharge(data);
                             }}
                           />
@@ -471,7 +532,6 @@ const AddCostEntry = (props) => {
                             options={prorateOptions}
                             onChange={(data) => {
                               setFieldValue("prorate_method", data.value);
-                              // console.log("eeeee", data);
                               setSelProrate(data);
                             }}
                           />
@@ -525,7 +585,6 @@ const AddCostEntry = (props) => {
                             options={SaleOrCostOptions}
                             onChange={(data) => {
                               setFieldValue("sale_cost", data.value);
-                              // console.log("eeeee", data);
                               setSelSaleOrCost(data);
                             }}
                           />

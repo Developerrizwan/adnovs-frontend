@@ -133,7 +133,7 @@ const Navdata = () => {
     //   roles: ["superadmin", "admin", "user"],
     // },
     {
-      id: "client",
+      id: "jobs",
       label: "Jobs",
       icon: "ri-customer-service-line",
       link: "/jobs",
@@ -142,7 +142,7 @@ const Navdata = () => {
       roles: ["superadmin", "admin", "user"],
     },
     {
-      id: "project",
+      id: "vouchers",
       label: "Vouchers",
       icon: "ri-folder-chart-line",
       link: "/vouchers",
@@ -151,7 +151,7 @@ const Navdata = () => {
       roles: ["superadmin", "admin", "user"],
     },
     {
-      id: "ticket",
+      id: "invoices",
       label: "Invoices",
       icon: "ri-ticket-line",
       link: "/invoices",

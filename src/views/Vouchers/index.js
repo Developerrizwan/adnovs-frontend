@@ -12,6 +12,7 @@ const Vouchers = (props) => {
   const [createModal, setCreateModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [url, setUrl] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Journal",
@@ -24,13 +25,26 @@ const Vouchers = (props) => {
   });
 
   const voucherOptions = [
-    // { value: "All", label: "All" },
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
     { value: "Debit", label: "Debit" },
     { value: "Credit", label: "Credit" },
   ];
+
+  const changeRoute = (event) => {
+    if (event.value === "Journal") {
+      setUrl("/journal-voucher");
+    } else if (event.value === "Payment") {
+      setUrl("/payment-voucher");
+    } else if (event.value === "Receipt") {
+      setUrl("/receipt-voucher");
+    } else if (event.value === "Debit") {
+      setUrl("/debit-voucher");
+    } else if (event.value === "Credit") {
+      setUrl("/credit-voucher");
+    }
+  };
 
   useEffect(() => {
     getSelVoucherData(pagination, searchValue, selectedVoucher.value);
@@ -90,7 +104,7 @@ const Vouchers = (props) => {
             createNew={() => {
               setCreateModal(true);
             }}
-            add_new_url={"/journal-voucher"}
+            add_new_url={url}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
@@ -103,6 +117,7 @@ const Vouchers = (props) => {
             voucherOptions={voucherOptions}
             handleVoucherChange={(data) => {
               setSelectedVoucher(data);
+              changeRoute(data);
               getSelVoucherData(pagination, searchValue, data.value);
             }}
           />
