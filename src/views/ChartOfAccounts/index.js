@@ -6,70 +6,54 @@ import apiAuth from "../../helpers/ApiAuth";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
-import VoucherTable from "./VoucherTable";
+import CaoTable from "./CaoTable";
 
-const Vouchers = (props) => {
+const ChartOfAccounts = (props) => {
   const [createModal, setCreateModal] = useState(false);
-  const [users, setUsers] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedVoucher, setSelectedVoucher] = useState({
-    value: "Journal",
-    label: "Journal",
-  });
   const [pagination, setPagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
     currentPage: 1,
   });
 
-  const voucherOptions = [
-    // { value: "All", label: "All" },
-    { value: "Journal", label: "Journal" },
-    { value: "Payment", label: "Payment" },
-    { value: "Receipt", label: "Receipt" },
-    { value: "Debit", label: "Debit" },
-    { value: "Credit", label: "Credit" },
-  ];
-
   useEffect(() => {
-    getSelVoucherData(pagination, searchValue, selectedVoucher.value);
+    getAccounts(pagination, searchValue);
   }, []);
 
-  const getSelVoucherData = (pgdata, val, type) => {
+  const getAccounts = (pgdata, val) => {
     apiAuth
-      .get(
-        `/api/get-voucher/?type=${type}&page=${pgdata?.currentPage}&search=${val}`
-      )
+      .get(`/api/master/coa/?page=${pgdata?.currentPage}`)
       .then((response) => {
         let data = response.data;
-        console.log("xswjhjwx", response);
+        // console.log("xswjhjwx", response);
         setPagination({
           ...pgdata,
-          totalRows: data.count,
+          totalRows: data.length,
         });
-        setUsers(data.results);
+        setAccounts(data.results);
         setLoading(false);
-        console.log(response);
       })
       .catch((err) => console.log(err));
   };
 
-  const deleteUser = (id) => {
-    let url = `/api/master/voucher/${id}/`;
+  const deleteAccount = (id) => {
+    let url = `/api/master/coa/${id}/`;
     apiAuth
       .delete(url)
       .then((response) => {
         const newdata = response.data;
         NotificationManager.success(
           "",
-          "Voucher Deleted Successfully",
+          "Account Deleted Successfully",
           3000,
           null,
           null,
           ""
         );
-        getSelVoucherData(pagination, searchValue, selectedVoucher.value);
+        getAccounts(pagination, searchValue);
       })
       .catch(function (error) {
         console.log(error);
@@ -84,26 +68,18 @@ const Vouchers = (props) => {
       <div className="page-content">
         <Container fluid>
           <BreadCrumb
-            title="Vouchers"
+            title="Chart of Accounts"
             pageTitle="Settings"
             add_new={true}
             createNew={() => {
               setCreateModal(true);
             }}
-            add_new_url={"/journal-voucher"}
+            add_new_url={"/coa/add"}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getSelVoucherData(pagination, val, selectedVoucher.value);
-            }}
-            add_vouchers={true}
-            add_voucher_select={true}
-            selectedValue={selectedVoucher}
-            voucherOptions={voucherOptions}
-            handleVoucherChange={(data) => {
-              setSelectedVoucher(data);
-              getSelVoucherData(pagination, searchValue, data.value);
+              getAccounts(pagination, val);
             }}
           />
         </Container>
@@ -116,24 +92,15 @@ const Vouchers = (props) => {
                 <>
                   {" "}
                   <Card>
-                    <VoucherTable
-                      users={users}
-                      deleteUser={deleteUser}
-                      pagination={{ ...pagination }}
+                    <CaoTable
+                      accounts={accounts}
+                      deleteAccount={(id) => deleteAccount(id)}
                       handlePagination={(data) => {
                         setPagination(data);
-                        getSelVoucherData(
-                          data,
-                          searchValue,
-                          selectedVoucher.value
-                        );
+                        getAccounts(pagination, searchValue);
                       }}
-                      getVouchers={() => {
-                        getSelVoucherData(
-                          pagination,
-                          searchValue,
-                          selectedVoucher.value
-                        );
+                      getAccounts={() => {
+                        getAccounts(pagination, searchValue);
                       }}
                     />
                   </Card>
@@ -174,4 +141,4 @@ const Vouchers = (props) => {
   );
 };
 
-export default Vouchers;
+export default ChartOfAccounts;

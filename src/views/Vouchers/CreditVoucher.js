@@ -70,8 +70,8 @@ const CreditVoucher = (props) => {
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
-    { value: "Debit", label: "Debit" },
-    { value: "Credit", label: "Credit" },
+    { value: "DEBIT NOTE", label: "DEBIT NOTE" },
+    { value: "CREDIT NOTE", label: "CREDIT NOTE" },
   ];
 
   const partyOptions = [
@@ -110,9 +110,9 @@ const CreditVoucher = (props) => {
       history.push("/payment-voucher");
     } else if (event.value === "Receipt") {
       history.push("/receipt-voucher");
-    } else if (event.value === "Debit") {
+    } else if (event.value === "DEBIT NOTE") {
       history.push("/debit-voucher");
-    } else if (event.value === "Credit") {
+    } else if (event.value === "CREDIT NOTE") {
       history.push("/credit-voucher");
     }
   };
@@ -128,7 +128,7 @@ const CreditVoucher = (props) => {
               className="mb-3"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h2 className="mx-5">Credit Voucher</h2>
+              <h2 className="mx-5">CREDIT NOTE</h2>
               <button className="btn btn-danger" onClick={goBack}>
                 Back
               </button>
@@ -141,7 +141,8 @@ const CreditVoucher = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  voucher_type: props.voucherData?.voucher_type || "Credit",
+                  voucher_type:
+                    props.voucherData?.voucher_type || "CREDIT NOTE",
                   job: String(props.voucherData?.job) || "",
                   branch: props.voucherData?.branch || "",
                   book: props.voucherData?.book || "Book",
@@ -182,7 +183,7 @@ const CreditVoucher = (props) => {
                       )
                       .then((res) => {
                         NotificationManager.success(
-                          "Credit Voucher",
+                          "CREDIT NOTE",
                           "Voucher Updated Successfully",
                           3000,
                           null,
@@ -193,7 +194,7 @@ const CreditVoucher = (props) => {
                       })
                       .catch((err) => {
                         NotificationManager.error(
-                          "Credit Voucher",
+                          "CREDIT NOTE",
                           "Voucher Create Error",
                           3000,
                           null,
@@ -206,7 +207,7 @@ const CreditVoucher = (props) => {
                       .post("/api/master/voucher/", values)
                       .then((res) => {
                         NotificationManager.success(
-                          "Credit Voucher",
+                          "CREDIT NOTE",
                           "Voucher Created Successfully",
                           3000,
                           null,
@@ -217,7 +218,7 @@ const CreditVoucher = (props) => {
                       })
                       .catch((err) => {
                         NotificationManager.error(
-                          "Credit Voucher",
+                          "CREDIT NOTE",
                           "Voucher Create Error",
                           3000,
                           null,

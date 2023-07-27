@@ -1,7 +1,6 @@
 import moment from "moment";
 import { useState } from "react";
 import DataTable from "react-data-table-component";
-import { Link } from "react-router-dom";
 import {
   Button,
   DropdownItem,
@@ -12,77 +11,73 @@ import {
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
-import JournalVoucher from "./JournalVoucher";
+import AddCostEntry from "./AddCostEntry";
 
-const VoucherTable = (props) => {
+const CostEntryTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [selectedVoucher, setSelectedVoucher] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState(null);
   const [deletId, setDeletId] = useState();
 
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Voucher Type</span>,
-      selector: (row) => row.voucher_type,
+      name: <span className="font-weight-bold fs-13"> Charge</span>,
+      selector: (row) => row.charge,
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13"> Branch</span>,
-      selector: (row) => row.branch,
+      name: <span className="font-weight-bold fs-13">Job No</span>,
+      selector: (row) => row.job_no,
+      sortable: true,
+    },
+
+    {
+      name: <span className="font-weight-bold fs-13">Shipment No</span>,
+      selector: (row) => row.shipment_no,
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Book</span>,
-      selector: (row) => row.book,
+      name: <span className="font-weight-bold fs-13">Currency</span>,
+      selector: (row) => row.currency,
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Date</span>,
-      selector: (row) => row,
-      cell: (value) => <span>{moment(value?.date).format("MM/DD/YYYY")}</span>,
+      name: <span className="font-weight-bold fs-13">Ex Rate</span>,
+      selector: (row) => row.ex_rate,
+      sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">G/L Date</span>,
-      selector: (row) => row,
-      cell: (value) => (
-        <span>{moment(value?.gl_date).format("MM/DD/YYYY")}</span>
-      ),
-    },
-    {
-      name: <span className="font-weight-bold fs-13">FC Amount</span>,
-      selector: (row) => row.fc_amount,
+      name: <span className="font-weight-bold fs-13">FCY Amount</span>,
+      selector: (row) => row.fcy_amount,
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Amount(SAR)</span>,
-      selector: (row) => row.amount_sar,
+      selector: (row) => row.amount,
+      sortable: true,
+    },
+
+    {
+      name: <span className="font-weight-bold fs-13">Sale/Cost</span>,
+      selector: (row) => row.sale_cost,
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Party A/C</span>,
-      selector: (row) => row.party_account,
+      name: <span className="font-weight-bold fs-13">Dr/Cr</span>,
+      selector: (row) => row.dr_cr,
       sortable: true,
     },
-    // {
-    //   name: <span className="font-weight-bold fs-13">Against Concern</span>,
-    //   selector: (row) => row.groups,
-    //   sortable: true,
-    // },
     {
-      name: <span className="font-weight-bold fs-13">naration</span>,
-      selector: (row) => row.naration,
+      name: <span className="font-weight-bold fs-13">Prorate Method</span>,
+      selector: (row) => row.prorate_method,
       sortable: true,
     },
-    // {
-    //   name: <span className="font-weight-bold fs-13">Outstanding Amount</span>,
-    //   selector: (row) => row.outstanding_amount,
-    //   sortable: true,
-    // },
     {
-      name: <span className="font-weight-bold fs-13">Remarks</span>,
-      selector: (row) => row.remarks,
+      name: <span className="font-weight-bold fs-13">Tax Method</span>,
+      selector: (row) => row.tax_group_code,
       sortable: true,
     },
+
     {
       name: <span className="font-weight-bold fs-13">Actions</span>,
       selector: (row) => row,
@@ -99,7 +94,7 @@ const VoucherTable = (props) => {
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
-                  setSelectedVoucher(value);
+                  setSelectedAccount(value);
                   console.log("wwwwwwwww", value);
                   setEditModal(true);
                 }}
@@ -125,10 +120,11 @@ const VoucherTable = (props) => {
   ]);
   return (
     <>
+      {/* {console.log("eeeeee", props)} */}
       <DataTable
         customStyles={customStyles}
         columns={cols}
-        data={props.users}
+        data={props.accounts}
         paginationPerPage={props.pagination?.rowsPerPage}
         onChangePage={(p, t) => {
           props.handlePagination({
@@ -163,16 +159,16 @@ const VoucherTable = (props) => {
             setEditModal((prev) => !prev);
           }}
         >
-          Edit Voucher
+          Edit Cost Entry
         </ModalHeader>
         <ModalBody>
-          <JournalVoucher
+          <AddCostEntry
             closeAddPopup={() => {
               setEditModal(false);
-              setSelectedVoucher(null);
-              props.getVouchers();
+              setSelectedAccount(null);
+              props.getAccounts();
             }}
-            voucherData={selectedVoucher}
+            entry={selectedAccount}
             history={props.history}
             isEdit={true}
           />
@@ -203,7 +199,7 @@ const VoucherTable = (props) => {
         <ModalFooter>
           <Button
             onClick={() => {
-              props.deleteUser(deletId.id);
+              props.deleteColumn(deletId.id);
               setDeleteModal((prev) => !prev);
             }}
           >
@@ -216,4 +212,4 @@ const VoucherTable = (props) => {
   );
 };
 
-export default VoucherTable;
+export default CostEntryTable;

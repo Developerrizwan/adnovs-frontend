@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Link, NavLink, useParams } from "react-router-dom";
+import React from "react";
+import { NavLink } from "react-router-dom";
 import { Button, Col, Row } from "reactstrap";
 import Select from "react-select";
-import apiAuth from "../../helpers/ApiAuth";
+import { Input, InputGroup, InputGroupText } from "reactstrap";
 
 const BreadCrumb = ({
   title,
@@ -34,6 +34,9 @@ const BreadCrumb = ({
   handleVoucherChange,
   voucherOptions,
   selectedValue,
+  search_functionality,
+  searchValue,
+  setSearchValue,
 }) => {
   const excelStyles = {
     control: (styles) => ({
@@ -61,6 +64,30 @@ const BreadCrumb = ({
                 </li>
                 <li className="breadcrumb-item active">{title}</li>
               </ol> */}
+
+              {/* {search_functionality ? (
+                <div className="input-group mx-1">
+                  <InputGroup style={{ width: "300px" }}>
+                    <Input
+                      placeholder="Search Here"
+                      value={searchValue}
+                      onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                    <InputGroupText
+                      style={{
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <i
+                        className="ri-search-line"
+                        style={{ color: "blue", fontSize: 14 }}
+                      ></i>
+                    </InputGroupText>
+                  </InputGroup>
+                </div>
+              ) : (
+                <></>
+              )} */}
 
               {back_button ? (
                 <div className="top-right-button-container float-right">
@@ -96,17 +123,6 @@ const BreadCrumb = ({
                       styles={excelStyles}
                     />
                   ) : (
-                    // <select
-                    //   value={selectedValue}
-                    //   onChange={handleProjectChange}
-                    //   style={{ height: "30px", width: "140px" }}
-                    // >
-                    //   {projects.map((pj) => (
-                    //     <option key={pj.value} value={pj.value}>
-                    //       {pj.name}.
-                    //     </option>
-                    //   ))}
-                    // </select>
                     <NavLink
                       to={add_project_url}
                       className="btn btn-md btn-primary "

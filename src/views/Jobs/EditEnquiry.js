@@ -9,36 +9,179 @@ import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
 
-const CreateJob = (props) => {
+const EditEnquiry = (props) => {
   const etaTime = props.allJobs.eta;
   const etdTime = props.allJobs.etd;
 
   const etaDateObj = new Date(etaTime);
   const etdDateObj = new Date(etdTime);
 
-  const [jobType, setJobType] = useState("Job");
   const [typevalue, setTypevalue] = useState(null);
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
   const [poaValue, setPoaValue] = useState(null);
-  const [branchValue, setBranchValue] = useState("JEDDHA");
   const [podValue, setPodValue] = useState(null);
   const [eta, setEta] = useState(etaDateObj);
   const [etd, setEtd] = useState(etdDateObj);
-  const [organization_type, setOrganization_type] = useState([]);
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
   const [consigneeNameValue, setConsigneeNameValue] = useState(null);
   const [clientNameValue, setClientNameValue] = useState(null);
 
-  const options = [
+  const getPoaOptions = () => {
+    apiAuth
+      .get("api/master/poa/")
+
+      .then((response) => {
+        let data = response.data.results;
+        setPoaOptions(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getPodOptions = () => {
+    apiAuth
+      .get("api/master/pod/")
+
+      .then((response) => {
+        let data = response.data.results;
+        setPodOptions(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getPoaOptions();
+    getPodOptions();
+  }, []);
+
+  const consigneeOptions = [
     {
-      label: "Job",
-      value: "Job",
+      label: "Consignee",
+      value: "Consignee",
     },
   ];
 
-  const branchOptions = () => [{ label: "JEDDHA", value: "JEDDHA" }];
+  const clientOptions = [
+    {
+      label: "Client",
+      value: "Client",
+    },
+  ];
+
+  useEffect(() => {
+    const scopeType = scopeofworkOptions.find(
+      (item) => item.value === props.allJobs.scope_of_work
+    );
+    setScopeType(scopeType);
+
+    const type = typeOptions.find((item) => item.value === props.allJobs.type);
+    setTypevalue(type);
+
+    const jobStatus = statusOptions.find(
+      (item) => item.value === props.allJobs.job_status
+    );
+    setJobStatus(jobStatus);
+
+    // const poa_value = poaOptions.find((item) => item.id === props.allJobs.poa);
+    setPoaValue({
+      label: props.allJobs.poa,
+      value: props.allJobs.poa,
+    });
+
+    const pod_Value = podOptions.find((item) => item.id === props.allJobs?.pod);
+    setPodValue({
+      label: props.allJobs.pod,
+      value: props.allJobs.pod,
+    });
+
+    const consignee_name = consigneeOptions.find(
+      (item) => item.value === props.allJobs?.consignee_name
+    );
+    setConsigneeNameValue(consignee_name);
+
+    const client_name = clientOptions.find(
+      (item) => item.value === props.allJobs?.client_name
+    );
+    setClientNameValue(client_name);
+  }, []);
+
+  const typeOptions = [
+    {
+      label: "Air Freight",
+      value: "Air Freight",
+    },
+    {
+      label: "Sea Freight",
+      value: "Sea Freight",
+    },
+    {
+      label: "Land Freight",
+      value: "Land Freight",
+    },
+    {
+      label: "Transportation",
+      value: "Transportation",
+    },
+    {
+      label: "Warehousing",
+      value: "Warehousing",
+    },
+  ];
+  const scopeofworkOptions = [
+    {
+      label: "D2D",
+      value: "D2D",
+    },
+    {
+      label: "EXW",
+      value: "EXW",
+    },
+    {
+      label: "FOB",
+      value: "FOB",
+    },
+    {
+      label: "CIF",
+      value: "CIF",
+    },
+    {
+      label: "CNF",
+      value: "CNF",
+    },
+    {
+      label: "C&F",
+      value: "C&F",
+    },
+    {
+      label: "DDP",
+      value: "DDP",
+    },
+    {
+      label: "DAP",
+      value: "DAP",
+    },
+    {
+      label: "CPT",
+      value: "CPT",
+    },
+    {
+      label: "TRANS",
+      value: "TRANS",
+    },
+    {
+      label: "D-TRANS",
+      value: "D-TRANS",
+    },
+    {
+      label: "OTHERS",
+      value: "OTHERS",
+    },
+  ];
 
   const statusOptions = [
     {
@@ -98,227 +241,6 @@ const CreateJob = (props) => {
       value: "Cancelled",
     },
   ];
-
-  const typeOptions = [
-    {
-      label: "Air Freight",
-      value: "Air Freight",
-    },
-    {
-      label: "Sea Freight",
-      value: "Sea Freight",
-    },
-    {
-      label: "Land Freight",
-      value: "Land Freight",
-    },
-    {
-      label: "Transportation",
-      value: "Transportation",
-    },
-    {
-      label: "Warehousing",
-      value: "Warehousing",
-    },
-  ];
-
-  const consigneeOptions = [
-    {
-      label: "Consignee",
-      value: "Consignee",
-    },
-  ];
-
-  const clientOptions = [
-    {
-      label: "Client",
-      value: "Client",
-    },
-  ];
-
-  const OrganizationTypeOptions = [
-    {
-      label: "Consignee",
-      value: "Consignee",
-    },
-    {
-      label: "Client",
-      value: "Client",
-    },
-    {
-      label: "Notify",
-      value: "Notify",
-    },
-    {
-      label: "Shipper",
-      value: "Shipper",
-    },
-    {
-      label: "Broker",
-      value: "Broker",
-    },
-    {
-      label: "Transporter",
-      value: "Transporter",
-    },
-    {
-      label: "Counterpart",
-      value: "Counterpart",
-    },
-    {
-      label: "Coloader",
-      value: "Coloader",
-    },
-    {
-      label: "Supplier",
-      value: "Supplier",
-    },
-    {
-      label: "Other",
-      value: "Other",
-    },
-  ];
-  const getPoaOptions = () => {
-    apiAuth
-      .get("api/master/poa/")
-
-      .then((response) => {
-        let data = response.data.results;
-        setPoaOptions(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getPodOptions = () => {
-    apiAuth
-      .get("api/master/pod/")
-
-      .then((response) => {
-        let data = response.data.results;
-        setPodOptions(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    getPoaOptions();
-    getPodOptions();
-  }, []);
-
-  const scopeofworkOptions = [
-    {
-      label: "D2D",
-      value: "D2D",
-    },
-    {
-      label: "EXW",
-      value: "EXW",
-    },
-    {
-      label: "FOB",
-      value: "FOB",
-    },
-    {
-      label: "CIF",
-      value: "CIF",
-    },
-    {
-      label: "CNF",
-      value: "CNF",
-    },
-    {
-      label: "C&F",
-      value: "C&F",
-    },
-    {
-      label: "DDP",
-      value: "DDP",
-    },
-    {
-      label: "DAP",
-      value: "DAP",
-    },
-    {
-      label: "CPT",
-      value: "CPT",
-    },
-    {
-      label: "TRANS",
-      value: "TRANS",
-    },
-    {
-      label: "D-TRANS",
-      value: "D-TRANS",
-    },
-    {
-      label: "OTHERS",
-      value: "OTHERS",
-    },
-  ];
-
-  const containerTypes = [
-    {
-      label: "20DC",
-      value: "20DC",
-    },
-    {
-      label: "20RF",
-      value: "20RF",
-    },
-    {
-      label: "20ST",
-      value: "20ST",
-    },
-    {
-      label: "20OT",
-      value: "20OT",
-    },
-    {
-      label: "20HC",
-      value: "20HC",
-    },
-    {
-      label: "40DC",
-      value: "40DC",
-    },
-    {
-      label: "40DC",
-      value: "40DC",
-    },
-    {
-      label: "40RF",
-      value: "40RF",
-    },
-    {
-      label: "40ST",
-      value: "40ST",
-    },
-    {
-      label: "40OT",
-      value: "40OT",
-    },
-    {
-      label: "40HC",
-      value: "40HC",
-    },
-    {
-      label: "FLAT RACK",
-      value: "FLAT RACK",
-    },
-    {
-      label: "FTL",
-      value: "FTL",
-    },
-    {
-      label: "LTL",
-      value: "LTL",
-    },
-  ];
-
   const history = useHistory();
 
   const customStyles = {
@@ -328,75 +250,14 @@ const CreateJob = (props) => {
     }),
   };
 
-  useEffect(
-    () => {
-      const jobtype = options.find(
-        (item) => item.value === props.allJobs.job_type
-      );
-      setJobType(jobtype);
-      const scopeType = scopeofworkOptions.find(
-        (item) => item.value === props.allJobs.scope_of_work
-      );
-      setScopeType(scopeType);
-      const type = typeOptions.find(
-        (item) => item.value === props.allJobs.type
-      );
-      setTypevalue(type);
-      const jobStatus = statusOptions.find(
-        (item) => item.value === props.allJobs.job_status
-      );
-      setJobStatus(jobStatus);
-
-      const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
-      setPoaValue({
-        label: props.allJobs.poa,
-        value: props.allJobs.poa,
-      });
-      const pod_Value = podOptions.find(
-        (item) => item.value === props.allJobs?.pod
-      );
-
-      setPodValue({
-        label: props.allJobs.pod,
-        value: props.allJobs.pod,
-      });
-
-      const consignee_name = consigneeOptions.find(
-        (item) => item.value === props.allJobs?.consignee_name
-      );
-      setConsigneeNameValue(consignee_name);
-
-      const client_name = clientOptions.find(
-        (item) => item.value === props.allJobs?.client_name
-      );
-      setClientNameValue(client_name);
-    },
-    [
-      // props.allJobs.job_type,
-      // props.allJobs.scope_of_work,
-      // props.allJobs.type,
-      // props.allJobs.job_status,
-    ]
-  );
-
-  const handleMultiSelectChange = (data) => {
-    setOrganization_type(data.map((item) => item.label));
-  };
   return (
     <React.Fragment>
       {props.allJobs ? (
         <Card className="p-3" style={{ background: "#EDEDED" }}>
           <Formik
             initialValues={{
-              bl_number: props?.allJobs?.bl_number
-                ? props?.allJobs?.bl_number
-                : "",
-              bayan_number: props?.allJobs?.bayan_number
-                ? props?.allJobs?.bayan_number
-                : "",
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
-              por: props?.allJobs?.por ? props?.allJobs?.por : "",
               consignee_name: props?.allJobs?.consignee_name
                 ? props?.allJobs?.consignee_name
                 : "",
@@ -407,34 +268,22 @@ const CreateJob = (props) => {
                 ? props?.allJobs?.client_name
                 : "",
               remarks: props?.allJobs?.remarks ? props?.allJobs?.remarks : "",
-              job_type:
-                //  props?.allJobs?.job_type
-                //   ? props?.allJobs?.job_type
-                "Job",
+              job_type: props?.allJobs?.job_type
+                ? props?.allJobs?.job_type
+                : "Enquiry",
               job_status: props?.allJobs?.job_status
                 ? props?.allJobs?.job_status
-                : "",
-              container_type: props?.allJobs?.container_type
-                ? props?.allJobs?.container_type
                 : "",
               type: props?.allJobs?.type ? props?.allJobs?.type : "",
               scope_of_work: props?.allJobs?.scope_of_work
                 ? props?.allJobs?.scope_of_work
                 : "",
-              eta: props?.allJobs?.eta ? props?.allJobs?.eta : new Date(),
-              etd: props?.allJobs?.etd ? props?.allJobs?.etd : new Date(),
-              organization_type: props?.allJobs?.organization_type
-                ? props?.allJobs?.organization_type
-                : "",
-              branch: "JEDDHA",
+              eta: props?.allJobs?.eta ? props?.allJobs?.eta : "",
+              etd: props?.allJobs?.etd ? props?.allJobs?.etd : "",
             }}
             validationSchema={Yup.object({
-              bl_number: Yup.string().required("BL Number is Required"),
-              branch: Yup.string().required("Branch is Required"),
-              bayan_number: Yup.string().required("Bayan Number is Required"),
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
-              por: Yup.string().required("Place Of Receipt is Required"),
               consignee_name: Yup.string().required(
                 "Cosignee Name is Required"
               ),
@@ -451,39 +300,44 @@ const CreateJob = (props) => {
               type: Yup.string().required("Type is Required"),
               scope_of_work: Yup.string().required("Scope of work is Required"),
               job_status: Yup.string().required("Job Status is Required"),
-              // organization_type: Yup.string().required(
-              //   "Organization Type is Required"
-              // ),
-              container_type: Yup.string().required(
-                "Container Type is Required"
-              ),
             })}
             onSubmit={(values, { reset }) => {
               const company = JSON.parse(
                 localStorage.getItem("authUser")
               )?.company_id;
               values["company"] = company;
-              values["eta"] = eta;
-              values["etd"] = etd;
-              values["organization_type"] = organization_type;
-              const url = `/api/master/job/`;
+              if (eta) values["eta"] = eta;
+              if (etd) values["etd"] = etd;
+
+              const url = `/api/master/job/${props.allJobs.id}/`;
               apiAuth
-                .post(url, values)
+                .patch(url, values)
                 .then((response) => {
-                  NotificationManager.success(
-                    "",
-                    `Job Created Successfully`,
-                    3000,
-                    null,
-                    null,
-                    ""
-                  );
-                  props.closeAddPopup();
+                  if (response.status === 200) {
+                    NotificationManager.success(
+                      "",
+                      ` Enquiry Updated Successfully`,
+                      3000,
+                      null,
+                      null,
+                      ""
+                    );
+                    props.closeAddPopup();
+                  } else {
+                    NotificationManager.error(
+                      "",
+                      `Enquiry Update Error`,
+                      3000,
+                      null,
+                      null,
+                      ""
+                    );
+                  }
                 })
                 .catch((error) => {
                   NotificationManager.error(
                     "",
-                    `Job Create Error`,
+                    `Enquiry Update Error`,
                     3000,
                     null,
                     null,
@@ -495,26 +349,6 @@ const CreateJob = (props) => {
             {({ values, setFieldValue }) => (
               <Form className="av-tooltip tooltip-label-bottom">
                 <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="bl_number" className="form-label">
-                        BL Number
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control jobs-field"
-                        name="bl_number"
-                        style={{ background: "#EDEDED" }}
-                      />
-                      <ErrorMessage
-                        name="bl_number"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="consignee_name" className="form-label">
@@ -536,28 +370,6 @@ const CreateJob = (props) => {
 
                       <ErrorMessage
                         name="consignee_name"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="bayan_number" className="form-label">
-                        Bayan Number
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="bayan_number"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="bayan_number"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -680,54 +492,6 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
-
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3" style={{ zIndex: "500" }}>
-                      <Label htmlFor="container" className="form-label">
-                        Container/Consignment
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Select
-                        name="type"
-                        placeholder={"Select"}
-                        styles={customStyles}
-                        options={containerTypes}
-                        onChange={(data) => {
-                          setFieldValue("container_type", data.value);
-                        }}
-                      />
-                      <ErrorMessage
-                        name="container_type"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="por" className="form-label">
-                        Place Of Receipt
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="por"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="por"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="type" className="form-label">
@@ -755,9 +519,7 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
-                </Grid>
 
-                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="scope_of_work" className="form-label">
@@ -769,10 +531,10 @@ const CreateJob = (props) => {
                         name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={scopeofworkOptions}
                         value={scopeType}
+                        options={scopeofworkOptions}
                         onChange={(data) => {
-                          setScopeType(data);
+                          setScopeType(data.value);
                           setFieldValue("scope_of_work", data.value);
                         }}
                       />
@@ -785,7 +547,6 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
-
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="eta" className="form-label">
@@ -811,9 +572,7 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
-                </Grid>
 
-                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="etd" className="form-label">
@@ -840,7 +599,6 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
-
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="job_status" className="form-label">
@@ -851,11 +609,10 @@ const CreateJob = (props) => {
                         name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={statusOptions}
                         value={jobStatus}
-                        // defaultValue={{ label: jobStatus }}
+                        options={statusOptions}
                         onChange={(data) => {
-                          setJobStatus(data);
+                          setJobStatus(data.value);
                           setFieldValue("job_status", data.value);
                         }}
                       />
@@ -867,64 +624,10 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
+
+                  <Grid item lg={6} xs={12}></Grid>
                 </Grid>
 
-                <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="branch" className="form-label">
-                        Branch
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Select
-                        name="type"
-                        placeholder={"Select"}
-                        styles={customStyles}
-                        options={branchOptions}
-                        // value={"JEDDHA"}
-                        defaultValue={{ label: branchValue }}
-                        onChange={(data) => {
-                          // setBranchValue(data);
-                          setFieldValue("branch", data.value);
-                        }}
-                      />
-                      <ErrorMessage
-                        name="job_status"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="organization_type" className="form-label">
-                        Organization Type
-                        <span className="text-danger">*</span>
-                      </Label>
-
-                      <Select
-                        name="type"
-                        placeholder={"Select"}
-                        styles={customStyles}
-                        options={OrganizationTypeOptions}
-                        isMulti
-                        value={organization_type.map((label) => ({
-                          label,
-                          value: label,
-                        }))}
-                        onChange={handleMultiSelectChange}
-                      />
-                      <ErrorMessage
-                        name=" organization_type"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
                 <div className="mb-3">
                   <Label htmlFor="remarks" className="form-label">
                     Remarks
@@ -956,7 +659,7 @@ const CreateJob = (props) => {
                       <span className="bounce2" />
                       <span className="bounce3" />
                     </span>
-                    <span className="label">Submit</span>
+                    <span className="label">Update</span>
                   </Button>{" "}
                   <Button
                     colo="success"
@@ -979,4 +682,4 @@ const CreateJob = (props) => {
   );
 };
 
-export default CreateJob;
+export default EditEnquiry;

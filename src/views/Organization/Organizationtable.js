@@ -12,75 +12,61 @@ import {
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
-import JournalVoucher from "./JournalVoucher";
-
-const VoucherTable = (props) => {
-  const [deleteModal, setDeleteModal] = useState(false);
+import EditOrganization from "./EditOrganization";
+const OrganizationTable = (props) => {
   const [editModal, setEditModal] = useState(false);
-  const [selectedVoucher, setSelectedVoucher] = useState([]);
+  const [jobTypeModal, setJobTypeModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [deletId, setDeletId] = useState();
-
+  const [selectedJob, setSelectedJob] = useState([]);
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Voucher Type</span>,
-      selector: (row) => row.voucher_type,
+      name: <span className="font-weight-bold fs-13">Name</span>,
+      selector: (row) => row.name,
+      cell: (value) => {
+        return <div>{value.name}</div>;
+      },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13"> Branch</span>,
-      selector: (row) => row.branch,
+      name: <span className="font-weight-bold fs-13">Type</span>,
+      selector: (row) => row.type,
+      cell: (value) => {
+        return <div>{value.type}</div>;
+      },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Book</span>,
-      selector: (row) => row.book,
+      name: <span className="font-weight-bold fs-13">Language Name</span>,
+      selector: (row) => row.language_name,
+      cell: (value) => {
+        return <div>{value.language_name}</div>;
+      },
+
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Date</span>,
-      selector: (row) => row,
-      cell: (value) => <span>{moment(value?.date).format("MM/DD/YYYY")}</span>,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">G/L Date</span>,
-      selector: (row) => row,
-      cell: (value) => (
-        <span>{moment(value?.gl_date).format("MM/DD/YYYY")}</span>
-      ),
-    },
-    {
-      name: <span className="font-weight-bold fs-13">FC Amount</span>,
-      selector: (row) => row.fc_amount,
+      name: <span className="font-weight-bold fs-13">Address</span>,
+      selector: (row) => row.address,
+      cell: (value) => {
+        return <div>{value.address}</div>;
+      },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Amount(SAR)</span>,
-      selector: (row) => row.amount_sar,
+      name: <span className="font-weight-bold fs-13">Vat Trn Number</span>,
+      selector: (row) => row.vat_trn_number,
+      cell: (value) => {
+        return <div>{value.vat_trn_number}</div>;
+      },
       sortable: true,
     },
-    {
-      name: <span className="font-weight-bold fs-13">Party A/C</span>,
-      selector: (row) => row.party_account,
-      sortable: true,
-    },
-    // {
-    //   name: <span className="font-weight-bold fs-13">Against Concern</span>,
-    //   selector: (row) => row.groups,
-    //   sortable: true,
-    // },
-    {
-      name: <span className="font-weight-bold fs-13">naration</span>,
-      selector: (row) => row.naration,
-      sortable: true,
-    },
-    // {
-    //   name: <span className="font-weight-bold fs-13">Outstanding Amount</span>,
-    //   selector: (row) => row.outstanding_amount,
-    //   sortable: true,
-    // },
     {
       name: <span className="font-weight-bold fs-13">Remarks</span>,
       selector: (row) => row.remarks,
+      cell: (value) => {
+        return <div>{value.remarks}</div>;
+      },
       sortable: true,
     },
     {
@@ -99,8 +85,17 @@ const VoucherTable = (props) => {
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
-                  setSelectedVoucher(value);
-                  console.log("wwwwwwwww", value);
+                  setSelectedJob(value);
+                  setJobTypeModal(true);
+                }}
+              >
+                <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                Create Job
+              </DropdownItem>
+              <DropdownItem
+                className="edit-item-btn"
+                onClick={() => {
+                  setSelectedJob(value);
                   setEditModal(true);
                 }}
               >
@@ -114,8 +109,8 @@ const VoucherTable = (props) => {
                   setDeletId(value);
                 }}
               >
-                <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
-                Delete{" "}
+                <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>
+                Delete
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
@@ -128,24 +123,24 @@ const VoucherTable = (props) => {
       <DataTable
         customStyles={customStyles}
         columns={cols}
-        data={props.users}
-        paginationPerPage={props.pagination?.rowsPerPage}
+        data={props.allOrganization}
+        paginationPerPage={props.userPagination?.rowsPerPage}
         onChangePage={(p, t) => {
           props.handlePagination({
-            ...props.pagination,
+            ...props.userPagination,
             currentPage: p,
           });
         }}
         onChangeRowsPerPage={(c, t) => {
-          props.pagination({
-            ...props.pagination,
+          props.handlePagination({
+            ...props.userPagination,
             rowsPerPage: c,
             currentPage: t,
           });
         }}
         paginationServer
-        paginationDefaultPage={props.pagination?.currentPage}
-        paginationTotalRows={props.pagination?.totalRows}
+        paginationDefaultPage={props.userPagination?.currentPage}
+        paginationTotalRows={props.userPagination?.totalRows}
         pagination={true}
       />
       <Modal
@@ -163,21 +158,22 @@ const VoucherTable = (props) => {
             setEditModal((prev) => !prev);
           }}
         >
-          Edit Voucher
+          Edit Enquiry
         </ModalHeader>
         <ModalBody>
-          <JournalVoucher
+          <EditOrganization
             closeAddPopup={() => {
               setEditModal(false);
-              setSelectedVoucher(null);
-              props.getVouchers();
+              setSelectedJob(null);
+              props.getOrganization();
             }}
-            voucherData={selectedVoucher}
+            organizationData={selectedJob}
+            selectedValue={props.selectedValue}
             history={props.history}
-            isEdit={true}
           />
         </ModalBody>
       </Modal>
+
       <Modal
         id="signupModals"
         tabIndex="-1"
@@ -203,8 +199,8 @@ const VoucherTable = (props) => {
         <ModalFooter>
           <Button
             onClick={() => {
-              props.deleteUser(deletId.id);
               setDeleteModal((prev) => !prev);
+              props.deleteOrganization(deletId.id);
             }}
           >
             Yes
@@ -216,4 +212,4 @@ const VoucherTable = (props) => {
   );
 };
 
-export default VoucherTable;
+export default OrganizationTable;

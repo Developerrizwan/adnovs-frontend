@@ -81,6 +81,15 @@ import DebitVoucher from "../views/Vouchers/DebitVoucher";
 import CreditVoucher from "../views/Vouchers/CreditVoucher";
 import TaxInvoice from "../views/TaxInvoice/TaxInvoice";
 import TaxInvoiceSecond from "../views/TaxInvoice/TaxInvoiceSecond";
+import ChartOfAccounts from "../views/ChartOfAccounts";
+import AddCOA from "../views/ChartOfAccounts/AddCOA";
+import CostEntry from "../views/Cost Entry";
+import AddCostEntry from "../views/Cost Entry/AddCostEntry";
+import AddCharge from "../views/Charge/AddCharge";
+import Charge from "../views/Charge";
+import CreateNewJob from "../views/Jobs/CreateNewJob";
+import Organization from "../views/Organization";
+import AddOrganization from "../views/Organization/AddOrganization";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -98,7 +107,17 @@ const authProtectedRoutes = [
   { path: "/client", component: Client },
   { path: "/jobs", component: Jobs },
   { path: "/jobs/add", component: AddJobs },
+  { path: "/jobs/createjob", component: CreateNewJob },
+  { path: "/organization", component: Organization },
+  { path: "/organization/add", component: AddOrganization },
+
   // { path: "/jobs/edit/:jobId/", component: EditJobs },
+  { path: "/coa/add", component: AddCOA },
+  { path: "/coa", component: ChartOfAccounts },
+  { path: "/cost-entry/add", component: AddCostEntry },
+  { path: "/cost-entry", component: CostEntry },
+  { path: "/charge/add", component: AddCharge },
+  { path: "/charge", component: Charge },
   { path: "/vouchers", component: Vouchers },
   { path: "/all-vouchers", component: AllVouchers },
   { path: "/journal-voucher", component: JournalVoucher },

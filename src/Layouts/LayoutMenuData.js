@@ -12,7 +12,11 @@ const Navdata = () => {
   const [isTicket, setIsTicket] = useState(false);
   const [isPlans, setIsPlans] = useState(false);
   const [isMyAccount, setisMyAccount] = useState(false);
+  const [isCoa, setIsCoa] = useState(false);
+  const [isCostEntry, setIsCostEntry] = useState(false);
+  const [isCharge, setIsCharge] = useState(false);
   const [isUserManagement, setisUserManagement] = useState(false);
+  const [isOrganization, setIsOrganization] = useState(false);
   const [isCouponManagement, setisCouponManagement] = useState(false);
   const [isPaymentManagement, setisPaymentManagement] = useState(false);
   const [isSubscriptionManagement, setisSubscriptionManagement] =
@@ -63,6 +67,9 @@ const Navdata = () => {
     if (iscurrentState !== "UserManagement") {
       setisUserManagement(false);
     }
+    if (iscurrentState !== "Organization") {
+      setIsOrganization(false);
+    }
     if (iscurrentState !== "CouponManagement") {
       setisCouponManagement(false);
     }
@@ -71,6 +78,15 @@ const Navdata = () => {
     }
     if (iscurrentState !== "SubscriptionManagement") {
       setisSubscriptionManagement(false);
+    }
+    if (iscurrentState !== "Coa") {
+      setIsCoa(false);
+    }
+    if (iscurrentState !== "cost-entry") {
+      setIsCostEntry(false);
+    }
+    if (iscurrentState !== "charge") {
+      setIsCharge(false);
     }
 
     if (iscurrentState === "Widgets") {
@@ -91,6 +107,10 @@ const Navdata = () => {
     isCouponManagement,
     isPaymentManagement,
     isSubscriptionManagement,
+    isCoa,
+    isCostEntry,
+    isCharge,
+    isOrganization,
   ]);
 
   const menuItems = [
@@ -139,6 +159,30 @@ const Navdata = () => {
       stateVariables: isTicket,
       roles: ["superadmin", "admin", "user"],
     },
+    {
+      id: "coa",
+      label: "Chart of Accounts",
+      icon: "ri-line-chart-fill",
+      link: "/coa",
+      stateVariables: isCoa,
+      roles: ["superadmin", "admin", "user"],
+    },
+    {
+      id: "charge",
+      label: "Charge",
+      icon: "ri-money-dollar-box-line",
+      link: "/charge",
+      stateVariables: isCharge,
+      roles: ["superadmin", "admin", "user"],
+    },
+    {
+      id: "cost-entry",
+      label: "Cost Entry",
+      icon: "ri-wallet-3-line",
+      link: "/cost-entry",
+      stateVariables: isCostEntry,
+      roles: ["superadmin", "admin", "user"],
+    },
 
     // {
     //   id: "profile",
@@ -149,6 +193,15 @@ const Navdata = () => {
     //   stateVariables: isMyAccount,
     //   roles: ["superadmin", "admin", "user"],
     // },
+    {
+      id: "Organization",
+      label: "Organization",
+      icon: "ri-team-line",
+      link: "/organization",
+      src: "/team.png",
+      stateVariables: isMyAccount,
+      roles: ["superadmin", "admin", "user"],
+    },
     {
       id: "user-management",
       label: "User Management",
