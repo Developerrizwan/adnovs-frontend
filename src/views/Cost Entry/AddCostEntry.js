@@ -14,6 +14,7 @@ import { getAllISOCodes } from "iso-country-currency";
 const AddCostEntry = (props) => {
   const history = useHistory();
 
+  const [selVoucher, setSelVoucher] = useState(null);
   const [selCurrency, setSelCurrency] = useState(null);
   const [selStatus, setSelStatus] = useState(null);
   const [selJob, setSelJob] = useState(null);
@@ -29,6 +30,14 @@ const AddCostEntry = (props) => {
   const [jobOptions, setJobOptions] = useState([]);
   const [shipmentOptions, setShipmentOptions] = useState([]);
   const [chargeOptions, setChargeOptions] = useState([]);
+
+  const voucherOptions = [
+    { value: "Journal", label: "Journal" },
+    { value: "Payment", label: "Payment" },
+    { value: "Receipt", label: "Receipt" },
+    { value: "Debit", label: "Debit" },
+    { value: "Credit", label: "Credit" },
+  ];
 
   const SaleOrCostOptions = [
     {
@@ -209,6 +218,7 @@ const AddCostEntry = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
+                  voucher_type: props.entry?.voucher_type || "Journal",
                   charge: props.entry?.charge || 0,
                   description: props.entry?.description || "",
                   job_no: props.entry?.job_no || 0,
@@ -223,6 +233,7 @@ const AddCostEntry = (props) => {
                   tax_group_code: props.entry?.tax_group_code || "",
                 }}
                 validationSchema={Yup.object({
+                  voucher_type: Yup.string().ensure().required("Required!"),
                   // charge: Yup.number().typeError().required("Required!"),
                   description: Yup.string().required("Required!"),
                   // job_no: Yup.number().required("Required!"),
@@ -291,6 +302,30 @@ const AddCostEntry = (props) => {
               >
                 {({ values, errors, touched, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="voucher_type" className="form-label">
+                            Voucher Type
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            styles={customStyles}
+                            options={voucherOptions}
+                            value={selVoucher}
+                            onChange={(data) => {
+                              setFieldValue("voucher_type", data.value);
+                              setSelVoucher(data);
+                            }}
+                          />
+                          {errors.voucher_type && touched.voucher_type && (
+                            <div className="invalid-feedback d-block">
+                              {errors.voucher_type}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
