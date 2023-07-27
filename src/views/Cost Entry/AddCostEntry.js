@@ -173,7 +173,7 @@ const AddCostEntry = (props) => {
         )}
 
         <Grid container spacing={2}>
-          <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
+          <Grid item lg={11} style={{ placeItems: "center", margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
