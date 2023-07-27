@@ -17,7 +17,6 @@ import CreateJob from "./CreateJob";
 const JobTable = (props) => {
   // const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
-  const [jobTypeModal, setJobTypeModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deletId, setDeletId] = useState();
   const [selectedJob, setSelectedJob] = useState([]);
@@ -25,89 +24,122 @@ const JobTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13"> Job Number</span>,
       selector: (row) => row.job_number,
+      cell: (value) => {
+        return <div>{value.job_number}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13"> BL Number</span>,
       selector: (row) => row.bl_number,
+      cell: (value) => {
+        return <div>{value.bl_number}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13"> Consigee Name</span>,
       selector: (row) => row.consignee_name,
+      cell: (value) => {
+        return <div>{value.consignee_name}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">Bayan Number</span>,
       selector: (row) => row.bayan_number,
+      cell: (value) => {
+        return <div>{value.bayan_number}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">Shipper Name</span>,
       selector: (row) => row.shipper_name,
+      cell: (value) => {
+        return <div>{value.shipper_name}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">POD</span>,
       selector: (row) => row.pod,
+      cell: (value) => {
+        return <div>{value.pod}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
       selector: (row) => row.client_name,
+      cell: (value) => {
+        return <div>{value.client_name}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">ETA</span>,
       selector: (row) => moment(row.eta).format("YYYY-MM-DD HH:mm:ss"),
+      cell: (value) => {
+        return <div>{moment(value.eta).format("YYYY-MM-DD HH:mm:ss")}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">ETD</span>,
       selector: (row) => moment(row.etd).format("YYYY-MM-DD HH:mm:ss"),
+      cell: (value) => {
+        return <div>{moment(value.etd).format("YYYY-MM-DD HH:mm:ss")}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">Organization Type</span>,
-      selector: (row) => row.organization_type.join(", "),
+      selector: (row) => row.organization_type,
+      cell: (value) => {
+        return <div>{value.organization_type.join(",")}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">Scope Of Work</span>,
       selector: (row) => row.scope_of_work,
+      cell: (value) => {
+        return <div>{value.scope_of_work}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13"> Place Of Receipt</span>,
       selector: (row) => row.por,
+      cell: (value) => {
+        return <div>{value.por}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Container</span>,
       selector: (row) => row.container_type,
+      cell: (value) => {
+        return <div>{value.container_type}</div>;
+      },
       sortable: true,
-      width: "150px",
     },
     {
       name: <span className="font-weight-bold fs-13">POA</span>,
       selector: (row) => row.poa,
+      cell: (value) => {
+        return <div>{value.poa}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
     {
       name: <span className="font-weight-bold fs-13">Remarks</span>,
       selector: (row) => row.remarks,
+      cell: (value) => {
+        return <div>{value.remarks}</div>;
+      },
       sortable: true,
-      width: "200px",
     },
 
     {
@@ -123,20 +155,6 @@ const JobTable = (props) => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
-              {/* <DropdownItem
-                className="edit-item-btn"
-                onClick={() => {
-                  setSelectedJob(value);
-                  setJobTypeModal(true);
-                }}
-              >
-                <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
-                Create Job
-              </DropdownItem> */}
-
-              {/*  */}
-              {/*  */}
-
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
@@ -216,36 +234,6 @@ const JobTable = (props) => {
             allJobs={selectedJob}
             history={props.history}
             selectedValue={props.selectedValue}
-          />
-        </ModalBody>
-      </Modal>
-
-      <Modal
-        id="signupModals"
-        tabIndex="-1"
-        className="modal-lg"
-        isOpen={jobTypeModal}
-        toggle={() => {
-          setJobTypeModal((prev) => !prev);
-        }}
-      >
-        <ModalHeader
-          className="p-3"
-          toggle={() => {
-            setJobTypeModal((prev) => !prev);
-          }}
-        >
-          Create Job
-        </ModalHeader>
-        <ModalBody>
-          <CreateJob
-            closeAddPopup={() => {
-              setJobTypeModal(false);
-              setSelectedJob(null);
-              props.getJobs();
-            }}
-            allJobs={selectedJob}
-            history={props.history}
           />
         </ModalBody>
       </Modal>

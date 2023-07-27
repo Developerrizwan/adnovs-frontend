@@ -12,9 +12,8 @@ import {
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
-import CreateJob from "./CreateJob";
-import EditEnquiry from "./EditEnquiry";
-const EnquiryTable = (props) => {
+import EditOrganization from "./EditOrganization";
+const OrganizationTable = (props) => {
   const [editModal, setEditModal] = useState(false);
   const [jobTypeModal, setJobTypeModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -22,75 +21,43 @@ const EnquiryTable = (props) => {
   const [selectedJob, setSelectedJob] = useState([]);
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Enquiry Number</span>,
-      selector: (row) => row.enquiry_number,
+      name: <span className="font-weight-bold fs-13">Name</span>,
+      selector: (row) => row.name,
       cell: (value) => {
-        return <div>{value.enquiry_number}</div>;
+        return <div>{value.name}</div>;
       },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13"> Consigee Name</span>,
-      selector: (row) => row.consignee_name,
+      name: <span className="font-weight-bold fs-13">Type</span>,
+      selector: (row) => row.type,
       cell: (value) => {
-        return <div>{value.consignee_name}</div>;
+        return <div>{value.type}</div>;
       },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Shipper Name</span>,
-      selector: (row) => row.shipper_name,
+      name: <span className="font-weight-bold fs-13">Language Name</span>,
+      selector: (row) => row.language_name,
       cell: (value) => {
-        return <div>{value.shipper_name}</div>;
+        return <div>{value.language_name}</div>;
       },
 
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">POD</span>,
-      selector: (row) => row.pod,
+      name: <span className="font-weight-bold fs-13">Address</span>,
+      selector: (row) => row.address,
       cell: (value) => {
-        return <div>{value.pod}</div>;
+        return <div>{value.address}</div>;
       },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Client Name</span>,
-      selector: (row) => row.client_name,
+      name: <span className="font-weight-bold fs-13">Vat Trn Number</span>,
+      selector: (row) => row.vat_trn_number,
       cell: (value) => {
-        return <div>{value.client_name}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">ETA </span>,
-      selector: (row) => moment(row.eta).format("YYYY-MM-DD HH:mm:ss"),
-      cell: (value) => {
-        return <div>{moment(value.eta).format("YYYY-MM-DD HH:mm:ss")}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">ETD </span>,
-      selector: (row) => moment(row.etd).format("YYYY-MM-DD HH:mm:ss"),
-      cell: (value) => {
-        return <div>{moment(value.etd).format("YYYY-MM-DD HH:mm:ss")}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">POA</span>,
-      selector: (row) => row.poa,
-      cell: (value) => {
-        return <div>{value.poa}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Scope Of Work</span>,
-      selector: (row) => row.scope_of_work,
-      cell: (value) => {
-        return <div>{value.scope_of_work}</div>;
+        return <div>{value.vat_trn_number}</div>;
       },
       sortable: true,
     },
@@ -156,7 +123,7 @@ const EnquiryTable = (props) => {
       <DataTable
         customStyles={customStyles}
         columns={cols}
-        data={props.allJobs}
+        data={props.allOrganization}
         paginationPerPage={props.userPagination?.rowsPerPage}
         onChangePage={(p, t) => {
           props.handlePagination({
@@ -194,44 +161,14 @@ const EnquiryTable = (props) => {
           Edit Enquiry
         </ModalHeader>
         <ModalBody>
-          <EditEnquiry
+          <EditOrganization
             closeAddPopup={() => {
               setEditModal(false);
               setSelectedJob(null);
-              props.getJobs();
+              props.getOrganization();
             }}
-            allJobs={selectedJob}
+            organizationData={selectedJob}
             selectedValue={props.selectedValue}
-            history={props.history}
-          />
-        </ModalBody>
-      </Modal>
-
-      <Modal
-        id="signupModals"
-        tabIndex="-1"
-        className="modal-lg"
-        isOpen={jobTypeModal}
-        toggle={() => {
-          setJobTypeModal((prev) => !prev);
-        }}
-      >
-        <ModalHeader
-          className="p-3"
-          toggle={() => {
-            setJobTypeModal((prev) => !prev);
-          }}
-        >
-          Create New Job
-        </ModalHeader>
-        <ModalBody>
-          <CreateJob
-            closeAddPopup={() => {
-              setJobTypeModal(false);
-              setSelectedJob(null);
-              props.getJobs();
-            }}
-            allJobs={selectedJob}
             history={props.history}
           />
         </ModalBody>
@@ -263,7 +200,7 @@ const EnquiryTable = (props) => {
           <Button
             onClick={() => {
               setDeleteModal((prev) => !prev);
-              props.deleteJob(deletId.id);
+              props.deleteOrganization(deletId.id);
             }}
           >
             Yes
@@ -275,4 +212,4 @@ const EnquiryTable = (props) => {
   );
 };
 
-export default EnquiryTable;
+export default OrganizationTable;
