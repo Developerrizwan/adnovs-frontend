@@ -104,7 +104,7 @@ const Vouchers = (props) => {
             createNew={() => {
               setCreateModal(true);
             }}
-            add_new_url={url}
+            add_new_url={`/voucher/${selectedVoucher.value}`}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
@@ -117,7 +117,7 @@ const Vouchers = (props) => {
             voucherOptions={voucherOptions}
             handleVoucherChange={(data) => {
               setSelectedVoucher(data);
-              changeRoute(data);
+              // changeRoute(data);
               getSelVoucherData(pagination, searchValue, data.value);
             }}
           />

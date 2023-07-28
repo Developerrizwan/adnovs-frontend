@@ -64,8 +64,8 @@ import AddTicket from "../views/Ticket/CreateInvoice";
 import Jobs from "../views/Jobs";
 import Vouchers from "../views/Vouchers";
 import JournalVoucher from "../views/Vouchers/JournalVoucher";
-import PaymentVoucher from "../views/Vouchers/PaymentVoucher";
-import ReceiptVoucher from "../views/Vouchers/ReceiptVoucher";
+// import PaymentVoucher from "../views/Vouchers/PaymentVoucher";
+// import ReceiptVoucher from "../views/Vouchers/ReceiptVoucher";
 import Invoices from "../views/Invoices";
 import Purchase from "../views/Invoices/Purchase";
 import Sales from "../views/Invoices/Sales";
@@ -76,9 +76,9 @@ import AddJobs from "../views/Jobs/AddJob";
 // import EditJobs from "../views/Jobs/EditJob";
 import AddUser from "../views/UserManagement/AddUser";
 import EditUser from "../views/UserManagement/EditUser";
-import AllVouchers from "../views/Vouchers/AllVouchers";
-import DebitVoucher from "../views/Vouchers/DebitVoucher";
-import CreditVoucher from "../views/Vouchers/CreditVoucher";
+// import AllVouchers from "../views/Vouchers/AllVouchers";
+// import DebitVoucher from "../views/Vouchers/DebitVoucher";
+// import CreditVoucher from "../views/Vouchers/CreditVoucher";
 import TaxInvoice from "../views/TaxInvoice/TaxInvoice";
 import TaxInvoiceSecond from "../views/TaxInvoice/TaxInvoiceSecond";
 import ChartOfAccounts from "../views/ChartOfAccounts";
@@ -118,13 +118,13 @@ const authProtectedRoutes = [
   { path: "/cost-entry", component: CostEntry },
   { path: "/charge/add", component: AddCharge },
   { path: "/charge", component: Charge },
+  { path: "/voucher/:voucherId", component: JournalVoucher },
   { path: "/vouchers", component: Vouchers },
-  { path: "/all-vouchers", component: AllVouchers },
-  { path: "/journal-voucher", component: JournalVoucher },
-  { path: "/payment-voucher", component: PaymentVoucher },
-  { path: "/receipt-voucher", component: ReceiptVoucher },
-  { path: "/debit-voucher", component: DebitVoucher },
-  { path: "/credit-voucher", component: CreditVoucher },
+  // { path: "/all-vouchers", component: AllVouchers },
+  // { path: "/payment-voucher", component: PaymentVoucher },
+  // { path: "/receipt-voucher", component: ReceiptVoucher },
+  // { path: "/debit-voucher", component: DebitVoucher },
+  // { path: "/credit-voucher", component: CreditVoucher },
   { path: "/user-management/add", component: AddUser },
   { path: "/user-management/edit/:userId", component: EditUser },
   { path: "/user-management", component: UserManagement },
