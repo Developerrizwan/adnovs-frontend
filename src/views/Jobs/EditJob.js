@@ -370,7 +370,6 @@ const EditJob = (props) => {
       background: "#EDEDED",
     }),
   };
-  console.log("ededd", organizationtypeValue);
 
   const handleMultiSelectChange = (data) => {
     console.log("cdcdecc", data);
