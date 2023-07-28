@@ -119,10 +119,10 @@ const Invoices = (props) => {
               // handleExportData();
             }}
             invoiceType={invoiceType}
-            invoiceTypes={invoiceTypes}
-            handleInvoiceChange={handleInvoiceChange}
-            add_invoices={true}
-            add_invoice_select={true}
+            options={invoiceTypes}
+            handleTypeChange={handleInvoiceChange}
+            add_type={true}
+            add_type_select={true}
           />
         </Container>
 

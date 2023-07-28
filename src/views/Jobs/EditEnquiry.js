@@ -534,7 +534,7 @@ const EditEnquiry = (props) => {
                         value={scopeType}
                         options={scopeofworkOptions}
                         onChange={(data) => {
-                          setScopeType(data.value);
+                          setScopeType(data);
                           setFieldValue("scope_of_work", data.value);
                         }}
                       />
@@ -612,7 +612,7 @@ const EditEnquiry = (props) => {
                         value={jobStatus}
                         options={statusOptions}
                         onChange={(data) => {
-                          setJobStatus(data.value);
+                          setJobStatus(data);
                           setFieldValue("job_status", data.value);
                         }}
                       />
