@@ -42,6 +42,7 @@ const JournalVoucher = (props) => {
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [currencyOptions, setCurrencyOptions] = useState([]);
+  const [partyOptions, setPartyOptions] = useState([]);
   const [coaOptions, setCoaOptions] = useState([]);
 
   const instTypeOptions = [
@@ -62,15 +63,9 @@ const JournalVoucher = (props) => {
     { value: "Credit", label: "Credit" },
   ];
 
-  const partyOptions = [
-    { value: "Party 1", label: "Party 1" },
-    { value: "Party 2", label: "Party 2" },
-    { value: "Party 3", label: "Party 3" },
-  ];
-
   useEffect(() => {
     getJobOptions();
-    getCoaOptions();
+    getPartyOptions();
     getAllCurrencyCodes();
     getCategoryOptions();
     setSelectedVoucher({
@@ -80,11 +75,20 @@ const JournalVoucher = (props) => {
   }, []);
 
   useEffect(() => {
-    if (props.isEdit) {
+    if (
+      props.isEdit &&
+      jobOptions.length &&
+      partyOptions.length &&
+      categoryOptions.length
+    ) {
       getInitialValues();
     }
-    getCoaOptions();
-  }, [props.isEdit, coaOptions.length]);
+  }, [
+    props.isEdit,
+    jobOptions.length,
+    partyOptions.length,
+    categoryOptions.length,
+  ]);
 
   const getInitialValues = () => {
     const selvoucher = voucherOptions.find(
@@ -107,7 +111,7 @@ const JournalVoucher = (props) => {
     );
     setSelCurrency(selCurr);
 
-    const selParty = coaOptions.find(
+    const selParty = partyOptions.find(
       (cur) => cur.value === Number(props.voucherData?.party_account)
     );
     setSelectedParty(selParty);
@@ -144,20 +148,18 @@ const JournalVoucher = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const getCoaOptions = () => {
+  const getPartyOptions = () => {
     apiAuth
-      .get(`/api/master/coa/`)
+      .get(`/api/get-coa/`)
       .then((res) => {
-        let {
-          data: { results },
-        } = res;
-        results = results.map((rr) => {
+        let { data } = res;
+        data = data.map((rr) => {
           return {
             label: rr.code,
             value: rr.id,
           };
         });
-        setCoaOptions(results);
+        setPartyOptions(data);
       })
       .catch((err) => console.log(err));
   };
@@ -177,22 +179,6 @@ const JournalVoucher = (props) => {
       })
       .catch((err) => console.log(err));
   };
-
-  // const getJobs = () => {
-  //   apiAuth
-  //     .get(`/api/get-jobs/`)
-  //     .then((res) => {
-  //       const { data } = res;
-  //       let opts = data.map((dd) => {
-  //         return {
-  //           label: `${dd?.bl_number} - ${dd?.consignee_name}`,
-  //           value: dd?.id,
-  //         };
-  //       });
-  //       setJobOptions(opts);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
 
   const customStyles = {
     control: (provided, state) => ({
@@ -253,7 +239,7 @@ const JournalVoucher = (props) => {
                   category: props.voucherData?.category || "",
                   status: props.voucherData?.status || false,
                   job: props.voucherData?.job || "",
-                  party_account: props.voucherData?.party_account || "",
+                  party_account: props.voucherData?.party_account || 3,
                   currency: props.voucherData?.currency || "",
                   ex_rate: props.voucherData?.ex_rate || "",
                   address: props.voucherData?.address || "",
@@ -270,8 +256,8 @@ const JournalVoucher = (props) => {
                   branch: Yup.string().required("Required!"),
                   book: Yup.string().required("Required!"),
                   period: Yup.string().required("Required!"),
-                  job: Yup.string().required("Required!"),
-                  party_account: Yup.string().ensure().required("Required!"),
+                  // job: Yup.string().required("Required!"),
+                  // party_account: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
                   // values["job"] = selectedJob.value;
@@ -599,7 +585,7 @@ const JournalVoucher = (props) => {
                             name="party_account"
                             styles={customStyles}
                             value={selectedParty}
-                            options={coaOptions}
+                            options={partyOptions}
                             onChange={(data) => {
                               setFieldValue("party_account", data.value);
                               setSelectedParty(data);
