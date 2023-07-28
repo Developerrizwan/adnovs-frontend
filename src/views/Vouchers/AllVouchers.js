@@ -36,8 +36,8 @@ const AllVouchers = (props) => {
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
-    { value: "Debit", label: "Debit" },
-    { value: "Credit", label: "Credit" },
+    { value: "Debit Note", label: "Debit Note" },
+    { value: "Credit Code", label: "Credit Note" },
   ];
 
   const handleOptionChange = (selectedOption) => {

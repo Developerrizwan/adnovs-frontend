@@ -28,8 +28,8 @@ const DebitVoucher = (props) => {
   const [date, setDate] = useState(new Date());
   const [glDate, setGlDate] = useState(new Date());
   const [selectedVoucher, setSelectedVoucher] = useState({
-    value: "Debit",
-    label: "Debit",
+    value: "Debit Note",
+    label: "Debit Note",
   });
   const [selectedParty, setSelectedParty] = useState(null);
   const [selectedConcern, setSelectedConcern] = useState(null);
@@ -71,7 +71,7 @@ const DebitVoucher = (props) => {
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
     { value: "DEBIT NOTE", label: "DEBIT NOTE" },
-    { value: "CREDIT NOTE", label: "CREDIT NOTE" },
+    { value: "Credit Note", label: "Credit Note" },
   ];
 
   const partyOptions = [
@@ -112,7 +112,7 @@ const DebitVoucher = (props) => {
       history.push("/receipt-voucher");
     } else if (event.value === "DEBIT NOTE") {
       history.push("/debit-voucher");
-    } else if (event.value === "CREDIT NOTE") {
+    } else if (event.value === "Credit Note") {
       history.push("/credit-voucher");
     }
   };

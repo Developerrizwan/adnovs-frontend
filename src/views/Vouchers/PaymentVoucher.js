@@ -70,8 +70,8 @@ const PaymentVoucher = (props) => {
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
-    { value: "Debit", label: "Debit" },
-    { value: "Credit", label: "Credit" },
+    { value: "Debit Note", label: "Debit Note" },
+    { value: "Credit Note", label: "Credit Note" },
   ];
 
   const partyOptions = [
@@ -110,9 +110,9 @@ const PaymentVoucher = (props) => {
       history.push("/payment-voucher");
     } else if (event.value === "Receipt") {
       history.push("/receipt-voucher");
-    } else if (event.value === "Debit") {
+    } else if (event.value === "Debit Note") {
       history.push("/debit-voucher");
-    } else if (event.value === "Credit") {
+    } else if (event.value === "Credit Note") {
       history.push("/credit-voucher");
     }
   };

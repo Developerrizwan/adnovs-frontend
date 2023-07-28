@@ -28,8 +28,8 @@ const Vouchers = (props) => {
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
-    { value: "Debit", label: "Debit" },
-    { value: "Credit", label: "Credit" },
+    { value: "Debit Note", label: "Debit Note" },
+    { value: "Credit Note", label: "Credit Note" },
   ];
 
   const changeRoute = (event) => {
@@ -39,9 +39,9 @@ const Vouchers = (props) => {
       setUrl("/payment-voucher");
     } else if (event.value === "Receipt") {
       setUrl("/receipt-voucher");
-    } else if (event.value === "Debit") {
+    } else if (event.value === "Debit Note") {
       setUrl("/debit-voucher");
-    } else if (event.value === "Credit") {
+    } else if (event.value === "Credit Note") {
       setUrl("/credit-voucher");
     }
   };
