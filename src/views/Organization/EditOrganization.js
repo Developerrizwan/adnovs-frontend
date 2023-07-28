@@ -7,19 +7,31 @@ import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
+import { getAllISOCodes } from "iso-country-currency";
+import { City, Country, State } from "country-state-city";
+import { useHistory } from "react-router";
 
 const EditOrganization = (props) => {
+  const history = useHistory();
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
       background: "#EDEDED",
     }),
   };
+  const goBack = () => {
+    history.goBack();
+  };
+
   const [coaOptions, setCoaOptions] = useState([]);
+  const [selCurrency, setSelCurrency] = useState(null);
+  const [currencyOptions, setCurrencyOptions] = useState([]);
+  const [branchValue, setBranchValue] = useState("JEDDHA");
 
-  const [selCoa, setSelCoa] = useState(null);
-
-  const [typeValue, setTypevalue] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
 
   const typeOptions = [
     {
@@ -32,40 +44,61 @@ const EditOrganization = (props) => {
     },
   ];
 
+  const registeredOptions = [
+    {
+      value: "TRUE",
+      label: "TRUE",
+    },
+    {
+      value: "FALSE",
+      label: "FALSE",
+    },
+  ];
+
+  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+
   const getCoaOptions = () => {
     apiAuth
       .get("api/master/coa/")
       .then((response) => {
-        let {
-          data: { results },
-        } = response;
-        results = results.map((rr) => {
-          return {
-            label: rr.code,
-            value: rr.id,
-          };
-        });
-        setCoaOptions(results);
+        let data = response.data.results;
+        setCoaOptions(data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const getInitialValues = () => {
-    const type = typeOptions.find(
-      (item) => item.value === props.organizationData?.type
-    );
-    setTypevalue(type);
-
-    const selectedCoa = coaOptions.find(
-      (cur) => cur.value === props.organizationData?.coa
-    );
-    setSelCoa(selectedCoa);
+  const getAllCurrencyCodes = () => {
+    let allCurrencies = getAllISOCodes();
+    allCurrencies = allCurrencies.map((cur) => {
+      return {
+        label: cur.currency + "  -  " + cur.countryName,
+        value: cur.currency + "  -  " + cur.countryName,
+      };
+    });
+    setCurrencyOptions(allCurrencies);
   };
 
   useEffect(() => {
-    getInitialValues();
+    getCoaOptions();
+    getAllCurrencyCodes();
+  }, []);
+
+  // const getInitialValues = () => {
+  //   const type = typeOptions.find(
+  //     (item) => item.value === props.organizationData?.type
+  //   );
+  //   setTypevalue(type);
+
+  //   const selectedCoa = coaOptions.find(
+  //     (cur) => cur.value === props.organizationData?.coa
+  //   );
+  //   setSelCoa(selectedCoa);
+  // };
+
+  useEffect(() => {
+    // getInitialValues();
     getCoaOptions();
   }, [coaOptions.length]);
   return (
@@ -172,7 +205,7 @@ const EditOrganization = (props) => {
             {({ values, setFieldValue }) => (
               <Form className="av-tooltip tooltip-label-bottom">
                 <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="name" className="form-label">
                         Name
@@ -180,6 +213,7 @@ const EditOrganization = (props) => {
                       </Label>
                       <Field
                         className="form-control"
+                        placeholder="Name"
                         name="name"
                         style={{ background: "#EDEDED" }}
                       />
@@ -192,7 +226,161 @@ const EditOrganization = (props) => {
                       />
                     </div>
                   </Grid>
-                  <Grid item lg={6} xs={12}>
+                  <Grid item lg={4} xs={12}>
+                    <div className="form-group mb-3">
+                      <Label htmlFor="email">Email</Label>
+                      <Field
+                        className="form-control"
+                        name="email"
+                        placeholder="Email"
+                        type="text"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="email"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <div className=" mb-3">
+                      <Label htmlFor="mobile">Mobile Number</Label>
+                      <Field
+                        className="form-control"
+                        name="mobile"
+                        placeholder="Mobile Number"
+                        type="text"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="mobile"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="vat_trn_number" className="form-label">
+                        Vat Trn Number
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Vat Trn Number"
+                        name="vat_trn_number"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="vat_trn_number"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={4} xs={12}>
+                    <div style={{ zIndex: 300 }} className="mb-3">
+                      <label htmlFor="currency" className="form-label">
+                        Currency
+                        <span className="text-danger">*</span>
+                      </label>
+                      <Select
+                        name="currency"
+                        styles={customStyles}
+                        value={selCurrency}
+                        options={currencyOptions}
+                        onChange={(data) => {
+                          setFieldValue("currency", data.value);
+                          setSelCurrency(data);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="currency"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="branch" className="form-label">
+                        Branch
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={branchOptions}
+                        defaultValue={{ label: branchValue }}
+                        onChange={(data) => {
+                          // setBranchValue(data);
+                          setFieldValue("branch", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="job_status"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="payment_terms" className="form-label">
+                        Payment Terms
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        placeholder="Payment Terms"
+                        className="form-control"
+                        name="payment_terms"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="payment_terms"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="language_name" className="form-label">
+                        Language Name
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Language Name"
+                        name="language_name"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="language_name"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="type" className="form-label">
                         Type
@@ -202,10 +390,8 @@ const EditOrganization = (props) => {
                         name="type"
                         placeholder={"Select"}
                         options={typeOptions}
-                        value={typeValue}
                         styles={customStyles}
                         onChange={(data) => {
-                          setTypevalue(data);
                           setFieldValue("type", data.value);
                         }}
                       />
@@ -220,20 +406,28 @@ const EditOrganization = (props) => {
                 </Grid>
 
                 <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
+                  <Grid item xs={12} lg={4} style={{ zIndex: "200" }}>
                     <div className="mb-3">
-                      <Label htmlFor="language_name" className="form-label">
-                        Language Name
+                      <label htmlFor="country" className="form-label">
+                        Country
                         <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="language_name"
-                        style={{ background: "#EDEDED" }}
+                      </label>
+                      <Select
+                        options={Country.getAllCountries().map((state) => {
+                          return {
+                            label: state.name,
+                            value: state.isoCode,
+                          };
+                        })}
+                        styles={customStyles}
+                        value={selectedCountry}
+                        onChange={(data) => {
+                          setFieldValue("country", data.label);
+                          setSelectedCountry(data);
+                        }}
                       />
-
                       <ErrorMessage
-                        name="language_name"
+                        name="country"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -241,20 +435,61 @@ const EditOrganization = (props) => {
                     </div>
                   </Grid>
 
-                  <Grid item lg={6} xs={12}>
+                  <Grid item xs={12} lg={4}>
                     <div className="mb-3">
-                      <Label htmlFor="address" className="form-label">
-                        Address
+                      <label htmlFor="state" className="form-label">
+                        State
                         <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        as="textarea"
-                        className="form-control"
-                        name="address"
-                        style={{ background: "#EDEDED" }}
+                      </label>
+                      <Select
+                        options={State.getStatesOfCountry(
+                          selectedCountry?.value
+                        )?.map((state) => {
+                          return {
+                            label: state.name,
+                            value: state.isoCode,
+                          };
+                        })}
+                        styles={customStyles}
+                        value={selectedState}
+                        onChange={(data) => {
+                          setFieldValue("state", data.label);
+                          setSelectedState(data);
+                        }}
                       />
                       <ErrorMessage
-                        name="address"
+                        name="state"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item xs={12} lg={4}>
+                    <div className="mb-3">
+                      <label htmlFor="state" className="form-label">
+                        City
+                        <span className="text-danger">*</span>
+                      </label>
+                      <Select
+                        options={City.getCitiesOfState(
+                          selectedCountry?.value,
+                          selectedState?.value
+                        )?.map((city) => {
+                          return {
+                            label: city.name,
+                            value: city.isoCode,
+                          };
+                        })}
+                        styles={customStyles}
+                        value={selectedCity}
+                        onChange={(data) => {
+                          setFieldValue("city", data.label);
+                          setSelectedCity(data);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="city"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -263,35 +498,81 @@ const EditOrganization = (props) => {
                   </Grid>
                 </Grid>
 
-                <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
+                <Grid spacing={2} container>
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="vat_trn_number" className="form-label">
-                        Vat Trn Number
+                      <Label htmlFor="website" className="form-label">
+                        Building Name
                         <span className="text-danger">*</span>
                       </Label>
                       <Field
                         className="form-control"
-                        name="vat_trn_number"
+                        name="building_name"
+                        placeholder="Building Name"
                         style={{ background: "#EDEDED" }}
                       />
 
                       <ErrorMessage
-                        name="vat_trn_number"
+                        name="building_name"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
                       />
                     </div>
                   </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="post_box_no" className="form-label">
+                        Post Box No
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Post Box No"
+                        name="post_box_no"
+                        style={{ background: "#EDEDED" }}
+                      />
 
-                  <Grid item lg={6} xs={12}>
+                      <ErrorMessage
+                        name="post_box_no"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="website" className="form-label">
+                        Zip Code
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Zip Code"
+                        name="zip_code"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="zip_code"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid spacing={2} container>
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="website" className="form-label">
                         Website
                         <span className="text-danger">*</span>
                       </Label>
                       <Field
+                        placeholder="Website"
                         className="form-control"
                         name="website"
                         style={{ background: "#EDEDED" }}
@@ -305,31 +586,7 @@ const EditOrganization = (props) => {
                       />
                     </div>
                   </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="browse_logo" className="form-label">
-                        Browse Logo
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="browse_logo"
-                        type="input"
-                        fileType="image/*"
-                        style={{ background: "#EDEDED" }}
-                      />
-                      <ErrorMessage
-                        name="browse_logo"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                  <Grid item lg={6} xs={12}>
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="coa" className="form-label">
                         COA
@@ -338,12 +595,15 @@ const EditOrganization = (props) => {
                       <Select
                         name="type"
                         placeholder={"Select"}
-                        options={coaOptions}
-                        value={selCoa}
+                        options={coaOptions?.map((item) => {
+                          return {
+                            label: item.code,
+                            value: item.id,
+                          };
+                        })}
                         styles={customStyles}
                         onChange={(data) => {
                           setFieldValue("coa", data.value);
-                          setSelCoa(data);
                         }}
                       />
                       <ErrorMessage
@@ -354,50 +614,154 @@ const EditOrganization = (props) => {
                       />
                     </div>
                   </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="port_name" className="form-label">
+                        Port Name
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="port_name"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="port_name"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
                 </Grid>
 
-                <div className="mb-3">
-                  <Label htmlFor="remarks" className="form-label">
-                    Remarks
-                    <span className="text-danger">*</span>
-                  </Label>
-                  <Field
-                    as="textarea"
-                    className="form-control"
-                    name="remarks"
-                    style={{ background: "#EDEDED" }}
-                  />
-                  <ErrorMessage
-                    name="remarks"
-                    render={(msg) => <div className="text-danger">{msg}</div>}
-                  />
-                </div>
+                <Grid spacing={2} container>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="gstin_registered" className="form-label">
+                        GstIn Registered
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        options={registeredOptions}
+                        styles={customStyles}
+                        onChange={(data) => {
+                          setFieldValue("gstin_registered", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="gstin_registered"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
 
-                <div className="d-flex justify-content-between">
-                  <Button
-                    type="submit"
-                    color="success"
-                    className={`btn btn-success  ${
-                      props.loading ? "show-spinner" : ""
-                    }`}
-                    // size="lg"
-                  >
-                    <span className="spinner d-inline-block">
-                      <span className="bounce1" />
-                      <span className="bounce2" />
-                      <span className="bounce3" />
-                    </span>
-                    <span className="label">Update</span>
-                  </Button>{" "}
-                  <Button
-                    colo="success"
-                    className="btn  float-right"
-                    type="reset"
-                    onClick={() => props.closeAddPopup()}
-                  >
-                    {" "}
-                    Cancel{" "}
-                  </Button>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="gstin" className="form-label">
+                        GstIn
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="GstIn"
+                        name="gstin"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="gstin"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+                {/* <Grid container spacing={2}>
+                <Grid item lg={6} xs={12}>
+                  <div className="mb-3">
+                    <Label htmlFor="browse_logo" className="form-label">
+                      Browse Logo
+                      <span className="text-danger">*</span>
+                    </Label>
+                    <Field
+                      className="form-control"
+                      name="browse_logo"
+                      type="file"
+                      fileType="image/*"
+                      onChange={(event) => {
+                        setFieldValue(
+                          "browse_logo",
+                          event.currentTarget.files[0]
+                        );
+                      }}
+                      style={{ background: "#EDEDED" }}
+                    />
+                    <ErrorMessage
+                      name="browse_logo"
+                      render={(msg) => (
+                        <div className="text-danger">{msg}</div>
+                      )}
+                    />
+                  </div>
+                </Grid>
+              </Grid> */}
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="address" className="form-label">
+                        Address
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        as="textarea"
+                        placeholder="Address"
+                        className="form-control"
+                        name="address"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="address"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="remarks" className="form-label">
+                        Remarks
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        as="textarea"
+                        placeholder="Remarks"
+                        className="form-control"
+                        name="remarks"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="remarks"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <div className="mt-4 mb-3">
+                  <button className="btn btn-success" type="submit">
+                    Submit
+                  </button>
                 </div>
               </Form>
             )}

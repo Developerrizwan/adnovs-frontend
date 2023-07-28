@@ -34,14 +34,10 @@ const Organization = (props) => {
     setLoading(true);
     apiAuth
       .get(
-        "/api/get-organization/?" +
-          "&page=" +
-          pgdata?.currentPage +
-          "&search=" +
-          (val ? val : "") +
-          "&type=" +
-          type
+        `/api/get-organization/
+        ?page=${pgdata?.currentPage}&search=${val || ""}&type=${type}`
       )
+
       .then((response) => {
         console.log("dd", response);
         let data = response.data;

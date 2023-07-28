@@ -57,7 +57,7 @@ const AddOrganization = (props) => {
     },
   ];
 
-  const branchOptions = () => [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
 
   const getCoaOptions = () => {
     apiAuth
@@ -230,7 +230,7 @@ const AddOrganization = (props) => {
                 {({ values, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="name" className="form-label">
                             Name
@@ -238,6 +238,7 @@ const AddOrganization = (props) => {
                           </Label>
                           <Field
                             className="form-control"
+                            placeholder="Name"
                             name="name"
                             style={{ background: "#EDEDED" }}
                           />
@@ -250,7 +251,164 @@ const AddOrganization = (props) => {
                           />
                         </div>
                       </Grid>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="form-group mb-3">
+                          <Label htmlFor="email">Email</Label>
+                          <Field
+                            className="form-control"
+                            name="email"
+                            placeholder="Email"
+                            type="text"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          <ErrorMessage
+                            name="email"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className=" mb-3">
+                          <Label htmlFor="mobile">Mobile Number</Label>
+                          <Field
+                            className="form-control"
+                            name="mobile"
+                            placeholder="Mobile Number"
+                            type="text"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          <ErrorMessage
+                            name="mobile"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label
+                            htmlFor="vat_trn_number"
+                            className="form-label"
+                          >
+                            Vat Trn Number
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            className="form-control"
+                            placeholder="Vat Trn Number"
+                            name="vat_trn_number"
+                            style={{ background: "#EDEDED" }}
+                          />
+
+                          <ErrorMessage
+                            name="vat_trn_number"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+
+                      <Grid item lg={4} xs={12}>
+                        <div style={{ zIndex: 300 }} className="mb-3">
+                          <label htmlFor="currency" className="form-label">
+                            Currency
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="currency"
+                            styles={customStyles}
+                            value={selCurrency}
+                            options={currencyOptions}
+                            onChange={(data) => {
+                              setFieldValue("currency", data.value);
+                              setSelCurrency(data);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="currency"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="branch" className="form-label">
+                            Branch
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={branchOptions}
+                            defaultValue={{ label: branchValue }}
+                            onChange={(data) => {
+                              // setBranchValue(data);
+                              setFieldValue("branch", data.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="job_status"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="payment_terms" className="form-label">
+                            Payment Terms
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            placeholder="Payment Terms"
+                            className="form-control"
+                            name="payment_terms"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          <ErrorMessage
+                            name="payment_terms"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="language_name" className="form-label">
+                            Language Name
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            className="form-control"
+                            placeholder="Language Name"
+                            name="language_name"
+                            style={{ background: "#EDEDED" }}
+                          />
+
+                          <ErrorMessage
+                            name="language_name"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="type" className="form-label">
                             Type
@@ -276,327 +434,7 @@ const AddOrganization = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="language_name" className="form-label">
-                            Language Name
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Field
-                            className="form-control"
-                            name="language_name"
-                            style={{ background: "#EDEDED" }}
-                          />
-
-                          <ErrorMessage
-                            name="language_name"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="address" className="form-label">
-                            Address
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Field
-                            as="textarea"
-                            className="form-control"
-                            name="address"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          <ErrorMessage
-                            name="address"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-
-                      {/* <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label
-                            htmlFor="language_address"
-                            className="form-label"
-                          >
-                            Language Address
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Field
-                            as="textarea"
-                            className="form-control"
-                            name="language_address"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          <ErrorMessage
-                            name="language_address"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid> */}
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label
-                            htmlFor="vat_trn_number"
-                            className="form-label"
-                          >
-                            Vat Trn Number
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Field
-                            className="form-control"
-                            name="vat_trn_number"
-                            style={{ background: "#EDEDED" }}
-                          />
-
-                          <ErrorMessage
-                            name="vat_trn_number"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="currency" className="form-label">
-                            Currency
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            name="currency"
-                            styles={customStyles}
-                            value={selCurrency}
-                            options={currencyOptions}
-                            onChange={(data) => {
-                              setFieldValue("currency", data.value);
-                              setSelCurrency(data);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="currency"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="branch" className="form-label">
-                            Branch
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Select
-                            name="type"
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            options={branchOptions}
-                            // value={"JEDDHA"}
-                            defaultValue={{ label: branchValue }}
-                            onChange={(data) => {
-                              // setBranchValue(data);
-                              setFieldValue("branch", data.value);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="job_status"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="payment_terms" className="form-label">
-                            Payment Terms
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Field
-                            className="form-control"
-                            name="payment_terms"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          <ErrorMessage
-                            name="payment_terms"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="browse_logo" className="form-label">
-                            Browse Logo
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Field
-                            className="form-control"
-                            name="browse_logo"
-                            type="file"
-                            fileType="image/*"
-                            onChange={(event) => {
-                              setFieldValue(
-                                "browse_logo",
-                                event.currentTarget.files[0]
-                              );
-                            }}
-                            style={{ background: "#EDEDED" }}
-                          />
-                          <ErrorMessage
-                            name="browse_logo"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="coa" className="form-label">
-                            COA
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Select
-                            name="type"
-                            placeholder={"Select"}
-                            options={coaOptions?.map((item) => {
-                              return {
-                                label: item.code,
-                                value: item.id,
-                              };
-                            })}
-                            styles={customStyles}
-                            onChange={(data) => {
-                              setFieldValue("coa", data.value);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="coa"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid spacing={2} container>
-                      <Grid item xs={12} lg={6} style={{ zIndex: "100" }}>
-                        <div className="mb-3">
-                          <label htmlFor="state" className="form-label">
-                            City
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            options={City.getAllCities(
-                              selectedState?.value
-                            )?.map((city) => {
-                              return {
-                                label: city.name,
-                                value: city.isoCode,
-                              };
-                            })}
-                            styles={customStyles}
-                            value={selectedCity}
-                            onChange={(data) => {
-                              setFieldValue("city", data.label);
-                              setSelectedCity(data);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="city"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="website" className="form-label">
-                            Zip Code
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Field
-                            className="form-control"
-                            name="zip_code"
-                            style={{ background: "#EDEDED" }}
-                          />
-
-                          <ErrorMessage
-                            name="zip_code"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className=" mb-3">
-                          <Label htmlFor="mobile">Mobile Number</Label>
-                          <Field
-                            className="form-control"
-                            name="mobile"
-                            placeholder="Mobile Number"
-                            type="text"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          <ErrorMessage
-                            name="mobile"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="form-group mb-3">
-                          <Label htmlFor="email">Email</Label>
-                          <Field
-                            className="form-control"
-                            name="email"
-                            placeholder="Email"
-                            type="text"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          <ErrorMessage
-                            name="email"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} lg={6} style={{ zIndex: "200" }}>
+                      <Grid item xs={12} lg={4} style={{ zIndex: "200" }}>
                         <div className="mb-3">
                           <label htmlFor="country" className="form-label">
                             Country
@@ -625,10 +463,10 @@ const AddOrganization = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item xs={12} lg={6} style={{ zIndex: "100" }}>
+                      <Grid item xs={12} lg={4}>
                         <div className="mb-3">
                           <label htmlFor="state" className="form-label">
-                            State Code
+                            State
                             <span className="text-danger">*</span>
                           </label>
                           <Select
@@ -655,31 +493,41 @@ const AddOrganization = (props) => {
                           />
                         </div>
                       </Grid>
-                    </Grid>
-
-                    <Grid spacing={2} container>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item xs={12} lg={4}>
                         <div className="mb-3">
-                          <Label htmlFor="website" className="form-label">
-                            Website
+                          <label htmlFor="state" className="form-label">
+                            City
                             <span className="text-danger">*</span>
-                          </Label>
-                          <Field
-                            className="form-control"
-                            name="website"
-                            style={{ background: "#EDEDED" }}
+                          </label>
+                          <Select
+                            options={City.getCitiesOfState(
+                              selectedCountry?.value,
+                              selectedState?.value
+                            )?.map((city) => {
+                              return {
+                                label: city.name,
+                                value: city.isoCode,
+                              };
+                            })}
+                            styles={customStyles}
+                            value={selectedCity}
+                            onChange={(data) => {
+                              setFieldValue("city", data.label);
+                              setSelectedCity(data);
+                            }}
                           />
-
                           <ErrorMessage
-                            name="website"
+                            name="city"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
                           />
                         </div>
                       </Grid>
+                    </Grid>
 
-                      <Grid item lg={6} xs={12}>
+                    <Grid spacing={2} container>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="website" className="form-label">
                             Building Name
@@ -688,6 +536,7 @@ const AddOrganization = (props) => {
                           <Field
                             className="form-control"
                             name="building_name"
+                            placeholder="Building Name"
                             style={{ background: "#EDEDED" }}
                           />
 
@@ -699,10 +548,101 @@ const AddOrganization = (props) => {
                           />
                         </div>
                       </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="post_box_no" className="form-label">
+                            Post Box No
+                            {/* <span className="text-danger">*</span> */}
+                          </Label>
+                          <Field
+                            className="form-control"
+                            placeholder="Post Box No"
+                            name="post_box_no"
+                            style={{ background: "#EDEDED" }}
+                          />
+
+                          <ErrorMessage
+                            name="post_box_no"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="website" className="form-label">
+                            Zip Code
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            className="form-control"
+                            placeholder="Zip Code"
+                            name="zip_code"
+                            style={{ background: "#EDEDED" }}
+                          />
+
+                          <ErrorMessage
+                            name="zip_code"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
                     </Grid>
 
                     <Grid spacing={2} container>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="website" className="form-label">
+                            Website
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            placeholder="Website"
+                            className="form-control"
+                            name="website"
+                            style={{ background: "#EDEDED" }}
+                          />
+
+                          <ErrorMessage
+                            name="website"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="coa" className="form-label">
+                            COA
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            options={coaOptions?.map((item) => {
+                              return {
+                                label: item.code,
+                                value: item.id,
+                              };
+                            })}
+                            styles={customStyles}
+                            onChange={(data) => {
+                              setFieldValue("coa", data.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="coa"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="port_name" className="form-label">
                             Port Name
@@ -722,31 +662,10 @@ const AddOrganization = (props) => {
                           />
                         </div>
                       </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="post_box_no" className="form-label">
-                            Post Box No
-                            {/* <span className="text-danger">*</span> */}
-                          </Label>
-                          <Field
-                            className="form-control"
-                            name="post_box_no"
-                            style={{ background: "#EDEDED" }}
-                          />
-
-                          <ErrorMessage
-                            name="post_box_no"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
                     </Grid>
 
                     <Grid spacing={2} container>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label
                             htmlFor="gstin_registered"
@@ -773,7 +692,7 @@ const AddOrganization = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="gstin" className="form-label">
                             GstIn
@@ -781,6 +700,7 @@ const AddOrganization = (props) => {
                           </Label>
                           <Field
                             className="form-control"
+                            placeholder="GstIn"
                             name="gstin"
                             style={{ background: "#EDEDED" }}
                           />
@@ -794,25 +714,80 @@ const AddOrganization = (props) => {
                         </div>
                       </Grid>
                     </Grid>
+                    {/* <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="browse_logo" className="form-label">
+                            Browse Logo
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            className="form-control"
+                            name="browse_logo"
+                            type="file"
+                            fileType="image/*"
+                            onChange={(event) => {
+                              setFieldValue(
+                                "browse_logo",
+                                event.currentTarget.files[0]
+                              );
+                            }}
+                            style={{ background: "#EDEDED" }}
+                          />
+                          <ErrorMessage
+                            name="browse_logo"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid> */}
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="address" className="form-label">
+                            Address
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            as="textarea"
+                            placeholder="Address"
+                            className="form-control"
+                            name="address"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          <ErrorMessage
+                            name="address"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
 
-                    <div className="mb-3">
-                      <Label htmlFor="remarks" className="form-label">
-                        Remarks
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        as="textarea"
-                        className="form-control"
-                        name="remarks"
-                        style={{ background: "#EDEDED" }}
-                      />
-                      <ErrorMessage
-                        name="remarks"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="remarks" className="form-label">
+                            Remarks
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Field
+                            as="textarea"
+                            placeholder="Remarks"
+                            className="form-control"
+                            name="remarks"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          <ErrorMessage
+                            name="remarks"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>
 
                     <div className="mt-4 mb-3">
                       <button className="btn btn-success" type="submit">

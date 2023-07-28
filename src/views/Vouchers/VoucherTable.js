@@ -83,9 +83,9 @@ const VoucherTable = (props) => {
     },
     {
       name: <span className="font-weight-bold fs-13">Party A/C</span>,
-      selector: (row) => row.party_account,
+      selector: (row) => row,
       cell: (value) => {
-        return <div>{value.party_account}</div>;
+        return <div>{value.party_account?.code}</div>;
       },
       sortable: true,
     },
