@@ -34,7 +34,7 @@ const Organization = (props) => {
     setLoading(true);
     apiAuth
       .get(
-        "/api/master/organization/?" +
+        "/api/get-organization/?" +
           "&page=" +
           pgdata?.currentPage +
           "&search=" +
@@ -43,7 +43,8 @@ const Organization = (props) => {
           type
       )
       .then((response) => {
-        let data = response.data.results;
+        console.log("dd", response);
+        let data = response.data;
         setOrganizationPagination({
           ...pgdata,
           totalRows: response.data.count,
@@ -121,7 +122,7 @@ const Organization = (props) => {
               setSearchValue(val);
               getOrganization(organizationPagination, val, selectedValue);
             }}
-            export_button={allOrganization.length > 0 ? true : false}
+            export_button={allOrganization?.length > 0 ? true : false}
             handleTypeChange={handleOrganizationChange}
             add_type={true}
             add_type_select={true}
@@ -135,7 +136,7 @@ const Organization = (props) => {
 
         <Row>
           <Colxx lg="12">
-            {allOrganization.length > 0 ? (
+            {allOrganization?.length > 0 ? (
               <>
                 <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
                   <OrganizationTable
