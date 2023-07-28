@@ -25,9 +25,9 @@ const BreadCrumb = ({
   add_invoice_select,
   add_invoices,
   handleInvoiceChange,
-  add_job_select,
-  add_jobs,
-  handleJobChange,
+  add_type_select,
+  add_type,
+  handleTypeChange,
   options,
   add_voucher_select,
   add_vouchers,
@@ -65,9 +65,9 @@ const BreadCrumb = ({
                 <li className="breadcrumb-item active">{title}</li>
               </ol> */}
 
-              {/* {search_functionality ? (
+              {search_functionality ? (
                 <div className="input-group mx-1">
-                  <InputGroup style={{ width: "300px" }}>
+                  <InputGroup>
                     <Input
                       placeholder="Search Here"
                       value={searchValue}
@@ -87,7 +87,7 @@ const BreadCrumb = ({
                 </div>
               ) : (
                 <></>
-              )} */}
+              )}
 
               {back_button ? (
                 <div className="top-right-button-container float-right">
@@ -137,7 +137,7 @@ const BreadCrumb = ({
                 <></>
               )}
 
-              {add_invoices ? (
+              {/* {add_invoices ? (
                 <div
                   className="top-right-button-container float-right mr-5"
                   style={{ marginRight: "10px", width: "150px" }}
@@ -156,19 +156,19 @@ const BreadCrumb = ({
                 </div>
               ) : (
                 <></>
-              )}
+              )} */}
 
-              {add_jobs ? (
+              {add_type ? (
                 <div
                   className="top-right-button-container float-right mr-5"
-                  style={{ marginRight: "10px", width: "150px" }}
+                  style={{ marginRight: "10px", width: "300px" }}
                 >
-                  {add_job_select ? (
+                  {add_type_select ? (
                     <Select
                       name="type"
                       placeholder={"Select"}
                       options={options}
-                      onChange={handleJobChange}
+                      onChange={handleTypeChange}
                       value={selectedValue}
                     />
                   ) : (
@@ -179,7 +179,7 @@ const BreadCrumb = ({
                 <></>
               )}
 
-              {add_vouchers ? (
+              {/* {add_vouchers ? (
                 <div
                   className="top-right-button-container float-right mr-5"
                   style={{ marginRight: "10px", width: "150px" }}
@@ -198,7 +198,7 @@ const BreadCrumb = ({
                 </div>
               ) : (
                 <></>
-              )}
+              )} */}
 
               {add_new ? (
                 <div className="top-right-button-container float-right ml-5">

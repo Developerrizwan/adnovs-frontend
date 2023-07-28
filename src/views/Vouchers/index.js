@@ -111,11 +111,11 @@ const Vouchers = (props) => {
               setSearchValue(val);
               getSelVoucherData(pagination, val, selectedVoucher.value);
             }}
-            add_vouchers={true}
-            add_voucher_select={true}
+            add_type={true}
+            add_type_select={true}
             selectedValue={selectedVoucher}
-            voucherOptions={voucherOptions}
-            handleVoucherChange={(data) => {
+            options={voucherOptions}
+            handleTypeChange={(data) => {
               setSelectedVoucher(data);
               changeRoute(data);
               getSelVoucherData(pagination, searchValue, data.value);

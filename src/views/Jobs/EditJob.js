@@ -784,7 +784,7 @@ const EditJob = (props) => {
                         //   setJobType(event.value);
                         // }}
                         onChange={(data) => {
-                          setScopeType(data.value);
+                          setScopeType(data);
                           setFieldValue("scope_of_work", data.value);
                         }}
                       />
@@ -866,7 +866,7 @@ const EditJob = (props) => {
                         options={statusOptions}
                         // defaultValue={{ label: jobStatus }}
                         onChange={(data) => {
-                          setJobStatus(data.value);
+                          setJobStatus(data);
                           setFieldValue("job_status", data.value);
                         }}
                       />

@@ -23,7 +23,7 @@ const AddOrganization = (props) => {
     history.goBack();
   };
 
-  const [coavalue, setCoavalue] = useState([]);
+  const [coaOptions, setCoaOptions] = useState([]);
 
   const typeOptions = [
     {
@@ -36,12 +36,12 @@ const AddOrganization = (props) => {
     },
   ];
 
-  const getCoa = () => {
+  const getCoaOptions = () => {
     apiAuth
       .get("api/master/coa/")
       .then((response) => {
         let data = response.data.results;
-        setCoavalue(data);
+        setCoaOptions(data);
       })
       .catch((error) => {
         console.log(error);
@@ -49,7 +49,7 @@ const AddOrganization = (props) => {
   };
 
   useEffect(() => {
-    getCoa();
+    getCoaOptions();
   }, []);
 
   return (
@@ -289,8 +289,14 @@ const AddOrganization = (props) => {
                           <Field
                             className="form-control"
                             name="browse_logo"
-                            type="input"
+                            type="file"
                             fileType="image/*"
+                            onChange={(event) => {
+                              setFieldValue(
+                                "browse_logo",
+                                event.currentTarget.files[0]
+                              );
+                            }}
                             style={{ background: "#EDEDED" }}
                           />
                           <ErrorMessage
@@ -310,9 +316,9 @@ const AddOrganization = (props) => {
                           <Select
                             name="type"
                             placeholder={"Select"}
-                            options={coavalue?.map((item) => {
+                            options={coaOptions?.map((item) => {
                               return {
-                                label: item.id,
+                                label: item.code,
                                 value: item.id,
                               };
                             })}

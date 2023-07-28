@@ -15,8 +15,10 @@ const EditOrganization = (props) => {
       background: "#EDEDED",
     }),
   };
-  const [coavalue, setCoavalue] = useState([]);
-  const [coaData, setCoaData] = useState(null);
+  const [coaOptions, setCoaOptions] = useState([]);
+
+  const [selCoa, setSelCoa] = useState(null);
+
   const [typeValue, setTypevalue] = useState(null);
 
   const typeOptions = [
@@ -30,35 +32,42 @@ const EditOrganization = (props) => {
     },
   ];
 
-  const getCoa = () => {
+  const getCoaOptions = () => {
     apiAuth
       .get("api/master/coa/")
       .then((response) => {
-        let data = response.data.results;
-        setCoavalue(data);
+        let {
+          data: { results },
+        } = response;
+        results = results.map((rr) => {
+          return {
+            label: rr.code,
+            value: rr.id,
+          };
+        });
+        setCoaOptions(results);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  useEffect(() => {
+  const getInitialValues = () => {
     const type = typeOptions.find(
       (item) => item.value === props.organizationData?.type
     );
     setTypevalue(type);
-    const coa_type = coavalue?.find(
-      (item) => item.coa === props.organizationData?.coa
+
+    const selectedCoa = coaOptions.find(
+      (cur) => cur.value === props.organizationData?.coa
     );
-    setCoaData({
-      label: props.organizationData?.coa,
-      value: props.organizationData?.coa,
-    });
-  }, []);
+    setSelCoa(selectedCoa);
+  };
 
   useEffect(() => {
-    getCoa();
-  }, []);
+    getInitialValues();
+    getCoaOptions();
+  }, [coaOptions.length]);
   return (
     <React.Fragment>
       {props.organizationData ? (
@@ -329,17 +338,12 @@ const EditOrganization = (props) => {
                       <Select
                         name="type"
                         placeholder={"Select"}
-                        options={coavalue?.map((item) => {
-                          return {
-                            label: item.id,
-                            value: item.id,
-                          };
-                        })}
-                        value={coaData}
+                        options={coaOptions}
+                        value={selCoa}
                         styles={customStyles}
                         onChange={(data) => {
-                          setCoaData(data);
                           setFieldValue("coa", data.value);
+                          setSelCoa(data);
                         }}
                       />
                       <ErrorMessage

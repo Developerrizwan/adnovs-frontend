@@ -24,16 +24,25 @@ const VoucherTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13"> Voucher Type</span>,
       selector: (row) => row.voucher_type,
+      cell: (value) => {
+        return <div>{value.voucher_type}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13"> Branch</span>,
       selector: (row) => row.branch,
+      cell: (value) => {
+        return <div>{value.branch}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Book</span>,
       selector: (row) => row.book,
+      cell: (value) => {
+        return <div>{value.book}</div>;
+      },
       sortable: true,
     },
     {
@@ -51,16 +60,25 @@ const VoucherTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">FC Amount</span>,
       selector: (row) => row.fc_amount,
+      cell: (value) => {
+        return <div>{value.fc_amount}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Amount(SAR)</span>,
       selector: (row) => row.amount_sar,
+      cell: (value) => {
+        return <div>{value.amount_sar}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Party A/C</span>,
       selector: (row) => row.party_account,
+      cell: (value) => {
+        return <div>{value.party_account}</div>;
+      },
       sortable: true,
     },
     // {
@@ -71,6 +89,9 @@ const VoucherTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">naration</span>,
       selector: (row) => row.naration,
+      cell: (value) => {
+        return <div>{value.naration}</div>;
+      },
       sortable: true,
     },
     // {
@@ -81,6 +102,9 @@ const VoucherTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">Remarks</span>,
       selector: (row) => row.remarks,
+      cell: (value) => {
+        return <div>{value.remarks}</div>;
+      },
       sortable: true,
     },
     {

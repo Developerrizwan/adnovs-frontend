@@ -21,11 +21,17 @@ const InvoiceTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">BL Number</span>,
       selector: (row) => row.bl_number,
+      cell: (value) => {
+        return <div>{value.bl_number}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Consignee Name</span>,
       selector: (row) => row.consignee_name,
+      cell: (value) => {
+        return <div>{value.consignee_name}</div>;
+      },
       sortable: true,
     },
     {
@@ -37,6 +43,9 @@ const InvoiceTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">Currency SAR</span>,
       selector: (row) => row.currency_sar,
+      cell: (value) => {
+        return <div>{value.currency_sar}</div>;
+      },
       sortable: true,
     },
     // {
@@ -49,16 +58,25 @@ const InvoiceTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">Bayan Number</span>,
       selector: (row) => row.bayan_number,
+      cell: (value) => {
+        return <div>{value.bayan_number}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Shipper Name</span>,
       selector: (row) => row.shipper_name,
+      cell: (value) => {
+        return <div>{value.shipper_name}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Branch</span>,
       selector: (row) => row.branch,
+      cell: (value) => {
+        return <div>{value.branch}</div>;
+      },
       sortable: true,
     },
     // {
@@ -69,66 +87,92 @@ const InvoiceTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">Ex. Rate</span>,
       selector: (row) => row.ex_rate,
+      cell: (value) => {
+        return <div>{value.ex_rate}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">POD</span>,
       selector: (row) => row.pod,
+      cell: (value) => {
+        return <div>{value.pod}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
       selector: (row) => row.client_name,
+      cell: (value) => {
+        return <div>{value.client_name}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">FC Amount</span>,
       selector: (row) => row.fc_amount,
+      cell: (value) => {
+        return <div>{value.fc_amount}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Amount(SAR)</span>,
       selector: (row) => row.amount_sar,
+      cell: (value) => {
+        return <div>{value.amount_sar}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">POA</span>,
       selector: (row) => row.poa,
+      cell: (value) => {
+        return <div>{value.poa}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Invoice Type</span>,
       selector: (row) => row.invoice_type,
+      cell: (value) => {
+        return <div>{value.invoice_type}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Vendor Name</span>,
       selector: (row) => row.vendor_name,
+      cell: (value) => {
+        return <div>{value.vendor_name}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Narration</span>,
       selector: (row) => row.narration,
+      cell: (value) => {
+        return <div>{value.narration}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Bill Amount</span>,
       selector: (row) => row.bill_amount,
+      cell: (value) => {
+        return <div>{value.bill_amount}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Ref Date</span>,
       selector: (row) => row,
-      cell: (value) => (
-        <span>{moment(value?.date).format("MM/DD/YYYY")}</span>
-      ),
+      cell: (value) => <span>{moment(value?.date).format("MM/DD/YYYY")}</span>,
     },
     {
       name: <span className="font-weight-bold fs-13">Due Date</span>,
       selector: (row) => row,
-      cell: (value) => (
-        <span>{moment(value?.date).format("MM/DD/YYYY")}</span>
-      ),
+      cell: (value) => <span>{moment(value?.date).format("MM/DD/YYYY")}</span>,
     },
     {
       name: <span className="font-weight-bold fs-13">Actions</span>,

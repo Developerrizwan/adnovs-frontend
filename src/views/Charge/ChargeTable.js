@@ -23,11 +23,17 @@ const ChargeTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13"> Code</span>,
       selector: (row) => row.code,
+      cell: (value) => {
+        return <div>{value.code}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Name</span>,
       selector: (row) => row.name,
+      cell: (value) => {
+        return <div>{value.name}</div>;
+      },
       sortable: true,
     },
 
@@ -39,16 +45,25 @@ const ChargeTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">COA</span>,
       selector: (row) => row.coa,
+      cell: (value) => {
+        return <div>{value.coa}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">IATA Code</span>,
       selector: (row) => row.iata_code,
+      cell: (value) => {
+        return <div>{value.iata_code}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Language Name</span>,
       selector: (row) => row.language_name,
+      cell: (value) => {
+        return <div>{value.language_name}</div>;
+      },
       sortable: true,
     },
     {

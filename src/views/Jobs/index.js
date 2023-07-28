@@ -126,9 +126,9 @@ const Jobs = (props) => {
               getJobs(jobPagination, val, selectedValue);
             }}
             export_button={allJobs.length > 0 ? true : false}
-            handleJobChange={handleJobChange}
-            add_jobs={true}
-            add_job_select={true}
+            handleTypeChange={handleJobChange}
+            add_type={true}
+            add_type_select={true}
             options={options}
             selectedValue={{
               label: selectedValue,

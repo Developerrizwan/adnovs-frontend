@@ -101,7 +101,7 @@ const Organization = (props) => {
       });
   };
 
-  const handleJobChange = (e) => {
+  const handleOrganizationChange = (e) => {
     setSelectedValue(e.value);
     getOrganization(organizationPagination, searchValue, e.value);
   };
@@ -122,9 +122,9 @@ const Organization = (props) => {
               getOrganization(organizationPagination, val, selectedValue);
             }}
             export_button={allOrganization.length > 0 ? true : false}
-            handleJobChange={handleJobChange}
-            add_jobs={true}
-            add_job_select={true}
+            handleTypeChange={handleOrganizationChange}
+            add_type={true}
+            add_type_select={true}
             options={options}
             selectedValue={{
               label: selectedValue,
