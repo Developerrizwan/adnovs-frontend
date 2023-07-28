@@ -2,26 +2,42 @@ import { Grid } from "@mui/material";
 import React from "react";
 import { Card } from "reactstrap";
 import shipLogo from "../../assets/images/ship-logo.png";
+import {
+  BrowserChrome,
+  EnvelopeAtFill,
+  TelephoneFill,
+  ThreeDotsVertical,
+  Wifi,
+  Wikipedia,
+} from "react-bootstrap-icons";
 import "./table.css";
 
 const TaxInvoice = () => {
   return (
     <>
-      <div style={{ padding: "25px" }}>
-        <div
-          className="card"
-          style={{ padding: "5px", border: "2px solid #000" }}
-        >
-          <div className="row" style={{ placeItems: "center" }}>
-            <div className="col-lg-6 mb-4">
-              <img
-                src={shipLogo}
-                alt=""
-                width={200}
-              />
-            </div>
-            <div className="col-lg-6" style={{ textAlign: "right" }}>
-              <h2 style={{ color: "#3d78e3", fontWeight: 900 }}>
+      <div className="card mb-5">
+        <div className="row" style={{ placeItems: "center" }}>
+          <div className="col-lg-3 mb-1">
+            <img
+              src={shipLogo}
+              alt=""
+              width={200}
+              style={{ margin: "auto", display: "block" }}
+            />
+          </div>
+          <div
+            className="col-lg-9"
+            style={{
+              background: "#009ada",
+              padding: "45px",
+              color: "#fff",
+              fontSize: "42px",
+              fontWeight: 900,
+              textAlign: "center",
+              letterSpacing: "0.4rem",
+            }}
+          >
+            {/* <h2 style={{ color: "#3d78e3", fontWeight: 900 }}>
                 ADNOV SHIPPING & LOGISTICS
               </h2>
               <p style={{ fontWeight: 600 }}>
@@ -32,10 +48,11 @@ const TaxInvoice = () => {
               </p>
               <p style={{ fontWeight: 600 }}>
                 PO Box 22234, Jeddah, Kingdom of Saudi Arabia
-              </p>
-            </div>
+              </p> */}
+            TAX INVOICE
           </div>
-          <hr style={{ border: "1px solid #000" }} />
+        </div>
+        {/* <hr style={{ border: "1px solid #000" }} />
           <div className="row">
             <div className="col-lg-6">
               <h2 className="text-center" style={{ fontWeight: 700 }}>
@@ -45,31 +62,34 @@ const TaxInvoice = () => {
             <div className="col-lg-6"></div>
           </div>
 
-          <hr style={{ border: "1px solid #000" }} />
+          <hr style={{ border: "1px solid #000" }} /> */}
 
-          <div className="row">
-            <div className="col-lg-2">
-              <h5 style={{ fontWeight: 700, color: "#000" }}>Customer:</h5>
-            </div>
-            <div className="col-lg-4" style={{ borderRight: "1px solid #000" }}>
-              <p>AL ASSAS SPECIALIZED CO.</p>
-              <p>AL MUDUN, AL BAGDAHIYA AL GHARBIYA</p>
-              <p>Phone: </p>
-              <p>VAT No. : </p>
-              <p>Credit Term: </p>
-            </div>
-            <div className="col-lg-4">
-              <p>:AL ASSAS SPECIALIZED CO.</p>
-              <p>AL MUDUN, AL BAGDAHIYA AL GHARBIYA</p>
-              <p>Phone: </p>
-              <p>VAT No. : </p>
-            </div>
-            <div className="col-lg-2"></div>
+        <div className="p-3 mt-2">
+          <p style={{ fontWeight: 500, fontSize: "16px" }}>
+          765, AIMALIKKHALIDSTREET, 7748 AI BAGHDADIYAH GHARBIYA PO BOX 22234, JEDDAH, KINGDOM OF SAUDI ARABIA
+          </p>
+        </div>
+
+        <div className="row mt-2 p-2">
+          <div className="col-lg-6">
+            <h5 className="mb-4" style={{ fontWeight: 700, color: "#000" }}>INVOICE TO:</h5>
+            <p>AL ASSAS SPECIALIZED CO.</p>
+            <p>AL MUDUN, AL BAGDAHIYA AL GHARBIYA</p>
+            <p>Phone: </p>
+            <p>VAT No. : </p>
+            <p>Credit Term: </p>
           </div>
+          <div className="col-lg-6" style={{ borderRight: "1px solid #000" }}>
+            <p style={{ fontWeight: 600, color: "#000", textTransform: "uppercase" }}>Customer VAT No: </p>
+            <p style={{ fontWeight: 600, color: "#000", textTransform: "uppercase"  }}> Invoice No.</p>
+            <p style={{ fontWeight: 600, color: "#000", textTransform: "uppercase"  }}>Invoice Date</p>
+            <p style={{ fontWeight: 600, color: "#000", textTransform: "uppercase"  }}> Payment Due Date</p>
+          </div>
+        </div>
 
-          <hr style={{ border: "1px solid #000" }} />
+        <hr style={{ border: "1px solid #000" }} />
 
-          {/* <div className="row">
+        {/* <div className="row">
             <div className="col-lg-4 col-xs-6">
               <h5>Customer VAT No.</h5>
               <h5>Invoice No.</h5>
@@ -84,323 +104,350 @@ const TaxInvoice = () => {
             </div>
             <div className="col-lg-4"></div>
           </div> */}
-          <div style={{ overflowX: "auto" }}>
+        {/* <div className="p-2" style={{ overflowX: "auto" }}>
+          <table className="w-100 mt-2 border-0">
+            <tr className="border-0">
+              <td className="border-0" style={{ fontWeight: 600 }}>
+                Customer VAT No.
+              </td>
+              <td className="border-0">32674785495</td>
+            </tr>
+            <tr>
+              <td className="border-0" style={{ fontWeight: 600 }}>
+                Invoice No.
+              </td>
+              <td className="border-0">ADN/INV/64/U3874</td>
+            </tr>
+            <tr className="border-0">
+              <td className="border-0" style={{ fontWeight: 600 }}>
+                Invoice Date
+              </td>
+              <td className="border-0">08-Jun-2023 (created)</td>
+            </tr>
+            <tr className="border-0">
+              <td className="border-0" style={{ fontWeight: 600 }}>
+                Payment Due Date
+              </td>
+              <td className="border-0">08-Jun-2023</td>
+            </tr>
+          </table>
+        </div> */}
+
+        {/* <hr style={{ border: "1px solid #000" }} /> */}
+
+        <div className="row p-2">
+          <div
+            className="col-lg-6 col-xs-12"
+            style={{ borderRight: "1px solid #000" }}
+          >
             <table className="w-100 mt-2 border-0">
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Customer VAT No.
+                  Shipper:
                 </td>
-                <td className="border-0">32674785495</td>
+                <td className="border-0">FRESE A/S</td>
+                <td className="border-0"></td>
               </tr>
               <tr>
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Invoice No.
+                  Consignee:
                 </td>
-                <td className="border-0">ADN/INV/64/U3874</td>
+                <td className="border-0"></td>
+                <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Invoice Date
+                  Place of Origin:
                 </td>
-                <td className="border-0">08-Jun-2023 (created)</td>
+                <td className="border-0">KOBENHAVN, DENMARK</td>
+                <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Payment Due Date
+                  Final Destination:
                 </td>
-                <td className="border-0">08-Jun-2023</td>
+                <td className="border-0">JEDDAH, SAUDI ARABIA</td>
+                <td className="border-0"></td>
+              </tr>
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Vessel / Flight:
+                </td>
+                <td className="border-0">CHENNAI EXPRESS/2320E</td>
+                <td className="border-0"></td>
+              </tr>
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Voy / Flt:
+                </td>
+                <td className="border-0">2320E</td>
+                <td className="border-0"></td>
+              </tr>
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Cust. P/O No:
+                </td>
+                <td className="border-0"></td>
+                <td className="border-0"></td>
+              </tr>
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Remarks:
+                </td>
+                <td className="border-0">YMNSJD/NSDBSDBC DENMARK</td>
+                <td className="border-0"></td>
               </tr>
             </table>
           </div>
-
-          <hr style={{ border: "1px solid #000" }} />
-
-          <div className="row">
-            <div
-              className="col-lg-6 col-xs-12"
-              style={{ borderRight: "1px solid #000" }}
-            >
-              <table className="w-100 mt-2 border-0">
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Shipper:
-                  </td>
-                  <td className="border-0">FRESE A/S</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr>
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Consignee:
-                  </td>
-                  <td className="border-0"></td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Place of Origin:
-                  </td>
-                  <td className="border-0">KOBENHAVN, DENMARK</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Final Destination:
-                  </td>
-                  <td className="border-0">JEDDAH, SAUDI ARABIA</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Vessel / Flight:
-                  </td>
-                  <td className="border-0">CHENNAI EXPRESS/2320E</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Voy / Flt:
-                  </td>
-                  <td className="border-0">2320E</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Cust. P/O No:
-                  </td>
-                  <td className="border-0"></td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Remarks:
-                  </td>
-                  <td className="border-0">YMNSJD/NSDBSDBC DENMARK</td>
-                  <td className="border-0"></td>
-                </tr>
-              </table>
-            </div>
-            <div className="col-lg-6 col-xs-12">
-              <table className="w-100 mt-2 border-0">
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Job Number:
-                  </td>
-                  <td className="border-0">ADFB/FI/SNB/30-JUN</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr>
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Job Date:
-                  </td>
-                  <td className="border-0">30-JUN-2023</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    Master:
-                  </td>
-                  <td className="border-0">WHSHAFDH/04-MAY</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    House No:
-                  </td>
-                  <td className="border-0"></td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    ETD:
-                  </td>
-                  <td className="border-0">04-JUN-2023</td>
-                  <td className="border-0"></td>
-                </tr>
-                <tr className="border-0">
-                  <td className="border-0" style={{ fontWeight: 600 }}>
-                    ETA:
-                  </td>
-                  <td className="border-0">19-JUN-2023</td>
-                  <td className="border-0"></td>
-                </tr>
-              </table>
-            </div>
-          </div>
-
-          <div style={{ overflowX: "auto" }}>
-            <table className="htmlTable mt-2 w-100">
-              <tr style={{ background: "#dadedf" }}>
-                <th>Charge Description</th>
-                <th>.Curr</th>
-                <th>Rate Per Unit</th>
-                <th>Unit</th>
-                <th>Curr. Amount</th>
-                <th>/ROE</th>
-                <th>Total Price excl. VAT</th>
-                <th>VAT%</th>
-                <th>VAT Amount</th>
-                <th>Total SAR</th>
-              </tr>
-              <tr>
-                <td>SEA FREIGHT</td>
-                <td>USD</td>
-                <td>6,350.00</td>
-                <td>1</td>
-                <td>6,350.00</td>
-                <td>3.760000</td>
-                <td>23,876.00</td>
-                <td>0</td>
-                <td>0.00</td>
-                <td>23,876.00</td>
-              </tr>
-              <tr>
-                <td>SEA FREIGHT</td>
-                <td>USD</td>
-                <td>6,350.00</td>
-                <td>1</td>
-                <td>6,350.00</td>
-                <td>3.760000</td>
-                <td>23,876.00</td>
-                <td>0</td>
-                <td>0.00</td>
-                <td>23,876.00</td>
-              </tr>
-              <tr>
-                <td>SEA FREIGHT</td>
-                <td>USD</td>
-                <td>6,350.00</td>
-                <td>1</td>
-                <td>6,350.00</td>
-                <td>3.760000</td>
-                <td>23,876.00</td>
-                <td>0</td>
-                <td>0.00</td>
-                <td>23,876.00</td>
-              </tr>
-              <tr>
-                <td>SEA FREIGHT</td>
-                <td>USD</td>
-                <td>6,350.00</td>
-                <td>1</td>
-                <td>6,350.00</td>
-                <td>3.760000</td>
-                <td>23,876.00</td>
-                <td>0</td>
-                <td>0.00</td>
-                <td>23,876.00</td>
-              </tr>
-              <tr>
-                <td>SEA FREIGHT</td>
-                <td>USD</td>
-                <td>6,350.00</td>
-                <td>1</td>
-                <td>6,350.00</td>
-                <td>3.760000</td>
-                <td>23,876.00</td>
-                <td>0</td>
-                <td>0.00</td>
-                <td>23,876.00</td>
-              </tr>
-              <tr>
-                <td>SEA FREIGHT</td>
-                <td>USD</td>
-                <td>6,350.00</td>
-                <td>1</td>
-                <td>6,350.00</td>
-                <td>3.760000</td>
-                <td>23,876.00</td>
-                <td>0</td>
-                <td>0.00</td>
-                <td>23,876.00</td>
-              </tr>
-              <tr>
-                <td>SEA FREIGHT</td>
-                <td>USD</td>
-                <td>6,350.00</td>
-                <td>1</td>
-                <td>6,350.00</td>
-                <td>3.760000</td>
-                <td>23,876.00</td>
-                <td>0</td>
-                <td>0.00</td>
-                <td>23,876.00</td>
-              </tr>
-            </table>
-          </div>
-
-          <div style={{ overflowX: "auto" }}>
+          <div className="col-lg-6 col-xs-12">
             <table className="w-100 mt-2 border-0">
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Thirty-Two Thousand Three Hundred Seventy-Eight Only
+                  Job Number:
                 </td>
-                <td className="border-0" style={{ fontWeight: 600 }}>
-                  Total in: SAR
-                </td>
-                <td className="border-0" style={{ fontWeight: 600 }}>
-                  31,718.99
-                </td>
-                {/* <td className="border-0"></td> */}
-                <td className="border-0" style={{ fontWeight: 600 }}>
-                  660.00
-                </td>
-                <td className="border-0" style={{ fontWeight: 600 }}>
-                  32,378.99
-                </td>
-              </tr>
-            </table>
-          </div>
-
-          <div style={{ overflowX: "auto" }}>
-            <table className="htmlTable mt-2 w-100">
-              <tr style={{ background: "#dadedf" }}>
-                <th>Container Details</th>
+                <td className="border-0">ADFB/FI/SNB/30-JUN</td>
+                <td className="border-0"></td>
               </tr>
               <tr>
-                <td>FCIU6538307, YMMU6330305</td>
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Job Date:
+                </td>
+                <td className="border-0">30-JUN-2023</td>
+                <td className="border-0"></td>
+              </tr>
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  Master:
+                </td>
+                <td className="border-0">WHSHAFDH/04-MAY</td>
+                <td className="border-0"></td>
+              </tr>
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  House No:
+                </td>
+                <td className="border-0"></td>
+                <td className="border-0"></td>
+              </tr>
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  ETD:
+                </td>
+                <td className="border-0">04-JUN-2023</td>
+                <td className="border-0"></td>
+              </tr>
+              <tr className="border-0">
+                <td className="border-0" style={{ fontWeight: 600 }}>
+                  ETA:
+                </td>
+                <td className="border-0">19-JUN-2023</td>
+                <td className="border-0"></td>
               </tr>
             </table>
           </div>
+        </div>
 
-          <div className="row">
-            <div className="col-lg-4 col-xs-12">
-              <table className="htmlTable mt-2 w-100">
-                <tr style={{ background: "#dadedf" }}>
-                  <th>No. of Containers</th>
-                  <th>TYPE</th>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>20 DC</td>
-                </tr>
-              </table>
-            </div>
-            <div className="col-lg-8 col-xs-12"></div>
+        <div className="p-2" style={{ overflowX: "auto" }}>
+          <table className="htmlTable mt-2 w-100">
+            <tr style={{ background: "#dadedf" }}>
+              <th>Charge Description</th>
+              <th>.Curr</th>
+              <th>Rate Per Unit</th>
+              <th>Unit</th>
+              <th>Curr. Amount</th>
+              <th>/ROE</th>
+              <th>Total Price excl. VAT</th>
+              <th>VAT%</th>
+              <th>VAT Amount</th>
+              <th>Total SAR</th>
+            </tr>
+            <tr>
+              <td>SEA FREIGHT</td>
+              <td>USD</td>
+              <td>6,350.00</td>
+              <td>1</td>
+              <td>6,350.00</td>
+              <td>3.760000</td>
+              <td>23,876.00</td>
+              <td>0</td>
+              <td>0.00</td>
+              <td>23,876.00</td>
+            </tr>
+            <tr>
+              <td>SEA FREIGHT</td>
+              <td>USD</td>
+              <td>6,350.00</td>
+              <td>1</td>
+              <td>6,350.00</td>
+              <td>3.760000</td>
+              <td>23,876.00</td>
+              <td>0</td>
+              <td>0.00</td>
+              <td>23,876.00</td>
+            </tr>
+            <tr>
+              <td>SEA FREIGHT</td>
+              <td>USD</td>
+              <td>6,350.00</td>
+              <td>1</td>
+              <td>6,350.00</td>
+              <td>3.760000</td>
+              <td>23,876.00</td>
+              <td>0</td>
+              <td>0.00</td>
+              <td>23,876.00</td>
+            </tr>
+            <tr>
+              <td>SEA FREIGHT</td>
+              <td>USD</td>
+              <td>6,350.00</td>
+              <td>1</td>
+              <td>6,350.00</td>
+              <td>3.760000</td>
+              <td>23,876.00</td>
+              <td>0</td>
+              <td>0.00</td>
+              <td>23,876.00</td>
+            </tr>
+            <tr>
+              <td>SEA FREIGHT</td>
+              <td>USD</td>
+              <td>6,350.00</td>
+              <td>1</td>
+              <td>6,350.00</td>
+              <td>3.760000</td>
+              <td>23,876.00</td>
+              <td>0</td>
+              <td>0.00</td>
+              <td>23,876.00</td>
+            </tr>
+            <tr>
+              <td>SEA FREIGHT</td>
+              <td>USD</td>
+              <td>6,350.00</td>
+              <td>1</td>
+              <td>6,350.00</td>
+              <td>3.760000</td>
+              <td>23,876.00</td>
+              <td>0</td>
+              <td>0.00</td>
+              <td>23,876.00</td>
+            </tr>
+            <tr>
+              <td>SEA FREIGHT</td>
+              <td>USD</td>
+              <td>6,350.00</td>
+              <td>1</td>
+              <td>6,350.00</td>
+              <td>3.760000</td>
+              <td>23,876.00</td>
+              <td>0</td>
+              <td>0.00</td>
+              <td>23,876.00</td>
+            </tr>
+          </table>
+        </div>
+
+        <div className="p-2" style={{ overflowX: "auto" }}>
+          <table className="w-100 mt-2 border-0">
+            <tr className="border-0">
+              <td className="border-0" style={{ fontWeight: 600 }}>
+                Thirty-Two Thousand Three Hundred Seventy-Eight Only
+              </td>
+              <td className="border-0" style={{ fontWeight: 600 }}>
+                Total in: SAR
+              </td>
+              <td className="border-0" style={{ fontWeight: 600 }}>
+                31,718.99
+              </td>
+              {/* <td className="border-0"></td> */}
+              <td className="border-0" style={{ fontWeight: 600 }}>
+                660.00
+              </td>
+              <td className="border-0" style={{ fontWeight: 600 }}>
+                32,378.99
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div className="p-2" style={{ overflowX: "auto" }}>
+          <table className="htmlTable mt-2 w-100">
+            <tr style={{ background: "#dadedf" }}>
+              <th>Container Details</th>
+            </tr>
+            <tr>
+              <td>FCIU6538307, YMMU6330305</td>
+            </tr>
+          </table>
+        </div>
+
+        <div className="row p-2">
+          <div className="col-lg-4 col-xs-12">
+            <table className="htmlTable mt-2 w-100">
+              <tr style={{ background: "#dadedf" }}>
+                <th>No. of Containers</th>
+                <th>TYPE</th>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>20 DC</td>
+              </tr>
+            </table>
           </div>
+          <div className="col-lg-8 col-xs-12"></div>
+        </div>
 
-          <div className="row mt-4">
-            <div className="col-lg-9 col-xs-12">
-              <h5 style={{ color: "#000", fontWeight: 700 }}>
-                Terms & Conditions
-              </h5>
-              <p>
-                If any discrepancy in the invoice must be notified within 7 days
-                from the date of invoice. Otherwise, it shall be considered as
-                acknowledged.
-              </p>
-              <h5 className="mt-4" style={{ color: "#000", fontWeight: 700 }}>
-                BANK DETAILS
-              </h5>
-              <p>ACC NO :</p>
-              <p>IBAN NO : </p>
-              <p>SWIFT :</p>
-            </div>
-            <div className="col-lg-3 col-xs-12"></div>
+        <div className="row mt-4 p-2">
+          <div className="col-lg-9 col-xs-12">
+            <h5 style={{ color: "#000", fontWeight: 700 }}>
+              Terms & Conditions
+            </h5>
+            <p>
+              If any discrepancy in the invoice must be notified within 7 days
+              from the date of invoice. Otherwise, it shall be considered as
+              acknowledged.
+            </p>
+            <h5 className="mt-4" style={{ color: "#000", fontWeight: 700 }}>
+              BANK DETAILS
+            </h5>
+            <p>ACC NO :</p>
+            <p>IBAN NO : </p>
+            <p>SWIFT :</p>
           </div>
+          <div className="col-lg-3 col-xs-12"></div>
+        </div>
 
-          <div className="mt-5 text-center">
+        {/* <div className="mt-5 text-center">
             This is a computer generated document and does not require a
             signature
+          </div> */}
+
+        <div
+          className="row mt-5 mb-0"
+          style={{
+            background: "#009ada",
+            padding: "15px",
+            color: "#fff",
+            fontSize: "60px",
+            fontWeight: 900,
+            textAlign: "center",
+          }}
+        >
+          <div className="col-lg-4 col-xs-12">
+            <h5 className="text-light">
+              <BrowserChrome /> www.adnov.com
+            </h5>
+          </div>
+          <div className="col-lg-4 col-xs-12">
+            <h5 className="text-light">
+              <EnvelopeAtFill /> adnov@gmail.com
+            </h5>
+          </div>
+          <div className="col-lg-4 col-xs-12">
+            <h5 className="text-light">
+              <TelephoneFill /> +91 9999999999
+            </h5>
           </div>
         </div>
       </div>
