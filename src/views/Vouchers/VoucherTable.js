@@ -38,6 +38,14 @@ const VoucherTable = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13"> Job ID</span>,
+      selector: (row) => row,
+      cell: (value) => {
+        return <div>{value.job?.job_number}</div>;
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Book</span>,
       selector: (row) => row.book,
       cell: (value) => {

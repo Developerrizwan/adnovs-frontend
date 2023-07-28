@@ -117,7 +117,7 @@ const JournalVoucher = (props) => {
     setSelectedParty(selParty);
 
     const selJob = jobOptions.find(
-      (cur) => cur.value === Number(props.voucherData?.job?.id)
+      (cur) => cur.value === props.voucherData?.job?.id
     );
     setSelectedJob(selJob);
   };
@@ -229,8 +229,12 @@ const JournalVoucher = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  date: props.voucherData?.date || "",
-                  gl_date: props.voucherData?.gl_date || "",
+                  date: props.voucherData?.date
+                    ? new Date(props.voucherData?.date)
+                    : new Date(),
+                  gl_date: props.voucherData?.gl_date
+                    ? new Date(props.voucherData?.gl_date)
+                    : new Date(),
                   voucher_type:
                     props.voucherData?.voucher_type || selectedVoucher.value,
                   branch: props.voucherData?.branch || "",
@@ -238,15 +242,17 @@ const JournalVoucher = (props) => {
                   book: props.voucherData?.book || "",
                   category: props.voucherData?.category || "",
                   status: props.voucherData?.status || false,
-                  job: props.voucherData?.job || "",
-                  party_account: props.voucherData?.party_account || 3,
+                  job: props.voucherData?.job?.id || "",
+                  party_account: props.voucherData?.party_account || 1,
                   currency: props.voucherData?.currency || "",
                   ex_rate: props.voucherData?.ex_rate || "",
                   address: props.voucherData?.address || "",
                   fc_amount: props.voucherData?.fc_amount || "",
                   amount_sar: props.voucherData?.amount_sar || "",
                   ref_no: props.voucherData?.ref_no || "",
-                  ref_date: props.voucherData?.ref_date || "",
+                  ref_date: props.voucherData?.ref_date
+                    ? new Date(props.voucherData?.ref_date)
+                    : new Date(),
                   naration: props.voucherData?.naration || "",
                   party_state_code: props.voucherData?.party_state_code || "",
                   division: props.voucherData?.division || "",
@@ -260,15 +266,6 @@ const JournalVoucher = (props) => {
                   // party_account: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
-                  // values["job"] = selectedJob.value;
-                  values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
-                  values["gl_date"] = moment(glDate).format(
-                    "YYYY-MM-DDTHH:mm:ss"
-                  );
-                  values["ref_date"] = moment(refDate).format(
-                    "YYYY-MM-DDTHH:mm:ss"
-                  );
-                  values["job"] = Number(values.job);
                   if (props.isEdit && props.voucherData) {
                     apiAuth
                       .patch(
@@ -358,36 +355,44 @@ const JournalVoucher = (props) => {
                           </label>
                           <div
                             style={{
-                              position: "relative",
-                              // cursor: "pointer",
+                              display: "flex",
                             }}
                           >
                             <DatePicker
-                              selected={date}
-                              onChange={(date) => setDate(date)}
+                              selected={values["date"]}
+                              onChange={(date) => {
+                                setFieldValue("date", date);
+                              }}
+                              showTimeSelect
+                              timeFormat="HH:mm"
+                              timeIntervals={15}
+                              timeCaption="Time"
+                              dateFormat="d MMMM yyyy h:mm aa"
                             />
-                            <span
+                            <div
                               style={{
-                                position: "absolute",
-                                top: 8,
-                                right: 10,
-                                fill: "red",
+                                position: "relative",
+                                // cursor: "pointer",
                               }}
                             >
-                              {/* <i className="bi bi-calendar4-week"></i> */}
-                              <img
-                                src="/calendar.svg"
-                                alt="calendar"
-                                width="20px"
-                                height="20px"
-                              />
-                            </span>
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 10,
+                                  fill: "red",
+                                }}
+                              >
+                                {/* <i className="bi bi-calendar4-week"></i> */}
+                                <img
+                                  src="/calendar.svg"
+                                  alt="calendar"
+                                  width="20px"
+                                  height="20px"
+                                />
+                              </span>
+                            </div>
                           </div>
-                          {/* <Field
-                            className="form-control"
-                            name="date"
-                            style={{ background: "#EDEDED" }}
-                          /> */}
                           {errors.date && touched.date && (
                             <div className="invalid-feedback d-block">
                               {errors.date}
@@ -397,46 +402,53 @@ const JournalVoucher = (props) => {
                       </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="glDate" className="form-label">
+                          <label htmlFor="gl_date" className="form-label">
                             G/L Date
                             <span className="text-danger">*</span>
                           </label>
                           <div
                             style={{
-                              position: "relative",
-                              // cursor: "pointer",
+                              display: "flex",
                             }}
                           >
                             <DatePicker
-                              selected={glDate}
-                              onChange={(date) => setGlDate(date)}
+                              selected={values["gl_date"]}
+                              onChange={(date) => {
+                                setFieldValue("gl_date", date);
+                              }}
+                              showTimeSelect
+                              timeFormat="HH:mm"
+                              timeIntervals={15}
+                              timeCaption="Time"
+                              dateFormat="d MMMM yyyy h:mm aa"
                             />
-                            <span
+                            <div
                               style={{
-                                position: "absolute",
-                                top: 8,
-                                right: 10,
-                                fill: "red",
+                                position: "relative",
+                                // cursor: "pointer",
                               }}
                             >
-                              {/* <i className="bi bi-calendar4-week"></i> */}
-                              <img
-                                src="/calendar.svg"
-                                alt="calendar"
-                                width="20px"
-                                height="20px"
-                              />
-                            </span>
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 10,
+                                  fill: "red",
+                                }}
+                              >
+                                {/* <i className="bi bi-calendar4-week"></i> */}
+                                <img
+                                  src="/calendar.svg"
+                                  alt="calendar"
+                                  width="20px"
+                                  height="20px"
+                                />
+                              </span>
+                            </div>
                           </div>
-
-                          {/* <Field
-                            className="form-control"
-                            name="glDate"
-                            style={{ background: "#EDEDED" }}
-                          /> */}
-                          {errors.glDate && touched.glDate && (
+                          {errors.gl_date && touched.gl_date && (
                             <div className="invalid-feedback d-block">
-                              {errors.glDate}
+                              {errors.gl_date}
                             </div>
                           )}
                         </div>
@@ -671,28 +683,43 @@ const JournalVoucher = (props) => {
                           </label>
                           <div
                             style={{
-                              position: "relative",
+                              display: "flex",
                             }}
                           >
                             <DatePicker
-                              selected={refDate}
-                              onChange={(date) => setRefDate(date)}
+                              selected={values["ref_date"]}
+                              onChange={(date) => {
+                                setFieldValue("ref_date", date);
+                              }}
+                              showTimeSelect
+                              timeFormat="HH:mm"
+                              timeIntervals={15}
+                              timeCaption="Time"
+                              dateFormat="d MMMM yyyy h:mm aa"
                             />
-                            <span
+                            <div
                               style={{
-                                position: "absolute",
-                                top: 8,
-                                right: 10,
-                                fill: "red",
+                                position: "relative",
+                                // cursor: "pointer",
                               }}
                             >
-                              <img
-                                src="/calendar.svg"
-                                alt="calendar"
-                                width="20px"
-                                height="20px"
-                              />
-                            </span>
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 10,
+                                  fill: "red",
+                                }}
+                              >
+                                {/* <i className="bi bi-calendar4-week"></i> */}
+                                <img
+                                  src="/calendar.svg"
+                                  alt="calendar"
+                                  width="20px"
+                                  height="20px"
+                                />
+                              </span>
+                            </div>
                           </div>
                           {errors.ref_date && touched.ref_date && (
                             <div className="invalid-feedback d-block">
