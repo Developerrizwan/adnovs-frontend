@@ -22,6 +22,10 @@ const Sales = (props) => {
     value: "Sales",
   });
 
+  const [branchValue, setBranchValue] = useState("JEDDHA");
+
+  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+
   const invoiceTypes = [
     {
       label: "Sales",
@@ -372,23 +376,29 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <div>
-                            <Label htmlFor="branch" className="pe-2 w-50">
-                              Branch
-                              <span className="text-danger">*</span>
-                            </Label>
-                            <Field
-                              className="form-control"
-                              name="branch"
-                              // value={"JEDDAH"}
-                              style={{ background: "#EDEDED" }}
-                            />
-                          </div>
-                          {errors.branch && touched.branch && (
-                            <div className="invalid-feedback d-block">
-                              {errors.branch}
-                            </div>
-                          )}
+                          <Label htmlFor="branch" className="form-label">
+                            Branch
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={branchOptions}
+                            defaultValue={{
+                              label: branchValue,
+                              value: branchValue,
+                            }}
+                            onChange={(data) => {
+                              setFieldValue("branch", data.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="branch"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
                         </div>
                       </Grid>
 

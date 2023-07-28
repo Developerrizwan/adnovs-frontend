@@ -57,7 +57,7 @@ const AddOrganization = (props) => {
     },
   ];
 
-  const branchOptions = () => [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
 
   const getCoaOptions = () => {
     apiAuth
@@ -406,10 +406,11 @@ const AddOrganization = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={branchOptions}
-                            // value={"JEDDHA"}
-                            defaultValue={{ label: branchValue }}
+                            defaultValue={{
+                              label: branchValue,
+                              value: branchValue,
+                            }}
                             onChange={(data) => {
-                              // setBranchValue(data);
                               setFieldValue("branch", data.value);
                             }}
                           />

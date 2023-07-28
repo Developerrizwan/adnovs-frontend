@@ -15,6 +15,7 @@ import { useParams } from "react-router";
 const JournalVoucher = (props) => {
   const history = useHistory();
   const { voucherId } = useParams();
+  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
 
   const [jobs, setJobs] = useState([]);
   const [jobOptions, setJobOptions] = useState([]);
@@ -27,6 +28,8 @@ const JournalVoucher = (props) => {
   const [selOutAmtoption, setSelOutAmtoption] = useState(null);
   const [selCategory, setSelCategory] = useState(null);
   const [selCurrency, setSelCurrency] = useState(null);
+  const [branchValue, setBranchValue] = useState("JEDDHA");
+
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Journal",
     label: "Journal",
@@ -450,17 +453,25 @@ const JournalVoucher = (props) => {
                             Branch
                             <span className="text-danger">*</span>
                           </label>
-                          <Field
-                            className="form-control"
-                            placeholder="Branch"
-                            name="branch"
-                            style={{ background: "#EDEDED" }}
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={branchOptions}
+                            defaultValue={{
+                              label: branchValue,
+                              value: branchValue,
+                            }}
+                            onChange={(data) => {
+                              setFieldValue("branch", data.value);
+                            }}
                           />
-                          {errors.branch && touched.branch && (
-                            <div className="invalid-feedback d-block">
-                              {errors.branch}
-                            </div>
-                          )}
+                          <ErrorMessage
+                            name="branch"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
                         </div>
                       </Grid>
                       <Grid item lg={4} xs={12}>
