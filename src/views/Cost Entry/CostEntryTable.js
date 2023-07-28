@@ -26,6 +26,11 @@ const CostEntryTable = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13"> Voucher</span>,
+      selector: (row) => row.voucher_type,
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Job No</span>,
       selector: (row) => row.job_no,
       sortable: true,

@@ -12,7 +12,7 @@ const Vouchers = (props) => {
   const [createModal, setCreateModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState("/journal-voucher");
   const [searchValue, setSearchValue] = useState("");
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Journal",
