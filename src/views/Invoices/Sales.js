@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Row, Button, Label } from "reactstrap";
+import { Row, Button, Label, Modal, ModalHeader, ModalBody } from "reactstrap";
 import * as Yup from "yup";
 import { Formik, Field, ErrorMessage } from "formik";
 import { Form } from "react-formik-ui";
@@ -10,6 +10,7 @@ import moment from "moment";
 import DatePicker from "react-datepicker";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
+import GenerateInvoice from "./GenerateInvoice";
 
 const Sales = (props) => {
   const [jobOptions, setJobOptions] = useState([]);
@@ -17,6 +18,9 @@ const Sales = (props) => {
   const [is_password_hidden, set_is_password_hidden] = useState(false);
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
+
+  const [generateInvoiceModal, setGenerateInvoiceModal] = useState(false);
+
   const [invoiceType, setInvoiceType] = useState({
     label: "Sales",
     value: "Sales",
@@ -635,6 +639,13 @@ const Sales = (props) => {
                           {props.isEdit ? "Update" : "Save"}
                         </span>
                       </Button>{" "}
+                      <Button
+                        className="btn btn-info float-right"
+                        onClick={() => setGenerateInvoiceModal(true)}
+                      >
+                        {" "}
+                        Generate Invoice
+                      </Button>
                     </div>
                   </Form>
                 )}
@@ -643,6 +654,28 @@ const Sales = (props) => {
           </Grid>
         </Grid>
       </div>
+
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={generateInvoiceModal}
+        toggle={() => {
+          setGenerateInvoiceModal((prev) => !prev);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setGenerateInvoiceModal((prev) => !prev);
+          }}
+        >
+          Invoice
+        </ModalHeader>
+        <ModalBody>
+          <GenerateInvoice />
+        </ModalBody>
+      </Modal>
     </React.Fragment>
   );
 };
