@@ -25,21 +25,33 @@ const UserManagementTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13"> Name</span>,
       selector: (row) => row.first_name + " " + row.last_name,
+      cell: (value) => {
+        return <div>{value.first_name + " " + value.last_name}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Email</span>,
       selector: (row) => row.email,
+      cell: (value) => {
+        return <div>{value.email}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Mobile</span>,
       selector: (row) => row.mobile,
+      cell: (value) => {
+        return <div>{value.mobile}</div>;
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Role</span>,
       selector: (row) => row.groups,
+      cell: (value) => {
+        return <div>{value.groups}</div>;
+      },
       sortable: true,
     },
     {

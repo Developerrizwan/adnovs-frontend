@@ -289,8 +289,14 @@ const AddOrganization = (props) => {
                           <Field
                             className="form-control"
                             name="browse_logo"
-                            type="input"
+                            type="file"
                             fileType="image/*"
+                            onChange={(event) => {
+                              setFieldValue(
+                                "browse_logo",
+                                event.currentTarget.files[0]
+                              );
+                            }}
                             style={{ background: "#EDEDED" }}
                           />
                           <ErrorMessage
