@@ -12,7 +12,7 @@ const Vouchers = (props) => {
   const [createModal, setCreateModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState("/journal-voucher");
   const [searchValue, setSearchValue] = useState("");
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Journal",
@@ -104,7 +104,7 @@ const Vouchers = (props) => {
             createNew={() => {
               setCreateModal(true);
             }}
-            add_new_url={url}
+            add_new_url={`/voucher/${selectedVoucher.value}`}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
@@ -117,7 +117,7 @@ const Vouchers = (props) => {
             options={voucherOptions}
             handleTypeChange={(data) => {
               setSelectedVoucher(data);
-              changeRoute(data);
+              // changeRoute(data);
               getSelVoucherData(pagination, searchValue, data.value);
             }}
           />

@@ -9,62 +9,50 @@ import "../../App.css";
 import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
 import NotificationManager from "../../components/Common/NotificationManager";
-
-const options = [
-  { value: "all", label: "All" },
-  { value: "option1", label: "Option1" },
-];
+import { getAllISOCodes } from "iso-country-currency";
+import { useParams } from "react-router";
 
 const JournalVoucher = (props) => {
   const history = useHistory();
+  const { voucherId } = useParams();
 
   const [jobs, setJobs] = useState([]);
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [selectedOption, setSelectedOption] = useState({
-    value: "all",
-    label: "All",
-  });
   const [date, setDate] = useState(new Date());
   const [glDate, setGlDate] = useState(new Date());
+  const [refDate, setRefDate] = useState(new Date());
+  const [selectedParty, setSelectedParty] = useState(null);
+  const [selectedConcern, setSelectedConcern] = useState(null);
+  const [selOutAmtoption, setSelOutAmtoption] = useState(null);
+  const [selCategory, setSelCategory] = useState(null);
+  const [selCurrency, setSelCurrency] = useState(null);
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Journal",
     label: "Journal",
   });
-  const [selectedParty, setSelectedParty] = useState(null);
-  const [selectedConcern, setSelectedConcern] = useState(null);
-  const [selOutAmtoption, setSelOutAmtoption] = useState(null);
+  const [selStatus, setSelStatus] = useState({
+    value: "Active",
+    label: "Active",
+  });
+  const [selInstType, setSelInstType] = useState({
+    value: "Cash",
+    label: "Cash",
+  });
 
-  useEffect(() => {
-    getJobs();
-  }, []);
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [currencyOptions, setCurrencyOptions] = useState([]);
+  const [coaOptions, setCoaOptions] = useState([]);
 
-  useEffect(() => {
-    if (props.isEdit && jobOptions.length) {
-      const sel = jobOptions.find((opt) => opt?.id === props.voucherData?.job);
-      setSelectedJob(sel);
-    }
-    if (props.isEdit && jobOptions.length) {
-      const sel = jobOptions.find((opt) => opt?.id === props.voucherData?.job);
-      setSelectedJob(sel);
-    }
-  }, [jobOptions, props]);
+  const instTypeOptions = [
+    { value: "Cash", label: "Cash" },
+    { value: "Card", label: "Card" },
+  ];
 
-  const getJobs = () => {
-    apiAuth
-      .get("/api/master/job/")
-      .then((res) => {
-        const { data } = res;
-        let opts = data.map((dd) => {
-          return {
-            label: `${dd?.bl_number} - ${dd?.consignee_name}`,
-            value: dd?.id,
-          };
-        });
-        setJobOptions(opts);
-      })
-      .catch((err) => console.log(err));
-  };
+  const statusOptions = [
+    { value: "Active", label: "Active" },
+    { value: "Inactive", label: "Inactive" },
+  ];
 
   const voucherOptions = [
     { value: "Journal", label: "Journal" },
@@ -80,17 +68,131 @@ const JournalVoucher = (props) => {
     { value: "Party 3", label: "Party 3" },
   ];
 
-  const concernOptions = [
-    { value: "ConcernOpt 1", label: "ConcernOpt 1" },
-    { value: "ConcernOpt 2", label: "ConcernOpt 2" },
-    { value: "ConcernOpt 3", label: "ConcernOpt 3" },
-  ];
+  useEffect(() => {
+    getJobOptions();
+    getCoaOptions();
+    getAllCurrencyCodes();
+    getCategoryOptions();
+    setSelectedVoucher({
+      label: voucherId,
+      value: voucherId,
+    });
+  }, []);
 
-  const OutAmtOptions = [
-    { value: "OutAmtOpt 1", label: "OutAmtOpt 1" },
-    { value: "OutAmtOpt 2", label: "OutAmtOpt 2" },
-    { value: "OutAmtOpt 3", label: "OutAmtOpt 3" },
-  ];
+  useEffect(() => {
+    if (props.isEdit) {
+      getInitialValues();
+    }
+    getCoaOptions();
+  }, [props.isEdit, coaOptions.length]);
+
+  const getInitialValues = () => {
+    const selvoucher = voucherOptions.find(
+      (dd) => dd.value === props.voucherData?.voucher_type
+    );
+    setSelectedVoucher(selvoucher);
+
+    const selectedCategory = categoryOptions.find(
+      (dd) => dd.value === props.voucherData?.category
+    );
+    setSelCategory(selectedCategory);
+
+    const selectedStatus = props.voucherData.status
+      ? { label: "Active", value: true }
+      : { label: "Inactive", value: false };
+    setSelStatus(selectedStatus);
+
+    const selCurr = currencyOptions.find(
+      (cur) => cur.value === props.voucherData?.currency
+    );
+    setSelCurrency(selCurr);
+
+    const selParty = coaOptions.find(
+      (cur) => cur.value === Number(props.voucherData?.party_account)
+    );
+    setSelectedParty(selParty);
+
+    const selJob = jobOptions.find(
+      (cur) => cur.value === Number(props.voucherData?.job?.id)
+    );
+    setSelectedJob(selJob);
+  };
+  const getAllCurrencyCodes = () => {
+    let allCurrencies = getAllISOCodes();
+    allCurrencies = allCurrencies.map((cur) => {
+      return {
+        label: cur.currency + "  -  " + cur.countryName,
+        value: cur.currency + "  -  " + cur.countryName,
+      };
+    });
+    setCurrencyOptions(allCurrencies);
+  };
+
+  const getCategoryOptions = () => {
+    apiAuth
+      .get("/api/master/coacategory/")
+      .then((res) => {
+        const { data } = res;
+        const catOptions = data.results.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.name,
+          };
+        });
+        setCategoryOptions(catOptions);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const getCoaOptions = () => {
+    apiAuth
+      .get(`/api/master/coa/`)
+      .then((res) => {
+        let {
+          data: { results },
+        } = res;
+        results = results.map((rr) => {
+          return {
+            label: rr.code,
+            value: rr.id,
+          };
+        });
+        setCoaOptions(results);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const getJobOptions = (val) => {
+    apiAuth
+      .get(`/api/get-jobs/?&page=${1}&search=${val || ""}&type=Job`)
+      .then((res) => {
+        const { data } = res;
+        let jobOpts = data.results.map((opt) => {
+          return {
+            label: opt?.job_number,
+            value: opt?.id,
+          };
+        });
+        setJobOptions(jobOpts);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // const getJobs = () => {
+  //   apiAuth
+  //     .get(`/api/get-jobs/`)
+  //     .then((res) => {
+  //       const { data } = res;
+  //       let opts = data.map((dd) => {
+  //         return {
+  //           label: `${dd?.bl_number} - ${dd?.consignee_name}`,
+  //           value: dd?.id,
+  //         };
+  //       });
+  //       setJobOptions(opts);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
   const customStyles = {
     control: (provided, state) => ({
@@ -128,7 +230,7 @@ const JournalVoucher = (props) => {
               className="mb-3"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h2 className="mx-5">Journal Voucher</h2>
+              <h2 className="mx-5">{selectedVoucher.value} Voucher</h2>
               <button className="btn btn-danger" onClick={goBack}>
                 Back
               </button>
@@ -141,39 +243,46 @@ const JournalVoucher = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  voucher_type: props.voucherData?.voucher_type || "Journal",
-                  job: String(props.voucherData?.job) || "",
-                  branch: props.voucherData?.branch || "",
-                  book: props.voucherData?.book || "Book",
                   date: props.voucherData?.date || "",
-                  glDate: props.voucherData?.glDate || "",
+                  gl_date: props.voucherData?.gl_date || "",
+                  voucher_type:
+                    props.voucherData?.voucher_type || selectedVoucher.value,
+                  branch: props.voucherData?.branch || "",
+                  period: props.voucherData?.period || "",
+                  book: props.voucherData?.book || "",
+                  category: props.voucherData?.category || "",
+                  status: props.voucherData?.status || false,
+                  job: props.voucherData?.job || "",
+                  party_account: props.voucherData?.party_account || "",
+                  currency: props.voucherData?.currency || "",
+                  ex_rate: props.voucherData?.ex_rate || "",
+                  address: props.voucherData?.address || "",
                   fc_amount: props.voucherData?.fc_amount || "",
                   amount_sar: props.voucherData?.amount_sar || "",
-                  party_account: props.voucherData?.party_account || "",
-                  against_concern: props.voucherData?.against_concern || "",
+                  ref_no: props.voucherData?.ref_no || "",
+                  ref_date: props.voucherData?.ref_date || "",
                   naration: props.voucherData?.naration || "",
-                  outstanding_amount:
-                    props.voucherData?.outstanding_amount || "",
+                  party_state_code: props.voucherData?.party_state_code || "",
+                  division: props.voucherData?.division || "",
                   remarks: props.voucherData?.remarks || "",
                 }}
                 validationSchema={Yup.object({
-                  // job: Yup.string().ensure().required("Job is Required"),
-                  branch: Yup.string().required("Branch is Required"),
-                  book: Yup.string().required("Book is Required"),
-                  fc_amount: Yup.string().required("FC Amount is Required"),
-                  amount_sar: Yup.string().required("SAR Amount is Required"),
-                  naration: Yup.string().required("naration is Required"),
-                  // outstandingAmount: Yup.string().required(
-                  //   "Outstanding Amount is Required"
-                  // ),
-                  remarks: Yup.string().required("Remarks is Required"),
+                  branch: Yup.string().required("Required!"),
+                  book: Yup.string().required("Required!"),
+                  period: Yup.string().required("Required!"),
+                  job: Yup.string().required("Required!"),
+                  party_account: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
                   // values["job"] = selectedJob.value;
                   values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
-                  values["glDate"] = moment(glDate).format(
+                  values["gl_date"] = moment(glDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
                   );
+                  values["ref_date"] = moment(refDate).format(
+                    "YYYY-MM-DDTHH:mm:ss"
+                  );
+                  values["job"] = Number(values.job);
                   if (props.isEdit && props.voucherData) {
                     apiAuth
                       .patch(
@@ -231,7 +340,7 @@ const JournalVoucher = (props) => {
                 {({ values, errors, touched, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="voucher_type" className="form-label">
                             Voucher Type
@@ -243,8 +352,9 @@ const JournalVoucher = (props) => {
                             value={selectedVoucher}
                             options={voucherOptions}
                             onChange={(event) => {
-                              routePage(event);
-                              // setSelectedVoucher(event.value);
+                              console.log(event, "event");
+                              setSelectedVoucher(event);
+                              setFieldValue("voucher_type", event.value);
                             }}
                           />
                           {errors.voucher_type && touched.voucher_type && (
@@ -254,72 +364,7 @@ const JournalVoucher = (props) => {
                           )}
                         </div>
                       </Grid>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="party_account" className="form-label">
-                            Job Type
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            name="job"
-                            options={jobOptions}
-                            value={selectedJob}
-                            onChange={(data) => {
-                              setFieldValue("job", data.value);
-                              setSelectedJob(data);
-                            }}
-                            styles={customStyles}
-                          />
-                          {errors.party && touched.party && (
-                            <div className="invalid-feedback d-block">
-                              {errors.party}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="branch" className="form-label">
-                            Branch
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            className="form-control"
-                            name="branch"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.branch && touched.branch && (
-                            <div className="invalid-feedback d-block">
-                              {errors.branch}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="book" className="form-label">
-                            Book
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            className="form-control"
-                            name="book"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.book && touched.book && (
-                            <div className="invalid-feedback d-block">
-                              {errors.book}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="date" className="form-label">
                             Date
@@ -364,8 +409,7 @@ const JournalVoucher = (props) => {
                           )}
                         </div>
                       </Grid>
-
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="glDate" className="form-label">
                             G/L Date
@@ -414,13 +458,274 @@ const JournalVoucher = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="branch" className="form-label">
+                            Branch
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Field
+                            className="form-control"
+                            placeholder="Branch"
+                            name="branch"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.branch && touched.branch && (
+                            <div className="invalid-feedback d-block">
+                              {errors.branch}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="period" className="form-label">
+                            Period
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Field
+                            placeholder="Period"
+                            className="form-control"
+                            name="period"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.period && touched.period && (
+                            <div className="invalid-feedback d-block">
+                              {errors.period}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="book" className="form-label">
+                            Book
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Field
+                            className="form-control"
+                            placeholder="Book"
+                            name="book"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.book && touched.book && (
+                            <div className="invalid-feedback d-block">
+                              {errors.book}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="category" className="form-label">
+                            Category
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            options={categoryOptions}
+                            value={selCategory}
+                            onChange={(data) => {
+                              setFieldValue("category", data.label);
+                              setSelCategory(data);
+                            }}
+                            styles={customStyles}
+                          />
+                          {errors.category && touched.category && (
+                            <div className="invalid-feedback d-block">
+                              {errors.category}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="status" className="form-label">
+                            Status
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            options={statusOptions}
+                            value={selStatus}
+                            onChange={(data) => {
+                              setFieldValue("status", data.label);
+                              setSelStatus(data);
+                            }}
+                            styles={customStyles}
+                          />
+                          {errors.status && touched.status && (
+                            <div className="invalid-feedback d-block">
+                              {errors.status}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="currency" className="form-label">
+                            Currency
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="currency"
+                            styles={customStyles}
+                            value={selCurrency}
+                            options={currencyOptions}
+                            onChange={(data) => {
+                              setFieldValue("currency", data.value);
+                              // console.log("eeeee", data);
+                              setSelCurrency(data);
+                            }}
+                          />
+                          {errors.currency && touched.currency && (
+                            <div className="invalid-feedback d-block">
+                              {errors.currency}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="party_account" className="form-label">
+                            Party A/C
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="party_account"
+                            styles={customStyles}
+                            value={selectedParty}
+                            options={coaOptions}
+                            onChange={(data) => {
+                              setFieldValue("party_account", data.value);
+                              setSelectedParty(data);
+                            }}
+                          />
+                          {errors.party_account && touched.party_account && (
+                            <div className="invalid-feedback d-block">
+                              {errors.party_account}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="job" className="form-label">
+                            Job Type
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="job"
+                            options={jobOptions}
+                            value={selectedJob}
+                            onChange={(data) => {
+                              setFieldValue("job", data.value);
+                              setSelectedJob(data);
+                            }}
+                            styles={customStyles}
+                          />
+                          {errors.job && touched.job && (
+                            <div className="invalid-feedback d-block">
+                              {errors.job}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="ex_rate" className="form-label">
+                            Ex Rate
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Field
+                            placeholder="Ex Rate"
+                            className="form-control"
+                            name="ex_rate"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.ex_rate && touched.ex_rate && (
+                            <div className="invalid-feedback d-block">
+                              {errors.ex_rate}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={8} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="address" className="form-label">
+                            Address
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Field
+                            placeholder="Address"
+                            className="form-control"
+                            name="address"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.address && touched.address && (
+                            <div className="invalid-feedback d-block">
+                              {errors.address}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="ref_date" className="form-label">
+                            Ref Date
+                            <span className="text-danger">*</span>
+                          </label>
+                          <div
+                            style={{
+                              position: "relative",
+                            }}
+                          >
+                            <DatePicker
+                              selected={refDate}
+                              onChange={(date) => setRefDate(date)}
+                            />
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                right: 10,
+                                fill: "red",
+                              }}
+                            >
+                              <img
+                                src="/calendar.svg"
+                                alt="calendar"
+                                width="20px"
+                                height="20px"
+                              />
+                            </span>
+                          </div>
+                          {errors.ref_date && touched.ref_date && (
+                            <div className="invalid-feedback d-block">
+                              {errors.ref_date}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="fc_amount" className="form-label">
                             FC Amount
                             <span className="text-danger">*</span>
                           </label>
                           <Field
+                            placeholder="FCY Amount"
                             className="form-control"
                             name="fc_amount"
                             style={{ background: "#EDEDED" }}
@@ -432,14 +737,14 @@ const JournalVoucher = (props) => {
                           )}
                         </div>
                       </Grid>
-
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="amount_sar" className="form-label">
                             Amount (SAR)
                             <span className="text-danger">*</span>
                           </label>
                           <Field
+                            placeholder="Amount (SAR)"
                             className="form-control"
                             name="amount_sar"
                             style={{ background: "#EDEDED" }}
@@ -451,62 +756,29 @@ const JournalVoucher = (props) => {
                           )}
                         </div>
                       </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="party_account" className="form-label">
-                            Party A/c
+                          <label htmlFor="ref_no" className="form-label">
+                            Ref No
                             <span className="text-danger">*</span>
                           </label>
-                          <Select
-                            options={partyOptions}
-                            value={selectedParty}
-                            onChange={(data) => {
-                              setFieldValue("party_account", data.label);
-                              setSelectedParty(data);
-                            }}
-                            styles={customStyles}
+                          <Field
+                            placeholder="Ref No"
+                            className="form-control"
+                            name="ref_no"
+                            style={{ background: "#EDEDED" }}
                           />
-                          {errors.party_account && touched.party_account && (
+                          {errors.ref_no && touched.ref_no && (
                             <div className="invalid-feedback d-block">
-                              {errors.party_account}
+                              {errors.ref_no}
                             </div>
                           )}
                         </div>
                       </Grid>
-
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label
-                            htmlFor="against_concern"
-                            className="form-label"
-                          >
-                            Against Concern
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            options={concernOptions}
-                            value={selectedConcern}
-                            onChange={(data) => {
-                              setFieldValue("against_concern", data.label);
-                              setSelectedConcern(data);
-                            }}
-                            styles={customStyles}
-                          />
-                          {errors.against_concern &&
-                            touched.against_concern && (
-                              <div className="invalid-feedback d-block">
-                                {errors.against_concern}
-                              </div>
-                            )}
-                        </div>
-                      </Grid>
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="naration" className="form-label">
                             Naration
@@ -515,6 +787,7 @@ const JournalVoucher = (props) => {
                           <Field
                             className="form-control"
                             name="naration"
+                            placeholder="Naration"
                             style={{ background: "#EDEDED" }}
                           />
                           {errors.naration && touched.naration && (
@@ -524,34 +797,129 @@ const JournalVoucher = (props) => {
                           )}
                         </div>
                       </Grid>
-
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label
-                            htmlFor="outstanding_amount"
+                            htmlFor="party_state_code"
                             className="form-label"
                           >
-                            Outstanding Amount
+                            Party State Code
                             <span className="text-danger">*</span>
                           </label>
-                          <Select
-                            options={OutAmtOptions}
-                            value={selOutAmtoption}
-                            onChange={(data) => {
-                              setFieldValue("outstanding_amount", data.label);
-                              setSelOutAmtoption(data);
-                            }}
-                            styles={customStyles}
+                          <Field
+                            name="party_state_code"
+                            className="form-control"
+                            placeholder="Party State Code"
+                            style={{ background: "#EDEDED" }}
                           />
-                          {errors.outstanding_amount &&
-                            touched.outstanding_amount && (
+                          {errors.party_state_code &&
+                            touched.party_state_code && (
                               <div className="invalid-feedback d-block">
-                                {errors.outstanding_amount}
+                                {errors.party_state_code}
                               </div>
                             )}
                         </div>
                       </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="division" className="form-label">
+                            Division
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Field
+                            name="division"
+                            className="form-control"
+                            placeholder="division"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.division && touched.division && (
+                            <div className="invalid-feedback d-block">
+                              {errors.division}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
                     </Grid>
+
+                    {(selectedVoucher.value === "Payment" ||
+                      selectedVoucher.value === "Receipt") && (
+                      <Grid container spacing={2}>
+                        {selectedVoucher.value === "Payment" && (
+                          <Grid item lg={4} xs={12}>
+                            <div className="mb-3">
+                              <label htmlFor="pay_to" className="form-label">
+                                Pay To
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                className="form-control"
+                                name="pay_to"
+                                placeholder="Pay To"
+                                style={{ background: "#EDEDED" }}
+                              />
+                              {errors.pay_to && touched.pay_to && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.pay_to}
+                                </div>
+                              )}
+                            </div>
+                          </Grid>
+                        )}
+                        {selectedVoucher.value === "Receipt" && (
+                          <Grid item lg={4} xs={12}>
+                            <div className="mb-3">
+                              <label
+                                htmlFor="recieved_from"
+                                className="form-label"
+                              >
+                                Recieved from
+                                <span className="text-danger">*</span>
+                              </label>
+                              <Field
+                                className="form-control"
+                                name="recieved_from"
+                                placeholder="Recieved from"
+                                style={{ background: "#EDEDED" }}
+                              />
+                              {errors.recieved_from &&
+                                touched.recieved_from && (
+                                  <div className="invalid-feedback d-block">
+                                    {errors.recieved_from}
+                                  </div>
+                                )}
+                            </div>
+                          </Grid>
+                        )}
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <label
+                              htmlFor="instrument_type"
+                              className="form-label"
+                            >
+                              Instrument Type
+                              <span className="text-danger">*</span>
+                            </label>
+
+                            <Select
+                              name="party_account"
+                              styles={customStyles}
+                              value={selInstType}
+                              options={instTypeOptions}
+                              onChange={(data) => {
+                                setFieldValue("party_account", data.value);
+                                setSelInstType(data);
+                              }}
+                            />
+                            {errors.instrument_type &&
+                              touched.instrument_type && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.instrument_type}
+                                </div>
+                              )}
+                          </div>
+                        </Grid>
+                      </Grid>
+                    )}
 
                     <div className="mb-3">
                       <label htmlFor="remarks" className="form-label">

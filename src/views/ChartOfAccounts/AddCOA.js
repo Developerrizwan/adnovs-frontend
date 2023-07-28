@@ -215,8 +215,14 @@ const AddCOA = (props) => {
         <Grid container spacing={2}>
           <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
+              {/* {console.log(
+                "wwwwwwww",
+                JSON.parse(localStorage.getItem("authUser"))
+              )} */}
               <Formik
                 initialValues={{
+                  company: JSON.parse(localStorage.getItem("authUser"))
+                    .company_id,
                   code: props.account?.code || "",
                   name: props.account?.name || "",
                   status: props.account?.status || false,

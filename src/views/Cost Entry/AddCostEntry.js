@@ -14,7 +14,10 @@ import { getAllISOCodes } from "iso-country-currency";
 const AddCostEntry = (props) => {
   const history = useHistory();
 
-  const [selVoucher, setSelVoucher] = useState(null);
+  const [selVoucher, setSelVoucher] = useState({
+    value: "Journal",
+    label: "Journal",
+  });
   const [selCurrency, setSelCurrency] = useState(null);
   const [selStatus, setSelStatus] = useState(null);
   const [selJob, setSelJob] = useState(null);
@@ -141,6 +144,11 @@ const AddCostEntry = (props) => {
   }, [currencyOptions.length, jobOptions.length, chargeOptions.length]);
 
   const getInitialValues = () => {
+    const selectedVoucher = voucherOptions.find(
+      (dd) => dd.value === props.entry?.voucher_type
+    );
+    setSelVoucher(selectedVoucher);
+
     const selectedCharge = chargeOptions.find(
       (dd) => dd.value === props.entry?.charge
     );
