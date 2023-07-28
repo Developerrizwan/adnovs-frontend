@@ -9,12 +9,6 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
 
 const EditJob = (props) => {
-  const etaTime = props.allJobs.eta;
-  const etdTime = props.allJobs.etd;
-
-  const etaDateObj = new Date(etaTime);
-  const etdDateObj = new Date(etdTime);
-
   const [jobType, setJobType] = useState(null);
   const [typevalue, setTypevalue] = useState(null);
   const [scopeType, setScopeType] = useState(null);
@@ -22,15 +16,9 @@ const EditJob = (props) => {
   const [poaValue, setPoaValue] = useState(null);
   const [podValue, setPodValue] = useState(null);
   const [containerTypesValue, setContainerTypesValue] = useState(null);
-  const [eta, setEta] = useState(etaDateObj);
-  const [etd, setEtd] = useState(etdDateObj);
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
-  const [organization_type, setOrganization_type] = useState([]);
   const [branchValue, setBranchValue] = useState("JEDDHA");
-
-  const [organizationtypeValue, setOrganizationtypeValue] = useState(null);
-
   const branchOptions = () => [{ label: "JEDDHA", value: "JEDDHA" }];
 
   const options = [
@@ -120,58 +108,40 @@ const EditJob = (props) => {
     },
   ];
 
-  useEffect(
-    () => {
-      const jobtype = options.find(
-        (item) => item.value === props.allJobs.job_type
-      );
-      setJobType(jobtype);
-      const scopeType = scopeofworkOptions.find(
-        (item) => item.value === props.allJobs.scope_of_work
-      );
-      setScopeType(scopeType);
-      const type = typeOptions.find(
-        (item) => item.value === props.allJobs.type
-      );
-      setTypevalue(type);
-      const jobStatus = statusOptions.find(
-        (item) => item.value === props.allJobs.job_status
-      );
-      setJobStatus(jobStatus);
+  useEffect(() => {
+    const jobtype = options.find(
+      (item) => item.value === props.allJobs.job_type
+    );
+    setJobType(jobtype);
+    const scopeType = scopeofworkOptions.find(
+      (item) => item.value === props.allJobs.scope_of_work
+    );
+    setScopeType(scopeType);
+    const type = typeOptions.find((item) => item.value === props.allJobs.type);
+    setTypevalue(type);
+    const jobStatus = statusOptions.find(
+      (item) => item.value === props.allJobs.job_status
+    );
+    setJobStatus(jobStatus);
 
-      const organization_type = OrganizationTypeOptions.find(
-        (item) => item.value === props.allJobs.organization_type
-      );
-      setOrganizationtypeValue(organization_type);
+    const container_type = containerTypes.find(
+      (item) => item.value === props.allJobs.container_type
+    );
+    setContainerTypesValue(container_type);
+    const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
+    setPoaValue({
+      label: props.allJobs.poa,
+      value: props.allJobs.poa,
+    });
+    const pod_Value = podOptions.find(
+      (item) => item.value === props.allJobs?.pod
+    );
 
-      const container_type = containerTypes.find(
-        (item) => item.value === props.allJobs.container_type
-      );
-      setContainerTypesValue(container_type);
-      const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
-      setPoaValue({
-        label: props.allJobs.poa,
-        value: props.allJobs.poa,
-      });
-      const pod_Value = podOptions.find(
-        (item) => item.value === props.allJobs?.pod
-      );
-
-      setPodValue({
-        label: props.allJobs.pod,
-        value: props.allJobs.pod,
-      });
-    },
-    [
-      // props.allJobs.job_type,
-      // props.allJobs.scope_of_work,
-      // props.allJobs.type,
-      // props.allJobs.job_status,
-      // props.allJobs.container_type,
-      // props.allJobs.poa,
-      // props.allJobs.pod,
-    ]
-  );
+    setPodValue({
+      label: props.allJobs.pod,
+      value: props.allJobs.pod,
+    });
+  }, []);
 
   const typeOptions = [
     {
@@ -371,12 +341,6 @@ const EditJob = (props) => {
     }),
   };
 
-  const handleMultiSelectChange = (data) => {
-    console.log("cdcdecc", data);
-    setOrganizationtypeValue(data.map((item) => item.label));
-    // setOrganizationtypeValue(data);
-  };
-
   return (
     <React.Fragment>
       <span>Job Number: {props.allJobs.job_number}</span>
@@ -416,11 +380,20 @@ const EditJob = (props) => {
               scope_of_work: props?.allJobs?.scope_of_work
                 ? props?.allJobs?.scope_of_work
                 : "",
-              eta: props?.allJobs?.eta ? props?.allJobs?.eta : new Date(),
-              etd: props?.allJobs?.etd ? props?.allJobs?.etd : new Date(),
+              eta: props?.allJobs?.eta
+                ? new Date(props?.allJobs?.eta)
+                : new Date(),
+              etd: props?.allJobs?.etd
+                ? new Date(props?.allJobs?.etd)
+                : new Date(),
               organization_type: props?.allJobs?.organization_type
                 ? props?.allJobs?.organization_type
-                : "",
+                : [],
+              selected_organization_type: props?.allJobs?.organization_type
+                ? props?.allJobs?.organization_type?.map((ot) => {
+                    return { label: ot, value: ot };
+                  })
+                : [],
               branch: props?.allJobs?.branch
                 ? props?.allJobs?.branch
                 : "JEDDHA",
@@ -464,9 +437,6 @@ const EditJob = (props) => {
                 localStorage.getItem("authUser")
               )?.company_id;
               values["company"] = company;
-              values["eta"] = eta;
-              values["etd"] = etd;
-              values["organization_type"] = organization_type;
 
               const url = `/api/master/job/${props.allJobs.id}/`;
               apiAuth
@@ -602,10 +572,6 @@ const EditJob = (props) => {
                           };
                         })}
                         value={podValue}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
                         onChange={(data) => {
                           setPodValue(data);
                           setFieldValue("pod", data.value);
@@ -662,10 +628,6 @@ const EditJob = (props) => {
                           };
                         })}
                         value={poaValue}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
                         onChange={(data) => {
                           setPoaValue(data);
                           setFieldValue("poa", data.value);
@@ -693,7 +655,6 @@ const EditJob = (props) => {
                         styles={customStyles}
                         options={containerTypes}
                         value={containerTypesValue}
-                        // defaultValue={{ label: jobStatus }}
                         onChange={(data) => {
                           setContainerTypesValue(data);
                           setFieldValue("container_type", data.value);
@@ -744,10 +705,6 @@ const EditJob = (props) => {
                         styles={customStyles}
                         options={typeOptions}
                         value={typevalue}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
                         onChange={(data) => {
                           setTypevalue(data);
                           setFieldValue("type", data.value);
@@ -778,10 +735,6 @@ const EditJob = (props) => {
                         styles={customStyles}
                         value={scopeType}
                         options={scopeofworkOptions}
-                        // defaultValue={{ label: jobType }}
-                        // onChange={(event) => {
-                        //   setJobType(event.value);
-                        // }}
                         onChange={(data) => {
                           setScopeType(data);
                           setFieldValue("scope_of_work", data.value);
@@ -804,9 +757,9 @@ const EditJob = (props) => {
                         <span className="text-danger">*</span>
                       </Label>
                       <DatePicker
-                        selected={eta}
+                        selected={values["eta"]}
                         onChange={(date) => {
-                          setEta(date);
+                          setFieldValue("eta", date);
                         }}
                         showTimeSelect
                         timeFormat="HH:mm"
@@ -832,9 +785,9 @@ const EditJob = (props) => {
                         <span className="text-danger">*</span>
                       </Label>
                       <DatePicker
-                        selected={etd}
+                        selected={values["etd"]}
                         onChange={(date) => {
-                          setEtd(date);
+                          setFieldValue("etd", date);
                         }}
                         showTimeSelect
                         timeFormat="HH:mm"
@@ -920,10 +873,16 @@ const EditJob = (props) => {
                         styles={customStyles}
                         options={OrganizationTypeOptions}
                         isMulti
-                        value={organizationtypeValue}
+                        value={values["selected_organization_type"]}
                         onChange={(data) => {
-                          handleMultiSelectChange(data);
-                          setFieldValue("organization_type", data.value);
+                          setFieldValue(
+                            "organization_type",
+                            data.map((dd) => dd.value)
+                          );
+                          setFieldValue(
+                            "selected_organization_type",
+                            data.value
+                          );
                         }}
                       />
                       <ErrorMessage
