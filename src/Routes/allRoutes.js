@@ -129,7 +129,7 @@ const authProtectedRoutes = [
   { path: "/user-management/edit/:userId", component: EditUser },
   { path: "/user-management", component: UserManagement },
   { path: "/invoices", component: Invoices },
-  { path: "/invoices/add", component: Sales },
+  { path: "/invoices/:invoicesId", component: Sales },
   { path: "/purchase", component: Purchase },
   // { path: "/sales", component: Sales},
   { path: "/project", component: Project },

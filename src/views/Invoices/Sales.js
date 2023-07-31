@@ -11,15 +11,30 @@ import DatePicker from "react-datepicker";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import GenerateInvoice from "./GenerateInvoice";
+import { useParams } from "react-router";
 
 const Sales = (props) => {
+  const { invoicesId } = useParams();
+
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [is_password_hidden, set_is_password_hidden] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const [consigneeNameValue, setConsigneeNameValue] = useState(null);
+  const [clientNameValue, setClientNameValue] = useState("Client");
 
   const [generateInvoiceModal, setGenerateInvoiceModal] = useState(false);
+  const [podOptions, setPodOptions] = useState([]);
+  const [poaOptions, setPoaOptions] = useState([]);
+  const [poaValue, setPoaValue] = useState(null);
+  const [date, setDate] = useState(new Date());
+  const [refDate, setRefDate] = useState(new Date());
+  const [dueDate, setDueDate] = useState(new Date());
+  const [podValue, setPodValue] = useState(null);
+  const [selectedInvoice, setSelectedInvoice] = useState({
+    value: "Sales",
+    label: "Sales",
+  });
 
   const [invoiceType, setInvoiceType] = useState({
     label: "Sales",
@@ -27,8 +42,11 @@ const Sales = (props) => {
   });
 
   const [branchValue, setBranchValue] = useState("JEDDHA");
+  const [Vendorvalue, setVendorvalue] = useState("TEMP");
+  const [purchaseForm, setPurchaseForm] = useState(false);
 
   const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const VendorOptions = [{ label: "TEMP", value: "TEMP" }];
 
   const invoiceTypes = [
     {
@@ -41,10 +59,58 @@ const Sales = (props) => {
     },
   ];
 
+  const consigneeOptions = [
+    {
+      label: "Consignee",
+      value: "Consignee",
+    },
+  ];
+
+  const clientOptions = [
+    {
+      label: "Client",
+      value: "Client",
+    },
+  ];
+
   const history = useHistory();
 
   const goBack = () => {
     history.goBack();
+  };
+
+  const getPoaOptions = () => {
+    apiAuth
+      .get("api/master/poa/")
+
+      .then((response) => {
+        let data = response.data.results;
+        setPoaOptions(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    getPoaOptions();
+    getPodOptions();
+    setSelectedInvoice({
+      label: invoicesId,
+      value: invoicesId,
+    });
+  }, []);
+
+  const getPodOptions = () => {
+    apiAuth
+      .get("api/master/pod/")
+
+      .then((response) => {
+        let data = response?.data?.results;
+        setPodOptions(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const customStyles = {
@@ -62,9 +128,29 @@ const Sales = (props) => {
       );
       setInvoiceType(selType);
 
-      const selJob = jobOptions.find((opt) => opt?.value === props.data?.job);
+      const selJob = jobOptions.find(
+        (opt) => opt?.value === props.data?.job?.job_type
+      );
       setSelectedJob(selJob);
+      const consignee_name = consigneeOptions.find(
+        (item) => item.value === props?.data?.consignee_name
+      );
+      setConsigneeNameValue(consignee_name);
+      const client_name = clientOptions.find(
+        (item) => item.value === props.data?.client_name
+      );
+      setClientNameValue(client_name);
     }
+    setPoaValue({
+      label: props?.data?.poa,
+      value: props?.data?.poa,
+    });
+    setPodValue({
+      label: props?.data?.pod,
+      value: props?.data?.pod,
+    });
+    getPoaOptions();
+    getPodOptions();
   }, []);
 
   const getJobs = () => {
@@ -95,7 +181,7 @@ const Sales = (props) => {
               className="mb-5 mt-3"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h2 className="mx-5">Sales Invoice</h2>
+              <h2 className="mx-5">{selectedInvoice.value} Invoice</h2>
               <button className="btn btn-danger" onClick={goBack}>
                 Back
               </button>
@@ -116,6 +202,7 @@ const Sales = (props) => {
                   bayan_Number: props.isEdit ? props.data?.bayan_Number : "",
                   shipper_name: props.isEdit ? props.data?.shipper_name : "",
                   branch: props.isEdit ? props.data?.branch : "JEDDAH",
+                  vendor: props.isEdit ? props.data?.vendor : "TEMP",
                   ex_rate: props.isEdit ? props.data?.ex_rate : "",
                   pod: props.isEdit ? props.data?.pod : "",
                   client_name: props.isEdit ? props.data?.client_name : "",
@@ -126,6 +213,10 @@ const Sales = (props) => {
                   invoice_type: props.isEdit
                     ? props.data?.invoice_type
                     : "Sales",
+                  ref_data: props.isEdit ? props.data?.ref_data : "",
+                  due_date: props.isEdit ? props.data?.due_date : "",
+                  bill_amount: props.isEdit ? props.data?.bill_amount : "",
+                  naration: props.isEdit ? props.data?.naration : "",
                 }}
                 validationSchema={Yup.object({
                   //   bl_number: Yup.string().required("BL Number is Required"),
@@ -144,6 +235,12 @@ const Sales = (props) => {
                 })}
                 onSubmit={(values, reset) => {
                   values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
+                  values["due_date"] = moment(date).format(
+                    "YYYY-MM-DDTHH:mm:ss"
+                  );
+                  values["ref_data"] = moment(date).format(
+                    "YYYY-MM-DDTHH:mm:ss"
+                  );
                   values["job"] = selectedJob.value;
                   const company = JSON.parse(
                     localStorage.getItem("authUser")
@@ -241,23 +338,32 @@ const Sales = (props) => {
 
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <div>
-                            <Label htmlFor="consignee_name">
-                              Consignee Name
-                            </Label>
-                            <Field
-                              className="form-control"
-                              name="consignee_name"
-                              // placeholder="Consignee Name"
-                              type="text"
-                              style={{ background: "#EDEDED" }}
-                            />
-                          </div>
-                          {errors.consignee_name && touched.consignee_name && (
-                            <div className="invalid-feedback d-block">
-                              {errors.consignee_name}
-                            </div>
-                          )}
+                          <Label
+                            htmlFor="consignee_name"
+                            className="form-label"
+                          >
+                            Consignee Name
+                            <span className="text-danger">*</span>
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={consigneeOptions}
+                            value={consigneeNameValue}
+                            onChange={(data) => {
+                              setConsigneeNameValue(data);
+                              setFieldValue("consignee_name", data.value);
+                            }}
+                          />
+
+                          <ErrorMessage
+                            name="consignee_name"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
                         </div>
                       </Grid>
 
@@ -378,33 +484,65 @@ const Sales = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="branch" className="form-label">
-                            Branch
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Select
-                            name="type"
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            options={branchOptions}
-                            defaultValue={{
-                              label: branchValue,
-                              value: branchValue,
-                            }}
-                            onChange={(data) => {
-                              setFieldValue("branch", data.value);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="branch"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
+                      {selectedInvoice.value === "Sales" && (
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <Label htmlFor="branch" className="form-label">
+                              Branch
+                              <span className="text-danger">*</span>
+                            </Label>
+                            <Select
+                              name="type"
+                              placeholder={"Select"}
+                              styles={customStyles}
+                              options={branchOptions}
+                              defaultValue={{
+                                label: branchValue,
+                                value: branchValue,
+                              }}
+                              onChange={(data) => {
+                                setFieldValue("branch", data.value);
+                              }}
+                            />
+                            <ErrorMessage
+                              name="branch"
+                              render={(msg) => (
+                                <div className="text-danger">{msg}</div>
+                              )}
+                            />
+                          </div>
+                        </Grid>
+                      )}
+
+                      {selectedInvoice.value === "Purchase" && (
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <Label htmlFor="vendor" className="form-label">
+                              Vendor Name
+                              <span className="text-danger">*</span>
+                            </Label>
+                            <Select
+                              name="type"
+                              placeholder={"Select"}
+                              styles={customStyles}
+                              options={VendorOptions}
+                              defaultValue={{
+                                label: Vendorvalue,
+                                value: Vendorvalue,
+                              }}
+                              onChange={(data) => {
+                                setFieldValue("vendor", data.value);
+                              }}
+                            />
+                            <ErrorMessage
+                              name="vendor"
+                              render={(msg) => (
+                                <div className="text-danger">{msg}</div>
+                              )}
+                            />
+                          </div>
+                        </Grid>
+                      )}
 
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
@@ -430,23 +568,39 @@ const Sales = (props) => {
 
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <div>
-                            <Label htmlFor="pod" className="pe-2 w-50">
-                              POD
-                            </Label>
-                            <Field
-                              className="form-control "
-                              name="pod"
-                              // placeholder="pod"
-                              type="text"
-                              style={{ background: "#EDEDED" }}
-                            />
-                          </div>
-                          {errors.pod && touched.pod && (
-                            <div className="invalid-feedback d-block">
-                              {errors.pod}
-                            </div>
-                          )}
+                          <Label htmlFor="pod" className="form-label">
+                            POD
+                            <span className="text-danger">*</span>
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={podOptions?.map((item) => {
+                              return {
+                                label: item.name,
+                                value: item.name,
+                              };
+                            })}
+                            value={podValue}
+                            // defaultValue={{ label: jobType }}
+                            // onChange={(event) => {
+                            //   setJobType(event.value);
+                            // }}
+                            onChange={(data) => {
+                              setPodValue(data);
+
+                              setFieldValue("pod", data.value);
+                            }}
+                          />
+
+                          <ErrorMessage
+                            name="pod"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
                         </div>
                       </Grid>
                     </Grid>
@@ -454,29 +608,29 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <div>
-                            <Label
-                              htmlFor="consignee_name"
-                              className=" w-50 pe-2"
-                            >
-                              Client Name
-                            </Label>
-                            <Field
-                              className="form-control "
-                              name="client_name"
-                              // placeholder="Client Name"
-                              type="text"
-                              style={{ background: "#EDEDED" }}
-                            />
-                          </div>
-                          {errors.client_name && touched.client_name && (
-                            <div className="invalid-feedback d-block">
-                              {errors.client_name}
-                            </div>
-                          )}
+                          <Label htmlFor="client_name" className="form-label">
+                            Client Name
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={clientOptions}
+                            value={clientNameValue}
+                            onChange={(data) => {
+                              setClientNameValue(data);
+                              setFieldValue("client_name", data.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="client_name"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
                         </div>
                       </Grid>
-
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
@@ -525,18 +679,32 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <div>
-                            <Label htmlFor="poa" className="pe-2  w-50">
-                              POA
-                            </Label>
-                            <Field
-                              className="form-control"
-                              name="poa"
-                              // placeholder="POA"
-                              type="text"
-                              style={{ background: "#EDEDED" }}
-                            />
-                          </div>
+                          <Label htmlFor="poa" className="form-label">
+                            POA
+                            <span className="text-danger">*</span>
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            value={poaValue}
+                            options={poaOptions?.map((item) => {
+                              return {
+                                label: item.name,
+                                value: item.name,
+                              };
+                            })}
+                            // defaultValue={{ label: jobType }}
+                            // onChange={(event) => {
+                            //   setJobType(event.value);
+                            // }}
+                            onChange={(data) => {
+                              setPoaValue(data);
+                              setFieldValue("poa", data.value);
+                            }}
+                          />
+
                           <ErrorMessage
                             name="poa"
                             render={(msg) => (
@@ -578,8 +746,8 @@ const Sales = (props) => {
                             options={jobOptions}
                             value={selectedJob}
                             onChange={(data) => {
-                              setFieldValue("job", data.label);
                               setSelectedJob(data);
+                              setFieldValue("job", data.label);
                             }}
                             styles={customStyles}
                           />
@@ -612,6 +780,142 @@ const Sales = (props) => {
                           )}
                         </div>
                       </Grid>
+
+                      {selectedInvoice.value === "Purchase" && (
+                        <Grid item lg={8} xs={12}>
+                          <Grid container spacing={2}>
+                            <Grid item lg={6} xs={12}>
+                              <div className="mb-3">
+                                <label
+                                  htmlFor="ref_data"
+                                  className="form-label"
+                                >
+                                  Ref Date
+                                  <span className="text-danger">*</span>
+                                </label>
+                                <div
+                                  style={{
+                                    position: "relative",
+                                    // cursor: "pointer",
+                                  }}
+                                >
+                                  <DatePicker
+                                    selected={refDate}
+                                    onChange={(date) => setRefDate(date)}
+                                  />
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      top: 8,
+                                      right: 10,
+                                      fill: "red",
+                                    }}
+                                  >
+                                    <img
+                                      src="/calendar.svg"
+                                      alt="calendar"
+                                      width="20px"
+                                      height="20px"
+                                    />
+                                  </span>
+                                </div>
+
+                                {errors.ref_data && touched.ref_data && (
+                                  <div className="invalid-feedback d-block">
+                                    {errors.ref_data}
+                                  </div>
+                                )}
+                              </div>
+                            </Grid>
+                            <Grid item lg={6} xs={12}>
+                              <div className="form-group mb-3">
+                                <div>
+                                  <Label htmlFor="bill_amount">
+                                    Bill Amount
+                                  </Label>
+                                  <Field
+                                    name="bill_amount"
+                                    className="form-control"
+                                    // placeholder="Remarks"
+                                    type="text"
+                                    style={{ background: "#EDEDED" }}
+                                  />
+                                </div>
+                                <ErrorMessage
+                                  name="bill_amount"
+                                  render={(msg) => (
+                                    <div className="text-danger">{msg}</div>
+                                  )}
+                                />
+                              </div>
+                            </Grid>
+
+                            <Grid item lg={6} xs={12}>
+                              <div className="mb-3">
+                                <label
+                                  htmlFor="due_date"
+                                  className="form-label"
+                                >
+                                  Due Date
+                                  <span className="text-danger">*</span>
+                                </label>
+                                <div
+                                  style={{
+                                    position: "relative",
+                                    // cursor: "pointer",
+                                  }}
+                                >
+                                  <DatePicker
+                                    selected={dueDate}
+                                    onChange={(date) => setDueDate(date)}
+                                  />
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      top: 8,
+                                      right: 10,
+                                      fill: "red",
+                                    }}
+                                  >
+                                    <img
+                                      src="/calendar.svg"
+                                      alt="calendar"
+                                      width="20px"
+                                      height="20px"
+                                    />
+                                  </span>
+                                </div>
+
+                                {errors.due_date && touched.due_date && (
+                                  <div className="invalid-feedback d-block">
+                                    {errors.due_date}
+                                  </div>
+                                )}
+                              </div>
+                            </Grid>
+                            <Grid item lg={6} xs={12}>
+                              <div className="form-group mb-3">
+                                <div>
+                                  <Label htmlFor="naration">naration</Label>
+                                  <Field
+                                    name="naration"
+                                    className="form-control"
+                                    // placeholder="Remarks"
+                                    type="text"
+                                    style={{ background: "#EDEDED" }}
+                                  />
+                                </div>
+                                <ErrorMessage
+                                  name="naration"
+                                  render={(msg) => (
+                                    <div className="text-danger">{msg}</div>
+                                  )}
+                                />
+                              </div>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      )}
                     </Grid>
 
                     <div className="d-flex justify-content-between">

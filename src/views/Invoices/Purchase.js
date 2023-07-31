@@ -96,7 +96,7 @@ const Purchase = (props) => {
                   due_date: "",
                   bill_amount: "",
                   naration: "",
-                  invoice_type: ""
+                  invoice_type: "",
                 }}
                 validationSchema={Yup.object({
                   // bl_number: Yup.string().required("BL Number is Required"),
@@ -124,8 +124,12 @@ const Purchase = (props) => {
                 })}
                 onSubmit={(values, reset) => {
                   values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
-                  values["ref_data"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
-                  values["due_date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
+                  values["ref_data"] = moment(date).format(
+                    "YYYY-MM-DDTHH:mm:ss"
+                  );
+                  values["due_date"] = moment(date).format(
+                    "YYYY-MM-DDTHH:mm:ss"
+                  );
                   values["job"] = selectedJob.value;
                   const company = JSON.parse(
                     localStorage.getItem("authUser")
@@ -216,7 +220,7 @@ const Purchase = (props) => {
                       </Grid>
 
                       <Grid item lg={4} xs={12}>
-                      <div className="mb-3">
+                        <div className="mb-3">
                           <label htmlFor="date" className="form-label">
                             Date
                             <span className="text-danger">*</span>
@@ -483,7 +487,7 @@ const Purchase = (props) => {
                         </div>
                       </Grid>
                       <Grid item lg={4} xs={12}>
-                      <div className="form-group mb-3">
+                        <div className="form-group mb-3">
                           <Label htmlFor="invoice_type">Invoice Type</Label>
                           <Select
                             name="type"
@@ -554,44 +558,44 @@ const Purchase = (props) => {
                       <Grid item lg={8} xs={12}>
                         <Grid container spacing={2}>
                           <Grid item lg={6} xs={12}>
-                          <div className="mb-3">
-                          <label htmlFor="date" className="form-label">
-                            Ref Date
-                            <span className="text-danger">*</span>
-                          </label>
-                          <div
-                            style={{
-                              position: "relative",
-                              // cursor: "pointer",
-                            }}
-                          >
-                            <DatePicker
-                              selected={date}
-                              onChange={(date) => setDate(date)}
-                            />
-                            <span
-                              style={{
-                                position: "absolute",
-                                top: 8,
-                                right: 10,
-                                fill: "red",
-                              }}
-                            >
-                              <img
-                                src="/calendar.svg"
-                                alt="calendar"
-                                width="20px"
-                                height="20px"
-                              />
-                            </span>
-                          </div>
+                            <div className="mb-3">
+                              <label htmlFor="date" className="form-label">
+                                Ref Date
+                                <span className="text-danger">*</span>
+                              </label>
+                              <div
+                                style={{
+                                  position: "relative",
+                                  // cursor: "pointer",
+                                }}
+                              >
+                                <DatePicker
+                                  selected={date}
+                                  onChange={(date) => setDate(date)}
+                                />
+                                <span
+                                  style={{
+                                    position: "absolute",
+                                    top: 8,
+                                    right: 10,
+                                    fill: "red",
+                                  }}
+                                >
+                                  <img
+                                    src="/calendar.svg"
+                                    alt="calendar"
+                                    width="20px"
+                                    height="20px"
+                                  />
+                                </span>
+                              </div>
 
-                          {errors.ref_data && touched.ref_data && (
-                            <div className="invalid-feedback d-block">
-                              {errors.ref_data}
+                              {errors.ref_data && touched.ref_data && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.ref_data}
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
                           </Grid>
                           <Grid item lg={6} xs={12}>
                             <div className="form-group mb-3">
@@ -615,44 +619,44 @@ const Purchase = (props) => {
                           </Grid>
 
                           <Grid item lg={6} xs={12}>
-                          <div className="mb-3">
-                          <label htmlFor="due_date" className="form-label">
-                            Due Date
-                            <span className="text-danger">*</span>
-                          </label>
-                          <div
-                            style={{
-                              position: "relative",
-                              // cursor: "pointer",
-                            }}
-                          >
-                            <DatePicker
-                              selected={date}
-                              onChange={(date) => setDate(date)}
-                            />
-                            <span
-                              style={{
-                                position: "absolute",
-                                top: 8,
-                                right: 10,
-                                fill: "red",
-                              }}
-                            >
-                              <img
-                                src="/calendar.svg"
-                                alt="calendar"
-                                width="20px"
-                                height="20px"
-                              />
-                            </span>
-                          </div>
+                            <div className="mb-3">
+                              <label htmlFor="due_date" className="form-label">
+                                Due Date
+                                <span className="text-danger">*</span>
+                              </label>
+                              <div
+                                style={{
+                                  position: "relative",
+                                  // cursor: "pointer",
+                                }}
+                              >
+                                <DatePicker
+                                  selected={date}
+                                  onChange={(date) => setDate(date)}
+                                />
+                                <span
+                                  style={{
+                                    position: "absolute",
+                                    top: 8,
+                                    right: 10,
+                                    fill: "red",
+                                  }}
+                                >
+                                  <img
+                                    src="/calendar.svg"
+                                    alt="calendar"
+                                    width="20px"
+                                    height="20px"
+                                  />
+                                </span>
+                              </div>
 
-                          {errors.due_date && touched.due_date && (
-                            <div className="invalid-feedback d-block">
-                              {errors.due_date}
+                              {errors.due_date && touched.due_date && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.due_date}
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
                           </Grid>
                           <Grid item lg={6} xs={12}>
                             <div className="form-group mb-3">

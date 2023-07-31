@@ -175,6 +175,11 @@ const InvoiceTable = (props) => {
       cell: (value) => <span>{moment(value?.date).format("MM/DD/YYYY")}</span>,
     },
     {
+      name: <span className="font-weight-bold fs-13">Remarks Date</span>,
+      selector: (row) => row.remarks,
+      cell: (value) => <div>{value.remarks}</div>,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Actions</span>,
       selector: (row) => row,
       cell: (value) => {
@@ -218,75 +223,7 @@ const InvoiceTable = (props) => {
   return (
     <>
       <DataTable
-        // columns={[
-        //   {
-        //     name: (
-        //       <span
-        //         className="font-weight-bold fs-18"
-        //         style={{ fontSize: "18px", fontWeight: 700 }}
-        //       >
-        //         Consignee Name
-        //       </span>
-        //     ),
-        //     selector: (row) => row.consignee_name,
-        //     sortable: true,
-        //   },
-        //   {
-        //     name: (
-        //       <span
-        //         className="font-weight-bold fs-18"
-        //         style={{ fontSize: "18px", fontWeight: 700 }}
-        //       >
-        //         Shipper Name
-        //       </span>
-        //     ),
-        //     selector: (row) => row.shipper_name,
-        //     sortable: true,
-        //   },
-
-        //   {
-        //     name: (
-        //       <span
-        //         className="font-weight-bold fs-18"
-        //         style={{ fontSize: "18px", fontWeight: 700 }}
-        //       >
-        //         Action
-        //       </span>
-        //     ),
-        //     selector: (row) => row,
-        //     cell: (value) => {
-        //       return (
-        //         <UncontrolledDropdown className="dropdown d-inline-block">
-        //           <DropdownToggle
-        //             className="btn btn-soft-secondary btn-sm"
-        //             tag="button"
-        //           >
-        //             <i className="ri-more-fill align-middle"></i>
-        //           </DropdownToggle>
-        //           <DropdownMenu className="dropdown-menu-end">
-        //             <DropdownItem
-        //               className="edit-item-btn"
-        //               onClick={() => {
-        //                 setSelectedTicket(value);
-        //                 setEditModal(true);
-        //               }}
-        //             >
-        //               <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
-        //               Edit
-        //             </DropdownItem>
-        //             <DropdownItem
-        //               className="remove-item-btn"
-        //               onClick={() => props.deleteTicket(value.id)}
-        //             >
-        //               <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
-        //               Delete{" "}
-        //             </DropdownItem>
-        //           </DropdownMenu>
-        //         </UncontrolledDropdown>
-        //       );
-        //     },
-        //   },
-        // ]}
+        customStyles={customStyles}
         columns={cols}
         data={props.invoices}
         paginationPerPage={props.invoicePagination?.rowsPerPage}
