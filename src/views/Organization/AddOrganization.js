@@ -105,19 +105,6 @@ const AddOrganization = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  // name: "",
-                  // type: "",
-                  // coa: "",
-                  // language_name: "",
-                  // language_address: "",
-                  // address: "",
-                  // vat_trn_number: "",
-                  // browse_logo: "",
-                  // website: "",
-                  // remarks: "",
-                  // payment_terms: "",
-                  // currency: "curr 1",
-
                   name: "",
                   type: "",
                   language_name: "",
@@ -142,59 +129,59 @@ const AddOrganization = (props) => {
                   company: 0,
                   coa: 0,
                 }}
-                validationSchema={Yup.object({
-                  name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Name is Required"),
-                  type: Yup.string().required("Type is Required"),
-                  language_name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Language Name is Required"),
-                  address: Yup.string()
-                    .max(400, "Must be 400 characters or less")
-                    .trim()
-                    .required("Remarks is Required"),
-                  vat_trn_number: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Vat Trn Number is Required"),
-                  currency: Yup.string().required("Currency is Required"),
-                  building_name: Yup.string().required(
-                    "Building Name is Required"
-                  ),
-                  payment_terms: Yup.string().required(
-                    "Payment Terms is Required"
-                  ),
-                  website: Yup.string()
-                    // .url("Invalid URL format")
-                    .required("Website URL is required"),
-                  language_address: Yup.string()
-                    .max(400, "Must be 400 characters or less")
-                    .trim()
-                    .required("Remarks is Required"),
-                  remarks: Yup.string()
-                    .max(400, "Must be 400 characters or less")
-                    .trim()
-                    .required("Remarks is Required"),
-                  coa: Yup.string().required("COA is Required"),
-                  country: Yup.string()
-                    .ensure()
-                    .required("Country is Required"),
-                  city: Yup.string().ensure().required("City is Required"),
-                  zip_code: Yup.string().required("Zip Code is Required"),
-                  mobile: Yup.string()
-                    .matches(
-                      /^[0-9]{10}$/,
-                      "Mobile number must be exactly 10 digits"
-                    )
-                    .required("Mobile Number is Required"),
+                // validationSchema={Yup.object({
+                //   name: Yup.string()
+                //     .max(20, "Must be 20 characters or less")
+                //     .trim()
+                //     .required("Name is Required"),
+                //   type: Yup.string().required("Type is Required"),
+                //   language_name: Yup.string()
+                //     .max(20, "Must be 20 characters or less")
+                //     .trim()
+                //     .required("Language Name is Required"),
+                //   address: Yup.string()
+                //     .max(400, "Must be 400 characters or less")
+                //     .trim()
+                //     .required("Remarks is Required"),
+                //   vat_trn_number: Yup.string()
+                //     .max(20, "Must be 20 characters or less")
+                //     .trim()
+                //     .required("Vat Trn Number is Required"),
+                //   currency: Yup.string().required("Currency is Required"),
+                //   building_name: Yup.string().required(
+                //     "Building Name is Required"
+                //   ),
+                //   payment_terms: Yup.string().required(
+                //     "Payment Terms is Required"
+                //   ),
+                //   website: Yup.string()
+                //     // .url("Invalid URL format")
+                //     .required("Website URL is required"),
+                //   language_address: Yup.string()
+                //     .max(400, "Must be 400 characters or less")
+                //     .trim()
+                //     .required("Remarks is Required"),
+                //   remarks: Yup.string()
+                //     .max(400, "Must be 400 characters or less")
+                //     .trim()
+                //     .required("Remarks is Required"),
+                //   coa: Yup.string().required("COA is Required"),
+                //   country: Yup.string()
+                //     .ensure()
+                //     .required("Country is Required"),
+                //   // city: Yup.string().ensure().required("City is Required"),
+                //   zip_code: Yup.string().required("Zip Code is Required"),
+                //   mobile: Yup.string()
+                //     .matches(
+                //       /^[0-9]{10}$/,
+                //       "Mobile number must be exactly 10 digits"
+                //     )
+                //     .required("Mobile Number is Required"),
 
-                  email: Yup.string().email().required("Email is Required"),
+                //   email: Yup.string().email().required("Email is Required"),
 
-                  state: Yup.string().ensure().required("State is Required"),
-                })}
+                //   state: Yup.string().ensure().required("State is Required"),
+                // })}
                 onSubmit={(values, { reset }) => {
                   const company = JSON.parse(
                     localStorage.getItem("authUser")
@@ -203,29 +190,29 @@ const AddOrganization = (props) => {
                   values.country = values.country ? values.country : undefined;
                   console.log("ddvalues", values);
                   const url = "/api/master/organization/";
-                  // apiAuth
-                  //   .post(url, values)
-                  //   .then((response) => {
-                  //     NotificationManager.success(
-                  //       "",
-                  //       `Organization Created Successfully`,
-                  //       3000,
-                  //       null,
-                  //       null,
-                  //       ""
-                  //     );
-                  //     props?.history?.push("/organization");
-                  //   })
-                  //   .catch((error) => {
-                  //     NotificationManager.error(
-                  //       "",
-                  //       `Organization Create Error`,
-                  //       3000,
-                  //       null,
-                  //       null,
-                  //       ""
-                  //     );
-                  //   });
+                  apiAuth
+                    .post(url, values)
+                    .then((response) => {
+                      NotificationManager.success(
+                        "",
+                        `Organization Created Successfully`,
+                        3000,
+                        null,
+                        null,
+                        ""
+                      );
+                      props?.history?.push("/organization");
+                    })
+                    .catch((error) => {
+                      NotificationManager.error(
+                        "",
+                        `Organization Create Error`,
+                        3000,
+                        null,
+                        null,
+                        ""
+                      );
+                    });
                 }}
               >
                 {({ values, setFieldValue }) => (
@@ -504,16 +491,14 @@ const AddOrganization = (props) => {
                     </Grid>
 
                     <Grid spacing={2} container>
-                      <Grid item xs={12} lg={6} style={{ zIndex: "100" }}>
+                      {/* <Grid item xs={12} lg={6} style={{ zIndex: "100" }}>
                         <div className="mb-3">
                           <label htmlFor="state" className="form-label">
                             City
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={City.getAllCities(
-                              selectedState?.value
-                            )?.map((city) => {
+                            options={City.getAllCities()?.map((city) => {
                               return {
                                 label: city.name,
                                 value: city.isoCode,
@@ -534,7 +519,7 @@ const AddOrganization = (props) => {
                             )}
                           />
                         </div>
-                      </Grid>
+                      </Grid> */}
 
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">

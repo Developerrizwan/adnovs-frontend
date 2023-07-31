@@ -25,15 +25,15 @@ const ChartOfAccounts = (props) => {
 
   const getAccounts = (pgdata, val) => {
     apiAuth
-      .get(`/api/master/coa/?page=${pgdata?.currentPage}`)
+      .get(`/api/get-coa/`)
       .then((response) => {
         let data = response.data;
         // console.log("xswjhjwx", response);
-        setPagination({
-          ...pgdata,
-          totalRows: data.length,
-        });
-        setAccounts(data.results);
+        // setPagination({
+        //   ...pgdata,
+        //   totalRows: data.length,
+        // });
+        setAccounts(data);
         setLoading(false);
       })
       .catch((err) => console.log(err));

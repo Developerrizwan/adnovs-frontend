@@ -12,6 +12,7 @@ import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import GenerateInvoice from "./GenerateInvoice";
 import { useParams } from "react-router";
+import TaxInvoiceSecond from "../TaxInvoice/TaxInvoiceSecond";
 
 const Sales = (props) => {
   const { invoicesId } = useParams();
@@ -24,6 +25,7 @@ const Sales = (props) => {
   const [clientNameValue, setClientNameValue] = useState("Client");
 
   const [generateInvoiceModal, setGenerateInvoiceModal] = useState(false);
+  const [viewInvoice, setViewInvoice] = useState(false);
   const [podOptions, setPodOptions] = useState([]);
   const [poaOptions, setPoaOptions] = useState([]);
   const [poaValue, setPoaValue] = useState(null);
@@ -943,13 +945,22 @@ const Sales = (props) => {
                           {props.isEdit ? "Update" : "Save"}
                         </span>
                       </Button>{" "}
-                      <Button
-                        className="btn btn-info float-right"
-                        onClick={() => setGenerateInvoiceModal(true)}
-                      >
-                        {" "}
-                        Generate Invoice
-                      </Button>
+                      <div>
+                        <Button
+                          className="btn btn-warning float-right me-3"
+                          onClick={() => setViewInvoice(true)}
+                        >
+                          {" "}
+                          View Invoice
+                        </Button>
+                        <Button
+                          className="btn btn-info float-right"
+                          onClick={() => setGenerateInvoiceModal(true)}
+                        >
+                          {" "}
+                          Generate Invoice
+                        </Button>
+                      </div>
                     </div>
                   </Form>
                 )}
@@ -982,6 +993,33 @@ const Sales = (props) => {
               setGenerateInvoiceModal(false);
               // setSelectedJob(null);
               // props.getJobs();
+            }}
+          />
+        </ModalBody>
+      </Modal>
+
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={viewInvoice}
+        toggle={() => {
+          setGenerateInvoiceModal((prev) => !prev);
+        }}
+        style={{ width: "80%" }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setViewInvoice((prev) => !prev);
+          }}
+        >
+          Tax Invoice
+        </ModalHeader>
+        <ModalBody>
+          <TaxInvoiceSecond
+            closeAddPopup={() => {
+              setViewInvoice(false);
             }}
           />
         </ModalBody>

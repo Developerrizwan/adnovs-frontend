@@ -25,15 +25,14 @@ const Charge = (props) => {
 
   const getChargeData = (pgdata, val) => {
     apiAuth
-      .get(`/api/master/charge/?page=${pgdata?.currentPage}`)
+      .get(`/api/get-charge/`)
       .then((response) => {
         let data = response.data;
-        // console.log("xswjhjwx", response);
-        setPagination({
-          ...pgdata,
-          totalRows: data.length,
-        });
-        setChargeData(data.results);
+        // setPagination({
+        //   ...pgdata,
+        //   totalRows: data.length,
+        // });
+        setChargeData(data);
         setLoading(false);
       })
       .catch((err) => console.log(err));

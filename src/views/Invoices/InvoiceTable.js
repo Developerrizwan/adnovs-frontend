@@ -180,6 +180,20 @@ const InvoiceTable = (props) => {
       cell: (value) => <div>{value.remarks}</div>,
     },
     {
+      name: <span className="font-weight-bold fs-13">View Invoice</span>,
+      selector: (row) => row,
+      cell: (value) => {
+        return (
+          <div>
+            <Button color="secondary" className="btn btn-sm">
+              {" "}
+              View
+            </Button>
+          </div>
+        );
+      },
+    },
+    {
       name: <span className="font-weight-bold fs-13">Actions</span>,
       selector: (row) => row,
       cell: (value) => {
