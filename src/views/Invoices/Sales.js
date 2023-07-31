@@ -673,7 +673,13 @@ const Sales = (props) => {
           Invoice
         </ModalHeader>
         <ModalBody>
-          <GenerateInvoice />
+          <GenerateInvoice
+            closeAddPopup={() => {
+              setGenerateInvoiceModal(false);
+              // setSelectedJob(null);
+              // props.getJobs();
+            }}
+          />
         </ModalBody>
       </Modal>
     </React.Fragment>

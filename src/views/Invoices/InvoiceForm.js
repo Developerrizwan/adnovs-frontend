@@ -290,11 +290,6 @@ const InvoiceForm = (props) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <div className="mt-4 mb-3">
-                <button className="btn btn-success" type="submit">
-                  Submit
-                </button>
-              </div>
             </Form>
           )}
         </Formik>

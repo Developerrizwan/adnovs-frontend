@@ -201,30 +201,31 @@ const AddOrganization = (props) => {
                   )?.company_id;
                   values["company"] = company;
                   values.country = values.country ? values.country : undefined;
+                  console.log("ddvalues", values);
                   const url = "/api/master/organization/";
-                  apiAuth
-                    .post(url, values)
-                    .then((response) => {
-                      NotificationManager.success(
-                        "",
-                        `Organization Created Successfully`,
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                      props?.history?.push("/organization");
-                    })
-                    .catch((error) => {
-                      NotificationManager.error(
-                        "",
-                        `Organization Create Error`,
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                    });
+                  // apiAuth
+                  //   .post(url, values)
+                  //   .then((response) => {
+                  //     NotificationManager.success(
+                  //       "",
+                  //       `Organization Created Successfully`,
+                  //       3000,
+                  //       null,
+                  //       null,
+                  //       ""
+                  //     );
+                  //     props?.history?.push("/organization");
+                  //   })
+                  //   .catch((error) => {
+                  //     NotificationManager.error(
+                  //       "",
+                  //       `Organization Create Error`,
+                  //       3000,
+                  //       null,
+                  //       null,
+                  //       ""
+                  //     );
+                  //   });
                 }}
               >
                 {({ values, setFieldValue }) => (
@@ -368,7 +369,7 @@ const AddOrganization = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: "400" }}>
                         <div className="mb-3">
                           <label htmlFor="currency" className="form-label">
                             Currency
@@ -445,7 +446,7 @@ const AddOrganization = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      {/* <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="browse_logo" className="form-label">
                             Browse Logo
@@ -471,8 +472,8 @@ const AddOrganization = (props) => {
                             )}
                           />
                         </div>
-                      </Grid>
-                      <Grid item lg={6} xs={12}>
+                      </Grid> */}
+                      <Grid item lg={6} xs={12} style={{ zIndex: "300" }}>
                         <div className="mb-3">
                           <Label htmlFor="coa" className="form-label">
                             COA
@@ -521,8 +522,9 @@ const AddOrganization = (props) => {
                             styles={customStyles}
                             value={selectedCity}
                             onChange={(data) => {
-                              setFieldValue("city", data.label);
-                              setSelectedCity(data);
+                              console.log("se", data);
+                              // setFieldValue("city", data.label);
+                              // setSelectedCity(data);
                             }}
                           />
                           <ErrorMessage
