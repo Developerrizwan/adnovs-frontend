@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { Row, Button, Label, Modal, ModalHeader, ModalBody } from "reactstrap";
 import * as Yup from "yup";
 import { Formik, Field, ErrorMessage } from "formik";
@@ -38,10 +38,10 @@ const Sales = (props) => {
     label: "Sales",
   });
 
-  const [invoiceType, setInvoiceType] = useState({
-    label: "Sales",
-    value: "Sales",
-  });
+  // const [invoiceType, setInvoiceType] = useState({
+  //   label: "Sales",
+  //   value: "Sales",
+  // });
 
   const [branchValue, setBranchValue] = useState("JEDDHA");
   const [Vendorvalue, setVendorvalue] = useState("TEMP");
@@ -50,16 +50,16 @@ const Sales = (props) => {
   const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
   const VendorOptions = [{ label: "TEMP", value: "TEMP" }];
 
-  const invoiceTypes = [
-    {
-      label: "Sales",
-      value: "Sales",
-    },
-    {
-      label: "Purchase",
-      value: "Purchase",
-    },
-  ];
+  // const invoiceTypes = [
+  //   {
+  //     label: "Sales",
+  //     value: "Sales",
+  //   },
+  //   {
+  //     label: "Purchase",
+  //     value: "Purchase",
+  //   },
+  // ];
 
   const consigneeOptions = [
     {
@@ -125,10 +125,10 @@ const Sales = (props) => {
   useEffect(() => {
     getJobs();
     if (props?.isEdit) {
-      const selType = invoiceTypes.find(
-        (opt) => opt?.value === props.data?.invoice_type
-      );
-      setInvoiceType(selType);
+      // const selType = invoiceTypes.find(
+      //   (opt) => opt?.value === props.data?.invoice_type
+      // );
+      // setInvoiceType(selType);
 
       const selJob = jobOptions.find(
         (opt) => opt?.value === props.data?.job?.job_type
@@ -162,7 +162,7 @@ const Sales = (props) => {
         const { data } = res;
         let opts = data.map((dd) => {
           return {
-            label: `${dd?.bl_number} - ${dd?.consignee_name}`,
+            label: `${dd?.job_number}`,
             value: dd?.id,
           };
         });
@@ -715,7 +715,7 @@ const Sales = (props) => {
                           />
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                      {/* <Grid item lg={4} xs={12}>
                         <div className="form-group mb-3">
                           <Label htmlFor="invoice_type">Invoice Type</Label>
                           <Select
@@ -736,7 +736,7 @@ const Sales = (props) => {
                             )}
                           />
                         </div>
-                      </Grid>
+                      </Grid> */}
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="job_type" className="form-label">
@@ -760,9 +760,134 @@ const Sales = (props) => {
                           )}
                         </div>
                       </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="ref_data" className="form-label">
+                            Ref Date
+                            <span className="text-danger">*</span>
+                          </label>
+                          <div
+                            style={{
+                              position: "relative",
+                              // cursor: "pointer",
+                            }}
+                          >
+                            <DatePicker
+                              selected={refDate}
+                              onChange={(date) => setRefDate(date)}
+                            />
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                right: 10,
+                                fill: "red",
+                              }}
+                            >
+                              <img
+                                src="/calendar.svg"
+                                alt="calendar"
+                                width="20px"
+                                height="20px"
+                              />
+                            </span>
+                          </div>
+
+                          {errors.ref_data && touched.ref_data && (
+                            <div className="invalid-feedback d-block">
+                              {errors.ref_data}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
                     </Grid>
 
-                    <Grid container spacing={2}>
+                    {selectedInvoice.value === "Purchase" && (
+                      <Grid container spacing={2}>
+                        <Grid item lg={4} xs={12}>
+                          <div className="form-group mb-3">
+                            <div>
+                              <Label htmlFor="bill_amount">Bill Amount</Label>
+                              <Field
+                                name="bill_amount"
+                                className="form-control"
+                                // placeholder="Remarks"
+                                type="text"
+                                style={{ background: "#EDEDED" }}
+                              />
+                            </div>
+                            <ErrorMessage
+                              name="bill_amount"
+                              render={(msg) => (
+                                <div className="text-danger">{msg}</div>
+                              )}
+                            />
+                          </div>
+                        </Grid>
+
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <label htmlFor="due_date" className="form-label">
+                              Due Date
+                              <span className="text-danger">*</span>
+                            </label>
+                            <div
+                              style={{
+                                position: "relative",
+                                // cursor: "pointer",
+                              }}
+                            >
+                              <DatePicker
+                                selected={dueDate}
+                                onChange={(date) => setDueDate(date)}
+                              />
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 10,
+                                  fill: "red",
+                                }}
+                              >
+                                <img
+                                  src="/calendar.svg"
+                                  alt="calendar"
+                                  width="20px"
+                                  height="20px"
+                                />
+                              </span>
+                            </div>
+
+                            {errors.due_date && touched.due_date && (
+                              <div className="invalid-feedback d-block">
+                                {errors.due_date}
+                              </div>
+                            )}
+                          </div>
+                        </Grid>
+                        <Grid item lg={4} xs={12}>
+                          <div className="form-group mb-3">
+                            <div>
+                              <Label htmlFor="naration">naration</Label>
+                              <Field
+                                name="naration"
+                                className="form-control"
+                                // placeholder="Remarks"
+                                type="text"
+                                style={{ background: "#EDEDED" }}
+                              />
+                            </div>
+                            <ErrorMessage
+                              name="naration"
+                              render={(msg) => (
+                                <div className="text-danger">{msg}</div>
+                              )}
+                            />
+                          </div>
+                        </Grid>
+                      </Grid>
+                    )}
+                    <Grid spacing={2} container>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="remarks" className="form-label">
@@ -782,142 +907,6 @@ const Sales = (props) => {
                           )}
                         </div>
                       </Grid>
-
-                      {selectedInvoice.value === "Purchase" && (
-                        <Grid item lg={8} xs={12}>
-                          <Grid container spacing={2}>
-                            <Grid item lg={6} xs={12}>
-                              <div className="mb-3">
-                                <label
-                                  htmlFor="ref_data"
-                                  className="form-label"
-                                >
-                                  Ref Date
-                                  <span className="text-danger">*</span>
-                                </label>
-                                <div
-                                  style={{
-                                    position: "relative",
-                                    // cursor: "pointer",
-                                  }}
-                                >
-                                  <DatePicker
-                                    selected={refDate}
-                                    onChange={(date) => setRefDate(date)}
-                                  />
-                                  <span
-                                    style={{
-                                      position: "absolute",
-                                      top: 8,
-                                      right: 10,
-                                      fill: "red",
-                                    }}
-                                  >
-                                    <img
-                                      src="/calendar.svg"
-                                      alt="calendar"
-                                      width="20px"
-                                      height="20px"
-                                    />
-                                  </span>
-                                </div>
-
-                                {errors.ref_data && touched.ref_data && (
-                                  <div className="invalid-feedback d-block">
-                                    {errors.ref_data}
-                                  </div>
-                                )}
-                              </div>
-                            </Grid>
-                            <Grid item lg={6} xs={12}>
-                              <div className="form-group mb-3">
-                                <div>
-                                  <Label htmlFor="bill_amount">
-                                    Bill Amount
-                                  </Label>
-                                  <Field
-                                    name="bill_amount"
-                                    className="form-control"
-                                    // placeholder="Remarks"
-                                    type="text"
-                                    style={{ background: "#EDEDED" }}
-                                  />
-                                </div>
-                                <ErrorMessage
-                                  name="bill_amount"
-                                  render={(msg) => (
-                                    <div className="text-danger">{msg}</div>
-                                  )}
-                                />
-                              </div>
-                            </Grid>
-
-                            <Grid item lg={6} xs={12}>
-                              <div className="mb-3">
-                                <label
-                                  htmlFor="due_date"
-                                  className="form-label"
-                                >
-                                  Due Date
-                                  <span className="text-danger">*</span>
-                                </label>
-                                <div
-                                  style={{
-                                    position: "relative",
-                                    // cursor: "pointer",
-                                  }}
-                                >
-                                  <DatePicker
-                                    selected={dueDate}
-                                    onChange={(date) => setDueDate(date)}
-                                  />
-                                  <span
-                                    style={{
-                                      position: "absolute",
-                                      top: 8,
-                                      right: 10,
-                                      fill: "red",
-                                    }}
-                                  >
-                                    <img
-                                      src="/calendar.svg"
-                                      alt="calendar"
-                                      width="20px"
-                                      height="20px"
-                                    />
-                                  </span>
-                                </div>
-
-                                {errors.due_date && touched.due_date && (
-                                  <div className="invalid-feedback d-block">
-                                    {errors.due_date}
-                                  </div>
-                                )}
-                              </div>
-                            </Grid>
-                            <Grid item lg={6} xs={12}>
-                              <div className="form-group mb-3">
-                                <div>
-                                  <Label htmlFor="naration">naration</Label>
-                                  <Field
-                                    name="naration"
-                                    className="form-control"
-                                    // placeholder="Remarks"
-                                    type="text"
-                                    style={{ background: "#EDEDED" }}
-                                  />
-                                </div>
-                                <ErrorMessage
-                                  name="naration"
-                                  render={(msg) => (
-                                    <div className="text-danger">{msg}</div>
-                                  )}
-                                />
-                              </div>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      )}
                     </Grid>
 
                     <div className="d-flex justify-content-between">
@@ -946,13 +935,13 @@ const Sales = (props) => {
                         </span>
                       </Button>{" "}
                       <div>
-                        <Button
-                          className="btn btn-warning float-right me-3"
-                          onClick={() => setViewInvoice(true)}
-                        >
-                          {" "}
-                          View Invoice
-                        </Button>
+                        <Link to="/tax-invoice-second/:invoiceId=">
+                          <Button className="btn btn-warning float-right me-3">
+                            {" "}
+                            View Invoice
+                          </Button>
+                        </Link>
+
                         <Button
                           className="btn btn-info float-right"
                           onClick={() => setGenerateInvoiceModal(true)}

@@ -1,10 +1,27 @@
 import { Grid } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "reactstrap";
 import shipLogo from "../../assets/images/ship-logo.png";
 import "./table.css";
+import apiAuth from "../../helpers/ApiAuth";
 
 const TaxInvoiceSecond = () => {
+  const [accounts, setAccounts] = useState([]);
+
+  const getAccounts = (pgdata, val) => {
+    apiAuth
+      .get(`/api/get-costentry/`)
+      .then((response) => {
+        let data = response.data;
+
+        setAccounts(data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getAccounts();
+  }, []);
   return (
     <>
       <div style={{ padding: "25px" }}>

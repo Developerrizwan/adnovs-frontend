@@ -17,6 +17,7 @@ const InvoiceTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState([]);
+  console.log("selectedInvoice", props);
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13">BL Number</span>,
@@ -79,6 +80,7 @@ const InvoiceTable = (props) => {
       },
       sortable: true,
     },
+
     // {
     //   name: <span className="font-weight-bold fs-13">Against Concern</span>,
     //   selector: (row) => row.groups,
