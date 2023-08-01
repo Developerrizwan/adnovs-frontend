@@ -87,10 +87,10 @@ const EnquiryTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">POI</span>,
-      selector: (row) => row.poi,
+      name: <span className="font-weight-bold fs-13">POL</span>,
+      selector: (row) => row.pol,
       cell: (value) => {
-        return <div>{value.poi}</div>;
+        return <div>{value.pol}</div>;
       },
       sortable: true,
     },
@@ -192,6 +192,7 @@ const EnquiryTable = (props) => {
         toggle={() => {
           setEditModal((prev) => !prev);
         }}
+        style={{ backgroundColor: "#EDEDED" }}
       >
         <ModalHeader
           className="p-3"

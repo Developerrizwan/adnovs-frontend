@@ -200,7 +200,7 @@ const Sales = (props) => {
                   ref_data: props.isEdit ? props.data?.ref_data : "",
                   due_date: props.isEdit ? props.data?.due_date : "",
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
-                  naration: props.isEdit ? props.data?.naration : "",
+                  narration: props.isEdit ? props.data?.narration : "",
                 }}
                 validationSchema={Yup.object({
                   //   bl_number: Yup.string().required("BL Number is Required"),
@@ -823,9 +823,9 @@ const Sales = (props) => {
                         <Grid item lg={4} xs={12}>
                           <div className="form-group mb-3">
                             <div>
-                              <Label htmlFor="naration">Naration</Label>
+                              <Label htmlFor="narration">Narration</Label>
                               <Field
-                                name="naration"
+                                name="narration"
                                 className="form-control"
                                 // placeholder="Remarks"
                                 type="text"
@@ -833,7 +833,7 @@ const Sales = (props) => {
                               />
                             </div>
                             <ErrorMessage
-                              name="naration"
+                              name="narration"
                               render={(msg) => (
                                 <div className="text-danger">{msg}</div>
                               )}

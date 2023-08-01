@@ -76,7 +76,7 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Branch</span>,
       selector: (row) => row.branch,
       cell: (value) => {
-        return <div>{value.branch}</div>;
+        return <div>{value.job?.branch}</div>;
       },
       sortable: true,
     },
@@ -106,7 +106,7 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
       selector: (row) => row.client_name,
       cell: (value) => {
-        return <div>{value.client_name}</div>;
+        return <div>{value.job?.client_name}</div>;
       },
       sortable: true,
     },
@@ -284,7 +284,7 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
       selector: (row) => row.client_name,
       cell: (value) => {
-        return <div>{value.client_name}</div>;
+        return <div>{value.job?.client_name}</div>;
       },
       sortable: true,
     },
@@ -320,14 +320,14 @@ const InvoiceTable = (props) => {
       },
       sortable: true,
     },
-    {
-      name: <span className="font-weight-bold fs-13">Vendor Name</span>,
-      selector: (row) => row.vendor_name,
-      cell: (value) => {
-        return <div>{value.vendor_name}</div>;
-      },
-      sortable: true,
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Vendor Name</span>,
+    //   selector: (row) => row.vendor_name,
+    //   cell: (value) => {
+    //     return <div>{value.vendor_name}</div>;
+    //   },
+    //   sortable: true,
+    // },
     {
       name: <span className="font-weight-bold fs-13">Narration</span>,
       selector: (row) => row.narration,

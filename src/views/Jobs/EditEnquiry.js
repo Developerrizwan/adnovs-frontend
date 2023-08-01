@@ -20,7 +20,7 @@ const EditEnquiry = (props) => {
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
   const [poaValue, setPoaValue] = useState(null);
-  const [poiValue, setPoiValue] = useState(null);
+  const [polValue, setPolValue] = useState(null);
   const [podValue, setPodValue] = useState(null);
   const [eta, setEta] = useState(etaDateObj);
   const [etd, setEtd] = useState(etdDateObj);
@@ -93,9 +93,9 @@ const EditEnquiry = (props) => {
       label: props.allJobs.poa,
       value: props.allJobs.poa,
     });
-    setPoiValue({
-      label: props.allJobs.poi,
-      value: props.allJobs.poi,
+    setPolValue({
+      label: props.allJobs.pol,
+      value: props.allJobs.pol,
     });
 
     const pod_Value = podOptions.find((item) => item.id === props.allJobs?.pod);
@@ -263,7 +263,7 @@ const EditEnquiry = (props) => {
             initialValues={{
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
-              poi: props?.allJobs?.poi ? props?.allJobs?.poi : "",
+              pol: props?.allJobs?.pol ? props?.allJobs?.pol : "",
               consignee_name: props?.allJobs?.consignee_name
                 ? props?.allJobs?.consignee_name
                 : "",
@@ -290,7 +290,7 @@ const EditEnquiry = (props) => {
             validationSchema={Yup.object({
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
-              poi: Yup.string().required("POI is Required"),
+              pol: Yup.string().required("POL is Required"),
               consignee_name: Yup.string().required(
                 "Cosignee Name is Required"
               ),
@@ -502,8 +502,8 @@ const EditEnquiry = (props) => {
 
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="poi" className="form-label">
-                        POI
+                      <Label htmlFor="pol" className="form-label">
+                        POL
                         <span className="text-danger">*</span>
                       </Label>
 
@@ -517,15 +517,15 @@ const EditEnquiry = (props) => {
                             value: item.name,
                           };
                         })}
-                        value={poiValue}
+                        value={polValue}
                         onChange={(data) => {
-                          setPoiValue(data);
-                          setFieldValue("poi", data.value);
+                          setPolValue(data);
+                          setFieldValue("pol", data.value);
                         }}
                       />
 
                       <ErrorMessage
-                        name="poi"
+                        name="pol"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}

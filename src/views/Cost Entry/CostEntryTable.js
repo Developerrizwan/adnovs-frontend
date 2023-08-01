@@ -21,7 +21,7 @@ const CostEntryTable = (props) => {
 
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Charge</span>,
+      name: <span className="font-weight-bold fs-13">Charge</span>,
       selector: (row) => row.charge,
       cell: (value) => {
         return <div>{value.charge?.code}</div>;
@@ -29,7 +29,7 @@ const CostEntryTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13"> Voucher</span>,
+      name: <span className="font-weight-bold fs-13">Voucher</span>,
       selector: (row) => row.voucher_type,
       sortable: true,
     },

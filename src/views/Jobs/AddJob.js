@@ -240,7 +240,7 @@ const AddJobs = (props) => {
                   // bayan_number: "",
                   pod: "",
                   poa: "",
-                  poi: "",
+                  pol: "",
                   consignee_name: "",
                   shipper_name: "",
                   client_name: "",
@@ -260,7 +260,7 @@ const AddJobs = (props) => {
                   // ),
                   pod: Yup.string().required("POD is Required"),
                   poa: Yup.string().required("POA is Required"),
-                  poi: Yup.string().required("POI is Required"),
+                  pol: Yup.string().required("POL is Required"),
                   consignee_name: Yup.string().required(
                     "Cosignee Name is Required"
                   ),
@@ -527,8 +527,8 @@ const AddJobs = (props) => {
 
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="poi" className="form-label">
-                            POI
+                          <Label htmlFor="pol" className="form-label">
+                            POL
                             <span className="text-danger">*</span>
                           </Label>
 
@@ -544,12 +544,12 @@ const AddJobs = (props) => {
                             })}
                             onChange={(data) => {
                               // setJobType(data.value);
-                              setFieldValue("poi", data.value);
+                              setFieldValue("pol", data.value);
                             }}
                           />
 
                           <ErrorMessage
-                            name="poi"
+                            name="pol"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}

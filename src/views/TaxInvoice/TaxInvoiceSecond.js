@@ -18,7 +18,7 @@ const TaxInvoiceSecond = (props) => {
 
   const getInvoice = (id) => {
     apiAuth
-      .get(`/api/master/invoice/${id}/`)
+      .get(`/api/get-invoices/${id}`)
       .then((response) => {
         let data = response.data;
         setState({ ...state, invoice: data });

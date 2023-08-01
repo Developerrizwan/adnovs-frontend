@@ -46,7 +46,7 @@ const CaoTable = (props) => {
       name: <span className="font-weight-bold fs-13">COA Type</span>,
       selector: (row) => row.coa_type,
       cell: (value) => {
-        return <div>{value.coa_type?.code}</div>;
+        return <div>{value.coa_type}</div>;
       },
       sortable: true,
     },
