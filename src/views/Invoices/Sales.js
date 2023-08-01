@@ -28,7 +28,6 @@ const Sales = (props) => {
   const [podOptions, setPodOptions] = useState([]);
   const [poaOptions, setPoaOptions] = useState([]);
   const [poaValue, setPoaValue] = useState(null);
-  const [date, setDate] = useState(new Date());
   const [refDate, setRefDate] = useState(new Date());
   const [dueDate, setDueDate] = useState(new Date());
   const [invoiceId, setInvoiceId] = useState(null);
@@ -181,7 +180,7 @@ const Sales = (props) => {
                   consignee_name: props.isEdit
                     ? props.data?.consignee_name
                     : "",
-                  date: props.isEdit ? props.data?.date : "",
+                  due_date: props.isEdit ? props.data?.due_date : "",
                   currency_sar: props.isEdit ? props.data?.currency_sar : "",
                   bayan_number: props.isEdit ? props.data?.bayan_number : "",
                   shipper_name: props.isEdit ? props.data?.shipper_name : "",
@@ -198,7 +197,6 @@ const Sales = (props) => {
                     ? props.data?.invoice_type
                     : selectedInvoice.value,
                   ref_data: props.isEdit ? props.data?.ref_data : "",
-                  due_date: props.isEdit ? props.data?.due_date : "",
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
                   narration: props.isEdit ? props.data?.narration : "",
                 }}
@@ -218,11 +216,11 @@ const Sales = (props) => {
                   //   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values, reset) => {
-                  values["date"] = moment(date).format("YYYY-MM-DDTHH:mm:ss");
-                  values["due_date"] = moment(date).format(
+                  values["due_date"] = moment(dueDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
                   );
-                  values["ref_data"] = moment(date).format(
+
+                  values["ref_data"] = moment(refDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
                   );
                   values["job"] = selectedJob.value;
@@ -366,8 +364,8 @@ const Sales = (props) => {
                             }}
                           >
                             <DatePicker
-                              selected={date}
-                              onChange={(date) => setDate(date)}
+                              selected={dueDate}
+                              onChange={(date) => setDueDate(date)}
                             />
                             <span
                               style={{
@@ -386,9 +384,9 @@ const Sales = (props) => {
                             </span>
                           </div>
 
-                          {errors.date && touched.date && (
+                          {errors.due_date && touched.due_date && (
                             <div className="invalid-feedback d-block">
-                              {errors.date}
+                              {errors.due_date}
                             </div>
                           )}
                         </div>
@@ -469,65 +467,33 @@ const Sales = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      {selectedInvoice.value === "Sales" && (
-                        <Grid item lg={4} xs={12}>
-                          <div className="mb-3">
-                            <Label htmlFor="branch" className="form-label">
-                              Branch
-                              <span className="text-danger">*</span>
-                            </Label>
-                            <Select
-                              name="type"
-                              placeholder={"Select"}
-                              styles={customStyles}
-                              options={branchOptions}
-                              defaultValue={{
-                                label: branchValue,
-                                value: branchValue,
-                              }}
-                              onChange={(data) => {
-                                setFieldValue("branch", data.value);
-                              }}
-                            />
-                            <ErrorMessage
-                              name="branch"
-                              render={(msg) => (
-                                <div className="text-danger">{msg}</div>
-                              )}
-                            />
-                          </div>
-                        </Grid>
-                      )}
-
-                      {selectedInvoice.value === "Purchase" && (
-                        <Grid item lg={4} xs={12}>
-                          <div className="mb-3">
-                            <Label htmlFor="vendor" className="form-label">
-                              Vendor Name
-                              <span className="text-danger">*</span>
-                            </Label>
-                            <Select
-                              name="type"
-                              placeholder={"Select"}
-                              styles={customStyles}
-                              options={VendorOptions}
-                              defaultValue={{
-                                label: Vendorvalue,
-                                value: Vendorvalue,
-                              }}
-                              onChange={(data) => {
-                                setFieldValue("vendor", data.value);
-                              }}
-                            />
-                            <ErrorMessage
-                              name="vendor"
-                              render={(msg) => (
-                                <div className="text-danger">{msg}</div>
-                              )}
-                            />
-                          </div>
-                        </Grid>
-                      )}
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="branch" className="form-label">
+                            Branch
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={branchOptions}
+                            defaultValue={{
+                              label: branchValue,
+                              value: branchValue,
+                            }}
+                            onChange={(data) => {
+                              setFieldValue("branch", data.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="branch"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
 
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
@@ -780,7 +746,7 @@ const Sales = (props) => {
                           </div>
                         </Grid>
 
-                        <Grid item lg={4} xs={12}>
+                        {/* <Grid item lg={4} xs={12}>
                           <div className="mb-3">
                             <label htmlFor="due_date" className="form-label">
                               Due Date
@@ -819,7 +785,7 @@ const Sales = (props) => {
                               </div>
                             )}
                           </div>
-                        </Grid>
+                        </Grid> */}
                         <Grid item lg={4} xs={12}>
                           <div className="form-group mb-3">
                             <div>

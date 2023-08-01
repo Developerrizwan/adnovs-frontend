@@ -1,26 +1,70 @@
 import { Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Card } from "reactstrap";
+import { Button, Card } from "reactstrap";
 import shipLogo from "../../assets/images/ship-logo.png";
 import "./table.css";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import QRCode from "react-qr-code";
+import moment from "moment";
+import jsPDF from "jspdf";
+
+import numberToWords from "number-to-words";
 
 const TaxInvoiceSecond = (props) => {
   const [state, setState] = useState({ costs: [] });
 
+  const [amount, setAmount] = useState(0);
+  const [words, setWords] = useState("");
+
+  async function exportProjectToPdf() {
+    // setLoading(true);
+    const doc = new jsPDF("p", "px");
+    const elements = document.getElementsByClassName("reportdownproject");
+    await creatPdf({ doc, elements });
+
+    doc.save(`${state.project?.name}-report.pdf`);
+  }
+
+  async function creatPdf({ doc, elements }) {
+    let top = 20;
+    const padding = 10;
+
+    for (let i = 0; i < elements.length; i++) {
+      const el = elements.item(i);
+      try {
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        doc.addImage(
+          "PNG",
+          padding,
+          top,
+
+          `image${i}`
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
   useEffect(() => {
     let invoiceid = Number(props.match.params.invoiceId);
     getInvoice(invoiceid);
-    getCosts(invoiceid);
+    // getCosts(invoiceid);
   }, []);
+
+  // useEffect(() => {
+  //   // Update the words state whenever the amount changes
+  //   setWords(numberToWords.toWords(amount));
+  // }, [amount]);
 
   const getInvoice = (id) => {
     apiAuth
       .get(`/api/master/invoice/${id}`)
       .then((response) => {
         let data = response.data;
+        // setAmount(state.total_amount );
         setState({ ...state, invoice: data });
         getCosts(data.id);
       })
@@ -29,7 +73,6 @@ const TaxInvoiceSecond = (props) => {
         NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
       });
   };
-
   const getCosts = (id) => {
     apiAuth
       .get(`/api/get-costentry/?invoice=${id}`)
@@ -58,12 +101,14 @@ const TaxInvoiceSecond = (props) => {
           ).toFixed(2);
           return ct;
         });
-        setState({
-          ...state,
-          costs: data,
-          total_amount,
-          vat_amount,
-          exd_vat_total_amount,
+        setState((prev) => {
+          return {
+            ...prev,
+            costs: data,
+            total_amount,
+            vat_amount,
+            exd_vat_total_amount,
+          };
         });
       })
       .catch((err) => {
@@ -79,10 +124,24 @@ const TaxInvoiceSecond = (props) => {
     var bufsArray = [tagBuf, tagValueLenBuf, tagValueBuf];
     return Buffer.concat(bufsArray);
   };
-
   return (
     <>
       <div style={{ padding: "25px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "end",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            color="info"
+            className="float-right"
+            onClick={exportProjectToPdf}
+          >
+            Download
+          </Button>
+        </div>
         <div className="card" style={{ padding: "20px" }}>
           <div className="row">
             <div className="col-lg-3 mb-4 d-flex">
@@ -120,19 +179,27 @@ const TaxInvoiceSecond = (props) => {
               <p>Saudi Arabia</p>
             </div>
             <div className="col-lg-4">
-              <p style={{ color: "#3cb043" }}>Invoice No : </p>
-              <p>Due Date : </p>
-              <p>Delivery Date : </p>
-              <p>Job No : </p>
-              <p>Consignee</p>
-              <p>Client Re/PO No : </p>
-              <p>POL</p>
+              <p style={{ color: "#3cb043" }}>
+                Invoice No : {state?.invoice?.id}
+              </p>
+              <p>
+                Due Date :{" "}
+                {moment(state.invoice?.due_date).format("MM/DD/YYYY")}
+              </p>
+              {/* <p>Delivery Date : </p> */}
+              <p>Job No : {state.invoice?.job?.job_number} </p>
+              <p>Consignee: {state.invoice?.job?.consignee_name}</p>
+              <p>Client Re/PO No : {state.invoice?.job?.client_name}</p>
+              <p>POL: {state.invoice?.job?.pol}</p>
             </div>
             <div className="col-lg-4">
-              <p>Invoice Date :</p>
-              <p>BL/AWB :</p>
-              <p>Bayan No : </p>
-              <p>Activity : </p>
+              <p>
+                Invoice Date :{" "}
+                {moment(state.invoice?.created_at).format("MM/DD/YYYY")}
+              </p>
+              {/* <p>BL/AWB :</p> */}
+              <p>Bayan No : {state.invoice?.job?.bayan_number}</p>
+              <p>Activity : {state.invoice?.job?.por}</p>
             </div>
           </div>
 
@@ -208,10 +275,11 @@ const TaxInvoiceSecond = (props) => {
                 <hr style={{ border: "1px solid #000" }} />
                 <div className="row">
                   <div className="col-lg-7">
-                    <h6>
+                    <h4>
                       SAR Two Thousand Five Hundred Sixty Three Riyals and Five
                       Halalah Only
-                    </h6>
+                      {/* {words} */}
+                    </h4>
                   </div>
                   <div className="col-lg-5">
                     <p></p>

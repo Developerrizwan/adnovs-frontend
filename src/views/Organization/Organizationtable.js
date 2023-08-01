@@ -53,6 +53,33 @@ const OrganizationTable = (props) => {
       },
       sortable: true,
     },
+
+    {
+      name: <span className="font-weight-bold fs-13">Currency</span>,
+      selector: (row) => row.currency,
+      cell: (value) => {
+        return <div>{value.currency}</div>;
+      },
+      sortable: true,
+    },
+
+    {
+      name: <span className="font-weight-bold "> Gstin Registered</span>,
+      selector: (row) => row.gstin_registered,
+      cell: (value) => {
+        return <div>{value.gstin_registered}</div>;
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold ">Payment Terms</span>,
+      selector: (row) => row.payment_terms,
+      cell: (value) => {
+        return <div>{value.payment_terms}</div>;
+      },
+      sortable: true,
+    },
+
     {
       name: <span className="font-weight-bold fs-13">Vat Trn Number</span>,
       selector: (row) => row.vat_trn_number,
