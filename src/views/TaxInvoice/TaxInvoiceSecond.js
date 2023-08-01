@@ -32,7 +32,7 @@ const TaxInvoiceSecond = (props) => {
 
   const getCosts = (id) => {
     apiAuth
-      .get(`/api/get-costentry/?invoice_id=${id}`)
+      .get(`/api/get-costentry/?invoice=${id}`)
       .then((response) => {
         let data = response.data.map((ct) => {
           ct.vat_amount = Number(
@@ -91,7 +91,7 @@ const TaxInvoiceSecond = (props) => {
               <p>Saudi Arabia</p>
             </div>
             <div className="col-lg-4">
-              <p style={{ color: "#3cb043" }}>Invoice No :</p>
+              <p style={{ color: "#3cb043" }}>Invoice No : </p>
               <p>Due Date : </p>
               <p>Delivery Date : </p>
               <p>Job No : </p>

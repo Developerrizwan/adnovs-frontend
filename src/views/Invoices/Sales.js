@@ -31,6 +31,7 @@ const Sales = (props) => {
   const [date, setDate] = useState(new Date());
   const [refDate, setRefDate] = useState(new Date());
   const [dueDate, setDueDate] = useState(new Date());
+  const [invoiceId, setInvoiceId] = useState(null);
   const [podValue, setPodValue] = useState(null);
   const [selectedInvoice, setSelectedInvoice] = useState({
     value: "Sales",
@@ -137,18 +138,17 @@ const Sales = (props) => {
     getPodOptions();
   }, []);
 
-  const getJobs = () => {
+  const getJobs = (val) => {
     apiAuth
-      .get("/api/master/job/")
+      .get(`/api/get-jobs/?&page=${1}&search=${val || ""}&type=Job`)
       .then((res) => {
         const { data } = res;
-        let opts = data.map((dd) => {
+        let opts = data.results.map((dd) => {
           return {
-            label: `${dd?.job_number}`,
+            label: dd.job_number,
             value: dd?.id,
           };
         });
-
         setJobOptions(opts);
       })
       .catch((err) => console.log(err));
@@ -183,7 +183,7 @@ const Sales = (props) => {
                     : "",
                   date: props.isEdit ? props.data?.date : "",
                   currency_sar: props.isEdit ? props.data?.currency_sar : "",
-                  bayan_Number: props.isEdit ? props.data?.bayan_Number : "",
+                  bayan_number: props.isEdit ? props.data?.bayan_number : "",
                   shipper_name: props.isEdit ? props.data?.shipper_name : "",
                   branch: props.isEdit ? props.data?.branch : "JEDDAH",
                   vendor: props.isEdit ? props.data?.vendor : "TEMP",
@@ -207,7 +207,7 @@ const Sales = (props) => {
                   //   consignee_name: Yup.string().required("Consignee Name is Required"),
                   // date: Yup.string().required("Date is Required"),
                   //   currency_sar: Yup.string().required("Currency is Required"),
-                  //   bayan_Number: Yup.string().required("Bayan Number is Required"),
+                  //   bayan_number: Yup.string().required("Bayan Number is Required"),
                   //   shipper_name: Yup.string().required("Shipper Name is Required"),
                   // branch: Yup.string().required("Branch is Required"),
                   //   ex_rate: Yup.string().required("Rate is Required"),
@@ -270,6 +270,8 @@ const Sales = (props) => {
                               null,
                               ""
                             );
+                            setGenerateInvoiceModal(true);
+                            setInvoiceId(response.data.id);
                             // props?.history?.push("/invoices");
                           } else {
                             NotificationManager.error(
@@ -408,9 +410,9 @@ const Sales = (props) => {
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.bayan_Number && touched.bayan_Number && (
+                          {errors.currency_sar && touched.currency_sar && (
                             <div className="invalid-feedback d-block">
-                              {errors.bayan_Number}
+                              {errors.currency_sar}
                             </div>
                           )}
                         </div>
@@ -420,22 +422,22 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <div>
                             <Label
-                              htmlFor="bayan_Number"
+                              htmlFor="bayan_number"
                               className="  w-50 pe-2"
                             >
                               Bayan Number
                             </Label>
                             <Field
                               className="form-control"
-                              name="bayan_Number"
+                              name="bayan_number"
                               // placeholder="Bayan Number"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
-                          {errors.bayan_Number && touched.bayan_Number && (
+                          {errors.bayan_number && touched.bayan_number && (
                             <div className="invalid-feedback d-block">
-                              {errors.bayan_Number}
+                              {errors.bayan_number}
                             </div>
                           )}
                         </div>
@@ -690,13 +692,16 @@ const Sales = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="job_type" className="form-label">
-                            Job Type
+                            Job No
                             <span className="text-danger">*</span>
                           </label>
                           <Select
                             name="job"
                             options={jobOptions}
                             value={selectedJob}
+                            onInputChange={(val) => {
+                              getJobs(val);
+                            }}
                             onChange={(data) => {
                               setSelectedJob(data);
                               setFieldValue("job", data.label);
@@ -818,7 +823,7 @@ const Sales = (props) => {
                         <Grid item lg={4} xs={12}>
                           <div className="form-group mb-3">
                             <div>
-                              <Label htmlFor="naration">naration</Label>
+                              <Label htmlFor="naration">Naration</Label>
                               <Field
                                 name="naration"
                                 className="form-control"
@@ -876,7 +881,7 @@ const Sales = (props) => {
                         </span>
                       </Button>{" "}
                       <div>
-                        <Link to="/tax-invoice-second/:invoiceId=">
+                        <Link to={`/tax-invoice-second/${invoiceId}`}>
                           <Button className="btn btn-warning float-right me-3">
                             {" "}
                             View Invoice

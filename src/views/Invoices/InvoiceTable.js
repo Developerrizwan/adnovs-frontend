@@ -484,7 +484,7 @@ const InvoiceTable = (props) => {
             setDeleteModal((prev) => !prev);
           }}
         >
-          Delete Job
+          Delete Invoice
         </ModalHeader>
         <ModalBody>
           <div>
