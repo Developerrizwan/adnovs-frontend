@@ -89,45 +89,70 @@ const AddOrganization = (props) => {
 
   return (
     <React.Fragment>
-      <div className="page-content">
-        <div
-          className="mb-5 mt-3"
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <h2 className="mx-3">Create Organization</h2>
+      <div className={props.isEdit ? "" : "page-content"}>
+        {props.isEdit ? (
+          <></>
+        ) : (
+          <>
+            <div
+              className="mb-5 mt-3"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <h2 className="mx-3">Create Organization</h2>
 
-          <button className="btn btn-danger" onClick={goBack}>
-            Back
-          </button>
-        </div>
+              <button className="btn btn-danger" onClick={goBack}>
+                Back
+              </button>
+            </div>
+          </>
+        )}
+
         <Grid container spacing={2}>
           <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  name: "",
-                  type: "",
-                  language_name: "",
-                  address: "",
-                  vat_trn_number: "",
-                  currency: "",
-                  branch: "",
-                  payment_terms: "",
-                  city: "",
-                  zip_code: "",
-                  mobile: "",
-                  email: "",
-                  country: "",
-                  state_code: "",
-                  building_name: "",
-                  port_name: "",
-                  post_box_no: "",
-                  gstin_registered: "",
-                  gstin: "",
-                  website: "",
-                  remarks: "",
-                  company: 0,
-                  coa: 0,
+                  name: props.isEdit ? props.organizationData?.name : "",
+                  type: props.isEdit ? props.organizationData?.type : "",
+                  language_name: props.isEdit
+                    ? props.organizationData?.language_name
+                    : "",
+                  address: props.isEdit ? props.organizationData?.address : "",
+                  vat_trn_number: props.isEdit
+                    ? props.organizationData?.vat_trn_number
+                    : "",
+                  currency: props.isEdit
+                    ? props.organizationData?.currency
+                    : "",
+                  branch: props.isEdit ? props.organizationData?.branch : "",
+                  payment_terms: props.isEdit
+                    ? props.organizationData?.payment_terms
+                    : "",
+                  city: props.isEdit ? props.organizationData?.city : "",
+                  zip_code: props.isEdit
+                    ? props.organizationData?.zip_code
+                    : "",
+                  mobile: props.isEdit ? props.organizationData?.mobile : "",
+                  email: props.isEdit ? props.organizationData?.email : "",
+                  country: props.isEdit ? props.organizationData?.country : "",
+                  state_code: props.isEdit
+                    ? props.organizationData?.state_code
+                    : "",
+                  building_name: props.isEdit
+                    ? props.organizationData?.building_name
+                    : "",
+                  port_name: props.isEdit
+                    ? props.organizationData?.port_name
+                    : "",
+                  post_box_no: props.isEdit
+                    ? props.organizationData?.post_box_no
+                    : "",
+                  gstin_registered: props.isEdit
+                    ? props.organizationData?.gstin_registered
+                    : "",
+                  gstin: props.isEdit ? props.organizationData?.gstin : "",
+                  website: props.isEdit ? props.organizationData?.website : "",
+                  remarks: props.isEdit ? props.organizationData?.remarks : "",
                 }}
                 // validationSchema={Yup.object({
                 //   name: Yup.string()
@@ -188,31 +213,58 @@ const AddOrganization = (props) => {
                   )?.company_id;
                   values["company"] = company;
                   values.country = values.country ? values.country : undefined;
-                  console.log("ddvalues", values);
-                  const url = "/api/master/organization/";
-                  apiAuth
-                    .post(url, values)
-                    .then((response) => {
-                      NotificationManager.success(
-                        "",
-                        `Organization Created Successfully`,
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                      props?.history?.push("/organization");
-                    })
-                    .catch((error) => {
-                      NotificationManager.error(
-                        "",
-                        `Organization Create Error`,
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                    });
+                  props.isEdit
+                    ? apiAuth
+                        .patch(
+                          `/api/master/organization/${props.organizationData.id}`,
+                          values
+                        )
+                        .then((response) => {
+                          NotificationManager.success(
+                            "",
+                            `Organization Updated Successfully`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                          props.isEdit
+                            ? props.closeAddPopup()
+                            : props?.history?.push("/organization");
+                        })
+                        .catch((error) => {
+                          NotificationManager.error(
+                            "",
+                            `Organization Update Error`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                        })
+                    : apiAuth
+                        .post("/api/master/organization/", values)
+                        .then((response) => {
+                          NotificationManager.success(
+                            "",
+                            `Organization Created Successfully`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                          props?.history?.push("/organization");
+                        })
+                        .catch((error) => {
+                          NotificationManager.error(
+                            "",
+                            `Organization Create Error`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                        });
                 }}
               >
                 {({ values, setFieldValue }) => (
@@ -804,7 +856,7 @@ const AddOrganization = (props) => {
 
                     <div className="mt-4 mb-3">
                       <button className="btn btn-success" type="submit">
-                        Submit
+                        {props.isEdit ? "Update" : "Submit"}
                       </button>
                     </div>
                   </Form>

@@ -140,6 +140,10 @@ const Invoices = (props) => {
             handleTypeChange={handleInvoiceChange}
             add_type={true}
             add_type_select={true}
+            selectedValue={{
+              label: selectedValue.value,
+              value: selectedValue.value,
+            }}
           />
         </Container>
 
@@ -157,6 +161,7 @@ const Invoices = (props) => {
                       setInvoicePagination(data);
                       getInvoices(data);
                     }}
+                    selectedValue={selectedValue.value}
                     getInvoices={() => {
                       setInvoices([]);
                       getInvoices(

@@ -12,12 +12,13 @@ import {
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
-import EditOrganization from "./EditOrganization";
+import AddOrganization from "./AddOrganization";
 const OrganizationTable = (props) => {
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deletId, setDeletId] = useState();
-  const [selectedJob, setSelectedJob] = useState([]);
+  const [selectedOrganization, setSelectedOrganization] = useState([]);
+
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13">Name</span>,
@@ -84,7 +85,7 @@ const OrganizationTable = (props) => {
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
-                  setSelectedJob(value);
+                  setSelectedOrganization(value);
                   setEditModal(true);
                 }}
               >
@@ -147,16 +148,16 @@ const OrganizationTable = (props) => {
             setEditModal((prev) => !prev);
           }}
         >
-          Edit Enquiry
+          Edit Organization
         </ModalHeader>
         <ModalBody>
-          <EditOrganization
+          <AddOrganization
+            isEdit={true}
             closeAddPopup={() => {
               setEditModal(false);
-              setSelectedJob(null);
               props.getOrganization();
             }}
-            organizationData={selectedJob}
+            organizationData={selectedOrganization}
             selectedValue={props.selectedValue}
             history={props.history}
           />
