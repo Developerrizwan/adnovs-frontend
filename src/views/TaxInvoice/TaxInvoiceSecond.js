@@ -18,7 +18,7 @@ const TaxInvoiceSecond = (props) => {
 
   const getInvoice = (id) => {
     apiAuth
-      .get(`/api/get-invoices/${id}`)
+      .get(`/api/master/invoice/${id}`)
       .then((response) => {
         let data = response.data;
         setState({ ...state, invoice: data });
@@ -34,6 +34,9 @@ const TaxInvoiceSecond = (props) => {
     apiAuth
       .get(`/api/get-costentry/?invoice=${id}`)
       .then((response) => {
+        let total_amount = 0;
+        let vat_amount = 0;
+        let exd_vat_total_amount = 0;
         let data = response.data.map((ct) => {
           ct.vat_amount = Number(
             (Number(ct.amount) * Number(ct.tax_group_code)) / 100
@@ -41,14 +44,40 @@ const TaxInvoiceSecond = (props) => {
           ct.total_amount = Number(
             Number(ct.amount) + Number(ct.vat_amount)
           ).toFixed(2);
+
+          exd_vat_total_amount = Number(
+            Number(exd_vat_total_amount) + Number(ct.amount)
+          ).toFixed(2);
+
+          total_amount = Number(
+            Number(total_amount) + Number(ct.total_amount)
+          ).toFixed(2);
+
+          vat_amount = Number(
+            Number(vat_amount) + Number(ct.vat_amount)
+          ).toFixed(2);
           return ct;
         });
-        setState({ ...state, costs: data });
+        setState({
+          ...state,
+          costs: data,
+          total_amount,
+          vat_amount,
+          exd_vat_total_amount,
+        });
       })
       .catch((err) => {
         console.log(err);
         NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
       });
+  };
+
+  const getTLVForValue = (tag, value) => {
+    var tagBuf = Buffer.from([tag], "utf8");
+    var tagValueLenBuf = Buffer.from([String(value).length], "utf8");
+    var tagValueBuf = Buffer.from(String(value), "utf8");
+    var bufsArray = [tagBuf, tagValueLenBuf, tagValueBuf];
+    return Buffer.concat(bufsArray);
   };
 
   return (
@@ -168,10 +197,11 @@ const TaxInvoiceSecond = (props) => {
                     className="col-lg-4 col-md-6"
                     style={{ fontWeight: 900, fontSize: "18px" }}
                   >
-                    <p>2,518.05</p>
-                    <p>45.00</p>
+                    <p>{state.exd_vat_total_amount}</p>
+                    <p>{state.vat_amount}</p>
                     <p style={{ color: "#D0312D" }}>
-                      <span style={{ fontSize: "12px" }}>SAR </span>2,563.05
+                      <span style={{ fontSize: "12px" }}>SAR </span>
+                      {state.total_amount}
                     </p>
                   </div>
                 </div>
