@@ -84,8 +84,7 @@ const GenerateInvoice = (props) => {
     for (let i = 0; i < costs.length; i++) {
       await apiAuth
         .patch(`/api/master/cost_entry/${costs[i]}/`, {
-          // invoice: props.invoice,
-          invoice: 20,
+          invoice: props.invoice,
           is_included: true,
         })
         .then((res) => {
@@ -99,7 +98,16 @@ const GenerateInvoice = (props) => {
     }
 
     if (x == costs.length - 1 || x == 0) {
-      props.closeAddPopup();
+      props.closeAddPopup(true);
+
+      NotificationManager.success(
+        "",
+        "Invoice Generated Successfully",
+        3000,
+        null,
+        null,
+        ""
+      );
     }
   };
 
@@ -306,9 +314,9 @@ const GenerateInvoice = (props) => {
                     className="form-check-input fs-15"
                     type="checkbox"
                     name="checkAll"
-                    value="option1"
-                    onClick={() => props.checkedValues("", true)}
-                    checked={props.checkedSalesAll}
+                    onClick={() => checkedSalesValues("", true)}
+                    checked={state.checkedSalesAll}
+                    readOnly
                   />
                 ),
                 cell: (value) => (
@@ -316,8 +324,9 @@ const GenerateInvoice = (props) => {
                     className="form-check-input fs-15"
                     type="checkbox"
                     name="checkAll"
-                    onClick={() => props.checkedValues(value.id, null, value)}
-                    checked={props.checkedSalesBox?.includes(value.id)}
+                    onClick={() => checkedSalesValues(value.id, null, value)}
+                    checked={state.checkedSalesBox?.includes(value.id)}
+                    readOnly
                   />
                 ),
                 width: "50px",

@@ -268,8 +268,13 @@ const Sales = (props) => {
                               null,
                               ""
                             );
-                            setGenerateInvoiceModal(true);
                             setInvoiceId(response.data.id);
+                            setState((prev) => {
+                              return {
+                                ...state,
+                                invoice_id: response.data.id,
+                              };
+                            });
                             // props?.history?.push("/invoices");
                           } else {
                             NotificationManager.error(
@@ -746,46 +751,6 @@ const Sales = (props) => {
                           </div>
                         </Grid>
 
-                        {/* <Grid item lg={4} xs={12}>
-                          <div className="mb-3">
-                            <label htmlFor="due_date" className="form-label">
-                              Due Date
-                              <span className="text-danger">*</span>
-                            </label>
-                            <div
-                              style={{
-                                position: "relative",
-                                // cursor: "pointer",
-                              }}
-                            >
-                              <DatePicker
-                                selected={dueDate}
-                                onChange={(date) => setDueDate(date)}
-                              />
-                              <span
-                                style={{
-                                  position: "absolute",
-                                  top: 8,
-                                  right: 10,
-                                  fill: "red",
-                                }}
-                              >
-                                <img
-                                  src="/calendar.svg"
-                                  alt="calendar"
-                                  width="20px"
-                                  height="20px"
-                                />
-                              </span>
-                            </div>
-
-                            {errors.due_date && touched.due_date && (
-                              <div className="invalid-feedback d-block">
-                                {errors.due_date}
-                              </div>
-                            )}
-                          </div>
-                        </Grid> */}
                         <Grid item lg={4} xs={12}>
                           <div className="form-group mb-3">
                             <div>
@@ -830,10 +795,10 @@ const Sales = (props) => {
                       </Grid>
                     </Grid>
 
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex">
                       <Button
                         type="submit"
-                        className={`btn btn-success  ${
+                        className={`btn btn-success me-3 ${
                           props.loading ? "show-spinner" : ""
                         }`}
                       >
@@ -846,22 +811,39 @@ const Sales = (props) => {
                           {props.isEdit ? "Update" : "Save"}
                         </span>
                       </Button>{" "}
-                      <div>
-                        <Link to={`/tax-invoice-second/${invoiceId}`}>
-                          <Button className="btn btn-warning float-right me-3">
-                            {" "}
-                            View Invoice
-                          </Button>
-                        </Link>
-
-                        <Button
-                          className="btn btn-info float-right"
-                          onClick={() => setGenerateInvoiceModal(true)}
-                        >
+                      {props.isEdit ? (
+                        <></>
+                      ) : (
+                        <>
                           {" "}
-                          Generate Invoice
-                        </Button>
-                      </div>
+                          <div>
+                            {state.invoice_id ? (
+                              <Button
+                                className="btn btn-info float-right me-3"
+                                onClick={() => setGenerateInvoiceModal(true)}
+                              >
+                                {" "}
+                                Generate Invoice
+                              </Button>
+                            ) : (
+                              <></>
+                            )}
+
+                            {state.invoice_generated ? (
+                              <Link
+                                to={`/tax-invoice-second/${state.invoice_id}`}
+                              >
+                                <Button className="btn btn-warning float-right">
+                                  {" "}
+                                  View Invoice
+                                </Button>
+                              </Link>
+                            ) : (
+                              <></>
+                            )}
+                          </div>
+                        </>
+                      )}
                     </div>
                   </Form>
                 )}
@@ -890,8 +872,16 @@ const Sales = (props) => {
         </ModalHeader>
         <ModalBody>
           <GenerateInvoice
-            closeAddPopup={() => {
+            closeAddPopup={(val) => {
               setGenerateInvoiceModal(false);
+              if (val) {
+                setState((prev) => {
+                  return {
+                    ...state,
+                    invoice_generated: true,
+                  };
+                });
+              }
             }}
             invoice={state.invoice_id}
           />

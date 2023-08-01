@@ -8,22 +8,24 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import QRCode from "react-qr-code";
 import moment from "moment";
 import jsPDF from "jspdf";
+import * as htmlToImage from "html-to-image";
 
 import numberToWords from "number-to-words";
 
 const TaxInvoiceSecond = (props) => {
   const [state, setState] = useState({ costs: [] });
-
+  const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
   const [words, setWords] = useState("");
 
   async function exportProjectToPdf() {
-    // setLoading(true);
+    setLoading(true);
     const doc = new jsPDF("p", "px");
     const elements = document.getElementsByClassName("reportdownproject");
     await creatPdf({ doc, elements });
 
-    doc.save(`${state.project?.name}-report.pdf`);
+    doc.save(`invoice.pdf`);
+    setLoading(false);
   }
 
   async function creatPdf({ doc, elements }) {
@@ -33,15 +35,37 @@ const TaxInvoiceSecond = (props) => {
     for (let i = 0; i < elements.length; i++) {
       const el = elements.item(i);
       try {
+        const imgData = await htmlToImage.toPng(el);
+        // setImgs(imgData);
+
+        let elHeight = el.offsetHeight;
+        let elWidth = el.offsetWidth;
+
+        const pageWidth = doc.internal.pageSize.getWidth();
+
+        if (elWidth > pageWidth) {
+          const ratio = pageWidth / elWidth;
+          elHeight = elHeight * ratio - padding;
+          elWidth = elWidth * ratio - padding;
+        }
+
         const pageHeight = doc.internal.pageSize.getHeight();
 
+        if (top + elHeight > pageHeight) {
+          doc.addPage();
+          top = 20;
+        }
+
         doc.addImage(
+          imgData,
           "PNG",
           padding,
           top,
-
+          elWidth,
+          elHeight,
           `image${i}`
         );
+        top += elHeight;
       } catch (error) {
         console.log(error);
       }
@@ -75,7 +99,7 @@ const TaxInvoiceSecond = (props) => {
   };
   const getCosts = (id) => {
     apiAuth
-      .get(`/api/get-costentry/?invoice=${id}`)
+      .get(`/api/get-costentry/?invoice_id=${id}`)
       .then((response) => {
         let total_amount = 0;
         let vat_amount = 0;
@@ -139,10 +163,10 @@ const TaxInvoiceSecond = (props) => {
             className="float-right"
             onClick={exportProjectToPdf}
           >
-            Download
+            {loading ? "Downloding..." : "Download"}
           </Button>
         </div>
-        <div className="card" style={{ padding: "20px" }}>
+        <div className="card reportdownproject" style={{ padding: "20px" }}>
           <div className="row">
             <div className="col-lg-3 mb-4 d-flex">
               <img
@@ -247,7 +271,10 @@ const TaxInvoiceSecond = (props) => {
             <div className="row">
               <div className="col-lg-4 col-xs-12">
                 <span className="p-2">
-                  <QRCode size={250} value={"QRCODE"} />
+                  <QRCode
+                    size={250}
+                    value={`Total-${String(state.total_amount)}`}
+                  />
                 </span>
               </div>
               <div className="col-lg-8 col-xs-12">
@@ -275,11 +302,7 @@ const TaxInvoiceSecond = (props) => {
                 <hr style={{ border: "1px solid #000" }} />
                 <div className="row">
                   <div className="col-lg-7">
-                    <h4>
-                      SAR Two Thousand Five Hundred Sixty Three Riyals and Five
-                      Halalah Only
-                      {/* {words} */}
-                    </h4>
+                    <h4>SAR {numberToWords.toWords(state.total_amount)}</h4>
                   </div>
                   <div className="col-lg-5">
                     <p></p>
@@ -319,10 +342,10 @@ const TaxInvoiceSecond = (props) => {
                   of invoice. Otherwise it shall be considered as confirmation
                   of correctness
                 </p>
-                <p>
+                {/* <p>
                   <span style={{ fontWeight: 700 }}>Print Date </span>05-07-2023
                   11:00 am
-                </p>
+                </p> */}
               </div>
               <div className="col-lg-2 col-xs-12">
                 <p>Email:</p>
