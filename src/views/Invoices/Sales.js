@@ -356,7 +356,7 @@ const Sales = (props) => {
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="date" className="form-label">
-                            Date
+                            Due Date
                             <span className="text-danger">*</span>
                           </label>
                           <div

@@ -20,6 +20,7 @@ const EditEnquiry = (props) => {
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
   const [poaValue, setPoaValue] = useState(null);
+  const [poiValue, setPoiValue] = useState(null);
   const [podValue, setPodValue] = useState(null);
   const [eta, setEta] = useState(etaDateObj);
   const [etd, setEtd] = useState(etdDateObj);
@@ -91,6 +92,10 @@ const EditEnquiry = (props) => {
     setPoaValue({
       label: props.allJobs.poa,
       value: props.allJobs.poa,
+    });
+    setPoiValue({
+      label: props.allJobs.poi,
+      value: props.allJobs.poi,
     });
 
     const pod_Value = podOptions.find((item) => item.id === props.allJobs?.pod);
@@ -258,6 +263,7 @@ const EditEnquiry = (props) => {
             initialValues={{
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
+              poi: props?.allJobs?.poi ? props?.allJobs?.poi : "",
               consignee_name: props?.allJobs?.consignee_name
                 ? props?.allJobs?.consignee_name
                 : "",
@@ -284,6 +290,7 @@ const EditEnquiry = (props) => {
             validationSchema={Yup.object({
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
+              poi: Yup.string().required("POI is Required"),
               consignee_name: Yup.string().required(
                 "Cosignee Name is Required"
               ),
@@ -492,10 +499,11 @@ const EditEnquiry = (props) => {
                       />
                     </div>
                   </Grid>
+
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="type" className="form-label">
-                        Type
+                      <Label htmlFor="poi" className="form-label">
+                        POI
                         <span className="text-danger">*</span>
                       </Label>
 
@@ -503,23 +511,30 @@ const EditEnquiry = (props) => {
                         name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={typeOptions}
-                        value={typevalue}
+                        options={poaOptions?.map((item) => {
+                          return {
+                            label: item.name,
+                            value: item.name,
+                          };
+                        })}
+                        value={poiValue}
                         onChange={(data) => {
-                          setTypevalue(data);
-                          setFieldValue("type", data.value);
+                          setPoiValue(data);
+                          setFieldValue("poi", data.value);
                         }}
                       />
 
                       <ErrorMessage
-                        name="type"
+                        name="poi"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
                       />
                     </div>
                   </Grid>
+                </Grid>
 
+                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="scope_of_work" className="form-label">
@@ -572,7 +587,9 @@ const EditEnquiry = (props) => {
                       />
                     </div>
                   </Grid>
+                </Grid>
 
+                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="etd" className="form-label">
@@ -624,8 +641,36 @@ const EditEnquiry = (props) => {
                       />
                     </div>
                   </Grid>
+                </Grid>
 
-                  <Grid item lg={6} xs={12}></Grid>
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="type" className="form-label">
+                        Type
+                        <span className="text-danger">*</span>
+                      </Label>
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={typeOptions}
+                        value={typevalue}
+                        onChange={(data) => {
+                          setTypevalue(data);
+                          setFieldValue("type", data.value);
+                        }}
+                      />
+
+                      <ErrorMessage
+                        name="type"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
                 </Grid>
 
                 <div className="mb-3">

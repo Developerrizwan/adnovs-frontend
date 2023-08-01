@@ -167,7 +167,6 @@ const AddJobs = (props) => {
 
       .then((response) => {
         let data = response.data.results;
-        console.log("dswdwd", data);
         setPoaOptions(data);
       })
       .catch((error) => {
@@ -182,7 +181,6 @@ const AddJobs = (props) => {
       .then((response) => {
         let data = response.data.results;
         setPodOptions(data);
-        console.log("poa", data);
       })
       .catch((error) => {
         console.log(error);
@@ -242,6 +240,7 @@ const AddJobs = (props) => {
                   // bayan_number: "",
                   pod: "",
                   poa: "",
+                  poi: "",
                   consignee_name: "",
                   shipper_name: "",
                   client_name: "",
@@ -261,6 +260,7 @@ const AddJobs = (props) => {
                   // ),
                   pod: Yup.string().required("POD is Required"),
                   poa: Yup.string().required("POA is Required"),
+                  poi: Yup.string().required("POI is Required"),
                   consignee_name: Yup.string().required(
                     "Cosignee Name is Required"
                   ),
@@ -525,6 +525,38 @@ const AddJobs = (props) => {
                         </div>
                       </Grid>
 
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="poi" className="form-label">
+                            POI
+                            <span className="text-danger">*</span>
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={poaOptions?.map((item) => {
+                              return {
+                                label: item.name,
+                                value: item.name,
+                              };
+                            })}
+                            onChange={(data) => {
+                              // setJobType(data.value);
+                              setFieldValue("poi", data.value);
+                            }}
+                          />
+
+                          <ErrorMessage
+                            name="poi"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+
                       {/* <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="job_type" className="form-label">
@@ -555,36 +587,6 @@ const AddJobs = (props) => {
                           />
                         </div>
                       </Grid> */}
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="type" className="form-label">
-                            Type
-                            <span className="text-danger">*</span>
-                          </Label>
-
-                          <Select
-                            name="type"
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            options={typeOptions}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
-                            onChange={(data) => {
-                              setJobType(data.value);
-                              setFieldValue("type", data.value);
-                            }}
-                          />
-
-                          <ErrorMessage
-                            name="type"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
                     </Grid>
 
                     <Grid container spacing={2}>
@@ -691,6 +693,38 @@ const AddJobs = (props) => {
 
                           <ErrorMessage
                             name="scope_of_work"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>
+                    <Grid spacing={2} container>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="type" className="form-label">
+                            Type
+                            <span className="text-danger">*</span>
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={typeOptions}
+                            // defaultValue={{ label: jobType }}
+                            // onChange={(event) => {
+                            //   setJobType(event.value);
+                            // }}
+                            onChange={(data) => {
+                              setJobType(data.value);
+                              setFieldValue("type", data.value);
+                            }}
+                          />
+
+                          <ErrorMessage
+                            name="type"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}

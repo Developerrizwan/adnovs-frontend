@@ -9,6 +9,7 @@ import {
   ModalFooter,
   UncontrolledDropdown,
 } from "reactstrap";
+import { Link } from "react-router-dom";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Sales from "./Sales";
@@ -152,10 +153,12 @@ const InvoiceTable = (props) => {
       cell: (value) => {
         return (
           <div>
-            <Button color="secondary" className="btn btn-sm">
-              {" "}
-              View
-            </Button>
+            <Link to={`/tax-invoice-second/${value.id}`}>
+              <Button color="secondary" className="btn btn-sm">
+                {" "}
+                View
+              </Button>
+            </Link>
           </div>
         );
       },
@@ -362,10 +365,12 @@ const InvoiceTable = (props) => {
       cell: (value) => {
         return (
           <div>
-            <Button color="secondary" className="btn btn-sm">
-              {" "}
-              View
-            </Button>
+            <Link to={`/tax-invoice-second/${value.id}`}>
+              <Button color="secondary" className="btn btn-sm">
+                {" "}
+                View
+              </Button>
+            </Link>
           </div>
         );
       },

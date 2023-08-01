@@ -87,6 +87,14 @@ const EnquiryTable = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">POI</span>,
+      selector: (row) => row.poi,
+      cell: (value) => {
+        return <div>{value.poi}</div>;
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Scope Of Work</span>,
       selector: (row) => row.scope_of_work,
       cell: (value) => {
