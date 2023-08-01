@@ -4,24 +4,53 @@ import { Card } from "reactstrap";
 import shipLogo from "../../assets/images/ship-logo.png";
 import "./table.css";
 import apiAuth from "../../helpers/ApiAuth";
+import NotificationManager from "../../components/Common/NotificationManager";
+import QRCode from "react-qr-code";
 
-const TaxInvoiceSecond = () => {
-  const [accounts, setAccounts] = useState([]);
-
-  const getAccounts = (pgdata, val) => {
-    apiAuth
-      .get(`/api/get-costentry/`)
-      .then((response) => {
-        let data = response.data;
-
-        setAccounts(data);
-      })
-      .catch((err) => console.log(err));
-  };
+const TaxInvoiceSecond = (props) => {
+  const [state, setState] = useState({ costs: [] });
 
   useEffect(() => {
-    getAccounts();
+    let invoiceid = Number(props.match.params.invoiceId);
+    getInvoice(invoiceid);
+    getCosts(invoiceid);
   }, []);
+
+  const getInvoice = (id) => {
+    apiAuth
+      .get(`/api/master/invoice/${id}/`)
+      .then((response) => {
+        let data = response.data;
+        setState({ ...state, invoice: data });
+        getCosts(data.id);
+      })
+      .catch((err) => {
+        console.log(err);
+        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+      });
+  };
+
+  const getCosts = (id) => {
+    apiAuth
+      .get(`/api/get-costentry/?invoice_id=${id}`)
+      .then((response) => {
+        let data = response.data.map((ct) => {
+          ct.vat_amount = Number(
+            (Number(ct.amount) * Number(ct.tax_group_code)) / 100
+          ).toFixed(2);
+          ct.total_amount = Number(
+            Number(ct.amount) + Number(ct.vat_amount)
+          ).toFixed(2);
+          return ct;
+        });
+        setState({ ...state, costs: data });
+      })
+      .catch((err) => {
+        console.log(err);
+        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+      });
+  };
+
   return (
     <>
       <div style={{ padding: "25px" }}>
@@ -93,39 +122,23 @@ const TaxInvoiceSecond = () => {
                 <th className="border-0">VAT</th>
                 <th className="border-0">Total</th>
               </tr>
-              <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
-                <td className="border-0">1</td>
-                <td className="border-0">Port Charges</td>
-                <td className="border-0"></td>
-                <td className="border-0">1</td>
-                <td className="border-0">1,161.50</td>
-                <td className="border-0">1,161.50</td>
-                <td className="border-0">0.00%</td>
-                <td className="border-0">0.00</td>
-                <td className="border-0">1,161.50</td>
-              </tr>
-              <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
-                <td className="border-0">1</td>
-                <td className="border-0">Port Charges</td>
-                <td className="border-0"></td>
-                <td className="border-0">1</td>
-                <td className="border-0">1,161.50</td>
-                <td className="border-0">1,161.50</td>
-                <td className="border-0">0.00%</td>
-                <td className="border-0">0.00</td>
-                <td className="border-0">1,161.50</td>
-              </tr>
-              <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
-                <td className="border-0">1</td>
-                <td className="border-0">Port Charges</td>
-                <td className="border-0"></td>
-                <td className="border-0">1</td>
-                <td className="border-0">1,161.50</td>
-                <td className="border-0">1,161.50</td>
-                <td className="border-0">0.00%</td>
-                <td className="border-0">0.00</td>
-                <td className="border-0">1,161.50</td>
-              </tr>
+              {state.costs?.map((cost) => {
+                return (
+                  <>
+                    <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
+                      <td className="border-0">1</td>
+                      <td className="border-0">Port Charges</td>
+                      <td className="border-0"></td>
+                      <td className="border-0">1</td>
+                      <td className="border-0">1,161.50</td>
+                      <td className="border-0">{cost.amount}</td>
+                      <td className="border-0">{cost.tax_group_code}</td>
+                      <td className="border-0">{cost.vat_amount}</td>
+                      <td className="border-0">{cost.total_amount}</td>
+                    </tr>
+                  </>
+                );
+              })}
             </table>
           </div>
 
@@ -136,7 +149,11 @@ const TaxInvoiceSecond = () => {
             style={{ border: "1px solid #000", padding: "10px" }}
           >
             <div className="row">
-              <div className="col-lg-4 col-xs-12"></div>
+              <div className="col-lg-4 col-xs-12">
+                <span className="p-2">
+                  <QRCode size={250} value={"QRCODE"} />
+                </span>
+              </div>
               <div className="col-lg-8 col-xs-12">
                 <div className="row">
                   <div

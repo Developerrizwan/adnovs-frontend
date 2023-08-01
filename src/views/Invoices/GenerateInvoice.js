@@ -1,42 +1,19 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import DataTable from "react-data-table-component";
-import {
-  Button,
-  Card,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Form,
-  Label,
-  ModalFooter,
-  UncontrolledDropdown,
-  Input,
-} from "reactstrap";
-import * as Yup from "yup";
+import { Button, Card, Label, Input } from "reactstrap";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
-
-import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
-import { customStyles } from "../../assets/CustomTableStyles";
-import Sales from "./Sales";
-import { ErrorMessage, Field, Formik } from "formik";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
-import { Grid } from "react-bootstrap-icons";
-import SalesInvoice from "../Ticket/SalesInvoice";
-import InvoiceForm from "./InvoiceForm";
 
 const GenerateInvoice = (props) => {
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
-  const [selectedInvoice, setSelectedInvoice] = useState([]);
-  const [fromDate, SetFromDate] = useState(new Date());
-  const [toDate, setToDate] = useState(new Date());
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [job_no, setJob_no] = useState("");
-  const [invoiceData, SetInvoiceData] = useState([]);
-
-  const dateOptions = [{ label: "test", value: "test" }];
+  const [invoiceData, setInvoiceData] = useState([]);
+  const [jobOptions, setJobOptions] = useState([]);
+  const [state, setState] = useState({ checkedSalesBox: [] });
 
   const job_noStyles = {
     control: (provided, state) => ({
@@ -46,262 +23,85 @@ const GenerateInvoice = (props) => {
     }),
   };
 
-  const saledata = [
-    {
-      job_no: "123",
-      shipment_no: "11",
-      mawb_mbl_no: "test",
-      date_filter: "date",
-      from_date: "07/25/2023",
-      to_date: "07/29/2023",
-      selectedSale: "testSale",
-      selectedCost: "testCost",
-      net_total: "testsale",
-    },
-  ];
-
-  const costSale = [
-    {
-      job_no: "123",
-      shipment_no: "11",
-      mawb_mbl_no: "test",
-      date_filter: "date",
-      from_date: "07/25/2023",
-      to_date: "07/29/2023",
-      selectedSale: "testSale",
-      selectedCost: "testCost",
-      net_total: "testsale",
-    },
-  ];
-
-  const [sale_cols, setSale_Cols] = useState([
-    {
-      name: (
-        <Input
-          className="form-check-input fs-15"
-          type="checkbox"
-          name="checkAll"
-          value="option1"
-          onClick={() => props.checkedValues("", true)}
-          checked={props.checkedAll}
-        />
-      ),
-      cell: (value) => (
-        <input
-          className="form-check-input fs-15"
-          type="checkbox"
-          name="checkAll"
-          onClick={() => props.checkedValues(value.id, null, value)}
-          checked={props.checkedBox?.includes(value.id)}
-        />
-      ),
-      width: "50px",
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Job No</span>,
-      selector: (row) => row.job_no,
-      cell: (value) => {
-        return <div>{value.job_no}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Shipment No</span>,
-      selector: (row) => row.shipment_no,
-      cell: (value) => {
-        return <div>{value.shipment_no}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Amount</span>,
-      selector: (row) => row.amount,
-      cell: (value) => {
-        return <div>{value.amount}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Charge</span>,
-      selector: (row) => row.charge,
-      cell: (value) => {
-        return <div>{value.charge}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Currency</span>,
-      selector: (row) => row.currency,
-      cell: (value) => {
-        return <div>{value.currency}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Dr Cr</span>,
-      selector: (row) => row.dr_cr,
-      cell: (value) => {
-        return <div>{value.dr_cr}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Ex Rate</span>,
-      selector: (row) => row.ex_rate,
-      cell: (value) => {
-        return <div>{value.ex_rate}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Fcy Amount</span>,
-      selector: (row) => row.fcy_amount,
-      cell: (value) => {
-        return <div>{value.fcy_amount}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Prorate Method</span>,
-      selector: (row) => row.prorate_method,
-      cell: (value) => {
-        return <div>{value.prorate_method}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Tax Group Code</span>,
-      selector: (row) => row.tax_group_code,
-      cell: (value) => {
-        return <div>{value.tax_group_code}</div>;
-      },
-      sortable: true,
-    },
-  ]);
-
-  const [cost_cols, setCost_Cols] = useState([
-    {
-      name: (
-        <Input
-          className="form-check-input fs-15"
-          type="checkbox"
-          name="checkAll"
-          value="option1"
-          onClick={() => props.checkedValues("", true)}
-          checked={props.checkedAll}
-        />
-      ),
-      cell: (value) => (
-        <input
-          className="form-check-input fs-15"
-          type="checkbox"
-          name="checkAll"
-          onClick={() => props.checkedValues(value.id, null, value)}
-          checked={props.checkedBox?.includes(value.id)}
-        />
-      ),
-      width: "50px",
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Job No</span>,
-      selector: (row) => row.job_no,
-      cell: (value) => {
-        return <div>{value.job_no}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Shipment No</span>,
-      selector: (row) => row.shipment_no,
-      cell: (value) => {
-        return <div>{value.shipment_no}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Amount</span>,
-      selector: (row) => row.amount,
-      cell: (value) => {
-        return <div>{value.amount}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Charge</span>,
-      selector: (row) => row.charge,
-      cell: (value) => {
-        return <div>{value.charge}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Currency</span>,
-      selector: (row) => row.currency,
-      cell: (value) => {
-        return <div>{value.currency}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Dr Cr</span>,
-      selector: (row) => row.dr_cr,
-      cell: (value) => {
-        return <div>{value.dr_cr}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Ex Rate</span>,
-      selector: (row) => row.ex_rate,
-      cell: (value) => {
-        return <div>{value.ex_rate}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Fcy Amount</span>,
-      selector: (row) => row.fcy_amount,
-      cell: (value) => {
-        return <div>{value.fcy_amount}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Prorate Method</span>,
-      selector: (row) => row.prorate_method,
-      cell: (value) => {
-        return <div>{value.prorate_method}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Tax Group Code</span>,
-      selector: (row) => row.tax_group_code,
-      cell: (value) => {
-        return <div>{value.tax_group_code}</div>;
-      },
-      sortable: true,
-    },
-  ]);
+  const checkedSalesValues = (value, all, data) => {
+    let newStatus = [];
+    if (all) {
+      newStatus = state.checkedSalesAll
+        ? []
+        : invoiceData?.map((val) => val.id);
+      setState({
+        ...state,
+        checkedSalesBox: newStatus,
+        checkedSalesAll: !state.checkedSalesAll,
+      });
+    } else {
+      if (state.checkedSalesBox.includes(value)) {
+        newStatus = state.checkedSalesBox.filter((id) => id !== value);
+      } else {
+        newStatus = [...state.checkedSalesBox, value];
+      }
+      setState({
+        ...state,
+        checkedSalesBox: newStatus,
+        checkedSalesAll: invoiceData?.length !== newStatus?.length,
+      });
+    }
+  };
 
   const getInvoiceData = () => {
     apiAuth
-      .get(
-        `/api/master/cost_entry/`
-        // ?page=${pgdata?.currentPage
-      )
+      .get(`/api/get-costentry/?`)
       .then((response) => {
         let data = response.data;
-        // console.log("xswjhjwx", response);
-        console.log("deed", data);
-
-        SetInvoiceData(data.results);
+        setInvoiceData(data);
       })
       .catch((err) => console.log(err));
   };
   useEffect(() => {
+    getJobOptions();
     getInvoiceData();
   }, []);
+
+  const getJobOptions = (val) => {
+    apiAuth
+      .get(`/api/get-jobs/?&page=${1}&search=${val || ""}&type=Job`)
+      .then((res) => {
+        const { data } = res;
+        let jobOpts = data.results.map((opt) => {
+          return {
+            label: opt?.job_number,
+            value: opt?.id,
+          };
+        });
+        setJobOptions(jobOpts);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleCosts = async () => {
+    let costs = state.checkedSalesBox;
+    let x = 0;
+    for (let i = 0; i < costs.length; i++) {
+      await apiAuth
+        .patch(`/api/master/cost_entry/${costs[i]}/`, {
+          // invoice: props.invoice,
+          invoice: 20,
+          is_included: true,
+        })
+        .then((res) => {
+          let data = res.data;
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+
+      x = i;
+    }
+
+    if (x == costs.length - 1 || x == 0) {
+      props.closeAddPopup();
+    }
+  };
 
   return (
     <>
@@ -313,26 +113,27 @@ const GenerateInvoice = (props) => {
           marginBottom: "20px",
         }}
       >
-        {" "}
-        {/* <InvoiceForm />{" "} */}
         <div>
           <Label htmlFor="job_no">Job No</Label>
           <Select
             name="type"
             placeholder={"Select"}
             styles={job_noStyles}
-            options={dateOptions}
+            options={jobOptions}
             onChange={(data) => {
-              setJob_no("date_filter", data.value);
+              setJob_no(data.value);
             }}
           />
         </div>
+
         <div>
-          <Label htmlFor="to_date">To Date</Label>
+          <Label htmlFor="to_date" className="form-label">
+            From Date
+          </Label>
           <DatePicker
-            selected={toDate}
+            selected={startDate}
             onChange={(date) => {
-              setToDate(date);
+              setStartDate(date);
             }}
             showTimeSelect
             timeFormat="HH:mm"
@@ -342,13 +143,11 @@ const GenerateInvoice = (props) => {
           />
         </div>
         <div>
-          <Label htmlFor="to_date" className="form-label">
-            From Date
-          </Label>
+          <Label htmlFor="to_date">To Date</Label>
           <DatePicker
-            selected={toDate}
+            selected={endDate}
             onChange={(date) => {
-              SetFromDate(date);
+              setEndDate(date);
             }}
             showTimeSelect
             timeFormat="HH:mm"
@@ -370,26 +169,124 @@ const GenerateInvoice = (props) => {
         </p>
         <Card>
           <DataTable
-            columns={sale_cols}
             data={invoiceData.filter((item) => item.sale_cost === "Sale")}
-            // paginationPerPage={props.invoicePagination?.rowsPerPage}
-            // onChangePage={(p, t) => {
-            //   props.handlePagination({
-            //     ...props.invoicePagination,
-            //     currentPage: p,
-            //   });
-            // }}
-            // onChangeRowsPerPage={(c, t) => {
-            //   props.handlePagination({
-            //     ...props.invoicePagination,
-            //     rowsPerPage: c,
-            //     currentPage: t,
-            //   });
-            // }}
-            paginationServer
-            // paginationDefaultPage={props.invoicePagination?.currentPage}
-            // paginationTotalRows={props.invoicePagination?.totalRows}
-            // pagination={props.invoices.length > 10 ? true : false}
+            columns={[
+              {
+                name: (
+                  <Input
+                    className="form-check-input fs-15"
+                    type="checkbox"
+                    name="checkAll"
+                    onClick={() => checkedSalesValues("", true)}
+                    checked={state.checkedSalesAll}
+                    readOnly
+                  />
+                ),
+                cell: (value) => (
+                  <input
+                    className="form-check-input fs-15"
+                    type="checkbox"
+                    name="checkAll"
+                    onClick={() => checkedSalesValues(value.id, null, value)}
+                    checked={state.checkedSalesBox?.includes(value.id)}
+                    readOnly
+                  />
+                ),
+                width: "50px",
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Job No</span>,
+                selector: (row) => row.job_no,
+                cell: (value) => {
+                  return <div>{value.job_no?.job_number}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: (
+                  <span className="font-weight-bold fs-13">Shipment No</span>
+                ),
+                selector: (row) => row.shipment_no,
+                cell: (value) => {
+                  return <div>{value.shipment_no}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Amount</span>,
+                selector: (row) => row.amount,
+                cell: (value) => {
+                  return <div>{value.amount}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Charge</span>,
+                selector: (row) => row.charge,
+                cell: (value) => {
+                  return (
+                    <div>
+                      {value.charge?.name}-{value.charge?.code}
+                    </div>
+                  );
+                },
+                sortable: true,
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Currency</span>,
+                selector: (row) => row.currency,
+                cell: (value) => {
+                  return <div>{value.currency}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Dr Cr</span>,
+                selector: (row) => row.dr_cr,
+                cell: (value) => {
+                  return <div>{value.dr_cr}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Ex Rate</span>,
+                selector: (row) => row.ex_rate,
+                cell: (value) => {
+                  return <div>{value.ex_rate}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: (
+                  <span className="font-weight-bold fs-13">Fcy Amount</span>
+                ),
+                selector: (row) => row.fcy_amount,
+                cell: (value) => {
+                  return <div>{value.fcy_amount}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: (
+                  <span className="font-weight-bold fs-13">Prorate Method</span>
+                ),
+                selector: (row) => row.prorate_method,
+                cell: (value) => {
+                  return <div>{value.prorate_method}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: (
+                  <span className="font-weight-bold fs-13">Tax Group Code</span>
+                ),
+                selector: (row) => row.tax_group_code,
+                cell: (value) => {
+                  return <div>{value.tax_group_code}</div>;
+                },
+                sortable: true,
+              },
+            ]}
           />
         </Card>
       </div>
@@ -401,44 +298,139 @@ const GenerateInvoice = (props) => {
       <div>
         <Card>
           <DataTable
-            columns={sale_cols}
             data={invoiceData.filter((item) => item.sale_cost === "Cost")}
-            // paginationPerPage={props.invoicePagination?.rowsPerPage}
-            // onChangePage={(p, t) => {
-            //   props.handlePagination({
-            //     ...props.invoicePagination,
-            //     currentPage: p,
-            //   });
-            // }}
-            // onChangeRowsPerPage={(c, t) => {
-            //   props.handlePagination({
-            //     ...props.invoicePagination,
-            //     rowsPerPage: c,
-            //     currentPage: t,
-            //   });
-            // }}
-            paginationServer
-            // paginationDefaultPage={props.invoicePagination?.currentPage}
-            // paginationTotalRows={props.invoicePagination?.totalRows}
-            // pagination={props.invoices.length > 10 ? true : false}
+            columns={[
+              {
+                name: (
+                  <Input
+                    className="form-check-input fs-15"
+                    type="checkbox"
+                    name="checkAll"
+                    value="option1"
+                    onClick={() => props.checkedValues("", true)}
+                    checked={props.checkedSalesAll}
+                  />
+                ),
+                cell: (value) => (
+                  <input
+                    className="form-check-input fs-15"
+                    type="checkbox"
+                    name="checkAll"
+                    onClick={() => props.checkedValues(value.id, null, value)}
+                    checked={props.checkedSalesBox?.includes(value.id)}
+                  />
+                ),
+                width: "50px",
+              },
+              ,
+              {
+                name: <span className="font-weight-bold fs-13">Job No</span>,
+                selector: (row) => row.job_no,
+                cell: (value) => {
+                  return <div>{value.job_no?.job_number}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: (
+                  <span className="font-weight-bold fs-13">Shipment No</span>
+                ),
+                selector: (row) => row.shipment_no,
+                cell: (value) => {
+                  return <div>{value.shipment_no}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Amount</span>,
+                selector: (row) => row.amount,
+                cell: (value) => {
+                  return <div>{value.amount}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Charge</span>,
+                selector: (row) => row.charge,
+                cell: (value) => {
+                  return (
+                    <div>
+                      {value.charge?.name} - {value.charge?.code}
+                    </div>
+                  );
+                },
+                sortable: true,
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Currency</span>,
+                selector: (row) => row.currency,
+                cell: (value) => {
+                  return <div>{value.currency}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Dr Cr</span>,
+                selector: (row) => row.dr_cr,
+                cell: (value) => {
+                  return <div>{value.dr_cr}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: <span className="font-weight-bold fs-13">Ex Rate</span>,
+                selector: (row) => row.ex_rate,
+                cell: (value) => {
+                  return <div>{value.ex_rate}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: (
+                  <span className="font-weight-bold fs-13">Fcy Amount</span>
+                ),
+                selector: (row) => row.fcy_amount,
+                cell: (value) => {
+                  return <div>{value.fcy_amount}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: (
+                  <span className="font-weight-bold fs-13">Prorate Method</span>
+                ),
+                selector: (row) => row.prorate_method,
+                cell: (value) => {
+                  return <div>{value.prorate_method}</div>;
+                },
+                sortable: true,
+              },
+              {
+                name: (
+                  <span className="font-weight-bold fs-13">Tax Group Code</span>
+                ),
+                selector: (row) => row.tax_group_code,
+                cell: (value) => {
+                  return <div>{value.tax_group_code}</div>;
+                },
+                sortable: true,
+              },
+            ]}
           />
         </Card>
       </div>
 
       <div className="d-flex justify-content-between">
-        {/* <Button
-                        className="btn btn-warning float-right"
-                        type="reset"
-                        onClick={() => props.closeAddPopup()}
-                      >
-                        {" "}
-                        Back{" "}
-                      </Button> */}
         <Button color="danger" onClick={() => props.closeAddPopup()}>
           {" "}
           Cancel
         </Button>
-        <Button color="success">
+        <Button
+          color="success"
+          onClick={() => {
+            handleCosts();
+          }}
+        >
           <span className="spinner d-inline-block">
             <span className="bounce1" />
             <span className="bounce2" />

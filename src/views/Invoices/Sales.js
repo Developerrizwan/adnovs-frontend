@@ -19,11 +19,10 @@ const Sales = (props) => {
 
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [is_password_hidden, set_is_password_hidden] = useState(false);
   const [loading, setLoading] = useState(false);
   const [consigneeNameValue, setConsigneeNameValue] = useState(null);
   const [clientNameValue, setClientNameValue] = useState("Client");
-
+  const [state, setState] = useState({});
   const [generateInvoiceModal, setGenerateInvoiceModal] = useState(false);
   const [viewInvoice, setViewInvoice] = useState(false);
   const [podOptions, setPodOptions] = useState([]);
@@ -38,28 +37,11 @@ const Sales = (props) => {
     label: "Sales",
   });
 
-  // const [invoiceType, setInvoiceType] = useState({
-  //   label: "Sales",
-  //   value: "Sales",
-  // });
-
   const [branchValue, setBranchValue] = useState("JEDDHA");
   const [Vendorvalue, setVendorvalue] = useState("TEMP");
-  const [purchaseForm, setPurchaseForm] = useState(false);
 
   const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
   const VendorOptions = [{ label: "TEMP", value: "TEMP" }];
-
-  // const invoiceTypes = [
-  //   {
-  //     label: "Sales",
-  //     value: "Sales",
-  //   },
-  //   {
-  //     label: "Purchase",
-  //     value: "Purchase",
-  //   },
-  // ];
 
   const consigneeOptions = [
     {
@@ -214,7 +196,7 @@ const Sales = (props) => {
                   remarks: props.isEdit ? props.data?.remarks : "",
                   invoice_type: props.isEdit
                     ? props.data?.invoice_type
-                    : "Sales",
+                    : selectedInvoice.value,
                   ref_data: props.isEdit ? props.data?.ref_data : "",
                   due_date: props.isEdit ? props.data?.due_date : "",
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
@@ -248,7 +230,7 @@ const Sales = (props) => {
                     localStorage.getItem("authUser")
                   )?.company_id;
                   values["company"] = company;
-                  console.log("values", values);
+                  values["invoice_type"] = selectedInvoice.value;
 
                   props.isEdit
                     ? apiAuth
@@ -262,9 +244,9 @@ const Sales = (props) => {
                             null,
                             ""
                           );
-                          props.isEdit
-                            ? props.closeAddPopup()
-                            : props?.history?.push("/invoices");
+                          // props.isEdit
+                          //   ? props.closeAddPopup()
+                          //   : props?.history?.push("/invoices");
                         })
                         .catch((error) => {
                           NotificationManager.error(
@@ -288,7 +270,7 @@ const Sales = (props) => {
                               null,
                               ""
                             );
-                            props?.history?.push("/invoices");
+                            // props?.history?.push("/invoices");
                           } else {
                             NotificationManager.error(
                               "",
@@ -471,7 +453,6 @@ const Sales = (props) => {
                             <Field
                               className="form-control "
                               name="shipper_name"
-                              // placeholder="shipper Name"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
@@ -555,7 +536,6 @@ const Sales = (props) => {
                             <Field
                               className="form-control "
                               name="ex_rate"
-                              // placeholder="EX Rate"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
@@ -586,10 +566,6 @@ const Sales = (props) => {
                               };
                             })}
                             value={podValue}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
                             onChange={(data) => {
                               setPodValue(data);
 
@@ -697,10 +673,6 @@ const Sales = (props) => {
                                 value: item.name,
                               };
                             })}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
                             onChange={(data) => {
                               setPoaValue(data);
                               setFieldValue("poa", data.value);
@@ -715,28 +687,6 @@ const Sales = (props) => {
                           />
                         </div>
                       </Grid>
-                      {/* <Grid item lg={4} xs={12}>
-                        <div className="form-group mb-3">
-                          <Label htmlFor="invoice_type">Invoice Type</Label>
-                          <Select
-                            // name="invoice_type"
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            options={invoiceTypes}
-                            value={invoiceType}
-                            onChange={(data) => {
-                              setInvoiceType(data);
-                              setFieldValue("invoice_type", data.value);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="invoice_type"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid> */}
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="job_type" className="form-label">
@@ -910,17 +860,8 @@ const Sales = (props) => {
                     </Grid>
 
                     <div className="d-flex justify-content-between">
-                      {/* <Button
-                        className="btn btn-warning float-right"
-                        type="reset"
-                        onClick={() => props.closeAddPopup()}
-                      >
-                        {" "}
-                        Back{" "}
-                      </Button> */}
                       <Button
                         type="submit"
-                        // color="primary"
                         className={`btn btn-success  ${
                           props.loading ? "show-spinner" : ""
                         }`}
@@ -980,9 +921,8 @@ const Sales = (props) => {
           <GenerateInvoice
             closeAddPopup={() => {
               setGenerateInvoiceModal(false);
-              // setSelectedJob(null);
-              // props.getJobs();
             }}
+            invoice={state.invoice_id}
           />
         </ModalBody>
       </Modal>
