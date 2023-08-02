@@ -18,6 +18,8 @@ const CreateNewJob = (props) => {
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
   const [organization_type, setOrganization_type] = useState([]);
+  const [polValue, setPolValue] = useState(null);
+
   const options = [
     {
       label: "Job",
@@ -349,6 +351,7 @@ const CreateNewJob = (props) => {
                   pod: "",
                   poa: "",
                   por: "",
+                  pol: "",
                   consignee_name: "",
                   shipper_name: "",
                   client_name: "",
@@ -372,6 +375,7 @@ const CreateNewJob = (props) => {
                   pod: Yup.string().required("POD is Required"),
                   poa: Yup.string().required("POA is Required"),
                   por: Yup.string().required("Place Of Receipt is Required"),
+                  pol: Yup.string().required("POL is Required"),
                   consignee_name: Yup.string().required(
                     "Cosignee Name is Required"
                   ),
@@ -587,7 +591,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="poa" className="form-label">
                             POA
@@ -620,7 +624,40 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="pol" className="form-label">
+                            POL
+                            <span className="text-danger">*</span>
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={poaOptions?.map((item) => {
+                              return {
+                                label: item.name,
+                                value: item.name,
+                              };
+                            })}
+                            value={polValue}
+                            onChange={(data) => {
+                              setPolValue(data);
+                              setFieldValue("pol", data.value);
+                            }}
+                          />
+
+                          <ErrorMessage
+                            name="pol"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3" style={{ zIndex: "500" }}>
                           <Label htmlFor="container" className="form-label">
                             Container/Consignment

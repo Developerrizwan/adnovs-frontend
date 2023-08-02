@@ -58,7 +58,6 @@ const AddOrganization = (props) => {
   ];
 
   const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
 
   const getCoaOptions = () => {
     apiAuth

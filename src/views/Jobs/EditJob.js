@@ -20,6 +20,7 @@ const EditJob = (props) => {
   const [podOptions, setPodOptions] = useState([]);
   const [branchValue, setBranchValue] = useState("JEDDHA");
   const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const [polValue, setPolValue] = useState(null);
 
   const options = [
     {
@@ -140,6 +141,12 @@ const EditJob = (props) => {
     setPodValue({
       label: props.allJobs.pod,
       value: props.allJobs.pod,
+    });
+
+    const polv = podOptions.find((item) => item.value === props.allJobs?.pol);
+    setPolValue({
+      label: polv,
+      value: polv,
     });
   }, []);
 
@@ -356,6 +363,7 @@ const EditJob = (props) => {
                 : "",
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
+              pol: props?.allJobs?.pol ? props?.allJobs?.pol : "",
               consignee_name: props?.allJobs?.consignee_name
                 ? props?.allJobs?.consignee_name
                 : "",
@@ -404,6 +412,7 @@ const EditJob = (props) => {
               branch: Yup.string().required("Branch is Required"),
               pod: Yup.string().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
+              pol: Yup.string().required("POL is Required"),
               consignee_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
@@ -610,7 +619,7 @@ const EditJob = (props) => {
                 </Grid>
 
                 <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="poa" className="form-label">
                         POA
@@ -643,7 +652,40 @@ const EditJob = (props) => {
                     </div>
                   </Grid>
 
-                  <Grid item lg={6} xs={12}>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="pol" className="form-label">
+                        POL
+                        <span className="text-danger">*</span>
+                      </Label>
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={poaOptions?.map((item) => {
+                          return {
+                            label: item.name,
+                            value: item.name,
+                          };
+                        })}
+                        value={polValue}
+                        onChange={(data) => {
+                          setPolValue(data);
+                          setFieldValue("pol", data.value);
+                        }}
+                      />
+
+                      <ErrorMessage
+                        name="pol"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3" style={{ zIndex: "500" }}>
                       <Label htmlFor="container" className="form-label">
                         Container/Consignment
