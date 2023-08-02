@@ -46,7 +46,7 @@ const ChargeTable = (props) => {
       name: <span className="font-weight-bold fs-13">COA</span>,
       selector: (row) => row.coa,
       cell: (value) => {
-        return <div>{value.coa}</div>;
+        return <div>{value.coa?.code}</div>;
       },
       sortable: true,
     },

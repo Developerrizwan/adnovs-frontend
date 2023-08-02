@@ -25,7 +25,7 @@ const CreateNewJob = (props) => {
     },
   ];
 
-  const branchOptions = () => [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
 
   const statusOptions = [
     {
@@ -820,15 +820,16 @@ const CreateNewJob = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={branchOptions}
-                            // value={"JEDDHA"}
-                            defaultValue={{ label: branchValue }}
+                            defaultValue={{
+                              label: branchValue,
+                              value: branchValue,
+                            }}
                             onChange={(data) => {
-                              // setBranchValue(data);
                               setFieldValue("branch", data.value);
                             }}
                           />
                           <ErrorMessage
-                            name="job_status"
+                            name="branch"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}

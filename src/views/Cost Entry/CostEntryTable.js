@@ -21,15 +21,15 @@ const CostEntryTable = (props) => {
 
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Charge</span>,
+      name: <span className="font-weight-bold fs-13">Charge</span>,
       selector: (row) => row.charge,
       cell: (value) => {
-        return <div>{value.charge}</div>;
+        return <div>{value.charge?.code}</div>;
       },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13"> Voucher</span>,
+      name: <span className="font-weight-bold fs-13">Voucher</span>,
       selector: (row) => row.voucher_type,
       sortable: true,
     },
@@ -37,7 +37,15 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Job No</span>,
       selector: (row) => row.job_no,
       cell: (value) => {
-        return <div>{value.job_no}</div>;
+        return <div>{value.job_no?.job_number}</div>;
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Amount</span>,
+      selector: (row) => row.amount,
+      cell: (value) => {
+        return <div>{value.amount}</div>;
       },
       sortable: true,
     },
@@ -67,10 +75,24 @@ const CostEntryTable = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">Is Invoiced</span>,
+      selector: (row) => row.ex_rate,
+      cell: (value) => <span>{value?.is_included ? "Yes" : "No"}</span>,
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">FCY Amount</span>,
       selector: (row) => row.fcy_amount,
       cell: (value) => {
         return <div>{value.fcy_amount}</div>;
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Description</span>,
+      selector: (row) => row.description,
+      cell: (value) => {
+        return <div>{value.description}</div>;
       },
       sortable: true,
     },

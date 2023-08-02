@@ -58,6 +58,7 @@ const AddOrganization = (props) => {
   ];
 
   const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
 
   const getCoaOptions = () => {
     apiAuth
@@ -89,142 +90,182 @@ const AddOrganization = (props) => {
 
   return (
     <React.Fragment>
-      <div className="page-content">
-        <div
-          className="mb-5 mt-3"
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <h2 className="mx-3">Create Organization</h2>
+      <div className={props.isEdit ? "" : "page-content"}>
+        {props.isEdit ? (
+          <></>
+        ) : (
+          <>
+            <div
+              className="mb-5 mt-3"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <h2 className="mx-3">Create Organization</h2>
 
-          <button className="btn btn-danger" onClick={goBack}>
-            Back
-          </button>
-        </div>
+              <button className="btn btn-danger" onClick={goBack}>
+                Back
+              </button>
+            </div>
+          </>
+        )}
+
         <Grid container spacing={2}>
           <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  // name: "",
-                  // type: "",
-                  // coa: "",
-                  // language_name: "",
-                  // language_address: "",
-                  // address: "",
-                  // vat_trn_number: "",
-                  // browse_logo: "",
-                  // website: "",
-                  // remarks: "",
-                  // payment_terms: "",
-                  // currency: "curr 1",
-
-                  name: "",
-                  type: "",
-                  language_name: "",
-                  address: "",
-                  vat_trn_number: "",
-                  currency: "",
-                  branch: "",
-                  payment_terms: "",
-                  city: "",
-                  zip_code: "",
-                  mobile: "",
-                  email: "",
-                  country: "",
-                  state_code: "",
-                  building_name: "",
-                  port_name: "",
-                  post_box_no: "",
-                  gstin_registered: "",
-                  gstin: "",
-                  website: "",
-                  remarks: "",
-                  company: 0,
-                  coa: 0,
+                  name: props.isEdit ? props.organizationData?.name : "",
+                  type: props.isEdit ? props.organizationData?.type : "",
+                  language_name: props.isEdit
+                    ? props.organizationData?.language_name
+                    : "",
+                  address: props.isEdit ? props.organizationData?.address : "",
+                  vat_trn_number: props.isEdit
+                    ? props.organizationData?.vat_trn_number
+                    : "",
+                  currency: props.isEdit
+                    ? props.organizationData?.currency
+                    : "",
+                  branch: props.isEdit ? props.organizationData?.branch : "",
+                  payment_terms: props.isEdit
+                    ? props.organizationData?.payment_terms
+                    : "",
+                  city: props.isEdit ? props.organizationData?.city : "",
+                  zip_code: props.isEdit
+                    ? props.organizationData?.zip_code
+                    : "",
+                  mobile: props.isEdit ? props.organizationData?.mobile : "",
+                  email: props.isEdit ? props.organizationData?.email : "",
+                  country: props.isEdit ? props.organizationData?.country : "",
+                  state_code: props.isEdit
+                    ? props.organizationData?.state_code
+                    : "",
+                  building_name: props.isEdit
+                    ? props.organizationData?.building_name
+                    : "",
+                  port_name: props.isEdit
+                    ? props.organizationData?.port_name
+                    : "",
+                  post_box_no: props.isEdit
+                    ? props.organizationData?.post_box_no
+                    : "",
+                  gstin_registered: props.isEdit
+                    ? props.organizationData?.gstin_registered
+                    : "",
+                  gstin: props.isEdit ? props.organizationData?.gstin : "",
+                  website: props.isEdit ? props.organizationData?.website : "",
+                  remarks: props.isEdit ? props.organizationData?.remarks : "",
                 }}
-                validationSchema={Yup.object({
-                  name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Name is Required"),
-                  type: Yup.string().required("Type is Required"),
-                  language_name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Language Name is Required"),
-                  address: Yup.string()
-                    .max(400, "Must be 400 characters or less")
-                    .trim()
-                    .required("Remarks is Required"),
-                  vat_trn_number: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Vat Trn Number is Required"),
-                  currency: Yup.string().required("Currency is Required"),
-                  building_name: Yup.string().required(
-                    "Building Name is Required"
-                  ),
-                  payment_terms: Yup.string().required(
-                    "Payment Terms is Required"
-                  ),
-                  website: Yup.string()
-                    // .url("Invalid URL format")
-                    .required("Website URL is required"),
-                  language_address: Yup.string()
-                    .max(400, "Must be 400 characters or less")
-                    .trim()
-                    .required("Remarks is Required"),
-                  remarks: Yup.string()
-                    .max(400, "Must be 400 characters or less")
-                    .trim()
-                    .required("Remarks is Required"),
-                  coa: Yup.string().required("COA is Required"),
-                  country: Yup.string()
-                    .ensure()
-                    .required("Country is Required"),
-                  city: Yup.string().ensure().required("City is Required"),
-                  zip_code: Yup.string().required("Zip Code is Required"),
-                  mobile: Yup.string()
-                    .matches(
-                      /^[0-9]{10}$/,
-                      "Mobile number must be exactly 10 digits"
-                    )
-                    .required("Mobile Number is Required"),
+                // validationSchema={Yup.object({
+                //   name: Yup.string()
+                //     .max(20, "Must be 20 characters or less")
+                //     .trim()
+                //     .required("Name is Required"),
+                //   type: Yup.string().required("Type is Required"),
+                //   language_name: Yup.string()
+                //     .max(20, "Must be 20 characters or less")
+                //     .trim()
+                //     .required("Language Name is Required"),
+                //   address: Yup.string()
+                //     .max(400, "Must be 400 characters or less")
+                //     .trim()
+                //     .required("Remarks is Required"),
+                //   vat_trn_number: Yup.string()
+                //     .max(20, "Must be 20 characters or less")
+                //     .trim()
+                //     .required("Vat Trn Number is Required"),
+                //   currency: Yup.string().required("Currency is Required"),
+                //   building_name: Yup.string().required(
+                //     "Building Name is Required"
+                //   ),
+                //   payment_terms: Yup.string().required(
+                //     "Payment Terms is Required"
+                //   ),
+                //   website: Yup.string()
+                //     // .url("Invalid URL format")
+                //     .required("Website URL is required"),
+                //   language_address: Yup.string()
+                //     .max(400, "Must be 400 characters or less")
+                //     .trim()
+                //     .required("Remarks is Required"),
+                //   remarks: Yup.string()
+                //     .max(400, "Must be 400 characters or less")
+                //     .trim()
+                //     .required("Remarks is Required"),
+                //   coa: Yup.string().required("COA is Required"),
+                //   country: Yup.string()
+                //     .ensure()
+                //     .required("Country is Required"),
+                //   // city: Yup.string().ensure().required("City is Required"),
+                //   zip_code: Yup.string().required("Zip Code is Required"),
+                //   mobile: Yup.string()
+                //     .matches(
+                //       /^[0-9]{10}$/,
+                //       "Mobile number must be exactly 10 digits"
+                //     )
+                //     .required("Mobile Number is Required"),
 
-                  email: Yup.string().email().required("Email is Required"),
+                //   email: Yup.string().email().required("Email is Required"),
 
-                  state: Yup.string().ensure().required("State is Required"),
-                })}
+                //   state: Yup.string().ensure().required("State is Required"),
+                // })}
                 onSubmit={(values, { reset }) => {
                   const company = JSON.parse(
                     localStorage.getItem("authUser")
                   )?.company_id;
                   values["company"] = company;
                   values.country = values.country ? values.country : undefined;
-                  const url = "/api/master/organization/";
-                  apiAuth
-                    .post(url, values)
-                    .then((response) => {
-                      NotificationManager.success(
-                        "",
-                        `Organization Created Successfully`,
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                      props?.history?.push("/organization");
-                    })
-                    .catch((error) => {
-                      NotificationManager.error(
-                        "",
-                        `Organization Create Error`,
-                        3000,
-                        null,
-                        null,
-                        ""
-                      );
-                    });
+                  props.isEdit
+                    ? apiAuth
+                        .patch(
+                          `/api/master/organization/${props.organizationData.id}`,
+                          values
+                        )
+                        .then((response) => {
+                          NotificationManager.success(
+                            "",
+                            `Organization Updated Successfully`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                          props.isEdit
+                            ? props.closeAddPopup()
+                            : props?.history?.push("/organization");
+                        })
+                        .catch((error) => {
+                          NotificationManager.error(
+                            "",
+                            `Organization Update Error`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                        })
+                    : apiAuth
+                        .post("/api/master/organization/", values)
+                        .then((response) => {
+                          NotificationManager.success(
+                            "",
+                            `Organization Created Successfully`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                          props?.history?.push("/organization");
+                        })
+                        .catch((error) => {
+                          NotificationManager.error(
+                            "",
+                            `Organization Create Error`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                        });
                 }}
               >
                 {({ values, setFieldValue }) => (
@@ -791,7 +832,7 @@ const AddOrganization = (props) => {
 
                     <div className="mt-4 mb-3">
                       <button className="btn btn-success" type="submit">
-                        Submit
+                        {props.isEdit ? "Update" : "Submit"}
                       </button>
                     </div>
                   </Form>

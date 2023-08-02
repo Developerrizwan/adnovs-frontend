@@ -30,7 +30,6 @@ import CoverPasswCreate from "../pages/AuthenticationInner/PasswordCreate/CoverP
 import Offlinepage from "../pages/AuthenticationInner/Errors/Offlinepage";
 
 //login
-import Login from "../pages/Authentication/Login";
 import ForgetPasswordPage from "../pages/Authentication/ForgetPassword";
 import Logout from "../pages/Authentication/Logout";
 import Register from "../pages/Authentication/Register";
@@ -38,34 +37,17 @@ import Register from "../pages/Authentication/Register";
 // User Profile
 import UserProfile from "../pages/Authentication/user-profile";
 
-import Companies from "../views/Companies";
 import Users from "../views/Users";
-import Groups from "../views/Groups";
-import Locations from "../views/Locations";
-import Devices from "../views/Devices";
-import Servers from "../views/Servers";
-import AddServer from "../views/Servers/AddServer";
-import EditServer from "../views/Servers/EditServer";
 import Project from "../views/Project";
-import Ticket from "../views/Ticket";
-import Plans from "../views/Plans";
-import CouponManagement from "../views/CouponManagement";
 import Admin from "../views/Admin";
-// import AddProject from "../views/Project/AddProject";
-import Team from "../views/Team";
 import Client from "../views/Client";
 import UserManagement from "../views/UserManagement";
-import SubscriptionManagement from "../views/SubscriptionManagement";
 import AddProject from "../views/Project/AddProject";
 import ViewProject from "../views/Project/ViewProject";
 import Report from "../views/Project/Report";
-import Success from "../views/Plans/Success";
-import AddTicket from "../views/Ticket/CreateInvoice";
 import Jobs from "../views/Jobs";
 import Vouchers from "../views/Vouchers";
 import JournalVoucher from "../views/Vouchers/JournalVoucher";
-// import PaymentVoucher from "../views/Vouchers/PaymentVoucher";
-// import ReceiptVoucher from "../views/Vouchers/ReceiptVoucher";
 import Invoices from "../views/Invoices";
 import Purchase from "../views/Invoices/Purchase";
 import Sales from "../views/Invoices/Sales";
@@ -73,12 +55,8 @@ import ResetPassword from "../pages/AuthenticationInner/ResetPassword";
 import ResetSuccessful from "../pages/AuthenticationInner/ResetPassword/ResetSuccessful";
 import RegisterSuccessful from "../pages/AuthenticationInner/Register/RegisterSuccessful";
 import AddJobs from "../views/Jobs/AddJob";
-// import EditJobs from "../views/Jobs/EditJob";
 import AddUser from "../views/UserManagement/AddUser";
 import EditUser from "../views/UserManagement/EditUser";
-// import AllVouchers from "../views/Vouchers/AllVouchers";
-// import DebitVoucher from "../views/Vouchers/DebitVoucher";
-// import CreditVoucher from "../views/Vouchers/CreditVoucher";
 import TaxInvoice from "../views/TaxInvoice/TaxInvoice";
 import TaxInvoiceSecond from "../views/TaxInvoice/TaxInvoiceSecond";
 import ChartOfAccounts from "../views/ChartOfAccounts";
@@ -94,24 +72,13 @@ import AddOrganization from "../views/Organization/AddOrganization";
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
   { path: "/index", component: DashboardCrm },
-
-  { path: "/devices", component: Devices },
-  { path: "/locations", component: Locations },
-  { path: "/servers/edit/:serverId/", component: EditServer },
-  { path: "/servers/add", component: AddServer },
-  { path: "/servers", component: Servers },
   { path: "/users", component: Users },
-  { path: "/groups", component: Groups },
-  { path: "/companies", component: Companies },
-  { path: "/team", component: Team },
   { path: "/client", component: Client },
   { path: "/jobs", component: Jobs },
   { path: "/jobs/add", component: AddJobs },
   { path: "/jobs/createjob", component: CreateNewJob },
   { path: "/organization", component: Organization },
   { path: "/organization/add", component: AddOrganization },
-
-  // { path: "/jobs/edit/:jobId/", component: EditJobs },
   { path: "/coa/add", component: AddCOA },
   { path: "/coa", component: ChartOfAccounts },
   { path: "/cost-entry/add", component: AddCostEntry },
@@ -120,37 +87,18 @@ const authProtectedRoutes = [
   { path: "/charge", component: Charge },
   { path: "/voucher/:voucherId", component: JournalVoucher },
   { path: "/vouchers", component: Vouchers },
-  // { path: "/all-vouchers", component: AllVouchers },
-  // { path: "/payment-voucher", component: PaymentVoucher },
-  // { path: "/receipt-voucher", component: ReceiptVoucher },
-  // { path: "/debit-voucher", component: DebitVoucher },
-  // { path: "/credit-voucher", component: CreditVoucher },
   { path: "/user-management/add", component: AddUser },
   { path: "/user-management/edit/:userId", component: EditUser },
   { path: "/user-management", component: UserManagement },
   { path: "/invoices", component: Invoices },
-  { path: "/invoices/add", component: Sales },
+  { path: "/invoices/:invoicesId", component: Sales },
   { path: "/purchase", component: Purchase },
-  // { path: "/sales", component: Sales},
   { path: "/project", component: Project },
   { path: "/project/add", component: AddProject },
   { path: "/project/:projectId/", component: ViewProject },
   { path: "/report/:reportId", component: Report },
-  { path: "/ticket", component: Ticket },
-  { path: "/ticket/add", component: AddTicket },
-  { path: "/plans/success", component: Success },
-  { path: "/plans", component: Plans },
-  { path: "/couponmanagement", component: CouponManagement },
   { path: "/admin", component: Admin },
-  { path: "/subscriptionmanagement", component: SubscriptionManagement },
-
-  // { path: "/project/add", component: AddProject },
-
-  //User Profile
   { path: "/profile", component: UserProfile },
-
-  // this route should be at the end of all other routes
-  // eslint-disable-next-line react/display-name
   {
     path: "*",
     exact: true,
@@ -193,7 +141,7 @@ const publicRoutes = [
   { path: "/auth-offline", component: Offlinepage },
 
   { path: "/tax-invoice", component: TaxInvoice },
-  { path: "/tax-invoice-second", component: TaxInvoiceSecond },
+  { path: "/tax-invoice-second/:invoiceId", component: TaxInvoiceSecond },
 ];
 
 export { authProtectedRoutes, publicRoutes };

@@ -38,8 +38,8 @@ const AddCostEntry = (props) => {
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
-    { value: "Debit", label: "Debit" },
-    { value: "Credit", label: "Credit" },
+    { value: "Debit Note", label: "Debit Note" },
+    { value: "Credit Note", label: "Credit Note" },
   ];
 
   const SaleOrCostOptions = [
@@ -253,7 +253,6 @@ const AddCostEntry = (props) => {
                   dr_cr: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
-                  console.log("values", values);
                   if (props.isEdit && props.entry) {
                     apiAuth
                       .patch(

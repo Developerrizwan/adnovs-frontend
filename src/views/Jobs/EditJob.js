@@ -19,7 +19,7 @@ const EditJob = (props) => {
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
   const [branchValue, setBranchValue] = useState("JEDDHA");
-  const branchOptions = () => [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
 
   const options = [
     {
@@ -844,10 +844,11 @@ const EditJob = (props) => {
                         placeholder={"Select"}
                         styles={customStyles}
                         options={branchOptions}
-                        value={{ label: branchValue }}
-                        // defaultValue={{ label: branchValue }}
+                        defaultValue={{
+                          label: branchValue,
+                          value: branchValue,
+                        }}
                         onChange={(data) => {
-                          // setBranchValue(data);
                           setFieldValue("branch", data.value);
                         }}
                       />

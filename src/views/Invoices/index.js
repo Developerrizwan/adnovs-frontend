@@ -20,14 +20,17 @@ const Invoices = (props) => {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState({
+    label: "Sales",
+    value: "Sales",
+  });
   const [invoicePagination, setInvoicePagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
     currentPage: 1,
   });
 
-  const [invoiceType, setInvoiceType] = useState("Sales");
+  // const [invoiceType, setInvoiceType] = useState("Sales");
   const invoiceTypes = [
     {
       label: "Sales",
@@ -39,7 +42,7 @@ const Invoices = (props) => {
     },
   ];
 
-  const getInvoices = (pgdata, val) => {
+  const getInvoices = (pgdata, val, type) => {
     setLoading(true);
     apiAuth
       .get(
@@ -47,12 +50,13 @@ const Invoices = (props) => {
           "&page=" +
           pgdata?.currentPage +
           "&search=" +
-          (val ? val : "")
+          (val ? val : "") +
+          "&type=" +
+          type
       )
 
       .then((response) => {
         let data = response.data;
-        console.log("invoice", data);
         setInvoicePagination({
           ...pgdata,
           totalRows: response.data.count,
@@ -62,6 +66,16 @@ const Invoices = (props) => {
       })
       .catch((error) => {
         console.log(error);
+        NotificationManager.error(
+          "",
+          `${
+            error.response?.data?.Error || `${selectedValue.value} Get Error`
+          }`,
+          3000,
+          null,
+          null,
+          ""
+        );
         setLoading(false);
       });
   };
@@ -74,13 +88,15 @@ const Invoices = (props) => {
         const newdata = response.data;
         NotificationManager.success(
           "",
-          "Invoice Deleted Successfully",
+          selectedValue
+            ? `${selectedValue.value} Invoice Deleted Successfully`
+            : "Invoice Deleted Successfully",
           3000,
           null,
           null,
           ""
         );
-        getInvoices(invoicePagination);
+        getInvoices(invoicePagination, searchValue, selectedValue.value);
       })
       .catch(function (error) {
         console.log(error);
@@ -91,12 +107,12 @@ const Invoices = (props) => {
   };
 
   useEffect(() => {
-    getInvoices(invoicePagination, searchValue);
+    getInvoices(invoicePagination, searchValue, selectedValue.value);
   }, []);
 
   const handleInvoiceChange = (e) => {
-    setSelectedValue(e.value);
-    getInvoices(e.value);
+    setSelectedValue(e);
+    getInvoices(invoicePagination, searchValue, e.value);
   };
 
   return (
@@ -104,25 +120,29 @@ const Invoices = (props) => {
       <div className="page-content">
         <Container fluid>
           <BreadCrumb
-            title="Invoices"
+            title={selectedValue.value}
             pageTitle="Invoices"
             add_new={true}
-            add_new_url={"/invoices/add"}
+            add_new_url={`/invoices/${selectedValue.value}`}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getInvoices(invoicePagination, val);
+              getInvoices(invoicePagination, val, selectedValue.value);
             }}
             export_button={invoices.length > 0 ? true : false}
             exportData={() => {
               // handleExportData();
             }}
-            invoiceType={invoiceType}
+            // invoiceType={invoiceType}
             options={invoiceTypes}
             handleTypeChange={handleInvoiceChange}
             add_type={true}
             add_type_select={true}
+            selectedValue={{
+              label: selectedValue.value,
+              value: selectedValue.value,
+            }}
           />
         </Container>
 
@@ -140,9 +160,14 @@ const Invoices = (props) => {
                       setInvoicePagination(data);
                       getInvoices(data);
                     }}
+                    selectedValue={selectedValue.value}
                     getInvoices={() => {
                       setInvoices([]);
-                      getInvoices(invoicePagination, searchValue);
+                      getInvoices(
+                        invoicePagination,
+                        searchValue,
+                        selectedValue.value
+                      );
                     }}
                   />
                 </Card>

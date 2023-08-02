@@ -890,7 +890,7 @@ const CreateJob = (props) => {
                         }}
                       />
                       <ErrorMessage
-                        name="job_status"
+                        name="branch"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
