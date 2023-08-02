@@ -57,7 +57,6 @@ const Invoices = (props) => {
 
       .then((response) => {
         let data = response.data;
-        console.log("invoice", data);
         setInvoicePagination({
           ...pgdata,
           totalRows: response.data.count,

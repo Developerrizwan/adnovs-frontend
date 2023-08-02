@@ -15,8 +15,6 @@ import numberToWords from "number-to-words";
 const TaxInvoiceSecond = (props) => {
   const [state, setState] = useState({ costs: [] });
   const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState(0);
-  const [words, setWords] = useState("");
 
   async function exportProjectToPdf() {
     setLoading(true);
@@ -36,26 +34,19 @@ const TaxInvoiceSecond = (props) => {
       const el = elements.item(i);
       try {
         const imgData = await htmlToImage.toPng(el);
-        // setImgs(imgData);
-
         let elHeight = el.offsetHeight;
         let elWidth = el.offsetWidth;
-
         const pageWidth = doc.internal.pageSize.getWidth();
-
         if (elWidth > pageWidth) {
           const ratio = pageWidth / elWidth;
           elHeight = elHeight * ratio - padding;
           elWidth = elWidth * ratio - padding;
         }
-
         const pageHeight = doc.internal.pageSize.getHeight();
-
         if (top + elHeight > pageHeight) {
           doc.addPage();
           top = 20;
         }
-
         doc.addImage(
           imgData,
           "PNG",
@@ -75,20 +66,13 @@ const TaxInvoiceSecond = (props) => {
   useEffect(() => {
     let invoiceid = Number(props.match.params.invoiceId);
     getInvoice(invoiceid);
-    // getCosts(invoiceid);
   }, []);
-
-  // useEffect(() => {
-  //   // Update the words state whenever the amount changes
-  //   setWords(numberToWords.toWords(amount));
-  // }, [amount]);
 
   const getInvoice = (id) => {
     apiAuth
       .get(`/api/master/invoice/${id}`)
       .then((response) => {
         let data = response.data;
-        // setAmount(state.total_amount );
         setState({ ...state, invoice: data });
         getCosts(data.id);
       })
@@ -104,6 +88,7 @@ const TaxInvoiceSecond = (props) => {
         let total_amount = 0;
         let vat_amount = 0;
         let exd_vat_total_amount = 0;
+        let word_amount = "Zero";
         let data = response.data.map((ct) => {
           ct.vat_amount = Number(
             (Number(ct.amount) * Number(ct.tax_group_code)) / 100
@@ -123,6 +108,14 @@ const TaxInvoiceSecond = (props) => {
           vat_amount = Number(
             Number(vat_amount) + Number(ct.vat_amount)
           ).toFixed(2);
+
+          word_amount = Number.isFinite(Number(total_amount))
+            ? numberToWords.toWords(Number(total_amount))
+            : String(total_amount);
+          word_amount = String(
+            word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
+          );
+
           return ct;
         });
         setState((prev) => {
@@ -132,6 +125,7 @@ const TaxInvoiceSecond = (props) => {
             total_amount,
             vat_amount,
             exd_vat_total_amount,
+            word_amount,
           };
         });
       })
@@ -168,7 +162,14 @@ const TaxInvoiceSecond = (props) => {
         </div>
         <div className="card reportdownproject" style={{ padding: "20px" }}>
           <div className="row">
-            <div className="col-lg-3 mb-4 d-flex">
+            <div className="col-lg-4">
+              <h3 style={{ color: "#000" }}>ADNOVS SHIPPING & LOGISTICS</h3>
+              <p>Al Boughdadia</p>
+              <p>Jeddah, Saudi Arabia - 22234</p>
+              <p style={{ fontWeight: 600 }}>VAT NO : </p>
+              {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
+            </div>
+            <div className="col-lg-4 mb-4 d-flex">
               <img
                 src={shipLogo}
                 alt=""
@@ -176,20 +177,12 @@ const TaxInvoiceSecond = (props) => {
                 style={{ margin: "auto" }}
               />
             </div>
-            <div className="col-lg-6">
-              <h2 style={{ color: "#000" }}>
-                Younis Tantawi For Customs Clearance Est. YCC
-              </h2>
+            <div className="col-lg-4 d-flex flex-column align-items-end">
+              <h3 style={{ color: "#000" }}>ADNOVS SHIPPING & LOGISTICS</h3>
               <p>Al Boughdadia</p>
               <p>Jeddah, Saudi Arabia - 22234</p>
               <p style={{ fontWeight: 600 }}>VAT NO : </p>
-              <p style={{ fontWeight: 600 }}>CR NO : </p>
-            </div>
-            <div className="col-lg-3">
-              <p>Al Boughdadia</p>
-              <p>Jeddah, Saudi Arabia - 22234</p>
-              <p style={{ fontWeight: 600 }}></p>
-              <p style={{ fontWeight: 600 }}></p>
+              {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
             </div>
           </div>
           <hr style={{ border: "1px solid #000" }} />
@@ -231,34 +224,54 @@ const TaxInvoiceSecond = (props) => {
 
           <div style={{ overflowX: "auto" }}>
             <table className="htmlTable mt-2 w-100">
-              <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
-                <th className="border-0">#</th>
-                <th className="border-0">Description</th>
-                <th className="border-0">Comments</th>
-                <th className="border-0">Quantity</th>
-                <th className="border-0">Rate</th>
-                <th className="border-0">Amount</th>
-                <th className="border-0">VAT%</th>
-                <th className="border-0">VAT</th>
-                <th className="border-0">Total</th>
-              </tr>
-              {state.costs?.map((cost) => {
-                return (
-                  <>
-                    <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
-                      <td className="border-0">1</td>
-                      <td className="border-0">Port Charges</td>
-                      <td className="border-0"></td>
-                      <td className="border-0">1</td>
-                      <td className="border-0">1,161.50</td>
-                      <td className="border-0">{cost.amount}</td>
-                      <td className="border-0">{cost.tax_group_code}</td>
-                      <td className="border-0">{cost.vat_amount}</td>
-                      <td className="border-0">{cost.total_amount}</td>
-                    </tr>
-                  </>
-                );
-              })}
+              <tbody>
+                <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
+                  <th className="border-0">#</th>
+                  <th className="border-0">Description</th>
+                  <th className="border-0">Currency</th>
+                  {/* <th className="border-0">Quantity</th>
+                  <th className="border-0">Rate</th> */}
+                  <th className="border-0">Amount</th>
+                  <th className="border-0">VAT%</th>
+                  <th className="border-0">VAT</th>
+                  <th className="border-0">Total</th>
+                </tr>
+                {state.costs?.map((cost, index) => {
+                  return (
+                    <>
+                      <tr
+                        style={{ borderBottom: "1px solid #d3d3d3" }}
+                        key={index}
+                      >
+                        <td className="border-0">{index + 1}</td>
+                        <td className="border-0">{cost.charge?.name}</td>
+                        <td className="border-0">{cost.currency}</td>
+                        {/* <td className="border-0">1</td>
+                        <td className="border-0">1,161.50</td> */}
+                        <td className="border-0">
+                          {Number(cost.amount)?.toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </td>
+                        <td className="border-0">{cost.tax_group_code}</td>
+                        <td className="border-0">
+                          {Number(cost.vat_amount)?.toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </td>
+                        <td className="border-0">
+                          {Number(cost.total_amount)?.toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </td>
+                      </tr>
+                    </>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
 
@@ -291,18 +304,34 @@ const TaxInvoiceSecond = (props) => {
                     className="col-lg-4 col-md-6"
                     style={{ fontWeight: 900, fontSize: "18px" }}
                   >
-                    <p>{state.exd_vat_total_amount}</p>
-                    <p>{state.vat_amount}</p>
+                    <p>
+                      {Number(state.exd_vat_total_amount)?.toLocaleString(
+                        "en-US",
+                        {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        }
+                      )}
+                    </p>
+                    <p>
+                      {Number(state.vat_amount)?.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </p>
                     <p style={{ color: "#D0312D" }}>
                       <span style={{ fontSize: "12px" }}>SAR </span>
-                      {state.total_amount}
+                      {Number(state.total_amount)?.toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
                     </p>
                   </div>
                 </div>
                 <hr style={{ border: "1px solid #000" }} />
                 <div className="row">
                   <div className="col-lg-7">
-                    <h4>SAR {numberToWords.toWords(state.total_amount)}</h4>
+                    <h4>SAR {state.word_amount}</h4>
                   </div>
                   <div className="col-lg-5">
                     <p></p>
@@ -349,11 +378,11 @@ const TaxInvoiceSecond = (props) => {
               </div>
               <div className="col-lg-2 col-xs-12">
                 <p>Email:</p>
-                <p>Phone:</p>
+                {/* <p>Phone:</p> */}
               </div>
               <div className="col-lg-2 col-xs-12">
-                <p>y.tantawi@yy-cc.com</p>
-                <p>9999999999</p>
+                <p>info@adnovs.com</p>
+                {/* <p>9999999999</p> */}
               </div>
             </div>
           </div>
