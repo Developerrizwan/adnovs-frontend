@@ -331,7 +331,6 @@ const GenerateInvoice = (props) => {
                 ),
                 width: "50px",
               },
-              ,
               {
                 name: <span className="font-weight-bold fs-13">Job No</span>,
                 selector: (row) => row.job_no,

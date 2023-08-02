@@ -13,10 +13,11 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import GenerateInvoice from "./GenerateInvoice";
 import { useParams } from "react-router";
 import TaxInvoiceSecond from "../TaxInvoice/TaxInvoiceSecond";
+import { getAllISOCodes } from "iso-country-currency";
 
 const Sales = (props) => {
   const { invoicesId } = useParams();
-
+  const [selCurrency, setSelCurrency] = useState(null);
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,6 +40,7 @@ const Sales = (props) => {
 
   const [branchValue, setBranchValue] = useState("JEDDHA");
   const [Vendorvalue, setVendorvalue] = useState("TEMP");
+  const [currencyOptions, setCurrencyOptions] = useState([]);
 
   const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
   const VendorOptions = [{ label: "TEMP", value: "TEMP" }];
@@ -78,6 +80,7 @@ const Sales = (props) => {
   useEffect(() => {
     getPoaOptions();
     getPodOptions();
+    getAllCurrencyCodes();
     setSelectedInvoice({
       label: invoicesId,
       value: invoicesId,
@@ -95,6 +98,17 @@ const Sales = (props) => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const getAllCurrencyCodes = () => {
+    let allCurrencies = getAllISOCodes();
+    allCurrencies = allCurrencies.map((cur) => {
+      return {
+        label: cur.currency + "  -  " + cur.countryName,
+        value: cur.currency,
+      };
+    });
+    setCurrencyOptions(allCurrencies);
   };
 
   const customStyles = {
@@ -185,7 +199,7 @@ const Sales = (props) => {
                   bayan_number: props.isEdit ? props.data?.bayan_number : "",
                   shipper_name: props.isEdit ? props.data?.shipper_name : "",
                   branch: props.isEdit ? props.data?.branch : "JEDDAH",
-                  vendor: props.isEdit ? props.data?.vendor : "TEMP",
+                  // vendor: props.isEdit ? props.data?.vendor : "TEMP",
                   ex_rate: props.isEdit ? props.data?.ex_rate : "",
                   pod: props.isEdit ? props.data?.pod : "",
                   client_name: props.isEdit ? props.data?.client_name : "",
@@ -204,7 +218,9 @@ const Sales = (props) => {
                   //   bl_number: Yup.string().required("BL Number is Required"),
                   //   consignee_name: Yup.string().required("Consignee Name is Required"),
                   // date: Yup.string().required("Date is Required"),
-                  //   currency_sar: Yup.string().required("Currency is Required"),
+                  // currency_sar: Yup.string()
+                  //   .ensure()
+                  //   .required("Currency is Required"),
                   //   bayan_number: Yup.string().required("Bayan Number is Required"),
                   //   shipper_name: Yup.string().required("Shipper Name is Required"),
                   // branch: Yup.string().required("Branch is Required"),
@@ -242,9 +258,9 @@ const Sales = (props) => {
                             null,
                             ""
                           );
-                          // props.isEdit
-                          //   ? props.closeAddPopup()
-                          //   : props?.history?.push("/invoices");
+                          props.isEdit
+                            ? props.closeAddPopup()
+                            : props?.history?.push("/sales");
                         })
                         .catch((error) => {
                           NotificationManager.error(
@@ -401,18 +417,21 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <div>
-                            <Label htmlFor="currency_sar" className="pe-2 w-50">
-                              Currency (SAR)
-                            </Label>
-                            <Field
-                              className="form-control "
-                              name="currency_sar"
-                              // placeholder="Currency"
-                              type="text"
-                              style={{ background: "#EDEDED" }}
-                            />
-                          </div>
+                          <label htmlFor="currency_sar" className="form-label">
+                            Currency
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="currency_sar"
+                            styles={customStyles}
+                            value={selCurrency}
+                            options={currencyOptions}
+                            onChange={(data) => {
+                              setFieldValue("currency_sar", data.value);
+                              // console.log("eeeee", data);
+                              setSelCurrency(data);
+                            }}
+                          />
                           {errors.currency_sar && touched.currency_sar && (
                             <div className="invalid-feedback d-block">
                               {errors.currency_sar}
@@ -609,7 +628,7 @@ const Sales = (props) => {
                           <div>
                             <Label htmlFor="amount_sar" className="pe-2 w-50">
                               {" "}
-                              Amount (SAR)
+                              Amount
                             </Label>
                             <Field
                               className="form-control"

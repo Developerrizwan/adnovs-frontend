@@ -42,7 +42,7 @@ const InvoiceTable = (props) => {
     },
 
     {
-      name: <span className="font-weight-bold fs-13">Currency SAR</span>,
+      name: <span className="font-weight-bold fs-13">Currency</span>,
       selector: (row) => row.currency_sar,
       cell: (value) => {
         return <div>{value.currency_sar}</div>;
@@ -119,7 +119,7 @@ const InvoiceTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Amount(SAR)</span>,
+      name: <span className="font-weight-bold fs-13">Amount</span>,
       selector: (row) => row.amount_sar,
       cell: (value) => {
         return <div>{value.amount_sar}</div>;
@@ -466,6 +466,7 @@ const InvoiceTable = (props) => {
             isEdit={true}
             data={selectedInvoice}
             closeAddPopup={() => {
+              props.getInvoices();
               setEditModal(false, () => {
                 props.getInvoices();
               });
