@@ -9,7 +9,7 @@ import QRCode from "react-qr-code";
 import moment from "moment";
 import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
-
+import { Buffer } from "buffer";
 import numberToWords from "number-to-words";
 
 const TaxInvoiceSecond = (props) => {
@@ -89,6 +89,7 @@ const TaxInvoiceSecond = (props) => {
         let vat_amount = 0;
         let exd_vat_total_amount = 0;
         let word_amount = "Zero";
+        let qrcodeString = "";
         let data = response.data.map((ct) => {
           ct.vat_amount = Number(
             (Number(ct.amount) * Number(ct.tax_group_code)) / 100
@@ -116,6 +117,32 @@ const TaxInvoiceSecond = (props) => {
             word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
           );
 
+          // genrating qrcode string using TLV format
+
+          try {
+            let sellarNameBuf = getTLVForValue("1", "Seller Name");
+            let registrationBuf = getTLVForValue("2", "VAT No");
+            let timestampBuf = getTLVForValue(
+              "3",
+              String(state.invoice?.created_at)
+            );
+            let inoiceAmountBuf = getTLVForValue("4", String(total_amount));
+            let vatamountBuf = getTLVForValue("5", String(vat_amount));
+
+            let tagsBufsArray = [
+              sellarNameBuf,
+              registrationBuf,
+              timestampBuf,
+              inoiceAmountBuf,
+              vatamountBuf,
+            ];
+
+            let qrCodeBuf = Buffer.concat(tagsBufsArray);
+            qrcodeString = qrCodeBuf.toString("base64");
+          } catch (error) {
+            console.log(error);
+          }
+
           return ct;
         });
         setState((prev) => {
@@ -126,6 +153,7 @@ const TaxInvoiceSecond = (props) => {
             vat_amount,
             exd_vat_total_amount,
             word_amount,
+            qrcodeString,
           };
         });
       })
@@ -284,10 +312,7 @@ const TaxInvoiceSecond = (props) => {
             <div className="row">
               <div className="col-lg-4 col-xs-12">
                 <span className="p-2">
-                  <QRCode
-                    size={250}
-                    value={`Total-${String(state.total_amount)}`}
-                  />
+                  <QRCode size={250} value={String(state.qrcodeString)} />
                 </span>
               </div>
               <div className="col-lg-8 col-xs-12">
@@ -346,7 +371,7 @@ const TaxInvoiceSecond = (props) => {
             <div className="col-lg-9 col-xs-12">
               <h5 style={{ color: "#3cb043" }}>Payment Method</h5>
               <h6 className="mt-3 mb-4" style={{ color: "#3d78e3" }}>
-                SAR Account Details:
+                Account Details:
               </h6>
 
               <p>Account Name :</p>
