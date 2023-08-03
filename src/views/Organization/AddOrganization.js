@@ -448,7 +448,7 @@ const AddOrganization = (props) => {
                           />
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={4} xs={12} style={{ zIndex: "400" }}>
                         <div className="mb-3">
                           <Label htmlFor="type" className="form-label">
                             Type

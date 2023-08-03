@@ -34,8 +34,7 @@ const Organization = (props) => {
     setLoading(true);
     apiAuth
       .get(
-        `/api/get-organization/
-        ?page=${pgdata?.currentPage}&search=${val || ""}&type=${type}`
+        `/api/get-organization/?page=${pgdata?.currentPage}&search=${val || ""}&type=${type}`
       )
 
       .then((response) => {
