@@ -37,20 +37,15 @@ const Sales = (props) => {
     value: "Sales",
     label: "Sales",
   });
+  const [searchValue, setSearchValue] = useState("");
 
   const [branchValue, setBranchValue] = useState("JEDDHA");
   const [Vendorvalue, setVendorvalue] = useState("TEMP");
   const [currencyOptions, setCurrencyOptions] = useState([]);
+  const [consigneeOptions, setConsigneeOptions] = useState([]);
 
   const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
   const VendorOptions = [{ label: "TEMP", value: "TEMP" }];
-
-  const consigneeOptions = [
-    {
-      label: "Consignee",
-      value: "Consignee",
-    },
-  ];
 
   const clientOptions = [
     {
@@ -63,6 +58,38 @@ const Sales = (props) => {
 
   const goBack = () => {
     history.goBack();
+  };
+
+  const getOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
+      )
+      .then((response) => {
+        let data = response.data;
+
+        const opts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setConsigneeOptions(opts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
   };
 
   const getPoaOptions = () => {
@@ -78,6 +105,7 @@ const Sales = (props) => {
       });
   };
   useEffect(() => {
+    getOrganization(searchValue);
     getPoaOptions();
     getPodOptions();
     getAllCurrencyCodes();
@@ -357,6 +385,9 @@ const Sales = (props) => {
                             styles={customStyles}
                             options={consigneeOptions}
                             value={consigneeNameValue}
+                            onInputChange={(val) => {
+                              getOrganization(val);
+                            }}
                             onChange={(data) => {
                               setConsigneeNameValue(data);
                               setFieldValue("consignee_name", data.value);

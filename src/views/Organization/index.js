@@ -36,7 +36,6 @@ const Organization = (props) => {
       .get(
         `/api/get-organization/?page=${pgdata?.currentPage}&search=${val || ""}&type=${type}`
       )
-
       .then((response) => {
         console.log("dd", response);
         let data = response.data;
