@@ -153,6 +153,7 @@ const InvoiceTable = (props) => {
       cell: (value) => {
         return (
           <div>
+            {/* <Link to={`/tax-invoice/${value.id}`}> */}
             <Link to={`/tax-invoice-second/${value.id}`}>
               <Button color="secondary" className="btn btn-sm">
                 {" "}

@@ -329,7 +329,7 @@ const Sales = (props) => {
                               className="form-control"
                               name="bl_number"
                               style={{ background: "#EDEDED" }}
-                              // placeholder="bl_number"
+                              placeholder="BL Number"
                               type="text"
                             />
                           </div>
@@ -452,7 +452,7 @@ const Sales = (props) => {
                             <Field
                               className="form-control"
                               name="bayan_number"
-                              // placeholder="Bayan Number"
+                              placeholder="Bayan Number"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
@@ -477,6 +477,7 @@ const Sales = (props) => {
                             <Field
                               className="form-control "
                               name="shipper_name"
+                              placeholder="Shipper Name"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
@@ -527,6 +528,7 @@ const Sales = (props) => {
                             </Label>
                             <Field
                               className="form-control "
+                              placeholder="Ex. Rate"
                               name="ex_rate"
                               type="text"
                               style={{ background: "#EDEDED" }}
@@ -548,7 +550,7 @@ const Sales = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
+                            // name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={podOptions?.map((item) => {
@@ -610,7 +612,7 @@ const Sales = (props) => {
                             <Field
                               className="form-control"
                               name="fc_amount"
-                              // placeholder="FC Amount"
+                              placeholder="FC Amount"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
@@ -633,7 +635,7 @@ const Sales = (props) => {
                             <Field
                               className="form-control"
                               name="amount_sar"
-                              // placeholder="Amount"
+                              placeholder="Amount"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
@@ -756,7 +758,7 @@ const Sales = (props) => {
                               <Field
                                 name="bill_amount"
                                 className="form-control"
-                                // placeholder="Remarks"
+                                placeholder="Bill Amount"
                                 type="text"
                                 style={{ background: "#EDEDED" }}
                               />
@@ -777,7 +779,7 @@ const Sales = (props) => {
                               <Field
                                 name="narration"
                                 className="form-control"
-                                // placeholder="Remarks"
+                                placeholder="Narration"
                                 type="text"
                                 style={{ background: "#EDEDED" }}
                               />
@@ -802,6 +804,7 @@ const Sales = (props) => {
                           <Field
                             as="textarea"
                             className="form-control"
+                            placeholder="Remarks"
                             name="remarks"
                             style={{ background: "#EDEDED" }}
                           />

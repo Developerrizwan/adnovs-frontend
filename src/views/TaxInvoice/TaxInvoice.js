@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
-import React from "react";
-import { Card } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Card } from "reactstrap";
 import shipLogo from "../../assets/images/ship-logo.png";
 import {
   BrowserChrome,
@@ -10,12 +10,196 @@ import {
   Wifi,
   Wikipedia,
 } from "react-bootstrap-icons";
+import { Buffer } from "buffer";
+import * as htmlToImage from "html-to-image";
+import numberToWords from "number-to-words";
 import "./table.css";
+import jsPDF from "jspdf";
+import apiAuth from "../../helpers/ApiAuth";
+import NotificationManager from "../../components/Common/NotificationManager";
+import moment from "moment";
+import QRCode from "react-qr-code";
 
-const TaxInvoice = () => {
+const TaxInvoice = (props) => {
+  const [state, setState] = useState({ costs: [] });
+  const [loading, setLoading] = useState(false);
+
+  async function exportProjectToPdf() {
+    setLoading(true);
+    const doc = new jsPDF("p", "px");
+    const elements = document.getElementsByClassName("reportdownproject");
+    await creatPdf({ doc, elements });
+
+    doc.save(`invoice.pdf`);
+    setLoading(false);
+  }
+
+  async function creatPdf({ doc, elements }) {
+    let top = 20;
+    const padding = 10;
+
+    for (let i = 0; i < elements.length; i++) {
+      const el = elements.item(i);
+      try {
+        const imgData = await htmlToImage.toPng(el);
+        let elHeight = el.offsetHeight;
+        let elWidth = el.offsetWidth;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        if (elWidth > pageWidth) {
+          const ratio = pageWidth / elWidth;
+          elHeight = elHeight * ratio - padding;
+          elWidth = elWidth * ratio - padding;
+        }
+        const pageHeight = doc.internal.pageSize.getHeight();
+        if (top + elHeight > pageHeight) {
+          doc.addPage();
+          top = 20;
+        }
+        doc.addImage(
+          imgData,
+          "PNG",
+          padding,
+          top,
+          elWidth,
+          elHeight,
+          `image${i}`
+        );
+        top += elHeight;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+  useEffect(() => {
+    let invoiceid = Number(props.match.params.invoiceId);
+    getInvoice(invoiceid);
+  }, []);
+
+  const getInvoice = (id) => {
+    apiAuth
+      .get(`/api/master/invoice/${id}`)
+      .then((response) => {
+        let data = response.data;
+        setState({ ...state, invoice: data });
+        getCosts(data.id);
+      })
+      .catch((err) => {
+        console.log(err);
+        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+      });
+  };
+  const getCosts = (id) => {
+    apiAuth
+      .get(`/api/get-costentry/?invoice_id=${id}`)
+      .then((response) => {
+        let total_amount = 0;
+        let vat_amount = 0;
+        let exd_vat_total_amount = 0;
+        let word_amount = "Zero";
+        let qrcodeString = "";
+        let data = response.data.map((ct) => {
+          ct.vat_amount = Number(
+            (Number(ct.amount) * Number(ct.tax_group_code)) / 100
+          ).toFixed(2);
+          ct.total_amount = Number(
+            Number(ct.amount) + Number(ct.vat_amount)
+          ).toFixed(2);
+
+          exd_vat_total_amount = Number(
+            Number(exd_vat_total_amount) + Number(ct.amount)
+          ).toFixed(2);
+
+          total_amount = Number(
+            Number(total_amount) + Number(ct.total_amount)
+          ).toFixed(2);
+
+          vat_amount = Number(
+            Number(vat_amount) + Number(ct.vat_amount)
+          ).toFixed(2);
+
+          word_amount = Number.isFinite(Number(total_amount))
+            ? numberToWords.toWords(Number(total_amount))
+            : String(total_amount);
+          word_amount = String(
+            word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
+          );
+
+          // genrating qrcode string using TLV format
+
+          try {
+            let sellarNameBuf = getTLVForValue("1", "Seller Name");
+            let registrationBuf = getTLVForValue("2", "VAT No");
+            let timestampBuf = getTLVForValue(
+              "3",
+              String(state.invoice?.created_at)
+            );
+            let inoiceAmountBuf = getTLVForValue("4", String(total_amount));
+            let vatamountBuf = getTLVForValue("5", String(vat_amount));
+
+            let tagsBufsArray = [
+              sellarNameBuf,
+              registrationBuf,
+              timestampBuf,
+              inoiceAmountBuf,
+              vatamountBuf,
+            ];
+
+            let qrCodeBuf = Buffer.concat(tagsBufsArray);
+            qrcodeString = qrCodeBuf.toString("base64");
+          } catch (error) {
+            console.log(error);
+          }
+
+          return ct;
+        });
+        setState((prev) => {
+          return {
+            ...prev,
+            costs: data,
+            total_amount,
+            vat_amount,
+            exd_vat_total_amount,
+            word_amount,
+            qrcodeString,
+          };
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+      });
+  };
+
+  const getTLVForValue = (tag, value) => {
+    var tagBuf = Buffer.from([tag], "utf8");
+    var tagValueLenBuf = Buffer.from([String(value).length], "utf8");
+    var tagValueBuf = Buffer.from(String(value), "utf8");
+    var bufsArray = [tagBuf, tagValueLenBuf, tagValueBuf];
+    return Buffer.concat(bufsArray);
+  };
+
   return (
     <>
-      <div className="card mb-5">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "end",
+          alignItems: "center",
+          marginTop: "15px",
+          marginBottom: "5px",
+          marginRight: "5px",
+        }}
+      >
+        <Button
+          color="info"
+          className="float-right"
+          onClick={exportProjectToPdf}
+        >
+          {loading ? "Downloding..." : "Download"}
+        </Button>
+      </div>
+      <div className="card reportdownproject mb-5">
         <div className="row" style={{ placeItems: "center" }}>
           <div className="col-lg-3 mb-1">
             <img
@@ -66,13 +250,16 @@ const TaxInvoice = () => {
 
         <div className="p-3 mt-2">
           <p style={{ fontWeight: 500, fontSize: "16px" }}>
-          765, AIMALIKKHALIDSTREET, 7748 AI BAGHDADIYAH GHARBIYA PO BOX 22234, JEDDAH, KINGDOM OF SAUDI ARABIA
+            765, AIMALIKKHALIDSTREET, 7748 AI BAGHDADIYAH GHARBIYA PO BOX 22234,
+            JEDDAH, KINGDOM OF SAUDI ARABIA
           </p>
         </div>
 
         <div className="row mt-2 p-2">
           <div className="col-lg-6">
-            <h5 className="mb-4" style={{ fontWeight: 700, color: "#000" }}>INVOICE TO:</h5>
+            <h5 className="mb-4" style={{ fontWeight: 700, color: "#000" }}>
+              INVOICE TO:
+            </h5>
             <p>AL ASSAS SPECIALIZED CO.</p>
             <p>AL MUDUN, AL BAGDAHIYA AL GHARBIYA</p>
             <p>Phone: </p>
@@ -80,10 +267,47 @@ const TaxInvoice = () => {
             <p>Credit Term: </p>
           </div>
           <div className="col-lg-6" style={{ borderRight: "1px solid #000" }}>
-            <p style={{ fontWeight: 600, color: "#000", textTransform: "uppercase" }}>Customer VAT No: </p>
-            <p style={{ fontWeight: 600, color: "#000", textTransform: "uppercase"  }}> Invoice No.</p>
-            <p style={{ fontWeight: 600, color: "#000", textTransform: "uppercase"  }}>Invoice Date</p>
-            <p style={{ fontWeight: 600, color: "#000", textTransform: "uppercase"  }}> Payment Due Date</p>
+            <p
+              style={{
+                fontWeight: 600,
+                color: "#000",
+                textTransform: "uppercase",
+              }}
+            >
+              Customer VAT No:{" "}
+            </p>
+            <p
+              style={{
+                fontWeight: 600,
+                color: "#000",
+                textTransform: "uppercase",
+              }}
+            >
+              {" "}
+              Invoice No: {state?.invoice?.id}
+            </p>
+            <p
+              style={{
+                fontWeight: 600,
+                color: "#000",
+                textTransform: "uppercase",
+              }}
+            >
+              Invoice Date : {moment(state.invoice?.date).format("MM/DD/YYYY")}
+            </p>
+            <p
+              style={{
+                fontWeight: 600,
+                color: "#000",
+                textTransform: "uppercase",
+              }}
+            >
+              {" "}
+              Payment Due Date :{" "}
+              {state.invoice?.due_date
+                ? moment(state.invoice?.due_date).format("MM/DD/YYYY")
+                : ""}
+            </p>
           </div>
         </div>
 
@@ -143,58 +367,58 @@ const TaxInvoice = () => {
             <table className="w-100 mt-2 border-0">
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Shipper:
+                  Shipper :
                 </td>
-                <td className="border-0">FRESE A/S</td>
+                <td className="border-0">{state.invoice?.shipper_name}</td>
                 <td className="border-0"></td>
               </tr>
               <tr>
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Consignee:
+                  Consignee :
                 </td>
-                <td className="border-0"></td>
+                <td className="border-0">{state.invoice?.consignee_name}</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Place of Origin:
+                  Place of Origin :
                 </td>
-                <td className="border-0">KOBENHAVN, DENMARK</td>
+                <td className="border-0">{state.invoice?.pod}</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Final Destination:
+                  Final Destination :
                 </td>
-                <td className="border-0">JEDDAH, SAUDI ARABIA</td>
+                <td className="border-0">{state.invoice?.poa}</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Vessel / Flight:
+                  Vessel / Flight :
                 </td>
                 <td className="border-0">CHENNAI EXPRESS/2320E</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Voy / Flt:
+                  Voy / Flt :
                 </td>
                 <td className="border-0">2320E</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Cust. P/O No:
+                  Cust. P/O No :
                 </td>
                 <td className="border-0"></td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Remarks:
+                  Remarks :
                 </td>
-                <td className="border-0">YMNSJD/NSDBSDBC DENMARK</td>
+                <td className="border-0">{state.invoice?.remarks}</td>
                 <td className="border-0"></td>
               </tr>
             </table>
@@ -205,14 +429,21 @@ const TaxInvoice = () => {
                 <td className="border-0" style={{ fontWeight: 600 }}>
                   Job Number:
                 </td>
-                <td className="border-0">ADFB/FI/SNB/30-JUN</td>
+                <td className="border-0">{state.invoice?.job?.job_number}</td>
                 <td className="border-0"></td>
               </tr>
               <tr>
                 <td className="border-0" style={{ fontWeight: 600 }}>
                   Job Date:
                 </td>
-                <td className="border-0">30-JUN-2023</td>
+                <td className="border-0">
+                  {" "}
+                  {state.invoice?.job
+                    ? moment(state.invoice?.job?.created_at).format(
+                        "MM/DD/YYYY"
+                      )
+                    : ""}
+                </td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
@@ -233,14 +464,22 @@ const TaxInvoice = () => {
                 <td className="border-0" style={{ fontWeight: 600 }}>
                   ETD:
                 </td>
-                <td className="border-0">04-JUN-2023</td>
+                <td className="border-0">
+                  {state.invoice?.job
+                    ? moment(state.invoice?.job?.etd).format("MM/DD/YYYY")
+                    : ""}
+                </td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
                   ETA:
                 </td>
-                <td className="border-0">19-JUN-2023</td>
+                <td className="border-0">
+                  {state.invoice?.job
+                    ? moment(state.invoice?.job?.eta).format("MM/DD/YYYY")
+                    : ""}
+                </td>
                 <td className="border-0"></td>
               </tr>
             </table>
@@ -250,101 +489,59 @@ const TaxInvoice = () => {
         <div className="p-2" style={{ overflowX: "auto" }}>
           <table className="htmlTable mt-2 w-100">
             <tr style={{ background: "#dadedf" }}>
-              <th>Charge Description</th>
+              <th style={{ padding: "5px 0" }}>Charge Description</th>
               <th>.Curr</th>
               <th>Rate Per Unit</th>
               <th>Unit</th>
               <th>Curr. Amount</th>
-              <th>/ROE</th>
+              {/* <th>ROE</th> */}
               <th>Total Price excl. VAT</th>
               <th>VAT%</th>
               <th>VAT Amount</th>
               <th>Total SAR</th>
             </tr>
-            <tr>
-              <td>SEA FREIGHT</td>
-              <td>USD</td>
-              <td>6,350.00</td>
-              <td>1</td>
-              <td>6,350.00</td>
-              <td>3.760000</td>
-              <td>23,876.00</td>
-              <td>0</td>
-              <td>0.00</td>
-              <td>23,876.00</td>
-            </tr>
-            <tr>
-              <td>SEA FREIGHT</td>
-              <td>USD</td>
-              <td>6,350.00</td>
-              <td>1</td>
-              <td>6,350.00</td>
-              <td>3.760000</td>
-              <td>23,876.00</td>
-              <td>0</td>
-              <td>0.00</td>
-              <td>23,876.00</td>
-            </tr>
-            <tr>
-              <td>SEA FREIGHT</td>
-              <td>USD</td>
-              <td>6,350.00</td>
-              <td>1</td>
-              <td>6,350.00</td>
-              <td>3.760000</td>
-              <td>23,876.00</td>
-              <td>0</td>
-              <td>0.00</td>
-              <td>23,876.00</td>
-            </tr>
-            <tr>
-              <td>SEA FREIGHT</td>
-              <td>USD</td>
-              <td>6,350.00</td>
-              <td>1</td>
-              <td>6,350.00</td>
-              <td>3.760000</td>
-              <td>23,876.00</td>
-              <td>0</td>
-              <td>0.00</td>
-              <td>23,876.00</td>
-            </tr>
-            <tr>
-              <td>SEA FREIGHT</td>
-              <td>USD</td>
-              <td>6,350.00</td>
-              <td>1</td>
-              <td>6,350.00</td>
-              <td>3.760000</td>
-              <td>23,876.00</td>
-              <td>0</td>
-              <td>0.00</td>
-              <td>23,876.00</td>
-            </tr>
-            <tr>
-              <td>SEA FREIGHT</td>
-              <td>USD</td>
-              <td>6,350.00</td>
-              <td>1</td>
-              <td>6,350.00</td>
-              <td>3.760000</td>
-              <td>23,876.00</td>
-              <td>0</td>
-              <td>0.00</td>
-              <td>23,876.00</td>
-            </tr>
-            <tr>
-              <td>SEA FREIGHT</td>
-              <td>USD</td>
-              <td>6,350.00</td>
-              <td>1</td>
-              <td>6,350.00</td>
-              <td>3.760000</td>
-              <td>23,876.00</td>
-              <td>0</td>
-              <td>0.00</td>
-              <td>23,876.00</td>
-            </tr>
+            {state.costs.map((cost, index) => (
+              <>
+                <tr style={{ borderBottom: "1px solid #d3d3d3" }} key={index}>
+                  {console.log("ccc", cost)}
+                  <td>{cost?.charge?.description}</td>
+                  <td>{cost?.currency}</td>
+                  <td>
+                    {" "}
+                    {Number(cost.amount)?.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </td>
+                  <td>1</td>
+                  <td>
+                    {" "}
+                    {Number(cost.amount)?.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </td>
+                  {/* <td>3.760000</td> */}
+                  {Number(cost.amount)?.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                  <td className="border-0">{cost.tax_group_code}</td>
+                  <td className="border-0">
+                    {Number(cost.vat_amount)?.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </td>
+                  <td className="border-0">
+                    {Number(cost.total_amount)?.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </td>
+                </tr>
+              </>
+            ))}
           </table>
         </div>
 
@@ -352,20 +549,29 @@ const TaxInvoice = () => {
           <table className="w-100 mt-2 border-0">
             <tr className="border-0">
               <td className="border-0" style={{ fontWeight: 600 }}>
-                Thirty-Two Thousand Three Hundred Seventy-Eight Only
+                {state.word_amount} Only
               </td>
               <td className="border-0" style={{ fontWeight: 600 }}>
                 Total in: SAR
               </td>
               <td className="border-0" style={{ fontWeight: 600 }}>
-                31,718.99
+                {Number(state.exd_vat_total_amount)?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </td>
               {/* <td className="border-0"></td> */}
               <td className="border-0" style={{ fontWeight: 600 }}>
-                660.00
+                {Number(state.vat_amount)?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </td>
               <td className="border-0" style={{ fontWeight: 600 }}>
-                32,378.99
+                {Number(state.total_amount)?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
               </td>
             </tr>
           </table>
@@ -415,7 +621,11 @@ const TaxInvoice = () => {
             <p>IBAN NO : </p>
             <p>SWIFT :</p>
           </div>
-          <div className="col-lg-3 col-xs-12"></div>
+          <div className="col-lg-3 col-xs-12">
+            <span className="p-2">
+              <QRCode size={250} value={String(state.qrcodeString)} />
+            </span>
+          </div>
         </div>
 
         {/* <div className="mt-5 text-center">
