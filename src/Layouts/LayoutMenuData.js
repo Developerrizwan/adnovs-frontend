@@ -12,6 +12,7 @@ const Navdata = () => {
   const [isTicket, setIsTicket] = useState(false);
   const [isPlans, setIsPlans] = useState(false);
   const [isMyAccount, setisMyAccount] = useState(false);
+  const [isCompany, setIsCompany] = useState(false);
   const [isCoa, setIsCoa] = useState(false);
   const [isCostEntry, setIsCostEntry] = useState(false);
   const [isCharge, setIsCharge] = useState(false);
@@ -70,6 +71,9 @@ const Navdata = () => {
     if (iscurrentState !== "Organization") {
       setIsOrganization(false);
     }
+    if (iscurrentState !== "Company") {
+      setIsCompany(false);
+    }
     if (iscurrentState !== "CouponManagement") {
       setisCouponManagement(false);
     }
@@ -103,6 +107,7 @@ const Navdata = () => {
     isTicket,
     isPlans,
     isMyAccount,
+    isCompany,
     isUserManagement,
     isCouponManagement,
     isPaymentManagement,
@@ -199,7 +204,7 @@ const Navdata = () => {
       icon: "ri-team-line",
       link: "/organization",
       src: "/team.png",
-      stateVariables: isMyAccount,
+      stateVariables: isOrganization,
       roles: ["superadmin", "admin", "user"],
     },
     {
@@ -209,6 +214,16 @@ const Navdata = () => {
       link: "/user-management",
       src: "/users-sidebar.png",
       stateVariables: isMyAccount,
+      roles: ["superadmin", "admin", "user"],
+    },
+    {
+      id: "Company",
+      label: "Company",
+      icon: "ri-secure-payment-line",
+      link: "/company",
+      src: "/account.png",
+
+      stateVariables: isCompany,
       roles: ["superadmin", "admin", "user"],
     },
 

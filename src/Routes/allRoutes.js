@@ -68,6 +68,7 @@ import Charge from "../views/Charge";
 import CreateNewJob from "../views/Jobs/CreateNewJob";
 import Organization from "../views/Organization";
 import AddOrganization from "../views/Organization/AddOrganization";
+import Company from "../views/Company";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -78,6 +79,7 @@ const authProtectedRoutes = [
   { path: "/jobs/add", component: AddJobs },
   { path: "/jobs/createjob", component: CreateNewJob },
   { path: "/organization", component: Organization },
+  { path: "/company", component: Company },
   { path: "/organization/add", component: AddOrganization },
   { path: "/coa/add", component: AddCOA },
   { path: "/coa", component: ChartOfAccounts },
