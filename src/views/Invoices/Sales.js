@@ -69,14 +69,37 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
+        setConsigneeOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  const getClientOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .then((response) => {
+        let data = response.data;
+
         const ClientOpts = data.map((dd) => {
           return {
-            label: dd?.client_name?.name,
+            label: dd?.name,
             value: dd?.id,
           };
         });
         setClientOptions(ClientOpts);
-        setConsigneeOptions(ConsOpts);
         setLoading(false);
       })
       .catch((error) => {
@@ -107,6 +130,7 @@ const Sales = (props) => {
   };
   useEffect(() => {
     getOrganization(searchValue);
+    getClientOrganization(searchValue);
     getPoaOptions();
     getPodOptions();
     getAllCurrencyCodes();
@@ -632,6 +656,9 @@ const Sales = (props) => {
                             styles={customStyles}
                             options={clientOptions}
                             value={clientNameValue}
+                            onInputChange={(val) => {
+                              getClientOrganization(val);
+                            }}
                             onChange={(data) => {
                               setClientNameValue(data);
                               setFieldValue("client_name", data.value);

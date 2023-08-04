@@ -221,32 +221,9 @@ const TaxInvoice = (props) => {
               letterSpacing: "0.4rem",
             }}
           >
-            {/* <h2 style={{ color: "#3d78e3", fontWeight: 900 }}>
-                ADNOV SHIPPING & LOGISTICS
-              </h2>
-              <p style={{ fontWeight: 600 }}>
-                VAT: 311281265600003 info@adnovs.com
-              </p>
-              <p style={{ fontWeight: 600 }}>
-                4764, AI Malik Khalid Street, 7748 AI Baghdadiyah Gharbiya
-              </p>
-              <p style={{ fontWeight: 600 }}>
-                PO Box 22234, Jeddah, Kingdom of Saudi Arabia
-              </p> */}
             TAX INVOICE
           </div>
         </div>
-        {/* <hr style={{ border: "1px solid #000" }} />
-          <div className="row">
-            <div className="col-lg-6">
-              <h2 className="text-center" style={{ fontWeight: 700 }}>
-                TAX INVOICE
-              </h2>
-            </div>
-            <div className="col-lg-6"></div>
-          </div>
-
-          <hr style={{ border: "1px solid #000" }} /> */}
 
         <div className="p-3 mt-2">
           <p style={{ fontWeight: 500, fontSize: "16px" }}>
@@ -260,11 +237,9 @@ const TaxInvoice = (props) => {
             <h5 className="mb-4" style={{ fontWeight: 700, color: "#000" }}>
               INVOICE TO:
             </h5>
-            <p>AL ASSAS SPECIALIZED CO.</p>
-            <p>AL MUDUN, AL BAGDAHIYA AL GHARBIYA</p>
-            <p>Phone: </p>
-            <p>VAT No. : </p>
-            <p>Credit Term: </p>
+            <p>{state.invoice?.client_name?.name}</p>
+            <p>{state.invoice?.client_name?.address}</p>
+            <p>VAT No. : {state.invoice?.client_name?.vat_trn_number}</p>
           </div>
           <div className="col-lg-6" style={{ borderRight: "1px solid #000" }}>
             <p
@@ -274,7 +249,7 @@ const TaxInvoice = (props) => {
                 textTransform: "uppercase",
               }}
             >
-              Customer VAT No:{" "}
+              Customer VAT No:{state.invoice?.client_name?.vat_trn_number}
             </p>
             <p
               style={{
@@ -313,52 +288,6 @@ const TaxInvoice = (props) => {
 
         <hr style={{ border: "1px solid #000" }} />
 
-        {/* <div className="row">
-            <div className="col-lg-4 col-xs-6">
-              <h5>Customer VAT No.</h5>
-              <h5>Invoice No.</h5>
-              <h5>Invoice Date</h5>
-              <h5>Payment Due Date</h5>
-            </div>
-
-            
-
-            <div className="col-lg-4 col-xs-6">
-              
-            </div>
-            <div className="col-lg-4"></div>
-          </div> */}
-        {/* <div className="p-2" style={{ overflowX: "auto" }}>
-          <table className="w-100 mt-2 border-0">
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Customer VAT No.
-              </td>
-              <td className="border-0">32674785495</td>
-            </tr>
-            <tr>
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Invoice No.
-              </td>
-              <td className="border-0">ADN/INV/64/U3874</td>
-            </tr>
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Invoice Date
-              </td>
-              <td className="border-0">08-Jun-2023 (created)</td>
-            </tr>
-            <tr className="border-0">
-              <td className="border-0" style={{ fontWeight: 600 }}>
-                Payment Due Date
-              </td>
-              <td className="border-0">08-Jun-2023</td>
-            </tr>
-          </table>
-        </div> */}
-
-        {/* <hr style={{ border: "1px solid #000" }} /> */}
-
         <div className="row p-2">
           <div
             className="col-lg-6 col-xs-12"
@@ -376,7 +305,9 @@ const TaxInvoice = (props) => {
                 <td className="border-0" style={{ fontWeight: 600 }}>
                   Consignee :
                 </td>
-                <td className="border-0">{state.invoice?.consignee_name}</td>
+                <td className="border-0">
+                  {state.invoice?.consignee_name?.name}
+                </td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
@@ -522,18 +453,20 @@ const TaxInvoice = (props) => {
                     })}
                   </td>
                   {/* <td>3.760000</td> */}
-                  {Number(cost.amount)?.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
-                  <td className="border-0">{cost.tax_group_code}</td>
-                  <td className="border-0">
+                  <td>
+                    {Number(cost.amount)?.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </td>
+                  <td>{cost.tax_group_code}</td>
+                  <td>
                     {Number(cost.vat_amount)?.toLocaleString("en-US", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
                   </td>
-                  <td className="border-0">
+                  <td>
                     {Number(cost.total_amount)?.toLocaleString("en-US", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
@@ -552,7 +485,7 @@ const TaxInvoice = (props) => {
                 {state.word_amount} Only
               </td>
               <td className="border-0" style={{ fontWeight: 600 }}>
-                Total in: SAR
+                Total in: {state.invoice?.currency_sar}
               </td>
               <td className="border-0" style={{ fontWeight: 600 }}>
                 {Number(state.exd_vat_total_amount)?.toLocaleString("en-US", {
@@ -617,9 +550,10 @@ const TaxInvoice = (props) => {
             <h5 className="mt-4" style={{ color: "#000", fontWeight: 700 }}>
               BANK DETAILS
             </h5>
-            <p>ACC NO :</p>
-            <p>IBAN NO : </p>
-            <p>SWIFT :</p>
+            <p>Account Name : {state?.invoice?.company?.account_name}</p>
+            <p>ACC NO : {state?.invoice?.company?.account_number}</p>
+            <p>IBAN NO : {state?.invoice?.company?.iban_code}</p>
+            <p>SWIFT : {state?.invoice?.company?.swift_code}</p>
           </div>
           <div className="col-lg-3 col-xs-12">
             <span className="p-2">
@@ -627,11 +561,6 @@ const TaxInvoice = (props) => {
             </span>
           </div>
         </div>
-
-        {/* <div className="mt-5 text-center">
-            This is a computer generated document and does not require a
-            signature
-          </div> */}
 
         <div
           className="row mt-5 mb-0"

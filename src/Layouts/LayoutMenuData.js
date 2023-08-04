@@ -224,7 +224,7 @@ const Navdata = () => {
       src: "/account.png",
 
       stateVariables: isCompany,
-      roles: ["superadmin", "admin", "user"],
+      roles: ["admin"],
     },
 
     // {

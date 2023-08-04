@@ -120,8 +120,11 @@ const TaxInvoiceSecond = (props) => {
           // genrating qrcode string using TLV format
 
           try {
-            let sellarNameBuf = getTLVForValue("1", "Seller Name");
-            let registrationBuf = getTLVForValue("2", "VAT No");
+            let sellarNameBuf = getTLVForValue("1", "Adnovs");
+            let registrationBuf = getTLVForValue(
+              "2",
+              String(state?.invoice?.client_name?.vat_trn_number)
+            );
             let timestampBuf = getTLVForValue(
               "3",
               String(state.invoice?.created_at)
@@ -194,14 +197,16 @@ const TaxInvoiceSecond = (props) => {
               <h3 style={{ color: "#000" }}>ADNOVS SHIPPING & LOGISTICS</h3>
               <p>Al Boughdadia</p>
               <p>Jeddah, Saudi Arabia - 22234</p>
-              <p style={{ fontWeight: 600 }}>VAT NO : </p>
+              <p style={{ fontWeight: 600 }}>
+                VAT NO : {state?.invoice?.client_name?.vat_trn_number}
+              </p>
               {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
             </div>
             <div className="col-lg-4 mb-4 d-flex">
               <img
                 src={shipLogo}
                 alt=""
-                width={200}
+                width={300}
                 style={{ margin: "auto" }}
               />
             </div>
@@ -209,7 +214,9 @@ const TaxInvoiceSecond = (props) => {
               <h3 style={{ color: "#000" }}>ADNOVS SHIPPING & LOGISTICS</h3>
               <p>Al Boughdadia</p>
               <p>Jeddah, Saudi Arabia - 22234</p>
-              <p style={{ fontWeight: 600 }}>VAT NO : </p>
+              <p style={{ fontWeight: 600 }}>
+                VAT NO : {state?.invoice?.client_name?.vat_trn_number}
+              </p>
               {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
             </div>
           </div>
@@ -218,10 +225,10 @@ const TaxInvoiceSecond = (props) => {
             <div className="col-lg-4">
               <h3 style={{ color: "#3cb043" }}>TAX INVOICE</h3>
               <h6>To :</h6>
-              <h5>ADNOV Shipping & Logistics</h5>
-              <p>(CS230011)</p>
-              <p>JEDDAH,</p>
-              <p>Saudi Arabia</p>
+              <h5>{state?.invoice?.client_name?.name}</h5>
+              <p>{state?.invoice?.client_name?.address}</p>
+              <p>{state?.invoice?.client_name?.city},</p>
+              <p>{state?.invoice?.client_name?.country}</p>
             </div>
             <div className="col-lg-4">
               <p style={{ color: "#3cb043" }}>
@@ -254,7 +261,14 @@ const TaxInvoiceSecond = (props) => {
             <table className="htmlTable mt-2 w-100">
               <tbody>
                 <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
-                  <th className="border-0">#</th>
+                  <th
+                    className="border-0"
+                    style={{
+                      padding: "10px 0px",
+                    }}
+                  >
+                    #
+                  </th>
                   <th className="border-0">Description</th>
                   <th className="border-0">Currency</th>
                   {/* <th className="border-0">Quantity</th>
@@ -268,10 +282,19 @@ const TaxInvoiceSecond = (props) => {
                   return (
                     <>
                       <tr
-                        style={{ borderBottom: "1px solid #d3d3d3" }}
+                        style={{
+                          borderBottom: "1px solid #d3d3d3",
+                        }}
                         key={index}
                       >
-                        <td className="border-0">{index + 1}</td>
+                        <td
+                          className="border-0"
+                          style={{
+                            padding: "10px 0px",
+                          }}
+                        >
+                          {index + 1}
+                        </td>
                         <td className="border-0">{cost.charge?.name}</td>
                         <td className="border-0">{cost.currency}</td>
                         {/* <td className="border-0">1</td>
@@ -303,19 +326,19 @@ const TaxInvoiceSecond = (props) => {
             </table>
           </div>
 
-          <hr className="mt-5" style={{ border: "1px solid #000" }} />
+          {/* <hr className="mt-5" style={{ border: "1px solid #000" }} /> */}
 
           <div
-            className="card mt-2"
-            style={{ border: "1px solid #000", padding: "10px" }}
+            className="card mt-4"
+            style={{ border: "1px solid #000", padding: "20px 10px" }}
           >
             <div className="row">
-              <div className="col-lg-4 col-xs-12">
+              <div className="col-lg-2 col-xs-12 d-flex justify-content-center align-items-center">
                 <span className="p-2">
                   <QRCode size={250} value={String(state.qrcodeString)} />
                 </span>
               </div>
-              <div className="col-lg-8 col-xs-12">
+              <div className="col-lg-10 col-xs-12">
                 <div className="row">
                   <div
                     className="col-lg-8 col-md-6"
@@ -345,7 +368,9 @@ const TaxInvoiceSecond = (props) => {
                       })}
                     </p>
                     <p style={{ color: "#D0312D" }}>
-                      <span style={{ fontSize: "12px" }}>SAR </span>
+                      <span style={{ fontSize: "12px" }}>
+                        {state.invoice?.currency_sar}{" "}
+                      </span>
                       {Number(state.total_amount)?.toLocaleString("en-US", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
@@ -356,7 +381,9 @@ const TaxInvoiceSecond = (props) => {
                 <hr style={{ border: "1px solid #000" }} />
                 <div className="row">
                   <div className="col-lg-7">
-                    <h4>SAR {state.word_amount}</h4>
+                    <h4>
+                      {state.invoice?.currency_sar} {state.word_amount}
+                    </h4>
                   </div>
                   <div className="col-lg-5">
                     <p></p>
@@ -374,11 +401,11 @@ const TaxInvoiceSecond = (props) => {
                 Account Details:
               </h6>
 
-              <p>Account Name :</p>
-              <p>Bank Name : </p>
-              <p>Account No :</p>
-              <p>IBAN code :</p>
-              <p>Swift Code :</p>
+              <p>Account Name : {state?.invoice?.company?.account_name}</p>
+              <p>Bank Name : {state?.invoice?.company?.bank_name}</p>
+              <p>Account No : {state?.invoice?.company?.account_number}</p>
+              <p>IBAN code : {state?.invoice?.company?.iban_code}</p>
+              <p>Swift Code : {state?.invoice?.company?.swift_code}</p>
             </div>
             <div className="col-lg-3 col-xs-12"></div>
           </div>
@@ -386,7 +413,7 @@ const TaxInvoiceSecond = (props) => {
           <hr className="mt-5" style={{ border: "1px solid #000" }} />
           <div className="mt-2">
             <div className="row">
-              <div className="col-lg-8 col-xs-12">
+              <div className="col-lg-9 col-xs-12">
                 <p>
                   This is a computer generated invoice doesn't require signature
                   or stamp
@@ -401,7 +428,7 @@ const TaxInvoiceSecond = (props) => {
                   11:00 am
                 </p> */}
               </div>
-              <div className="col-lg-2 col-xs-12">
+              <div className="col-lg-1 col-xs-12">
                 <p>Email:</p>
                 {/* <p>Phone:</p> */}
               </div>

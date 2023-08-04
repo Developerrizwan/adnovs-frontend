@@ -150,23 +150,23 @@ const TwoColumnLayout = (props) => {
   });
 
   const isRouteCanView = (menuItem) => {
-    let flag = true;
+    let flag = false;
 
-    // let authdata = localStorage.getItem("authUser");
+    let authdata = localStorage.getItem("authUser");
 
-    // if (!authdata) props.history.push("/login");
+    if (!authdata) props.history.push("/login");
 
-    // authdata = JSON.parse(authdata);
+    authdata = JSON.parse(authdata);
 
-    // let roles = authdata.groups || [];
+    let roles = authdata.groups || [];
 
-    // if (roles.includes("admin")) return true;
+    if (roles.includes("superadmin")) return true;
 
-    // roles?.forEach((role) => {
-    //   if (menuItem?.roles?.includes(role)) {
-    //     flag = true;
-    //   }
-    // });
+    roles?.forEach((role) => {
+      if (menuItem?.roles?.includes(role)) {
+        flag = true;
+      }
+    });
 
     return flag;
   };
