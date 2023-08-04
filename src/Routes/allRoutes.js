@@ -140,7 +140,7 @@ const publicRoutes = [
   { path: "/auth-pass-change-cover", component: CoverPasswCreate },
   { path: "/auth-offline", component: Offlinepage },
 
-  { path: "/tax-invoice", component: TaxInvoice },
+  { path: "/tax-invoice/:invoiceId", component: TaxInvoice },
   { path: "/tax-invoice-second/:invoiceId", component: TaxInvoiceSecond },
 ];
 

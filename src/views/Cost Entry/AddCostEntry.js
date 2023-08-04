@@ -467,9 +467,19 @@ const AddCostEntry = (props) => {
                           </label>
                           <Field
                             className="form-control"
-                            placeholder="Rate"
+                            placeholder="0"
                             name="ex_rate"
                             style={{ background: "#EDEDED" }}
+                            onChange={(e) => {
+                              setFieldValue("ex_rate", e.target.value);
+                              if (values["fcy_amount"].length) {
+                                setFieldValue(
+                                  "amount",
+                                  Number(e.target.value) *
+                                    Number(values["fcy_amount"])
+                                );
+                              }
+                            }}
                           />
                           {errors.ex_rate && touched.ex_rate && (
                             <div className="invalid-feedback d-block">
@@ -489,9 +499,19 @@ const AddCostEntry = (props) => {
                           </label>
                           <Field
                             className="form-control"
-                            placeholder="FCY Amount"
+                            placeholder="0"
                             name="fcy_amount"
                             style={{ background: "#EDEDED" }}
+                            onChange={(e) => {
+                              setFieldValue("fcy_amount", e.target.value);
+                              if (values["ex_rate"].length) {
+                                setFieldValue(
+                                  "amount",
+                                  Number(e.target.value) *
+                                    Number(values["ex_rate"])
+                                );
+                              }
+                            }}
                           />
                           {errors.fcy_amount && touched.fcy_amount && (
                             <div className="invalid-feedback d-block">
@@ -503,12 +523,12 @@ const AddCostEntry = (props) => {
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="amount" className="form-label">
-                            Amount(SAR)
+                            Amount
                             {/* <span className="text-danger">*</span> */}
                           </label>
                           <Field
                             className="form-control"
-                            placeholder="Amount(SAR)"
+                            placeholder="0"
                             name="amount"
                             style={{ background: "#EDEDED" }}
                           />

@@ -97,7 +97,7 @@ const CostEntryTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Amount(SAR)</span>,
+      name: <span className="font-weight-bold fs-13">Amount</span>,
       selector: (row) => row.amount,
       cell: (value) => {
         return <div>{value.amount}</div>;
