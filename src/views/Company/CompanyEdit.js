@@ -46,20 +46,20 @@ const CompanyEdit = (props) => {
                 ? props?.companyData?.address
                 : "",
               users: props?.companyData?.users ? props?.companyData?.users : [],
-              accountName: props?.companyData?.accountName
-                ? props?.companyData?.accountName
+              account_name: props?.companyData?.account_name
+                ? props?.companyData?.account_name
                 : "",
-              accountNo: props?.companyData?.accountNo
-                ? props?.companyData?.accountNo
+              account_number: props?.companyData?.account_number
+                ? props?.companyData?.account_number
                 : "",
-              bankName: props?.companyData?.bankName
-                ? props?.companyData?.bankName
+              bank_name: props?.companyData?.bank_name
+                ? props?.companyData?.bank_name
                 : "",
-              swiftCode: props?.companyData?.swiftCode
-                ? props?.companyData?.swiftCode
+              swift_code: props?.companyData?.swift_code
+                ? props?.companyData?.swift_code
                 : "",
-              ibanCode: props?.companyData?.ibanCode
-                ? props?.companyData?.ibanCode
+              iban_code: props?.companyData?.iban_code
+                ? props?.companyData?.iban_code
                 : "",
             }}
             validationSchema={Yup.object({
@@ -68,11 +68,16 @@ const CompanyEdit = (props) => {
               address: Yup.string().required("Address Name is Required"),
               country: Yup.string().ensure().required("Country is Required"),
               state: Yup.string().ensure().required("State is Required"),
-              accountName: Yup.string().required("Account Name is Required"),
-              accountNo: Yup.string().required("Account Name is Required"),
-              bankName: Yup.string().required("Bank Name is Required"),
-              swiftCode: Yup.string().required("Swift Code Name is Required"),
-              ibanCode: Yup.string().required("IBAN Code Name is Required"),
+              account_name: Yup.string().required("Account Name is Required"),
+              account_number: Yup.string()
+                .matches(
+                  /^\d{9,18}$/,
+                  "Account number must be between 9 to 18 digits"
+                )
+                .required("Account number is required"),
+              bank_name: Yup.string().required("Bank Name is Required"),
+              swift_code: Yup.string().required("Swift Code Name is Required"),
+              iban_code: Yup.string().required("IBAN Code Name is Required"),
             })}
             onSubmit={(values, { reset }) => {
               const company = JSON.parse(
@@ -253,18 +258,18 @@ const CompanyEdit = (props) => {
                 <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="accountName" className="form-label">
+                      <Label htmlFor="account_name" className="form-label">
                         Account Name
                         <span className="text-danger">*</span>
                       </Label>
                       <Field
                         className="form-control"
-                        name="accountName"
+                        name="account_name"
                         style={{ background: "#EDEDED" }}
                       />
 
                       <ErrorMessage
-                        name="accountName"
+                        name="account_name"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -274,18 +279,18 @@ const CompanyEdit = (props) => {
 
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="bankName" className="form-label">
+                      <Label htmlFor="bank_name" className="form-label">
                         Bank Name
                         <span className="text-danger">*</span>
                       </Label>
                       <Field
                         className="form-control"
-                        name="bankName"
+                        name="bank_name"
                         style={{ background: "#EDEDED" }}
                       />
 
                       <ErrorMessage
-                        name="bankName"
+                        name="bank_name"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -297,18 +302,18 @@ const CompanyEdit = (props) => {
                 <Grid spacing={2} container>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="accountNo" className="form-label">
+                      <Label htmlFor="account_number" className="form-label">
                         Account No
                         <span className="text-danger">*</span>
                       </Label>
                       <Field
                         className="form-control"
-                        name="accountNo"
+                        name="account_number"
                         style={{ background: "#EDEDED" }}
                       />
 
                       <ErrorMessage
-                        name="accountNo"
+                        name="account_number"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -317,18 +322,18 @@ const CompanyEdit = (props) => {
                   </Grid>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="ibanCode" className="form-label">
+                      <Label htmlFor="iban_code" className="form-label">
                         IBAN Code
                         <span className="text-danger">*</span>
                       </Label>
                       <Field
                         className="form-control"
-                        name="ibanCode"
+                        name="iban_code"
                         style={{ background: "#EDEDED" }}
                       />
 
                       <ErrorMessage
-                        name="ibanCode"
+                        name="iban_code"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -340,18 +345,18 @@ const CompanyEdit = (props) => {
                 <Grid spacing={2} container>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="swiftCode" className="form-label">
+                      <Label htmlFor="swift_code" className="form-label">
                         Swift Code
                         <span className="text-danger">*</span>
                       </Label>
                       <Field
                         className="form-control"
-                        name="swiftCode"
+                        name="swift_code"
                         style={{ background: "#EDEDED" }}
                       />
 
                       <ErrorMessage
-                        name="swiftCode"
+                        name="swift_code"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
