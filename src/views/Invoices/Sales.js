@@ -43,16 +43,10 @@ const Sales = (props) => {
   const [Vendorvalue, setVendorvalue] = useState("TEMP");
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
+  const [clientOptions, setClientOptions] = useState([]);
 
   const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
   const VendorOptions = [{ label: "TEMP", value: "TEMP" }];
-
-  const clientOptions = [
-    {
-      label: "Client",
-      value: "Client",
-    },
-  ];
 
   const history = useHistory();
 
@@ -69,13 +63,20 @@ const Sales = (props) => {
       .then((response) => {
         let data = response.data;
 
-        const opts = data.map((dd) => {
+        const ConsOpts = data.map((dd) => {
           return {
             label: dd?.name,
             value: dd?.id,
           };
         });
-        setConsigneeOptions(opts);
+        const ClientOpts = data.map((dd) => {
+          return {
+            label: dd?.client_name?.name,
+            value: dd?.id,
+          };
+        });
+        setClientOptions(ClientOpts);
+        setConsigneeOptions(ConsOpts);
         setLoading(false);
       })
       .catch((error) => {
@@ -559,9 +560,19 @@ const Sales = (props) => {
                             </Label>
                             <Field
                               className="form-control "
-                              placeholder="Ex. Rate"
+                              placeholder="0"
                               name="ex_rate"
                               type="text"
+                              onChange={(e) => {
+                                setFieldValue("ex_rate", e.target.value);
+                                if (values["fc_amount"].length) {
+                                  setFieldValue(
+                                    "amount_sar",
+                                    Number(e.target.value) *
+                                      Number(values["fc_amount"])
+                                  );
+                                }
+                              }}
                               style={{ background: "#EDEDED" }}
                             />
                           </div>
@@ -643,9 +654,19 @@ const Sales = (props) => {
                             <Field
                               className="form-control"
                               name="fc_amount"
-                              placeholder="FC Amount"
+                              placeholder="0"
                               type="text"
                               style={{ background: "#EDEDED" }}
+                              onChange={(e) => {
+                                setFieldValue("fc_amount", e.target.value);
+                                if (values["ex_rate"].length) {
+                                  setFieldValue(
+                                    "amount_sar",
+                                    Number(e.target.value) *
+                                      Number(values["ex_rate"])
+                                  );
+                                }
+                              }}
                             />
                           </div>
                           {errors.fc_amount && touched.fc_amount && (
@@ -666,7 +687,7 @@ const Sales = (props) => {
                             <Field
                               className="form-control"
                               name="amount_sar"
-                              placeholder="Amount"
+                              placeholder="0"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
