@@ -148,7 +148,7 @@ const CompanyTable = (props) => {
             closeAddPopup={() => {
               setEditModal(false);
               setSelectedJob(null);
-              props.getJobs();
+              props.getCompany();
             }}
             companyData={selectedJob}
             history={props.history}

@@ -89,26 +89,16 @@ const CompanyEdit = (props) => {
               apiAuth
                 .patch(url, values)
                 .then((response) => {
-                  if (response.status === 200) {
-                    NotificationManager.success(
-                      "",
-                      ` Company Updated Successfully`,
-                      3000,
-                      null,
-                      null,
-                      ""
-                    );
-                    props.closeAddPopup();
-                  } else {
-                    NotificationManager.error(
-                      "",
-                      `Company Update Error`,
-                      3000,
-                      null,
-                      null,
-                      ""
-                    );
-                  }
+                  NotificationManager.success(
+                    "",
+                    ` Company Updated Successfully`,
+                    3000,
+                    null,
+                    null,
+                    ""
+                  );
+                  props.closeAddPopup();
+                  // props.getCompany();
                 })
                 .catch((error) => {
                   NotificationManager.error(
