@@ -28,6 +28,10 @@ const AddOrganization = (props) => {
 
   const [coaOptions, setCoaOptions] = useState([]);
   const [selCurrency, setSelCurrency] = useState(null);
+  const [typeValue, setTypeValue] = useState(null);
+  const [coaValue, setCoaValue] = useState(null);
+  const [gstValue, setGstValue] = useState(null);
+
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [branchValue, setBranchValue] = useState("JEDDHA");
 
@@ -96,7 +100,37 @@ const AddOrganization = (props) => {
   useEffect(() => {
     getCoaOptions();
     getAllCurrencyCodes();
-    initialValues();
+    // initialValues();
+    setSelCurrency({
+      label: props.organizationData?.currency,
+      value: props.organizationData?.currency,
+    });
+
+    setTypeValue({
+      label: props.organizationData?.type,
+      value: props.organizationData?.type,
+    });
+
+    setSelectedCountry({
+      label: props?.organizationData?.country,
+      value: props?.organizationData?.country,
+    });
+    setSelectedState({
+      label: props?.organizationData?.state_code,
+      value: props?.organizationData?.state_code,
+    });
+    setSelectedCity({
+      label: props?.organizationData?.city,
+      value: props?.organizationData?.city,
+    });
+    setCoaValue({
+      label: props?.organizationData?.coa?.code,
+      value: props?.organizationData?.coa?.id,
+    });
+    setGstValue({
+      label: props?.organizationData?.gstin_registeredm,
+      value: props?.organizationData?.gstin_registered,
+    });
   }, [props.isEdit]);
 
   return (
@@ -147,7 +181,9 @@ const AddOrganization = (props) => {
                   mobile: props.isEdit ? props.organizationData?.mobile : "",
                   email: props.isEdit ? props.organizationData?.email : "",
                   country: props.isEdit ? props.organizationData?.country : "",
-                  state: props.isEdit ? props.organizationData?.state : "",
+                  state_code: props.isEdit
+                    ? props.organizationData?.state_code
+                    : "",
                   building_name: props.isEdit
                     ? props.organizationData?.building_name
                     : "",
@@ -201,7 +237,9 @@ const AddOrganization = (props) => {
                   country: Yup.string()
                     .ensure()
                     .required("Country is Required"),
-                  state: Yup.string().ensure().required("State is Required"),
+                  state_code: Yup.string()
+                    .ensure()
+                    .required("State is Required"),
                   city: Yup.string().ensure().required("City is Required"),
                   building_name: Yup.string().required(
                     "Building Name is Required"
@@ -213,17 +251,16 @@ const AddOrganization = (props) => {
                     .max(400, "Must be 400 characters or less")
                     .trim()
                     .required("Language Address is Required"),
-
                   coa: Yup.string().ensure().required("COA is Required"),
-                  zip_code: Yup.string().required("Zip Code is Required"),
-                  address: Yup.string()
-                    .max(400, "Must be 400 characters or less")
-                    .trim()
-                    .required("Address is Required"),
-                  remarks: Yup.string()
-                    .max(400, "Must be 400 characters or less")
-                    .trim()
-                    .required("Remarks is Required"),
+                  // zip_code: Yup.string().required("Zip Code is Required"),
+                  // address: Yup.string()
+                  //   .max(400, "Must be 400 characters or less")
+                  //   .trim()
+                  //   .required("Address is Required"),
+                  // remarks: Yup.string()
+                  //   .max(400, "Must be 400 characters or less")
+                  //   .trim()
+                  //   .required("Remarks is Required"),
                 })}
                 onSubmit={(values, { reset }) => {
                   const company = JSON.parse(
@@ -231,6 +268,9 @@ const AddOrganization = (props) => {
                   )?.company_id;
                   values["company"] = company;
                   values.country = values.country ? values.country : undefined;
+                  values.state_code = values.state_code
+                    ? values.state_code
+                    : undefined;
                   props.isEdit
                     ? apiAuth
                         .patch(
@@ -420,7 +460,7 @@ const AddOrganization = (props) => {
                             }}
                           />
                           <ErrorMessage
-                            name="job_status"
+                            name="branch"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
@@ -479,11 +519,13 @@ const AddOrganization = (props) => {
                           </Label>
                           <Select
                             name="type"
+                            value={typeValue}
                             placeholder={"Select"}
                             options={typeOptions}
                             styles={customStyles}
                             onChange={(data) => {
                               setFieldValue("type", data.value);
+                              setTypeValue(data);
                             }}
                           />
                           <ErrorMessage
@@ -528,7 +570,7 @@ const AddOrganization = (props) => {
 
                       <Grid item xs={12} lg={4}>
                         <div className="mb-3">
-                          <label htmlFor="state" className="form-label">
+                          <label htmlFor="state_code" className="form-label">
                             State
                             <span className="text-danger">*</span>
                           </label>
@@ -544,12 +586,12 @@ const AddOrganization = (props) => {
                             styles={customStyles}
                             value={selectedState}
                             onChange={(data) => {
-                              setFieldValue("state", data.label);
+                              setFieldValue("state_code", data.label);
                               setSelectedState(data);
                             }}
                           />
                           <ErrorMessage
-                            name="state"
+                            name="state_code"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
@@ -558,7 +600,7 @@ const AddOrganization = (props) => {
                       </Grid>
                       <Grid item xs={12} lg={4}>
                         <div className="mb-3">
-                          <label htmlFor="state" className="form-label">
+                          <label htmlFor="city" className="form-label">
                             City
                             <span className="text-danger">*</span>
                           </label>
@@ -636,7 +678,7 @@ const AddOrganization = (props) => {
                         <div className="mb-3">
                           <Label htmlFor="website" className="form-label">
                             Zip Code
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </Label>
                           <Field
                             className="form-control"
@@ -692,9 +734,11 @@ const AddOrganization = (props) => {
                                 value: item.id,
                               };
                             })}
+                            value={coaValue}
                             styles={customStyles}
                             onChange={(data) => {
                               setFieldValue("coa", data.value);
+                              setCoaValue(data);
                             }}
                           />
                           <ErrorMessage
@@ -740,10 +784,12 @@ const AddOrganization = (props) => {
                           <Select
                             name="type"
                             placeholder={"Select"}
+                            value={gstValue}
                             options={registeredOptions}
                             styles={customStyles}
                             onChange={(data) => {
                               setFieldValue("gstin_registered", data.value);
+                              setGstValue(data);
                             }}
                           />
                           <ErrorMessage
@@ -811,7 +857,7 @@ const AddOrganization = (props) => {
                         <div className="mb-3">
                           <Label htmlFor="address" className="form-label">
                             Address
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </Label>
                           <Field
                             as="textarea"
@@ -833,7 +879,7 @@ const AddOrganization = (props) => {
                         <div className="mb-3">
                           <Label htmlFor="remarks" className="form-label">
                             Remarks
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </Label>
                           <Field
                             as="textarea"
