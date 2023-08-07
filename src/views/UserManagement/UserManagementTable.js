@@ -1,6 +1,5 @@
 import { useState } from "react";
 import DataTable from "react-data-table-component";
-import { Link } from "react-router-dom";
 import {
   Button,
   DropdownItem,
@@ -11,11 +10,10 @@ import {
 } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 
-import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
-import EditUser from "./EditUser";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import AddUser from "./AddUser";
 
 const UserManagementTable = (props) => {
-  const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deletId, setDeletId] = useState();
@@ -138,14 +136,14 @@ const UserManagementTable = (props) => {
           Edit User
         </ModalHeader>
         <ModalBody>
-          <EditUser
+          <AddUser
             closeAddPopup={() => {
               setEditModal(false);
               setSelectedUser(null);
               props.getUser();
             }}
             userData={selectedUser}
-            history={props.history}
+            isEdit={true}
           />
         </ModalBody>
       </Modal>

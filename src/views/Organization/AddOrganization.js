@@ -36,6 +36,9 @@ const AddOrganization = (props) => {
   });
 
   const [currencyOptions, setCurrencyOptions] = useState([]);
+  const [countryOptions, setCountryOptions] = useState([]);
+  const [stateOptions, setStateOptions] = useState([]);
+  const [cityOptions, setCityOptions] = useState([]);
   const [branchValue, setBranchValue] = useState("JEDDHA");
 
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -71,7 +74,19 @@ const AddOrganization = (props) => {
       .get("api/master/coa/")
       .then((response) => {
         let data = response.data.results;
-        setCoaOptions(data);
+        const opts = data.map((dd) => {
+          return {
+            label: dd.code,
+            value: dd.id,
+          };
+        });
+        setCoaOptions(opts);
+        if (props.isEdit) {
+          const sel = opts.find(
+            (dd) => dd?.label === props.organizationData?.coa?.code
+          );
+          setCoaValue(sel);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -86,50 +101,77 @@ const AddOrganization = (props) => {
         value: cur.currency + "  -  " + cur.countryName,
       };
     });
+    if (props.isEdit) {
+      const sel = allCurrencies.find(
+        (dd) => dd.value === props.organizationData?.currency
+      );
+      setSelCurrency(sel);
+    }
     setCurrencyOptions(allCurrencies);
   };
 
-  const initialValues = () => {
-    let selCurr = currencyOptions.find(
-      (dd) => dd.value === props.organizationData?.currency
-    );
-    setSelCurrency(selCurr);
+  const getCountries = () => {
+    const opts = Country.getAllCountries().map((state) => {
+      return {
+        label: state.name,
+        value: state.isoCode,
+      };
+    });
+    setCountryOptions(opts);
+    let sel = null;
+    if (props.isEdit) {
+      sel = opts.find((dd) => dd.label === props.organizationData?.country);
+      setSelectedCountry(sel);
+    }
+    if (sel) {
+      getStates(sel);
+    }
   };
 
-  useEffect(() => {
-    getCoaOptions();
-  }, []);
+  const getStates = (country) => {
+    const opts = State.getStatesOfCountry(country?.value)?.map((state) => {
+      return {
+        label: state.name,
+        value: state.isoCode,
+      };
+    });
+    setStateOptions(opts);
+    let sel = null;
+    if (props.isEdit) {
+      sel = opts.find((dd) => dd.label === props.organizationData?.state_code);
+      setSelectedState(sel);
+    }
+    if (sel) {
+      getCities(country, sel);
+    }
+  };
+
+  const getCities = (country, state) => {
+    const opts = City.getCitiesOfState(country?.value, state?.value)?.map(
+      (city) => {
+        return {
+          label: city.name,
+          value: city.isoCode,
+        };
+      }
+    );
+    setCityOptions(opts);
+    if (props.isEdit) {
+      const sel = opts.find((dd) => dd.label === props.organizationData?.city);
+      setSelectedCity(sel);
+    }
+  };
 
   useEffect(() => {
     getCoaOptions();
     getAllCurrencyCodes();
-    // initialValues();
-    setSelCurrency({
-      label: props.organizationData?.currency,
-      value: props.organizationData?.currency,
-    });
+    getCountries();
 
     setTypeValue({
       label: props.organizationData?.type,
       value: props.organizationData?.type,
     });
 
-    setSelectedCountry({
-      label: props?.organizationData?.country,
-      value: props?.organizationData?.country,
-    });
-    setSelectedState({
-      label: props?.organizationData?.state_code,
-      value: props?.organizationData?.state_code,
-    });
-    setSelectedCity({
-      label: props?.organizationData?.city,
-      value: props?.organizationData?.city,
-    });
-    setCoaValue({
-      label: props?.organizationData?.coa?.code,
-      value: props?.organizationData?.coa?.id,
-    });
     setGstValue({
       label: props?.organizationData?.gstin_registered ? "Yes" : "No",
       value: props?.organizationData?.gstin_registered ? true : false,
@@ -138,6 +180,7 @@ const AddOrganization = (props) => {
 
   return (
     <React.Fragment>
+      {/* {console.log("wwwwww", props?.organizationData)} */}
       <div className={props.isEdit ? "" : "page-content"}>
         {props.isEdit ? (
           <></>
@@ -203,7 +246,7 @@ const AddOrganization = (props) => {
                     : false,
                   gstin: props.isEdit ? props.organizationData?.gstin : "",
                   website: props.isEdit ? props.organizationData?.website : "",
-                  coa: props.isEdit ? props.organizationData?.coa : "",
+                  coa: props.isEdit ? props.organizationData?.coa?.code : "",
                   remarks: props.isEdit ? props.organizationData?.remarks : "",
                 }}
                 validationSchema={Yup.object({
@@ -270,6 +313,7 @@ const AddOrganization = (props) => {
                     localStorage.getItem("authUser")
                   )?.company_id;
                   values["company"] = company;
+                  values["coa"] = coaValue.value;
                   values.country = values.country ? values.country : undefined;
                   values.state_code = values.state_code
                     ? values.state_code
@@ -549,17 +593,14 @@ const AddOrganization = (props) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={Country.getAllCountries().map((state) => {
-                              return {
-                                label: state.name,
-                                value: state.isoCode,
-                              };
-                            })}
+                            placeholder="Select"
+                            options={countryOptions}
                             styles={customStyles}
                             value={selectedCountry}
                             onChange={(data) => {
                               setFieldValue("country", data.label);
                               setSelectedCountry(data);
+                              getStates(data);
                             }}
                           />
                           <ErrorMessage
@@ -578,19 +619,14 @@ const AddOrganization = (props) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={State.getStatesOfCountry(
-                              selectedCountry?.value
-                            )?.map((state) => {
-                              return {
-                                label: state.name,
-                                value: state.isoCode,
-                              };
-                            })}
+                            placeholder="Select"
+                            options={stateOptions}
                             styles={customStyles}
                             value={selectedState}
                             onChange={(data) => {
                               setFieldValue("state_code", data.label);
                               setSelectedState(data);
+                              getCities(selectedCountry, data);
                             }}
                           />
                           <ErrorMessage
@@ -608,15 +644,8 @@ const AddOrganization = (props) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Select
-                            options={City.getCitiesOfState(
-                              selectedCountry?.value,
-                              selectedState?.value
-                            )?.map((city) => {
-                              return {
-                                label: city.name,
-                                value: city.isoCode,
-                              };
-                            })}
+                            placeholder="Select"
+                            options={cityOptions}
                             styles={customStyles}
                             value={selectedCity}
                             onChange={(data) => {
@@ -731,16 +760,11 @@ const AddOrganization = (props) => {
                           <Select
                             name="coa"
                             placeholder={"Select"}
-                            options={coaOptions?.map((item) => {
-                              return {
-                                label: item.code,
-                                value: item.id,
-                              };
-                            })}
+                            options={coaOptions}
                             value={coaValue}
                             styles={customStyles}
                             onChange={(data) => {
-                              setFieldValue("coa", data.value);
+                              setFieldValue("coa", data.label);
                               setCoaValue(data);
                             }}
                           />

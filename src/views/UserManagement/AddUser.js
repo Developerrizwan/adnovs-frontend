@@ -2,37 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Row, Button, Label } from "reactstrap";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
-
 import { Formik, Field, ErrorMessage } from "formik";
 import { Form } from "react-formik-ui";
 import { Colxx, Separator } from "../../components/Common/CustomBootstrap";
 import apiAuth from "../../helpers/ApiAuth";
-import { Card, Container } from "reactstrap";
-import BreadCrumb from "../../components/Common/BreadCrumb";
+import { Card } from "reactstrap";
 import Select from "react-select";
-import { Country, State, City } from "country-state-city";
-// import VictoriaMatrics from "./AddVictoriaMatric";
-// import AddMqtt from "./AddMqtt";
-// import AddInflux from "./AddInflux";
 import NotificationManager from "../../components/Common/NotificationManager";
 
 const AddUser = (props) => {
   const history = useHistory();
-
-  const [is_password_hidden, set_is_password_hidden] = useState(false);
-
   const [selectedRole, setSelectedRole] = useState(null);
-  const [company, setCompany] = useState(null);
-  const [workshopData, setWorkshopData] = useState(null);
-  const [centerData, setCenterData] = useState(null);
-  const [states, setStates] = useState([]);
-  const [regions, setRegions] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [selectedState, setSelectedState] = useState([]);
-  const [selectedRegion, setSelectedRegion] = useState([]);
-  const [selectedCity, setSelectedCity] = useState([]);
-  const [centerId, setCenterId] = useState(null);
-  const [workshopId, setWorkshopId] = useState([]);
 
   const RoleOptions = [
     { value: "user", label: "User" },
@@ -46,104 +26,14 @@ const AddUser = (props) => {
     }),
   };
 
-  const getContactCenter = () => {
-    apiAuth
-      .get("/api/contact_center/")
-      .then((response) => {
-        let data = response.data.filter(
-          (ws) =>
-            String(ws.company) ===
-            String("66548c7c-6cd2-4bdc-bace-ac1c0128327c")
-        );
-        setCenterData(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getWorkshop = () => {
-    apiAuth
-      .get("/api/workshop/")
-      .then((response) => {
-        let data = response.data.filter(
-          (ws) =>
-            String(ws.company) ===
-            String("66548c7c-6cd2-4bdc-bace-ac1c0128327c")
-        );
-
-        setWorkshopData(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getStates = () => {
-    apiAuth
-      .get("/api/state/read")
-      .then((response) => {
-        let data = response.data;
-        data = data.map((dd, i) => {
-          dd["sno"] = i + 1;
-          return dd;
-        });
-        setStates(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        NotificationManager.error("", `State Get Error`, 3000, null, null, "");
-      });
-  };
-
-  const getRegions = () => {
-    apiAuth
-      .get("/api/region/read/")
-      .then((response) => {
-        let data = response.data;
-        data = data.map((dd, i) => {
-          dd["sno"] = i + 1;
-          return dd;
-        });
-        setRegions(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        NotificationManager.error(
-          "",
-          `Regions Get Error`,
-          3000,
-          null,
-          null,
-          ""
-        );
-      });
-  };
-
-  const getCities = () => {
-    apiAuth
-      .get("/api/city/read/")
-      .then((response) => {
-        let data = response.data;
-        data = data.map((dd, i) => {
-          dd["sno"] = i + 1;
-          return dd;
-        });
-        setCities(data);
-      })
-      .catch((error) => {
-        console.log(error);
-        NotificationManager.error("", `Cities Get Error`, 3000, null, null, "");
-      });
-  };
-
-  // useEffect(() => {
-  //   getWorkshop();
-  //   getContactCenter();
-  //   getStates();
-  //   getRegions();
-  //   getCities();
-  // }, []);
+  useEffect(() => {
+    if (props.isEdit) {
+      const sel = RoleOptions.find(
+        (dd) => dd.value === props.userData?.groups[0]
+      );
+      setSelectedRole(sel);
+    }
+  }, []);
 
   const goBack = () => {
     history.goBack();
@@ -151,25 +41,21 @@ const AddUser = (props) => {
 
   return (
     <>
-      <div className="page-content">
-        {/* <Container fluid>
-          <BreadCrumb
-            title="Add User"
-            pageTitle="Settings"
-            back_button={true}
-            history={props.history}
-          />
-        </Container> */}
-        <div
-          className="mb-5 mt-3"
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
-          <h2 className="mx-3">Create User </h2>
+      <div className={`${props.isEdit ? "" : "page-content"}`}>
+        {props.isEdit ? (
+          <></>
+        ) : (
+          <div
+            className="mb-5 mt-3"
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <h2 className="mx-3">Create User </h2>
 
-          <button className="btn btn-danger" onClick={goBack}>
-            Back
-          </button>
-        </div>
+            <button className="btn btn-danger" onClick={goBack}>
+              Back
+            </button>
+          </div>
+        )}
         <Row mb="4">
           <Colxx lg="12">
             <Card className="p-3" style={{ background: "#EDEDED" }}>
@@ -178,18 +64,12 @@ const AddUser = (props) => {
               <div className="card-body">
                 <Formik
                   initialValues={{
-                    first_name: "",
-                    last_name: "",
-                    password: "",
-                    // user_name: "",
-                    mobile: "",
-                    email: "",
-                    role: "",
-                    // workshop_id: "",
-                    // contact_center_id: "",
-                    // city: [],
-                    // state: [],
-                    // region: [],
+                    first_name: props.userData?.first_name || "",
+                    last_name: props.userData?.last_name || "",
+                    password: props.userData?.password || "",
+                    mobile: props.userData?.mobile || "",
+                    email: props.userData?.email || "",
+                    role: props.userData?.groups[0] || "",
                   }}
                   validationSchema={Yup.object({
                     first_name: Yup.string()
@@ -201,8 +81,7 @@ const AddUser = (props) => {
                       .trim()
                       .required("Last Name is Required"),
                     password: Yup.string().required("Password is Required"),
-                    role: Yup.string().required("Role is Required!"),
-                    // user_name: Yup.string().ensure(),
+                    role: Yup.string().ensure().required("Role is Required!"),
                     mobile: Yup.string()
                       .matches(
                         /^[0-9]{10}$/,
@@ -216,41 +95,59 @@ const AddUser = (props) => {
                       localStorage.getItem("authUser")
                     )?.company_id;
                     values["company_id"] = company;
-                    const url = "/api/user-create/";
-                    apiAuth
-                      .post(url, values)
-                      .then((response) => {
-                        // if (response.status === 200) {
-                        NotificationManager.success(
-                          "",
-                          `User Added Successfully`,
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                        props?.history?.push("/user-management");
-                        // } else {
-                        //   NotificationManager.error(
-                        //     "",
-                        //     `User Add Error`,
-                        //     3000,
-                        //     null,
-                        //     null,
-                        //     ""
-                        //   );
-                        // }
-                      })
-                      .catch((error) => {
-                        NotificationManager.error(
-                          "",
-                          `User Add Error`,
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                      });
+                    if (props.isEdit) {
+                      const url = `/api/user/delete/${props.userData.id}/`;
+                      apiAuth
+                        .patch(url, values)
+                        .then((response) => {
+                          NotificationManager.success(
+                            "",
+                            `User Updated Successfully`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                          props.isEdit
+                            ? props.closeAddPopup()
+                            : props?.history?.push("/user-management");
+                        })
+                        .catch((error) => {
+                          NotificationManager.error(
+                            "",
+                            `User Update Error`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                        });
+                    } else {
+                      const url = "/api/user-create/";
+                      apiAuth
+                        .post(url, values)
+                        .then((response) => {
+                          NotificationManager.success(
+                            "",
+                            `User Added Successfully`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                          props?.history?.push("/user-management");
+                        })
+                        .catch((error) => {
+                          NotificationManager.error(
+                            "",
+                            `User Add Error`,
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                        });
+                    }
                   }}
                 >
                   {({ values, setFieldValue }) => (
@@ -259,7 +156,10 @@ const AddUser = (props) => {
                         <Colxx lg="6">
                           {" "}
                           <div className="form-group mb-3">
-                            <Label htmlFor="first_name">First Name</Label>
+                            <Label htmlFor="first_name">
+                              First Name
+                              <span className="text-danger">*</span>
+                            </Label>
                             <Field
                               className="form-control"
                               name="first_name"
@@ -278,7 +178,10 @@ const AddUser = (props) => {
                         <Colxx lg="6">
                           {" "}
                           <div className="form-group mb-3">
-                            <Label htmlFor="last_name">Last Name</Label>
+                            <Label htmlFor="last_name">
+                              Last Name
+                              <span className="text-danger">*</span>
+                            </Label>
                             <Field
                               className="form-control"
                               name="last_name"
@@ -296,16 +199,19 @@ const AddUser = (props) => {
                         </Colxx>
                         <Colxx lg="6">
                           <div className="form-group mb-3">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="email">
+                              Email
+                              <span className="text-danger">*</span>
+                            </Label>
                             <Field
                               className="form-control"
-                              name="password"
-                              placeholder="Password"
+                              name="email"
+                              placeholder="Email"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                             <ErrorMessage
-                              name="password"
+                              name="email"
                               render={(msg) => (
                                 <div className="text-danger">{msg}</div>
                               )}
@@ -315,7 +221,10 @@ const AddUser = (props) => {
 
                         <Colxx lg="6">
                           <div className="form-group mb-3">
-                            <Label htmlFor="mobile">Mobile Number</Label>
+                            <Label htmlFor="mobile">
+                              Mobile Number
+                              <span className="text-danger">*</span>
+                            </Label>
                             <Field
                               className="form-control"
                               name="mobile"
@@ -333,16 +242,19 @@ const AddUser = (props) => {
                         </Colxx>
                         <Colxx lg="6">
                           <div className="form-group mb-3">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="password">
+                              Password
+                              <span className="text-danger">*</span>
+                            </Label>
                             <Field
                               className="form-control"
-                              name="email"
-                              placeholder="Email"
+                              name="password"
+                              placeholder="Password"
                               type="text"
                               style={{ background: "#EDEDED" }}
                             />
                             <ErrorMessage
-                              name="email"
+                              name="password"
                               render={(msg) => (
                                 <div className="text-danger">{msg}</div>
                               )}
@@ -352,11 +264,15 @@ const AddUser = (props) => {
                         <Colxx lg="6">
                           {" "}
                           <div className="form-group">
-                            <Label htmlFor="role">Role</Label>
+                            <Label htmlFor="role">
+                              Role
+                              <span className="text-danger">*</span>
+                            </Label>
                             <Select
+                              value={selectedRole}
                               options={RoleOptions}
                               onChange={(data) => {
-                                setSelectedRole(data.value);
+                                setSelectedRole(data);
                                 setFieldValue("role", data.value);
                               }}
                               styles={customStyles}

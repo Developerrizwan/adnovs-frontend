@@ -13,6 +13,9 @@ const CompanyEdit = (props) => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
 
+  const [countryOptions, setCountryOptions] = useState([]);
+  const [stateOptions, setStateOptions] = useState([]);
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -20,16 +23,41 @@ const CompanyEdit = (props) => {
     }),
   };
 
+  const getCountries = () => {
+    const opts = Country.getAllCountries().map((state) => {
+      return {
+        label: state.name,
+        value: state.isoCode,
+      };
+    });
+    setCountryOptions(opts);
+    let sel = null;
+
+    sel = opts.find((dd) => dd.label === props.companyData?.country);
+    setSelectedCountry(sel);
+
+    if (sel) {
+      getStates(sel);
+    }
+  };
+
+  const getStates = (country) => {
+    const opts = State.getStatesOfCountry(country?.value)?.map((state) => {
+      return {
+        label: state.name,
+        value: state.isoCode,
+      };
+    });
+    setStateOptions(opts);
+
+    const sel = opts.find((dd) => dd.label === props.companyData?.state);
+    setSelectedState(sel);
+  };
+
   useEffect(() => {
-    setSelectedCountry({
-      label: props?.companyData?.country,
-      value: props?.companyData?.country,
-    });
-    setSelectedState({
-      label: props?.companyData?.state,
-      value: props?.companyData?.isoCode,
-    });
+    getCountries();
   }, []);
+
   return (
     <React.Fragment>
       {props.companyData ? (
@@ -137,7 +165,10 @@ const CompanyEdit = (props) => {
                   </Grid>
                   <Grid item lg={6} xs={12}>
                     <div className="form-group mb-3">
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">
+                        Email
+                        <span className="text-danger">*</span>
+                      </Label>
                       <Field
                         className="form-control"
                         name="email"
@@ -162,17 +193,8 @@ const CompanyEdit = (props) => {
                         Country
                         <span className="text-danger">*</span>
                       </label>
-                      {console.log(
-                        "props?.companyData?.country",
-                        props?.companyData?.country
-                      )}
                       <Select
-                        options={Country.getAllCountries().map((state) => {
-                          return {
-                            label: state.name,
-                            value: state.isoCode,
-                          };
-                        })}
+                        options={countryOptions}
                         styles={customStyles}
                         value={selectedCountry}
                         onChange={(data) => {
@@ -196,14 +218,7 @@ const CompanyEdit = (props) => {
                         <span className="text-danger">*</span>
                       </label>
                       <Select
-                        options={State.getStatesOfCountry(
-                          selectedCountry?.value
-                        )?.map((state) => {
-                          return {
-                            label: state.name,
-                            value: state.isoCode,
-                          };
-                        })}
+                        options={stateOptions}
                         styles={customStyles}
                         required
                         value={selectedState}
@@ -214,29 +229,6 @@ const CompanyEdit = (props) => {
                       />
                       <ErrorMessage
                         name="state"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-
-                <Grid container spacing={2}>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="address" className="form-label">
-                        Address
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        as="textarea"
-                        className="form-control"
-                        name="address"
-                        style={{ background: "#EDEDED" }}
-                      />
-                      <ErrorMessage
-                        name="address"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -347,6 +339,26 @@ const CompanyEdit = (props) => {
 
                       <ErrorMessage
                         name="swift_code"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="address" className="form-label">
+                        Address
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        as="textarea"
+                        className="form-control"
+                        name="address"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="address"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
