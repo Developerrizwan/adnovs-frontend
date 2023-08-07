@@ -361,6 +361,10 @@ const CreateJob = (props) => {
         label: props.allJobs.pod,
         value: props.allJobs.pod,
       });
+      setPolValue({
+        label: props.allJobs?.pol,
+        value: props.allJobs?.pol,
+      });
 
       const consignee_name = consigneeOptions.find(
         (item) => item.value === props.allJobs?.consignee_name
@@ -434,23 +438,25 @@ const CreateJob = (props) => {
               bl_number: Yup.string().required("BL Number is Required"),
               branch: Yup.string().required("Branch is Required"),
               bayan_number: Yup.string().required("Bayan Number is Required"),
-              pod: Yup.string().required("POD is Required"),
+              pod: Yup.string().ensure().required("POD is Required"),
               poa: Yup.string().required("POA is Required"),
               por: Yup.string().required("Place Of Receipt is Required"),
-              pol: Yup.string().required("POL is Required"),
-              consignee_name: Yup.string().required(
-                "Cosignee Name is Required"
-              ),
+              pol: Yup.string().ensure().required("POL is Required"),
+              consignee_name: Yup.string()
+                .ensure()
+                .required("Cosignee Name is Required"),
               shipper_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
                 .required("Shipper Name is Required"),
-              client_name: Yup.string().required("Client Name is Required"),
+              client_name: Yup.string()
+                .ensure()
+                .required("Client Name is Required"),
               remarks: Yup.string()
                 .max(400, "Must be 400 characters or less")
                 .trim()
                 .required("Remarks is Required"),
-              job_type: Yup.string().required("Job Type is Required"),
+              // job_type: Yup.string().required("Job Type is Required"),
               type: Yup.string().required("Type is Required"),
               scope_of_work: Yup.string().required("Scope of work is Required"),
               job_status: Yup.string().required("Job Status is Required"),
@@ -826,7 +832,7 @@ const CreateJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="eta" className="form-label">
                         ETA
-                        <span className="text-danger">*</span>
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <DatePicker
                         selected={eta}
@@ -854,7 +860,7 @@ const CreateJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="etd" className="form-label">
                         ETD
-                        <span className="text-danger">*</span>
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <DatePicker
                         // selected={moment(etd).format("YYYY-MM-DD HH:mm:ss")}
@@ -938,7 +944,7 @@ const CreateJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="organization_type" className="form-label">
                         Organization Type
-                        <span className="text-danger">*</span>
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
 
                       <Select

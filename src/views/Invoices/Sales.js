@@ -180,17 +180,26 @@ const Sales = (props) => {
       // setInvoiceType(selType);
 
       const selJob = jobOptions.find(
-        (opt) => opt?.value === props.data?.job?.job_type
+        (opt) => opt?.value === props.data?.job?.bl_number
       );
-      setSelectedJob(selJob);
+      setSelectedJob({
+        label: props.data?.job?.bl_number,
+        value: props.data?.job?.bl_number,
+      });
       const consignee_name = consigneeOptions.find(
-        (item) => item.value === props?.data?.consignee_name
+        (item) => item.value === props?.data?.consignee_name?.name
       );
-      setConsigneeNameValue(consignee_name);
+      setConsigneeNameValue({
+        label: props?.data?.consignee_name?.name,
+        value: props?.data?.consignee_name?.name,
+      });
       const client_name = clientOptions.find(
         (item) => item.value === props.data?.client_name
       );
-      setClientNameValue(client_name);
+      setClientNameValue({
+        label: props.data?.client_name?.name,
+        value: props.data?.client_name?.name,
+      });
     }
     setPoaValue({
       label: props?.data?.poa,
@@ -245,7 +254,7 @@ const Sales = (props) => {
                 initialValues={{
                   bl_number: props.isEdit ? props.data?.bl_number : "",
                   consignee_name: props.isEdit
-                    ? props.data?.consignee_name
+                    ? props.data?.consignee_name?.name
                     : "",
                   due_date: props.isEdit ? props.data?.due_date : "",
                   currency_sar: props.isEdit ? props.data?.currency_sar : "",
@@ -255,7 +264,9 @@ const Sales = (props) => {
                   // vendor: props.isEdit ? props.data?.vendor : "TEMP",
                   ex_rate: props.isEdit ? props.data?.ex_rate : "",
                   pod: props.isEdit ? props.data?.pod : "",
-                  client_name: props.isEdit ? props.data?.client_name : "",
+                  client_name: props.isEdit
+                    ? props.data?.client_name?.name
+                    : "",
                   fc_amount: props.isEdit ? props.data?.fc_amount : "",
                   amount_sar: props.isEdit ? props.data?.amount_sar : "",
                   poa: props.isEdit ? props.data?.poa : "",
@@ -266,23 +277,33 @@ const Sales = (props) => {
                   ref_data: props.isEdit ? props.data?.ref_data : "",
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
                   narration: props.isEdit ? props.data?.narration : "",
+                  job: props.isEdit ? props.data?.job?.bl_number : "",
                 }}
                 validationSchema={Yup.object({
-                  //   bl_number: Yup.string().required("BL Number is Required"),
-                  //   consignee_name: Yup.string().required("Consignee Name is Required"),
+                  bl_number: Yup.string().required("BL Number is Required"),
+                  consignee_name: Yup.string()
+                    .ensure()
+                    .required("Consignee Name is Required"),
                   // date: Yup.string().required("Date is Required"),
-                  // currency_sar: Yup.string()
-                  //   .ensure()
-                  //   .required("Currency is Required"),
-                  //   bayan_number: Yup.string().required("Bayan Number is Required"),
-                  //   shipper_name: Yup.string().required("Shipper Name is Required"),
-                  // branch: Yup.string().required("Branch is Required"),
-                  //   ex_rate: Yup.string().required("Rate is Required"),
-                  //   pod: Yup.string().required("POD is Required"),
-                  //   client_name: Yup.string().required("Client Name is Required"),
-                  //   fc_amount: Yup.string().required("FC Amount is Required"),
-                  //   poa: Yup.string().required("POA is Required"),
-                  //   remarks: Yup.string().required("Remarks is Required"),
+                  currency_sar: Yup.string()
+                    .ensure()
+                    .required("Currency is Required"),
+                  bayan_number: Yup.string().required(
+                    "Bayan Number is Required"
+                  ),
+                  shipper_name: Yup.string().required(
+                    "Shipper Name is Required"
+                  ),
+                  branch: Yup.string().ensure().required("Branch is Required"),
+                  ex_rate: Yup.string().required("Rate is Required"),
+                  pod: Yup.string().ensure().required("POD is Required"),
+                  client_name: Yup.string()
+                    .ensure()
+                    .required("Client Name is Required"),
+                  fc_amount: Yup.string().required("FC Amount is Required"),
+                  poa: Yup.string().required("POA is Required"),
+                  job: Yup.string().ensure().required("Job is Required"),
+                  remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values, reset) => {
                   values["due_date"] = moment(dueDate).format(
@@ -432,7 +453,7 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <label htmlFor="date" className="form-label">
                             Due Date
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <div
                             style={{
@@ -762,7 +783,7 @@ const Sales = (props) => {
                       </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="job_type" className="form-label">
+                          <label htmlFor="job" className="form-label">
                             Job No
                             <span className="text-danger">*</span>
                           </label>
@@ -779,9 +800,9 @@ const Sales = (props) => {
                             }}
                             styles={customStyles}
                           />
-                          {errors.job_type && touched.job_type && (
+                          {errors.job && touched.job && (
                             <div className="invalid-feedback d-block">
-                              {errors.job_type}
+                              {errors.job}
                             </div>
                           )}
                         </div>
@@ -790,7 +811,7 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <label htmlFor="ref_data" className="form-label">
                             Ref Date
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <div
                             style={{

@@ -21,6 +21,8 @@ const EditJob = (props) => {
   const [branchValue, setBranchValue] = useState("JEDDHA");
   const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
   const [polValue, setPolValue] = useState(null);
+  const [clientNameValue, setClientNameValue] = useState(null);
+  const [consigneeNameValue, setConsigneeNameValue] = useState(null);
 
   const options = [
     {
@@ -33,6 +35,19 @@ const EditJob = (props) => {
     // },
   ];
 
+  const consigneeOptions = [
+    {
+      label: "Consignee",
+      value: "Consignee",
+    },
+  ];
+
+  const clientOptions = [
+    {
+      label: "Client",
+      value: "Client",
+    },
+  ];
   const getPoaOptions = () => {
     apiAuth
       .get("api/master/poa/")
@@ -143,11 +158,21 @@ const EditJob = (props) => {
       value: props.allJobs.pod,
     });
 
-    const polv = podOptions.find((item) => item.value === props.allJobs?.pol);
+    // const polv = podOptions.find((item) => item.value === props.allJobs?.pol);
     setPolValue({
-      label: polv,
-      value: polv,
+      label: props.allJobs?.pol,
+      value: props.allJobs?.pol,
     });
+
+    const consignee_name = consigneeOptions.find(
+      (item) => item.value === props.allJobs?.consignee_name
+    );
+    setConsigneeNameValue(consignee_name);
+
+    const client_name = clientOptions.find(
+      (item) => item.value === props.allJobs?.client_name
+    );
+    setClientNameValue(client_name);
   }, []);
 
   const typeOptions = [
@@ -411,19 +436,17 @@ const EditJob = (props) => {
               bayan_number: Yup.string().required("Bayan Number is Required"),
               branch: Yup.string().required("Branch is Required"),
               pod: Yup.string().required("POD is Required"),
-              poa: Yup.string().required("POA is Required"),
-              pol: Yup.string().required("POL is Required"),
+              poa: Yup.string().ensure().required("POA is Required"),
+              pol: Yup.string().ensure().required("POL is Required"),
               consignee_name: Yup.string()
-                .max(20, "Must be 20 characters or less")
-                .trim()
+                .ensure()
                 .required("Cosignee Name is Required"),
               shipper_name: Yup.string()
                 .max(20, "Must be 20 characters or less")
                 .trim()
                 .required("Shipper Name is Required"),
               client_name: Yup.string()
-                .max(20, "Must be 20 characters or less")
-                .trim()
+                .ensure()
                 .required("Client Name is Required"),
               remarks: Yup.string()
                 .max(400, "Must be 400 characters or less")
@@ -432,14 +455,18 @@ const EditJob = (props) => {
               por: Yup.string().required("Place Of Receipt is Required"),
               job_type: Yup.string().required("Job Type is Required"),
               type: Yup.string().required("Type is Required"),
-              scope_of_work: Yup.string().required("Scope of work is Required"),
-              job_status: Yup.string().required("Job Status is Required"),
+              scope_of_work: Yup.string()
+                .ensure()
+                .required("Scope of work is Required"),
+              job_status: Yup.string()
+                .ensure()
+                .required("Job Status is Required"),
               // organization_type: Yup.string().required(
               //   "Organization Type is Required"
               // ),
-              container_type: Yup.string().required(
-                "Container Type is Required"
-              ),
+              container_type: Yup.string()
+                .ensure()
+                .required("Container Type is Required"),
             })}
             onSubmit={(values, { reset }) => {
               const company = JSON.parse(
@@ -503,10 +530,16 @@ const EditJob = (props) => {
                         Consignee Name
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="consignee_name"
-                        style={{ background: "#EDEDED" }}
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        value={consigneeNameValue}
+                        options={consigneeOptions}
+                        onChange={(data) => {
+                          setConsigneeNameValue(data);
+                          setFieldValue("consignee_name", data.value);
+                        }}
                       />
 
                       <ErrorMessage
@@ -602,10 +635,16 @@ const EditJob = (props) => {
                         Client Name
                         <span className="text-danger">*</span>
                       </Label>
-                      <Field
-                        className="form-control"
-                        name="client_name"
-                        style={{ background: "#EDEDED" }}
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        value={clientNameValue}
+                        options={clientOptions}
+                        onChange={(data) => {
+                          setClientNameValue(data);
+                          setFieldValue("client_name", data.value);
+                        }}
                       />
 
                       <ErrorMessage
@@ -796,7 +835,7 @@ const EditJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="eta" className="form-label">
                         ETA
-                        <span className="text-danger">*</span>
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <DatePicker
                         selected={values["eta"]}
@@ -824,7 +863,7 @@ const EditJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="etd" className="form-label">
                         ETD
-                        <span className="text-danger">*</span>
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <DatePicker
                         selected={values["etd"]}
@@ -895,7 +934,7 @@ const EditJob = (props) => {
                         }}
                       />
                       <ErrorMessage
-                        name="job_status"
+                        name="branch"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -907,7 +946,7 @@ const EditJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="organization_type" className="form-label">
                         Organization Type
-                        <span className="text-danger">*</span>
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
 
                       <Select
