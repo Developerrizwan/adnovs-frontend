@@ -10,13 +10,18 @@ import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label } from "reactstrap";
 
-const AddJobs = (props) => {
+const AddEnquiry = (props) => {
   const [jobType, setJobType] = useState("Enquiry");
   const [jobStatus, setJobStatus] = useState("");
+  const [loading, setLoading] = useState(false);
   const [eta, setEta] = useState(new Date());
   const [etd, setEtd] = useState(new Date());
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
+  const [selConsignee, setSelConsignee] = useState(null);
+  const [selClient, setSelClient] = useState(null);
+  const [consigneeOptions, setConsigneeOptions] = useState([]);
+  const [clientOptions, setClientOptions] = useState([]);
 
   const options = [
     // {
@@ -187,23 +192,73 @@ const AddJobs = (props) => {
       });
   };
 
-  const consigneeOptions = [
-    {
-      label: "Consignee",
-      value: "Consignee",
-    },
-  ];
+  const getOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
+      )
+      .then((response) => {
+        let data = response.data;
 
-  const clientOptions = [
-    {
-      label: "Client",
-      value: "Client",
-    },
-  ];
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setConsigneeOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  const getClientOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .then((response) => {
+        let data = response.data;
+
+        const ClientOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setClientOptions(ClientOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
     getPoaOptions();
     getPodOptions();
+    getOrganization();
+    getClientOrganization();
   }, []);
 
   const history = useHistory();
@@ -293,6 +348,8 @@ const AddJobs = (props) => {
                   values["company"] = company;
                   values["eta"] = eta;
                   values["etd"] = etd;
+                  values["client_name"] = selClient.value;
+                  values["consignee_name"] = selConsignee.value;
                   const url = "/api/master/job/";
                   apiAuth
                     .post(url, values)
@@ -369,8 +426,8 @@ const AddJobs = (props) => {
                             styles={customStyles}
                             options={consigneeOptions}
                             onChange={(data) => {
-                              // setJobType(data.value);
-                              setFieldValue("consignee_name", data.value);
+                              setSelConsignee(data);
+                              setFieldValue("consignee_name", data.label);
                             }}
                           />
 
@@ -479,7 +536,8 @@ const AddJobs = (props) => {
                             styles={customStyles}
                             options={clientOptions}
                             onChange={(data) => {
-                              setFieldValue("client_name", data.value);
+                              setSelClient(data);
+                              setFieldValue("client_name", data.label);
                             }}
                           />
                           <ErrorMessage
@@ -775,4 +833,4 @@ const AddJobs = (props) => {
   );
 };
 
-export default AddJobs;
+export default AddEnquiry;

@@ -22,7 +22,7 @@ const Sales = (props) => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [loading, setLoading] = useState(false);
   const [consigneeNameValue, setConsigneeNameValue] = useState(null);
-  const [clientNameValue, setClientNameValue] = useState("Client");
+  const [clientNameValue, setClientNameValue] = useState(null);
   const [state, setState] = useState({});
   const [generateInvoiceModal, setGenerateInvoiceModal] = useState(false);
   const [viewInvoice, setViewInvoice] = useState(false);
@@ -39,7 +39,10 @@ const Sales = (props) => {
   });
   const [searchValue, setSearchValue] = useState("");
 
-  const [branchValue, setBranchValue] = useState("JEDDHA");
+  const [branchValue, setBranchValue] = useState({
+    label: "JEDDAH",
+    value: "JEDDAH",
+  });
   const [Vendorvalue, setVendorvalue] = useState("TEMP");
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
@@ -70,6 +73,10 @@ const Sales = (props) => {
           };
         });
         setConsigneeOptions(ConsOpts);
+        const sel = ConsOpts.find(
+          (item) => item.value === props?.data?.consignee_name?.id
+        );
+        setConsigneeNameValue(sel);
         setLoading(false);
       })
       .catch((error) => {
@@ -99,6 +106,10 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
+        const sel = ClientOpts.find(
+          (item) => item.value === props.data?.client_name?.id
+        );
+        setClientNameValue(sel);
         setClientOptions(ClientOpts);
         setLoading(false);
       })
@@ -121,23 +132,47 @@ const Sales = (props) => {
       .get("api/master/poa/")
 
       .then((response) => {
-        let data = response.data.results;
-        setPoaOptions(data);
+        const data = response.data.results;
+        const opts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.name,
+          };
+        });
+        if (props.isEdit) {
+          const sel = opts.find((dd) => dd.label === props?.data.poa);
+          setPoaValue(sel);
+        }
+        setPoaOptions(opts);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
   useEffect(() => {
     getOrganization(searchValue);
     getClientOrganization(searchValue);
     getPoaOptions();
     getPodOptions();
     getAllCurrencyCodes();
-    setSelectedInvoice({
-      label: invoicesId,
-      value: invoicesId,
-    });
+    getJobs();
+    getPoaOptions();
+    getPodOptions();
+    if (props.isEdit) {
+      setBranchValue({
+        label: props.data?.consignee_name?.branch,
+        value: props.data?.consignee_name?.branch,
+      });
+      setPodValue({
+        label: props?.data?.pod,
+        value: props?.data?.pod,
+      });
+      setSelectedInvoice({
+        label: invoicesId,
+        value: invoicesId,
+      });
+    }
   }, []);
 
   const getPodOptions = () => {
@@ -146,7 +181,16 @@ const Sales = (props) => {
 
       .then((response) => {
         let data = response?.data?.results;
+        data = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.name,
+          };
+        });
         setPodOptions(data);
+        if (props.isEdit) {
+          const sel = data.find((dd) => dd.value === props.data?.pod);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -161,6 +205,12 @@ const Sales = (props) => {
         value: cur.currency,
       };
     });
+    if (props.isEdit) {
+      const sel = allCurrencies.find(
+        (dd) => dd.value === props.data.currency_sar
+      );
+      setSelCurrency(sel);
+    }
     setCurrencyOptions(allCurrencies);
   };
 
@@ -170,48 +220,6 @@ const Sales = (props) => {
       background: "#EDEDED",
     }),
   };
-
-  useEffect(() => {
-    getJobs();
-    if (props?.isEdit) {
-      // const selType = invoiceTypes.find(
-      //   (opt) => opt?.value === props.data?.invoice_type
-      // );
-      // setInvoiceType(selType);
-
-      const selJob = jobOptions.find(
-        (opt) => opt?.value === props.data?.job?.bl_number
-      );
-      setSelectedJob({
-        label: props.data?.job?.bl_number,
-        value: props.data?.job?.bl_number,
-      });
-      const consignee_name = consigneeOptions.find(
-        (item) => item.value === props?.data?.consignee_name?.name
-      );
-      setConsigneeNameValue({
-        label: props?.data?.consignee_name?.name,
-        value: props?.data?.consignee_name?.name,
-      });
-      const client_name = clientOptions.find(
-        (item) => item.value === props.data?.client_name
-      );
-      setClientNameValue({
-        label: props.data?.client_name?.name,
-        value: props.data?.client_name?.name,
-      });
-    }
-    setPoaValue({
-      label: props?.data?.poa,
-      value: props?.data?.poa,
-    });
-    setPodValue({
-      label: props?.data?.pod,
-      value: props?.data?.pod,
-    });
-    getPoaOptions();
-    getPodOptions();
-  }, []);
 
   const getJobs = (val) => {
     apiAuth
@@ -225,6 +233,12 @@ const Sales = (props) => {
           };
         });
         setJobOptions(opts);
+        if (props?.isEdit) {
+          const selJob = opts.find(
+            (opt) => opt?.value === props.data?.job?.bl_number
+          );
+          setSelectedJob(selJob);
+        }
       })
       .catch((err) => console.log(err));
   };
@@ -260,7 +274,9 @@ const Sales = (props) => {
                   currency_sar: props.isEdit ? props.data?.currency_sar : "",
                   bayan_number: props.isEdit ? props.data?.bayan_number : "",
                   shipper_name: props.isEdit ? props.data?.shipper_name : "",
-                  branch: props.isEdit ? props.data?.branch : "JEDDAH",
+                  branch: props.isEdit
+                    ? props.data?.consignee_name?.branch
+                    : "",
                   // vendor: props.isEdit ? props.data?.vendor : "TEMP",
                   ex_rate: props.isEdit ? props.data?.ex_rate : "",
                   pod: props.isEdit ? props.data?.pod : "",
@@ -306,6 +322,7 @@ const Sales = (props) => {
                   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values, reset) => {
+                  // console.log("vallll", values);
                   values["due_date"] = moment(dueDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
                   );
@@ -313,12 +330,14 @@ const Sales = (props) => {
                   values["ref_data"] = moment(refDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
                   );
-                  values["job"] = selectedJob.value;
+                  values["job"] = selectedJob?.value;
                   const company = JSON.parse(
                     localStorage.getItem("authUser")
                   )?.company_id;
                   values["company"] = company;
-                  values["invoice_type"] = selectedInvoice.value;
+                  values["invoice_type"] = selectedInvoice?.value;
+                  values["consignee_name"] = consigneeNameValue?.value;
+                  values["client_name"] = clientNameValue?.value;
 
                   props.isEdit
                     ? apiAuth
@@ -576,16 +595,13 @@ const Sales = (props) => {
                             <span className="text-danger">*</span>
                           </Label>
                           <Select
-                            name="type"
+                            value={branchValue}
                             placeholder={"Select"}
                             styles={customStyles}
                             options={branchOptions}
-                            defaultValue={{
-                              label: branchValue,
-                              value: branchValue,
-                            }}
                             onChange={(data) => {
-                              setFieldValue("branch", data.value);
+                              setBranchValue(data);
+                              setFieldValue("branch", data.label);
                             }}
                           />
                           <ErrorMessage
@@ -640,12 +656,7 @@ const Sales = (props) => {
                             // name="type"
                             placeholder={"Select"}
                             styles={customStyles}
-                            options={podOptions?.map((item) => {
-                              return {
-                                label: item.name,
-                                value: item.name,
-                              };
-                            })}
+                            options={podOptions}
                             value={podValue}
                             onChange={(data) => {
                               setPodValue(data);
@@ -682,7 +693,7 @@ const Sales = (props) => {
                             }}
                             onChange={(data) => {
                               setClientNameValue(data);
-                              setFieldValue("client_name", data.value);
+                              setFieldValue("client_name", data.label);
                             }}
                           />
                           <ErrorMessage
@@ -761,12 +772,7 @@ const Sales = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             value={poaValue}
-                            options={poaOptions?.map((item) => {
-                              return {
-                                label: item.name,
-                                value: item.name,
-                              };
-                            })}
+                            options={poaOptions}
                             onChange={(data) => {
                               setPoaValue(data);
                               setFieldValue("poa", data.value);

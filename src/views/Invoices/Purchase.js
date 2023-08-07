@@ -18,6 +18,8 @@ const Purchase = (props) => {
   const [loading, setLoading] = useState(false);
   const [date, setDate] = useState(new Date());
   const [invoiceType, setInvoiceType] = useState("Sales");
+  const [consigneeOptions, setConsigneeOptions] = useState([]);
+  const [clientOptions, setClientOptions] = useState([]);
   const invoiceTypes = [
     {
       label: "Sales",
@@ -41,8 +43,72 @@ const Purchase = (props) => {
     }),
   };
 
+  const getOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
+      )
+      .then((response) => {
+        let data = response.data;
+
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setConsigneeOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  const getClientOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .then((response) => {
+        let data = response.data;
+
+        const ClientOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setClientOptions(ClientOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     getJobs();
+    getOrganization();
+    getClientOrganization();
   }, []);
 
   const getJobs = () => {

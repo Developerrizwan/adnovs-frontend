@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import Select from "react-select";
+import Select, { useStateManager } from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
@@ -28,6 +28,9 @@ const EditEnquiry = (props) => {
   const [podOptions, setPodOptions] = useState([]);
   const [consigneeNameValue, setConsigneeNameValue] = useState(null);
   const [clientNameValue, setClientNameValue] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [consigneeOptions, setConsigneeOptions] = useState([]);
+  const [clientOptions, setClientOptions] = useState([]);
 
   const getPoaOptions = () => {
     apiAuth
@@ -60,21 +63,71 @@ const EditEnquiry = (props) => {
     getPodOptions();
   }, []);
 
-  const consigneeOptions = [
-    {
-      label: "Consignee",
-      value: "Consignee",
-    },
-  ];
+  const getOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
+      )
+      .then((response) => {
+        let data = response.data;
 
-  const clientOptions = [
-    {
-      label: "Client",
-      value: "Client",
-    },
-  ];
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setConsigneeOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  const getClientOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .then((response) => {
+        let data = response.data;
+
+        const ClientOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setClientOptions(ClientOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
+    getOrganization();
+    getClientOrganization();
     const scopeType = scopeofworkOptions.find(
       (item) => item.value === props.allJobs.scope_of_work
     );
@@ -318,6 +371,8 @@ const EditEnquiry = (props) => {
               const company = JSON.parse(
                 localStorage.getItem("authUser")
               )?.company_id;
+              values["client_name"] = clientNameValue.value;
+              values["consignee_name"] = consigneeNameValue.value;
               values["company"] = company;
               if (eta) values["eta"] = eta;
               if (etd) values["etd"] = etd;
@@ -377,7 +432,7 @@ const EditEnquiry = (props) => {
                         options={consigneeOptions}
                         onChange={(data) => {
                           setConsigneeNameValue(data);
-                          setFieldValue("consignee_name", data.value);
+                          setFieldValue("consignee_name", data.label);
                         }}
                       />
 
@@ -459,7 +514,7 @@ const EditEnquiry = (props) => {
                         options={clientOptions}
                         onChange={(data) => {
                           setClientNameValue(data);
-                          setFieldValue("client_name", data.value);
+                          setFieldValue("client_name", data.label);
                         }}
                       />
                       <ErrorMessage

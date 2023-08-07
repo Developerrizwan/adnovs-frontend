@@ -54,7 +54,6 @@ import Sales from "../views/Invoices/Sales";
 import ResetPassword from "../pages/AuthenticationInner/ResetPassword";
 import ResetSuccessful from "../pages/AuthenticationInner/ResetPassword/ResetSuccessful";
 import RegisterSuccessful from "../pages/AuthenticationInner/Register/RegisterSuccessful";
-import AddJobs from "../views/Jobs/AddJob";
 import AddUser from "../views/UserManagement/AddUser";
 import EditUser from "../views/UserManagement/EditUser";
 import TaxInvoice from "../views/TaxInvoice/TaxInvoice";
@@ -69,6 +68,7 @@ import CreateNewJob from "../views/Jobs/CreateNewJob";
 import Organization from "../views/Organization";
 import AddOrganization from "../views/Organization/AddOrganization";
 import Company from "../views/Company";
+import AddEnquiry from "../views/Jobs/AddEnquiry";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -76,7 +76,7 @@ const authProtectedRoutes = [
   { path: "/users", component: Users },
   { path: "/client", component: Client },
   { path: "/jobs", component: Jobs },
-  { path: "/jobs/add", component: AddJobs },
+  { path: "/jobs/add", component: AddEnquiry },
   { path: "/jobs/createjob", component: CreateNewJob },
   { path: "/organization", component: Organization },
   { path: "/company", component: Company },

@@ -31,6 +31,9 @@ const CreateJob = (props) => {
   const [consigneeNameValue, setConsigneeNameValue] = useState(null);
   const [clientNameValue, setClientNameValue] = useState(null);
   const [polValue, setPolValue] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [consigneeOptions, setConsigneeOptions] = useState([]);
+  const [clientOptions, setClientOptions] = useState([]);
 
   const options = [
     {
@@ -123,19 +126,67 @@ const CreateJob = (props) => {
     },
   ];
 
-  const consigneeOptions = [
-    {
-      label: "Consignee",
-      value: "Consignee",
-    },
-  ];
+  const getOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
+      )
+      .then((response) => {
+        let data = response.data;
 
-  const clientOptions = [
-    {
-      label: "Client",
-      value: "Client",
-    },
-  ];
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setConsigneeOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  const getClientOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .then((response) => {
+        let data = response.data;
+
+        const ClientOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setClientOptions(ClientOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
 
   const OrganizationTypeOptions = [
     {
@@ -208,6 +259,8 @@ const CreateJob = (props) => {
   useEffect(() => {
     getPoaOptions();
     getPodOptions();
+    getOrganization();
+    getClientOrganization();
   }, []);
 
   const scopeofworkOptions = [
@@ -474,6 +527,8 @@ const CreateJob = (props) => {
               values["company"] = company;
               values["eta"] = eta;
               values["etd"] = etd;
+              values["consignee_name"] = consigneeNameValue.value;
+              values["client_name"] = clientNameValue.value;
               values["organization_type"] = organization_type;
               const url = `/api/master/job/`;
               apiAuth

@@ -473,6 +473,8 @@ const EditJob = (props) => {
                 localStorage.getItem("authUser")
               )?.company_id;
               values["company"] = company;
+              values["client_name"] = clientNameValue.value;
+              values["consignee_name"] = consigneeNameValue.value;
 
               const url = `/api/master/job/${props.allJobs.id}/`;
               apiAuth
@@ -480,7 +482,7 @@ const EditJob = (props) => {
                 .then((response) => {
                   NotificationManager.success(
                     "",
-                    `Job Update Successfully`,
+                    `Job Updated Successfully`,
                     3000,
                     null,
                     null,
