@@ -30,7 +30,10 @@ const AddOrganization = (props) => {
   const [selCurrency, setSelCurrency] = useState(null);
   const [typeValue, setTypeValue] = useState(null);
   const [coaValue, setCoaValue] = useState(null);
-  const [gstValue, setGstValue] = useState(null);
+  const [gstValue, setGstValue] = useState({
+    value: false,
+    label: "No",
+  });
 
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [branchValue, setBranchValue] = useState("JEDDHA");
@@ -52,12 +55,12 @@ const AddOrganization = (props) => {
 
   const registeredOptions = [
     {
-      value: "TRUE",
-      label: "TRUE",
+      value: true,
+      label: "Yes",
     },
     {
-      value: "FALSE",
-      label: "FALSE",
+      value: false,
+      label: "No",
     },
   ];
 
@@ -128,8 +131,8 @@ const AddOrganization = (props) => {
       value: props?.organizationData?.coa?.id,
     });
     setGstValue({
-      label: props?.organizationData?.gstin_registeredm,
-      value: props?.organizationData?.gstin_registered,
+      label: props?.organizationData?.gstin_registered ? "Yes" : "No",
+      value: props?.organizationData?.gstin_registered ? true : false,
     });
   }, [props.isEdit]);
 
@@ -170,7 +173,9 @@ const AddOrganization = (props) => {
                   currency: props.isEdit
                     ? props.organizationData?.currency
                     : "",
-                  branch: props.isEdit ? props.organizationData?.branch : "",
+                  branch: props.isEdit
+                    ? props.organizationData?.branch
+                    : "JEDDHA",
                   payment_terms: props.isEdit
                     ? props.organizationData?.payment_terms
                     : "",
@@ -195,7 +200,7 @@ const AddOrganization = (props) => {
                     : "",
                   gstin_registered: props.isEdit
                     ? props.organizationData?.gstin_registered
-                    : "",
+                    : false,
                   gstin: props.isEdit ? props.organizationData?.gstin : "",
                   website: props.isEdit ? props.organizationData?.website : "",
                   coa: props.isEdit ? props.organizationData?.coa : "",
@@ -223,9 +228,7 @@ const AddOrganization = (props) => {
                   currency: Yup.string()
                     .ensure()
                     .required("Currency is Required"),
-                  branch: Yup.string()
-                    .ensure()
-                    .required("Currency is Required"),
+                  branch: Yup.string().ensure().required("Branch is Required"),
                   payment_terms: Yup.string().required(
                     "Payment Terms is Required"
                   ),
@@ -247,10 +250,10 @@ const AddOrganization = (props) => {
                   website: Yup.string()
                     .url("Invalid URL format")
                     .required("Website URL is required"),
-                  language_address: Yup.string()
-                    .max(400, "Must be 400 characters or less")
-                    .trim()
-                    .required("Language Address is Required"),
+                  // language_address: Yup.string()
+                  //   .max(400, "Must be 400 characters or less")
+                  //   .trim()
+                  //   .required("Language Address is Required"),
                   coa: Yup.string().ensure().required("COA is Required"),
                   // zip_code: Yup.string().required("Zip Code is Required"),
                   // address: Yup.string()
@@ -511,7 +514,7 @@ const AddOrganization = (props) => {
                           />
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={4} xs={12} style={{ zIndex: 900 }}>
                         <div className="mb-3">
                           <Label htmlFor="type" className="form-label">
                             Type
@@ -676,7 +679,7 @@ const AddOrganization = (props) => {
                       </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="website" className="form-label">
+                          <Label htmlFor="zip_code" className="form-label">
                             Zip Code
                             {/* <span className="text-danger">*</span> */}
                           </Label>
@@ -726,7 +729,7 @@ const AddOrganization = (props) => {
                             <span className="text-danger">*</span>
                           </Label>
                           <Select
-                            name="type"
+                            name="coa"
                             placeholder={"Select"}
                             options={coaOptions?.map((item) => {
                               return {

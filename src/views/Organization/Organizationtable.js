@@ -67,7 +67,7 @@ const OrganizationTable = (props) => {
       name: <span className="font-weight-bold "> Gstin Registered</span>,
       selector: (row) => row.gstin_registered,
       cell: (value) => {
-        return <div>{value.gstin_registered}</div>;
+        return <div>{value.gstin_registered ? "Yes" : "No"}</div>;
       },
       sortable: true,
     },
