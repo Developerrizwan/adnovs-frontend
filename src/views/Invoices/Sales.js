@@ -939,39 +939,30 @@ const Sales = (props) => {
                           {props.isEdit ? "Update" : "Save"}
                         </span>
                       </Button>{" "}
-                      {props.isEdit ? (
-                        <></>
-                      ) : (
-                        <>
-                          {" "}
-                          <div>
-                            {state.invoice_id ? (
-                              <Button
-                                className="btn btn-info float-right me-3"
-                                onClick={() => setGenerateInvoiceModal(true)}
-                              >
-                                {" "}
-                                Generate Invoice
-                              </Button>
-                            ) : (
-                              <></>
-                            )}
+                      <div>
+                        {state.invoice_id || props?.isEdit ? (
+                          <Button
+                            className="btn btn-info float-right me-3"
+                            onClick={() => setGenerateInvoiceModal(true)}
+                          >
+                            {" "}
+                            Generate Invoice
+                          </Button>
+                        ) : (
+                          <></>
+                        )}
 
-                            {state.invoice_generated ? (
-                              <Link
-                                to={`/tax-invoice-second/${state.invoice_id}`}
-                              >
-                                <Button className="btn btn-warning float-right">
-                                  {" "}
-                                  View Invoice
-                                </Button>
-                              </Link>
-                            ) : (
-                              <></>
-                            )}
-                          </div>
-                        </>
-                      )}
+                        {state.invoice_generated || props?.isEdit ? (
+                          <Link to={`/tax-invoice-second/${state.invoice_id}`}>
+                            <Button className="btn btn-warning float-right">
+                              {" "}
+                              View Invoice
+                            </Button>
+                          </Link>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
                     </div>
                   </Form>
                 )}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import DataTable from "react-data-table-component";
 import { Button, Card, Label, Input } from "reactstrap";
 import DatePicker from "react-datepicker";
@@ -13,6 +13,8 @@ const GenerateInvoice = (props) => {
   const [job_no, setJob_no] = useState("");
   const [invoiceData, setInvoiceData] = useState([]);
   const [jobOptions, setJobOptions] = useState([]);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [filteredInvoices, setFilteredInvoices] = useState([]);
   const [state, setState] = useState({ checkedSalesBox: [] });
 
   const job_noStyles = {
@@ -48,9 +50,15 @@ const GenerateInvoice = (props) => {
     }
   };
 
-  const getInvoiceData = () => {
+  const getInvoiceData = (job_no, startDate, endDate) => {
     apiAuth
-      .get(`/api/get-costentry/?`)
+      .get(
+        `/api/get-costentry/?is_included=false&job_id=${
+          job_no || ""
+        }&start_date=${
+          startDate ? moment(startDate).toISOString() : ""
+        }&end_date=${endDate ? moment(endDate).toISOString() : ""}`
+      )
       .then((response) => {
         let data = response.data;
         setInvoiceData(data);
@@ -110,7 +118,14 @@ const GenerateInvoice = (props) => {
       );
     }
   };
+  const filterData = (job) => {
+    const data = invoiceData.filter(
+      (item) => item?.job_no?.job_number === job.label
+    );
+    setFilteredInvoices(data);
 
+    console.log("sss", invoiceData);
+  };
   return (
     <>
       <div
@@ -130,6 +145,9 @@ const GenerateInvoice = (props) => {
             options={jobOptions}
             onChange={(data) => {
               setJob_no(data.value);
+              // console.log("dddd", data);
+              setSelectedJob(data);
+              getInvoiceData(data.value, startDate, endDate);
             }}
           />
         </div>
@@ -156,6 +174,7 @@ const GenerateInvoice = (props) => {
             selected={endDate}
             onChange={(date) => {
               setEndDate(date);
+              getInvoiceData(job_no.value, startDate, date);
             }}
             showTimeSelect
             timeFormat="HH:mm"

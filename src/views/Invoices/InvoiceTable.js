@@ -106,7 +106,7 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
       selector: (row) => row.client_name?.name,
       cell: (value) => {
-        return <div>{value.job?.client_name?.name}</div>;
+        return <div>{value?.client_name?.name}</div>;
       },
       sortable: true,
     },
@@ -285,7 +285,7 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
       selector: (row) => row.client_name?.name,
       cell: (value) => {
-        return <div>{value.job?.client_name?.name}</div>;
+        return <div>{value?.client_name?.name}</div>;
       },
       sortable: true,
     },
