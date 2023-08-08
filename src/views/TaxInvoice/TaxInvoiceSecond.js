@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import { Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "reactstrap";
@@ -11,10 +12,69 @@ import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
 import { Buffer } from "buffer";
 import numberToWords from "number-to-words";
+import translate from "translate";
+
+async function translateData(data) {
+  const translatedObject = {};
+
+  // Convert Promise properties to resolved values
+  for (const key in data) {
+    if (data.hasOwnProperty(key)) {
+      if (data[key] instanceof Promise) {
+        try {
+          const translation = await data[key];
+          console.log("s1", translation);
+          translatedObject[key] = translation.text;
+        } catch (error) {
+          console.error(`Translation error for ${key}:`, error);
+        }
+      } else {
+        translatedObject[key] = data[key];
+      }
+    }
+  }
+  // setTranslatedData(translatedObject);
+}
+
+async function translateObject(object, targetLanguage) {
+  const translatedObject = {};
+
+  for (const key in object) {
+    if (object.hasOwnProperty(key)) {
+      const value = object[key];
+      if (typeof value === "string") {
+        translatedObject[key] = translate(value, {
+          to: targetLanguage,
+        });
+      } else if (typeof value === "object") {
+        if (Array.isArray(value)) {
+          translatedObject[key] = Promise.all(
+            value.map((item) =>
+              typeof item === "string"
+                ? translate(item, { to: targetLanguage })
+                : translateObject(item, targetLanguage)
+            )
+          );
+          const res = await translatedObject;
+        } else {
+          translatedObject[key] = translateObject(value, targetLanguage);
+        }
+      } else {
+        translatedObject[key] = value;
+      }
+    }
+  }
+  return translatedObject;
+}
 
 const TaxInvoiceSecond = (props) => {
   const [state, setState] = useState({ costs: [] });
+  const [objData, setObjData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [translatedObject, setTranslatedObject] = useState({});
+  const targetLanguage = "ar"; // Language code for Arabic
 
   async function exportProjectToPdf() {
     setLoading(true);
@@ -64,6 +124,19 @@ const TaxInvoiceSecond = (props) => {
   }
 
   useEffect(() => {
+    function translateOnMount() {
+      const translated = translateObject(state, targetLanguage);
+      setIsLoading(true);
+      console.log("translated", translated);
+
+      translateData(translated);
+
+      setTranslatedObject(translated);
+    }
+    translateOnMount();
+  }, []);
+
+  useEffect(() => {
     let invoiceid = Number(props.match.params.invoiceId);
     getInvoice(invoiceid);
   }, []);
@@ -75,6 +148,7 @@ const TaxInvoiceSecond = (props) => {
         let data = response.data;
         setState({ ...state, invoice: data });
         getCosts(data.id);
+        setObjData(data);
       })
       .catch((err) => {
         console.log(err);
@@ -175,271 +249,278 @@ const TaxInvoiceSecond = (props) => {
   };
   return (
     <>
-      <div style={{ padding: "25px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "end",
-            alignItems: "center",
-          }}
-        >
-          <Button
-            color="info"
-            className="float-right"
-            onClick={exportProjectToPdf}
-          >
-            {loading ? "Downloding..." : "Download"}
-          </Button>
-        </div>
-        <div className="card reportdownproject" style={{ padding: "20px" }}>
-          <div className="row">
-            <div className="col-lg-4">
-              <h3 style={{ color: "#000" }}>ADNOVS SHIPPING & LOGISTICS</h3>
-              <p>Al Boughdadia</p>
-              <p>Jeddah, Saudi Arabia - 22234</p>
-              <p style={{ fontWeight: 600 }}>
-                VAT NO : {state?.invoice?.client_name?.vat_trn_number}
-              </p>
-              {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
-            </div>
-            <div className="col-lg-4 mb-4 d-flex">
-              <img
-                src={shipLogo}
-                alt=""
-                width={300}
-                style={{ margin: "auto" }}
-              />
-            </div>
-            <div className="col-lg-4 d-flex flex-column align-items-end">
-              <h3 style={{ color: "#000" }}>ADNOVS SHIPPING & LOGISTICS</h3>
-              <p>Al Boughdadia</p>
-              <p>Jeddah, Saudi Arabia - 22234</p>
-              <p style={{ fontWeight: 600 }}>
-                VAT NO : {state?.invoice?.client_name?.vat_trn_number}
-              </p>
-              {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
-            </div>
-          </div>
-          <hr style={{ border: "1px solid #000" }} />
-          <div className="row">
-            <div className="col-lg-4">
-              <h3 style={{ color: "#3cb043" }}>TAX INVOICE</h3>
-              <h6>To :</h6>
-              <h5>{state?.invoice?.client_name?.name}</h5>
-              <p>{state?.invoice?.client_name?.address}</p>
-              <p>{state?.invoice?.client_name?.city},</p>
-              <p>{state?.invoice?.client_name?.country}</p>
-            </div>
-            <div className="col-lg-4">
-              <p style={{ color: "#3cb043" }}>
-                Invoice No : {state?.invoice?.id}
-              </p>
-              <p>
-                Due Date :{" "}
-                {moment(state.invoice?.due_date).format("MM/DD/YYYY")}
-              </p>
-              {/* <p>Delivery Date : </p> */}
-              <p>Job No : {state.invoice?.job?.job_number} </p>
-              <p>Consignee: {state.invoice?.job?.consignee_name}</p>
-              <p>Client Re/PO No : {state.invoice?.job?.client_name}</p>
-              <p>POL: {state.invoice?.job?.pol}</p>
-            </div>
-            <div className="col-lg-4">
-              <p>
-                Invoice Date :{" "}
-                {moment(state.invoice?.created_at).format("MM/DD/YYYY")}
-              </p>
-              {/* <p>BL/AWB :</p> */}
-              <p>Bayan No : {state.invoice?.job?.bayan_number}</p>
-              <p>Activity : {state.invoice?.job?.por}</p>
-            </div>
-          </div>
-
-          {/* <hr style={{ border: "1px solid #000" }} /> */}
-
-          <div style={{ overflowX: "auto" }}>
-            <table className="htmlTable mt-2 w-100">
-              <tbody>
-                <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
-                  <th
-                    className="border-0"
-                    style={{
-                      padding: "10px 0px",
-                    }}
-                  >
-                    #
-                  </th>
-                  <th className="border-0">Description</th>
-                  <th className="border-0">Currency</th>
-                  {/* <th className="border-0">Quantity</th>
-                  <th className="border-0">Rate</th> */}
-                  <th className="border-0">Amount</th>
-                  <th className="border-0">VAT%</th>
-                  <th className="border-0">VAT</th>
-                  <th className="border-0">Total</th>
-                </tr>
-                {state.costs?.map((cost, index) => {
-                  return (
-                    <>
-                      <tr
-                        style={{
-                          borderBottom: "1px solid #d3d3d3",
-                        }}
-                        key={index}
-                      >
-                        <td
-                          className="border-0"
-                          style={{
-                            padding: "10px 0px",
-                          }}
-                        >
-                          {index + 1}
-                        </td>
-                        <td className="border-0">{cost.charge?.name}</td>
-                        <td className="border-0">{cost.currency}</td>
-                        {/* <td className="border-0">1</td>
-                        <td className="border-0">1,161.50</td> */}
-                        <td className="border-0">
-                          {Number(cost.amount)?.toLocaleString("en-US", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </td>
-                        <td className="border-0">{cost.tax_group_code}</td>
-                        <td className="border-0">
-                          {Number(cost.vat_amount)?.toLocaleString("en-US", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </td>
-                        <td className="border-0">
-                          {Number(cost.total_amount)?.toLocaleString("en-US", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
-                        </td>
-                      </tr>
-                    </>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          {/* <hr className="mt-5" style={{ border: "1px solid #000" }} /> */}
-
+      {!isLoading ? (
+        "loading"
+      ) : (
+        <div style={{ padding: "25px" }}>
           <div
-            className="card mt-4"
-            style={{ border: "1px solid #000", padding: "20px 10px" }}
+            style={{
+              display: "flex",
+              justifyContent: "end",
+              alignItems: "center",
+            }}
           >
+            <Button
+              color="info"
+              className="float-right"
+              onClick={exportProjectToPdf}
+            >
+              {loading ? "Downloding..." : "Download"}
+            </Button>
+          </div>
+          <div className="card reportdownproject" style={{ padding: "20px" }}>
             <div className="row">
-              <div className="col-lg-2 col-xs-12 d-flex justify-content-center align-items-center">
-                <span className="p-2" style={{ display: "contents" }}>
-                  <QRCode size={250} value={String(state.qrcodeString)} />
-                </span>
+              <div className="col-lg-4">
+                <h3 style={{ color: "#000" }}>ADNOVS SHIPPING & LOGISTICS</h3>
+                <p>Al Boughdadia</p>
+                <p>Jeddah, Saudi Arabia - 22234</p>
+                <p style={{ fontWeight: 600 }}>
+                  VAT NO : {state?.invoice?.client_name?.vat_trn_number}
+                </p>
+                {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
               </div>
-              <div className="col-lg-10 col-xs-12">
-                <div className="row">
-                  <div
-                    className="col-lg-8 col-md-6"
-                    style={{ fontSize: "16px" }}
-                  >
-                    <p>Total excl VAT</p>
-                    <p>Value Added Tax</p>
-                    <p>Total With VAT</p>
-                  </div>
-                  <div
-                    className="col-lg-4 col-md-6"
-                    style={{ fontWeight: 900, fontSize: "18px" }}
-                  >
-                    <p>
-                      {Number(state.exd_vat_total_amount)?.toLocaleString(
-                        "en-US",
-                        {
+              <div className="col-lg-4 mb-4 d-flex">
+                <img
+                  src={shipLogo}
+                  alt=""
+                  width={300}
+                  style={{ margin: "auto" }}
+                />
+              </div>
+              <div className="col-lg-4 d-flex flex-column align-items-end">
+                <h3 style={{ color: "#000" }}>ADNOVS SHIPPING & LOGISTICS</h3>
+                <p>Al Boughdadia</p>
+                <p>Jeddah, Saudi Arabia - 22234</p>
+                <p style={{ fontWeight: 600 }}>
+                  VAT NO : {state?.invoice?.client_name?.vat_trn_number}
+                </p>
+                {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
+              </div>
+            </div>
+            <hr style={{ border: "1px solid #000" }} />
+            <div className="row">
+              <div className="col-lg-4">
+                <h3 style={{ color: "#3cb043" }}>TAX INVOICE</h3>
+                <h6>To :</h6>
+                <h5>{translatedObject && translatedObject?.country}</h5>
+                <p>{state?.invoice?.client_name?.address}</p>
+                <p>{state?.invoice?.client_name?.city},</p>
+                <p>{state?.invoice?.client_name?.country}</p>
+              </div>
+              <div className="col-lg-4">
+                <p style={{ color: "#3cb043" }}>
+                  Invoice No : {state?.invoice?.id}
+                </p>
+                <p>
+                  Due Date :{" "}
+                  {moment(state.invoice?.due_date).format("MM/DD/YYYY")}
+                </p>
+                {/* <p>Delivery Date : </p> */}
+                <p>Job No : {state.invoice?.job?.job_number}</p>
+                <p>Consignee: {state?.consignee_name}</p>
+                <p>Client Re/PO No : {state.invoice?.job?.client_name}</p>
+                <p>POL: {JSON.stringify(translatedObject.invoice?.job?.pol)}</p>
+              </div>
+              <div className="col-lg-4">
+                <p>
+                  Invoice Date :{" "}
+                  {moment(state.invoice?.created_at).format("MM/DD/YYYY")}
+                </p>
+                {/* <p>BL/AWB :</p> */}
+                <p>Bayan No : {state.invoice?.job?.bayan_number}</p>
+                <p>Activity : {state.invoice?.job?.por}</p>
+              </div>
+            </div>
+
+            {/* <hr style={{ border: "1px solid #000" }} /> */}
+
+            <div style={{ overflowX: "auto" }}>
+              <table className="htmlTable mt-2 w-100">
+                <tbody>
+                  <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
+                    <th
+                      className="border-0"
+                      style={{
+                        padding: "10px 0px",
+                      }}
+                    >
+                      #
+                    </th>
+                    <th className="border-0">Description</th>
+                    <th className="border-0">Currency</th>
+                    {/* <th className="border-0">Quantity</th>
+                <th className="border-0">Rate</th> */}
+                    <th className="border-0">Amount</th>
+                    <th className="border-0">VAT%</th>
+                    <th className="border-0">VAT</th>
+                    <th className="border-0">Total</th>
+                  </tr>
+                  {state.costs?.map((cost, index) => {
+                    return (
+                      <>
+                        <tr
+                          style={{
+                            borderBottom: "1px solid #d3d3d3",
+                          }}
+                          key={index}
+                        >
+                          <td
+                            className="border-0"
+                            style={{
+                              padding: "10px 0px",
+                            }}
+                          >
+                            {index + 1}
+                          </td>
+                          <td className="border-0">{cost.charge?.name}</td>
+                          <td className="border-0">{cost.currency}</td>
+                          {/* <td className="border-0">1</td>
+                      <td className="border-0">1,161.50</td> */}
+                          <td className="border-0">
+                            {Number(cost.amount)?.toLocaleString("en-US", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </td>
+                          <td className="border-0">{cost.tax_group_code}</td>
+                          <td className="border-0">
+                            {Number(cost.vat_amount)?.toLocaleString("en-US", {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}
+                          </td>
+                          <td className="border-0">
+                            {Number(cost.total_amount)?.toLocaleString(
+                              "en-US",
+                              {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              }
+                            )}
+                          </td>
+                        </tr>
+                      </>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* <hr className="mt-5" style={{ border: "1px solid #000" }} /> */}
+
+            <div
+              className="card mt-4"
+              style={{ border: "1px solid #000", padding: "20px 10px" }}
+            >
+              <div className="row">
+                <div className="col-lg-2 col-xs-12 d-flex justify-content-center align-items-center">
+                  <span className="p-2" style={{ display: "contents" }}>
+                    <QRCode size={250} value={String(state.qrcodeString)} />
+                  </span>
+                </div>
+                <div className="col-lg-10 col-xs-12">
+                  <div className="row">
+                    <div
+                      className="col-lg-8 col-md-6"
+                      style={{ fontSize: "16px" }}
+                    >
+                      <p>Total excl VAT</p>
+                      <p>Value Added Tax</p>
+                      <p>Total With VAT</p>
+                    </div>
+                    <div
+                      className="col-lg-4 col-md-6"
+                      style={{ fontWeight: 900, fontSize: "18px" }}
+                    >
+                      <p>
+                        {Number(state.exd_vat_total_amount)?.toLocaleString(
+                          "en-US",
+                          {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          }
+                        )}
+                      </p>
+                      <p>
+                        {Number(state.vat_amount)?.toLocaleString("en-US", {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
-                        }
-                      )}
-                    </p>
-                    <p>
-                      {Number(state.vat_amount)?.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </p>
-                    <p style={{ color: "#D0312D" }}>
-                      <span style={{ fontSize: "12px" }}>
-                        {state.invoice?.currency_sar}{" "}
-                      </span>
-                      {Number(state.total_amount)?.toLocaleString("en-US", {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                      })}
-                    </p>
+                        })}
+                      </p>
+                      <p style={{ color: "#D0312D" }}>
+                        <span style={{ fontSize: "12px" }}>
+                          {state.invoice?.currency_sar}{" "}
+                        </span>
+                        {Number(state.total_amount)?.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </p>
+                    </div>
                   </div>
+                  <hr style={{ border: "1px solid #000" }} />
+                  <div className="row">
+                    <div className="col-lg-7">
+                      <h4>
+                        {state.invoice?.currency_sar} {state.word_amount}
+                      </h4>
+                    </div>
+                    <div className="col-lg-5">
+                      <p></p>
+                    </div>
+                  </div>
+                  <hr style={{ border: "1px solid #000" }} />
                 </div>
-                <hr style={{ border: "1px solid #000" }} />
-                <div className="row">
-                  <div className="col-lg-7">
-                    <h4>
-                      {state.invoice?.currency_sar} {state.word_amount}
-                    </h4>
-                  </div>
-                  <div className="col-lg-5">
-                    <p></p>
-                  </div>
-                </div>
-                <hr style={{ border: "1px solid #000" }} />
               </div>
             </div>
-          </div>
 
-          <div className="row mt-2">
-            <div className="col-lg-9 col-xs-12">
-              <h5 style={{ color: "#3cb043" }}>Payment Method</h5>
-              <h6 className="mt-3 mb-4" style={{ color: "#3d78e3" }}>
-                Account Details:
-              </h6>
-
-              <p>Account Name : {state?.invoice?.company?.account_name}</p>
-              <p>Bank Name : {state?.invoice?.company?.bank_name}</p>
-              <p>Account No : {state?.invoice?.company?.account_number}</p>
-              <p>IBAN code : {state?.invoice?.company?.iban_code}</p>
-              <p>Swift Code : {state?.invoice?.company?.swift_code}</p>
-            </div>
-            <div className="col-lg-3 col-xs-12"></div>
-          </div>
-
-          <hr className="mt-5" style={{ border: "1px solid #000" }} />
-          <div className="mt-2">
-            <div className="row">
+            <div className="row mt-2">
               <div className="col-lg-9 col-xs-12">
-                <p>
-                  This is a computer generated invoice doesn't require signature
-                  or stamp
-                </p>
-                <p>
-                  Any discrepancy must be notified within 7 days from the date
-                  of invoice. Otherwise it shall be considered as confirmation
-                  of correctness
-                </p>
-                {/* <p>
-                  <span style={{ fontWeight: 700 }}>Print Date </span>05-07-2023
-                  11:00 am
-                </p> */}
+                <h5 style={{ color: "#3cb043" }}>Payment Method</h5>
+                <h6 className="mt-3 mb-4" style={{ color: "#3d78e3" }}>
+                  Account Details:
+                </h6>
+
+                <p>Account Name : {state?.invoice?.company?.account_name}</p>
+                <p>Bank Name : {state?.invoice?.company?.bank_name}</p>
+                <p>Account No : {state?.invoice?.company?.account_number}</p>
+                <p>IBAN code : {state?.invoice?.company?.iban_code}</p>
+                <p>Swift Code : {state?.invoice?.company?.swift_code}</p>
               </div>
-              <div className="col-lg-1 col-xs-12">
-                <p>Email:</p>
-                {/* <p>Phone:</p> */}
-              </div>
-              <div className="col-lg-2 col-xs-12">
-                <p>info@adnovs.com</p>
-                {/* <p>9999999999</p> */}
+              <div className="col-lg-3 col-xs-12"></div>
+            </div>
+
+            <hr className="mt-5" style={{ border: "1px solid #000" }} />
+            <div className="mt-2">
+              <div className="row">
+                <div className="col-lg-9 col-xs-12">
+                  <p>
+                    This is a computer generated invoice doesn't require
+                    signature or stamp
+                  </p>
+                  <p>
+                    Any discrepancy must be notified within 7 days from the date
+                    of invoice. Otherwise it shall be considered as confirmation
+                    of correctness
+                  </p>
+                  {/* <p>
+                <span style={{ fontWeight: 700 }}>Print Date </span>05-07-2023
+                11:00 am
+              </p> */}
+                </div>
+                <div className="col-lg-1 col-xs-12">
+                  <p>Email:</p>
+                  {/* <p>Phone:</p> */}
+                </div>
+                <div className="col-lg-2 col-xs-12">
+                  <p>info@adnovs.com</p>
+                  {/* <p>9999999999</p> */}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
