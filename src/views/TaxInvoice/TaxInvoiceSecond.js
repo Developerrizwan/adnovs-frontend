@@ -334,7 +334,7 @@ const TaxInvoiceSecond = (props) => {
           >
             <div className="row">
               <div className="col-lg-2 col-xs-12 d-flex justify-content-center align-items-center">
-                <span className="p-2">
+                <span className="p-2" style={{ display: "contents" }}>
                   <QRCode size={250} value={String(state.qrcodeString)} />
                 </span>
               </div>

@@ -417,6 +417,7 @@ const Sales = (props) => {
                             <Label htmlFor="bl_number" className="pe-2 w-50">
                               {" "}
                               BL Number
+                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control"
@@ -544,6 +545,7 @@ const Sales = (props) => {
                               className="  w-50 pe-2"
                             >
                               Bayan Number
+                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control"
@@ -569,6 +571,7 @@ const Sales = (props) => {
                               className=" w-50 p e-2"
                             >
                               Shipper Name
+                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control "
@@ -618,6 +621,7 @@ const Sales = (props) => {
                           <div>
                             <Label htmlFor="ex_rate" className="pe-2 w-50">
                               Ex. Rate
+                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control "
@@ -709,6 +713,7 @@ const Sales = (props) => {
                           <div>
                             <Label htmlFor="fc_amount" className="pe-2 w-50">
                               FC Amount
+                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control"
@@ -742,6 +747,7 @@ const Sales = (props) => {
                             <Label htmlFor="amount_sar" className="pe-2 w-50">
                               {" "}
                               Amount
+                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control"
@@ -946,14 +952,25 @@ const Sales = (props) => {
                             onClick={() => setGenerateInvoiceModal(true)}
                           >
                             {" "}
-                            Generate Invoice
+                            Add Cost Entry
                           </Button>
                         ) : (
                           <></>
                         )}
 
-                        {state.invoice_generated || props?.isEdit ? (
+                        {state.invoice_generated ? (
                           <Link to={`/tax-invoice-second/${state.invoice_id}`}>
+                            <Button className="btn btn-warning float-right">
+                              {" "}
+                              View Invoice
+                            </Button>
+                          </Link>
+                        ) : (
+                          <></>
+                        )}
+
+                        {props?.isEdit ? (
+                          <Link to={`/tax-invoice-second/${props?.data?.id}`}>
                             <Button className="btn btn-warning float-right">
                               {" "}
                               View Invoice
