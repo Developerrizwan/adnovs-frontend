@@ -484,7 +484,10 @@ const TaxInvoiceSecond = (props) => {
                         >
                           {index + 1}
                         </td>
-                        <td className="border-0">{cost.charge?.name}</td>
+                        <td className="border-0">
+                          {cost.charge?.name} /{" "}
+                          <Translate text={cost.charge?.name} />
+                        </td>
                         <td className="border-0">{cost.currency}</td>
                         {/* <td className="border-0">1</td>
                       <td className="border-0">1,161.50</td> */}
