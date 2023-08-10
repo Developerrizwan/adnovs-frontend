@@ -85,7 +85,7 @@ const EditEnquiry = (props) => {
         console.log(error);
         NotificationManager.error(
           "",
-          `${error.response?.data?.Error || `Organization Get Error`}`,
+          `${error.response?.data?.Error || `Consignee Get Error`}`,
           3000,
           null,
           null,
@@ -115,7 +115,7 @@ const EditEnquiry = (props) => {
         console.log(error);
         NotificationManager.error(
           "",
-          `${error.response?.data?.Error || `Organization Get Error`}`,
+          `${error.response?.data?.Error || `Client Get Error`}`,
           3000,
           null,
           null,
@@ -430,9 +430,12 @@ const EditEnquiry = (props) => {
                         styles={customStyles}
                         value={consigneeNameValue}
                         options={consigneeOptions}
+                        onInputChange={(val) => {
+                          getOrganization(val);
+                        }}
                         onChange={(data) => {
                           setConsigneeNameValue(data);
-                          setFieldValue("consignee_name", data.label);
+                          setFieldValue("consignee_name", data.value);
                         }}
                       />
 
@@ -512,9 +515,12 @@ const EditEnquiry = (props) => {
                         styles={customStyles}
                         value={clientNameValue}
                         options={clientOptions}
+                        onInputChange={(val) => {
+                          getClientOrganization(val);
+                        }}
                         onChange={(data) => {
                           setClientNameValue(data);
-                          setFieldValue("client_name", data.label);
+                          setFieldValue("client_name", data.value);
                         }}
                       />
                       <ErrorMessage

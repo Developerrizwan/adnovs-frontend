@@ -148,7 +148,7 @@ const CreateJob = (props) => {
         console.log(error);
         NotificationManager.error(
           "",
-          `${error.response?.data?.Error || `Organization Get Error`}`,
+          `${error.response?.data?.Error || `Consignee Get Error`}`,
           3000,
           null,
           null,
@@ -178,7 +178,7 @@ const CreateJob = (props) => {
         console.log(error);
         NotificationManager.error(
           "",
-          `${error.response?.data?.Error || `Organization Get Error`}`,
+          `${error.response?.data?.Error || `Client  Get Error`}`,
           3000,
           null,
           null,
@@ -696,6 +696,9 @@ const CreateJob = (props) => {
                         styles={customStyles}
                         value={clientNameValue}
                         options={clientOptions}
+                        onInputChange={(val) => {
+                          getClientOrganization(val);
+                        }}
                         onChange={(data) => {
                           setClientNameValue(data);
                           setFieldValue("client_name", data.value);

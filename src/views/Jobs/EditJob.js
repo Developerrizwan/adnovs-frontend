@@ -23,6 +23,9 @@ const EditJob = (props) => {
   const [polValue, setPolValue] = useState(null);
   const [clientNameValue, setClientNameValue] = useState(null);
   const [consigneeNameValue, setConsigneeNameValue] = useState(null);
+  const [consigneeOptions, setConsigneeOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [clientOptions, setClientOptions] = useState([]);
 
   const options = [
     {
@@ -35,19 +38,6 @@ const EditJob = (props) => {
     // },
   ];
 
-  const consigneeOptions = [
-    {
-      label: "Consignee",
-      value: "Consignee",
-    },
-  ];
-
-  const clientOptions = [
-    {
-      label: "Client",
-      value: "Client",
-    },
-  ];
   const getPoaOptions = () => {
     apiAuth
       .get("api/master/poa/")
@@ -59,6 +49,68 @@ const EditJob = (props) => {
       })
       .catch((error) => {
         console.log(error);
+      });
+  };
+
+  const getOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
+      )
+      .then((response) => {
+        let data = response.data;
+
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setConsigneeOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Consignee Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  const getClientOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .then((response) => {
+        let data = response.data;
+
+        const ClientOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setClientOptions(ClientOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Client Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
       });
   };
 
@@ -79,6 +131,8 @@ const EditJob = (props) => {
   useEffect(() => {
     getPoaOptions();
     getPodOptions();
+    getOrganization();
+    getClientOrganization();
   }, []);
 
   const OrganizationTypeOptions = [
@@ -538,6 +592,9 @@ const EditJob = (props) => {
                         styles={customStyles}
                         value={consigneeNameValue}
                         options={consigneeOptions}
+                        onInputChange={(val) => {
+                          getOrganization(val);
+                        }}
                         onChange={(data) => {
                           setConsigneeNameValue(data);
                           setFieldValue("consignee_name", data.value);
@@ -643,6 +700,9 @@ const EditJob = (props) => {
                         styles={customStyles}
                         value={clientNameValue}
                         options={clientOptions}
+                        onInputChange={(val) => {
+                          getClientOrganization(val);
+                        }}
                         onChange={(data) => {
                           setClientNameValue(data);
                           setFieldValue("client_name", data.value);

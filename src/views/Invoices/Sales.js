@@ -73,17 +73,14 @@ const Sales = (props) => {
           };
         });
         setConsigneeOptions(ConsOpts);
-        const sel = ConsOpts.find(
-          (item) => item.value === props?.data?.consignee_name?.id
-        );
-        setConsigneeNameValue(sel);
+
         setLoading(false);
       })
       .catch((error) => {
         console.log(error);
         NotificationManager.error(
           "",
-          `${error.response?.data?.Error || `Organization Get Error`}`,
+          `${error.response?.data?.Error || `Consignee Get Error`}`,
           3000,
           null,
           null,
@@ -106,10 +103,7 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
-        const sel = ClientOpts.find(
-          (item) => item.value === props.data?.client_name?.id
-        );
-        setClientNameValue(sel);
+
         setClientOptions(ClientOpts);
         setLoading(false);
       })
@@ -117,7 +111,7 @@ const Sales = (props) => {
         console.log(error);
         NotificationManager.error(
           "",
-          `${error.response?.data?.Error || `Organization Get Error`}`,
+          `${error.response?.data?.Error || `Client Get Error`}`,
           3000,
           null,
           null,
@@ -172,6 +166,14 @@ const Sales = (props) => {
         label: invoicesId,
         value: invoicesId,
       });
+      const sel = consigneeOptions.find(
+        (item) => item.value === props?.data?.consignee_name?.id
+      );
+      setConsigneeNameValue(sel);
+      const clOptions = clientOptions.find(
+        (item) => item.value === props.data?.client_name?.id
+      );
+      setClientNameValue(clOptions);
     }
   }, []);
 
@@ -322,7 +324,6 @@ const Sales = (props) => {
                   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values, reset) => {
-                  // console.log("vallll", values);
                   values["due_date"] = moment(dueDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
                   );
@@ -336,8 +337,8 @@ const Sales = (props) => {
                   )?.company_id;
                   values["company"] = company;
                   values["invoice_type"] = selectedInvoice?.value;
-                  values["consignee_name"] = consigneeNameValue?.value;
-                  values["client_name"] = clientNameValue?.value;
+                  // values["consignee_name"] = consigneeNameValue?.value;
+                  // values["client_name"] = clientNameValue?.value;
 
                   props.isEdit
                     ? apiAuth
@@ -697,7 +698,7 @@ const Sales = (props) => {
                             }}
                             onChange={(data) => {
                               setClientNameValue(data);
-                              setFieldValue("client_name", data.label);
+                              setFieldValue("client_name", data.value);
                             }}
                           />
                           <ErrorMessage

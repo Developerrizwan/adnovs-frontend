@@ -18,8 +18,8 @@ const AddEnquiry = (props) => {
   const [etd, setEtd] = useState(new Date());
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
-  const [selConsignee, setSelConsignee] = useState(null);
-  const [selClient, setSelClient] = useState(null);
+  // const [selConsignee, setSelConsignee] = useState(null);
+  // const [selClient, setSelClient] = useState(null);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
 
@@ -214,7 +214,7 @@ const AddEnquiry = (props) => {
         console.log(error);
         NotificationManager.error(
           "",
-          `${error.response?.data?.Error || `Organization Get Error`}`,
+          `${error.response?.data?.Error || `Consignee Get Error`}`,
           3000,
           null,
           null,
@@ -244,7 +244,7 @@ const AddEnquiry = (props) => {
         console.log(error);
         NotificationManager.error(
           "",
-          `${error.response?.data?.Error || `Organization Get Error`}`,
+          `${error.response?.data?.Error || `Client Get Error`}`,
           3000,
           null,
           null,
@@ -348,8 +348,8 @@ const AddEnquiry = (props) => {
                   values["company"] = company;
                   values["eta"] = eta;
                   values["etd"] = etd;
-                  values["client_name"] = selClient.value;
-                  values["consignee_name"] = selConsignee.value;
+                  // values["client_name"] = selClient.value;
+                  // values["consignee_name"] = selConsignee.value;
                   const url = "/api/master/job/";
                   apiAuth
                     .post(url, values)
@@ -425,9 +425,12 @@ const AddEnquiry = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={consigneeOptions}
+                            onInputChange={(val) => {
+                              getOrganization(val);
+                            }}
                             onChange={(data) => {
-                              setSelConsignee(data);
-                              setFieldValue("consignee_name", data.label);
+                              // setSelConsignee(data);
+                              setFieldValue("consignee_name", data.value);
                             }}
                           />
 
@@ -535,9 +538,12 @@ const AddEnquiry = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={clientOptions}
+                            onInputChange={(val) => {
+                              getClientOrganization(val);
+                            }}
                             onChange={(data) => {
-                              setSelClient(data);
-                              setFieldValue("client_name", data.label);
+                              // setSelClient(data);
+                              setFieldValue("client_name", data.value);
                             }}
                           />
                           <ErrorMessage
