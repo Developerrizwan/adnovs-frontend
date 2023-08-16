@@ -183,6 +183,7 @@ const TaxInvoiceSecond = (props) => {
   };
   return (
     <>
+      {/* {console.log("eeeee", state.invoice)} */}
       <div style={{ padding: "25px" }}>
         <div
           style={{
@@ -238,10 +239,10 @@ const TaxInvoiceSecond = (props) => {
           <hr style={{ border: "1px solid #000" }} />
           <div className="row">
             <div className="col-lg-4">
-              <h3 style={{ color: "#3cb043" }}>
+              <h3>
                 <Translate text={"TAX INVOICE"} />
               </h3>
-              <h3 style={{ color: "#3cb043" }}>TAX INVOICE</h3>
+              <h3>TAX INVOICE</h3>
               <h6>
                 To / <Translate text={"To"} /> :
               </h6>
@@ -267,12 +268,12 @@ const TaxInvoiceSecond = (props) => {
                 <span>{state?.invoice?.client_name?.country}</span>
               </div>
             </div>
-            <div className="col-lg-4">
-              <p style={{ color: "#3cb043" }}>
+            <div className="col-lg-5">
+              <p>
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "230px",
                   }}
                 >
                   Invoice No
@@ -286,7 +287,7 @@ const TaxInvoiceSecond = (props) => {
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "230px",
                   }}
                 >
                   Due Date
@@ -302,7 +303,7 @@ const TaxInvoiceSecond = (props) => {
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "230px",
                   }}
                 >
                   Job No
@@ -317,14 +318,14 @@ const TaxInvoiceSecond = (props) => {
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "230px",
                   }}
                 >
                   Consignee
                   <Translate text="Consignee" />
                 </div>
                 <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state?.consignee_name}
+                  : {state.invoice?.consignee_name?.name}
                 </div>
               </p>
 
@@ -332,38 +333,37 @@ const TaxInvoiceSecond = (props) => {
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "230px",
                   }}
                 >
                   Client Re/PO No
                   <Translate text="Client Re/PO No" />
                 </div>
                 <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.client_name}
+                  : {state.invoice?.client_name?.name}
                 </div>
               </p>
-
+            </div>
+            <div className="col-lg-3 ml-2">
               <p>
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "200px",
                   }}
                 >
                   POL
                   <Translate text="POL" />
                 </div>
                 <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {JSON.stringify(translatedObject.invoice?.job?.pol)}
+                  : {state.invoice?.job?.pol}
                 </div>
               </p>
-            </div>
-            <div className="col-lg-4">
               <p>
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "200px",
                   }}
                 >
                   Invoice Date
@@ -379,7 +379,7 @@ const TaxInvoiceSecond = (props) => {
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "200px",
                   }}
                 >
                   Bayan No
@@ -394,7 +394,7 @@ const TaxInvoiceSecond = (props) => {
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "200px",
                   }}
                 >
                   Activity
@@ -640,12 +640,12 @@ const TaxInvoiceSecond = (props) => {
 
           <div className="row mt-2">
             <div className="col-lg-9 col-xs-12">
-              <h5 style={{ color: "#3cb043" }}>
+              <h5>
                 <Translate text={"Payment Method"} />
               </h5>
-              <h5 style={{ color: "#3cb043" }}>Payment Method</h5>
+              <h5>Payment Method</h5>
 
-              <h6 className="mt-3 mb-4" style={{ color: "#3d78e3" }}>
+              <h6 className="mt-3 mb-4">
                 Account Details
                 <span style={{ marginRight: "5px" }}>
                   <Translate text={"Account Details"} />

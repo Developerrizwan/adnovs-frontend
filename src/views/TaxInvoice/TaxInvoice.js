@@ -182,6 +182,7 @@ const TaxInvoice = (props) => {
 
   return (
     <>
+      {/* {console.log("eeeeeee", state.invoice)} */}
       <div
         style={{
           display: "flex",
@@ -385,14 +386,14 @@ const TaxInvoice = (props) => {
                 <td className="border-0" style={{ fontWeight: 600 }}>
                   Vessel / Flight <Translate text={"Vessel / Flight"} />
                 </td>
-                <td className="border-0">: CHENNAI EXPRESS/2320E</td>
+                <td className="border-0">: </td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
                   Voy / Flt <Translate text={"Voy / Flt"} />
                 </td>
-                <td className="border-0">: 2320E</td>
+                <td className="border-0">:</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
@@ -439,7 +440,7 @@ const TaxInvoice = (props) => {
                 <td className="border-0" style={{ fontWeight: 600 }}>
                   Master <Translate text={"Master"} />
                 </td>
-                <td className="border-0">: WHSHAFDH/04-MAY</td>
+                <td className="border-0">: </td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
@@ -710,9 +711,9 @@ const TaxInvoice = (props) => {
               </div>
             </p>
           </div>
-          <div className="col-lg-3 col-xs-12">
+          <div className="col-lg-3 col-xs-12 mt-4">
             <span className="p-2">
-              <QRCode size={250} value={String(state.qrcodeString)} />
+              <QRCode size={150} value={String(state.qrcodeString)} />
             </span>
           </div>
         </div>
