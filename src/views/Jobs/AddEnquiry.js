@@ -166,10 +166,9 @@ const AddEnquiry = (props) => {
     },
   ];
 
-  const getPoaOptions = () => {
+  const getPoaOptions = (val) => {
     apiAuth
-      .get("api/master/poa/")
-
+      .get(`/api/master/poa/?page=${1}&search=${val || ""}`)
       .then((response) => {
         let data = response.data.results;
         setPoaOptions(data);
@@ -179,10 +178,9 @@ const AddEnquiry = (props) => {
       });
   };
 
-  const getPodOptions = () => {
+  const getPodOptions = (val) => {
     apiAuth
-      .get("api/master/pod/")
-
+      .get(`/api/master/pod/?page=${1}&search=${val || ""}`)
       .then((response) => {
         let data = response.data.results;
         setPodOptions(data);
@@ -508,12 +506,10 @@ const AddEnquiry = (props) => {
                                 value: item.name,
                               };
                             })}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
+                            onInputChange={(val) => {
+                              getPodOptions(val);
+                            }}
                             onChange={(data) => {
-                              // setJobType(data.value);
                               setFieldValue("pod", data.value);
                             }}
                           />
@@ -574,12 +570,10 @@ const AddEnquiry = (props) => {
                                 value: item.name,
                               };
                             })}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
+                            onInputChange={(val) => {
+                              getPoaOptions(val);
+                            }}
                             onChange={(data) => {
-                              // setJobType(data.value);
                               setFieldValue("poa", data.value);
                             }}
                           />

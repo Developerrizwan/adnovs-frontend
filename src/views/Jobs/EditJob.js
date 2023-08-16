@@ -38,10 +38,9 @@ const EditJob = (props) => {
     // },
   ];
 
-  const getPoaOptions = () => {
+  const getPoaOptions = (val) => {
     apiAuth
-      .get("api/master/poa/")
-
+      .get(`/api/master/poa/?page=${1}&search=${val || ""}`)
       .then((response) => {
         let data = response.data.results;
         console.log("dswdwd", data);
@@ -114,10 +113,9 @@ const EditJob = (props) => {
       });
   };
 
-  const getPodOptions = () => {
+  const getPodOptions = (val) => {
     apiAuth
-      .get("api/master/pod/")
-
+      .get(`/api/master/pod/?page=${1}&search=${val || ""}`)
       .then((response) => {
         let data = response.data.results;
         setPodOptions(data);
@@ -673,6 +671,7 @@ const EditJob = (props) => {
                           };
                         })}
                         value={podValue}
+                        onInputChange={(val) => getPodOptions(val)}
                         onChange={(data) => {
                           setPodValue(data);
                           setFieldValue("pod", data.value);
@@ -738,6 +737,7 @@ const EditJob = (props) => {
                           };
                         })}
                         value={poaValue}
+                        onInputChange={(val) => getPoaOptions(val)}
                         onChange={(data) => {
                           setPoaValue(data);
                           setFieldValue("poa", data.value);

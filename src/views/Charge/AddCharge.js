@@ -111,7 +111,7 @@ const AddCharge = (props) => {
                   language_name: props.charge?.language_name || "",
                   description: props.charge?.description || "",
                   remarks: props.charge?.remarks || "",
-                  coa: props.charge?.coa || "",
+                  coa: props.charge?.coa?.id || "",
                   tax: props.charge?.tax || 0,
                 }}
                 validationSchema={Yup.object({

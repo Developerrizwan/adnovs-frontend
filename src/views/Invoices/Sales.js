@@ -121,10 +121,9 @@ const Sales = (props) => {
       });
   };
 
-  const getPoaOptions = () => {
+  const getPoaOptions = (val) => {
     apiAuth
-      .get("api/master/poa/")
-
+      .get(`/api/master/poa/?page=${1}&search=${val || ""}`)
       .then((response) => {
         const data = response.data.results;
         const opts = data.map((dd) => {
@@ -151,8 +150,7 @@ const Sales = (props) => {
     getPodOptions();
     getAllCurrencyCodes();
     getJobs();
-    getPoaOptions();
-    getPodOptions();
+
     if (props.isEdit) {
       setBranchValue({
         label: props.data?.consignee_name?.branch,
@@ -177,10 +175,9 @@ const Sales = (props) => {
     }
   }, []);
 
-  const getPodOptions = () => {
+  const getPodOptions = (val) => {
     apiAuth
-      .get("api/master/pod/")
-
+      .get(`/api/master/pod/?page=${1}&search=${val || ""}`)
       .then((response) => {
         let data = response?.data?.results;
         data = data.map((dd) => {
@@ -192,6 +189,7 @@ const Sales = (props) => {
         setPodOptions(data);
         if (props.isEdit) {
           const sel = data.find((dd) => dd.value === props.data?.pod);
+          setPodValue(sel);
         }
       })
       .catch((error) => {
@@ -663,9 +661,11 @@ const Sales = (props) => {
                             styles={customStyles}
                             options={podOptions}
                             value={podValue}
+                            onInputChange={(val) => {
+                              getPodOptions(val);
+                            }}
                             onChange={(data) => {
                               setPodValue(data);
-
                               setFieldValue("pod", data.value);
                             }}
                           />
@@ -780,6 +780,9 @@ const Sales = (props) => {
                             styles={customStyles}
                             value={poaValue}
                             options={poaOptions}
+                            onInputChange={(val) => {
+                              getPoaOptions(val);
+                            }}
                             onChange={(data) => {
                               setPoaValue(data);
                               setFieldValue("poa", data.value);

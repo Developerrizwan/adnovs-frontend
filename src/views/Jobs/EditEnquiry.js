@@ -32,10 +32,9 @@ const EditEnquiry = (props) => {
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
 
-  const getPoaOptions = () => {
+  const getPoaOptions = (val) => {
     apiAuth
-      .get("api/master/poa/")
-
+      .get(`/api/master/poa/?page=${1}&search=${val || ""}`)
       .then((response) => {
         let data = response.data.results;
         setPoaOptions(data);
@@ -45,10 +44,9 @@ const EditEnquiry = (props) => {
       });
   };
 
-  const getPodOptions = () => {
+  const getPodOptions = (val) => {
     apiAuth
-      .get("api/master/pod/")
-
+      .get(`/api/master/pod/?page=${1}&search=${val || ""}`)
       .then((response) => {
         let data = response.data.results;
         setPodOptions(data);
@@ -78,6 +76,10 @@ const EditEnquiry = (props) => {
             value: dd?.id,
           };
         });
+        const consignee_name = ConsOpts.find(
+          (item) => item.value === Number(props.allJobs?.consignee_name)
+        );
+        setConsigneeNameValue(consignee_name);
         setConsigneeOptions(ConsOpts);
         setLoading(false);
       })
@@ -108,6 +110,10 @@ const EditEnquiry = (props) => {
             value: dd?.id,
           };
         });
+        const client_name = ClientOpts.find(
+          (item) => item.value === Number(props.allJobs?.client_name)
+        );
+        setClientNameValue(client_name);
         setClientOptions(ClientOpts);
         setLoading(false);
       })
@@ -126,6 +132,7 @@ const EditEnquiry = (props) => {
   };
 
   useEffect(() => {
+    // console.log("sssssss", props.allJobs);
     getOrganization();
     getClientOrganization();
     const scopeType = scopeofworkOptions.find(
@@ -156,16 +163,6 @@ const EditEnquiry = (props) => {
       label: props.allJobs.pod,
       value: props.allJobs.pod,
     });
-
-    const consignee_name = consigneeOptions.find(
-      (item) => item.value === props.allJobs?.consignee_name
-    );
-    setConsigneeNameValue(consignee_name);
-
-    const client_name = clientOptions.find(
-      (item) => item.value === props.allJobs?.client_name
-    );
-    setClientNameValue(client_name);
   }, []);
 
   const typeOptions = [
@@ -488,6 +485,9 @@ const EditEnquiry = (props) => {
                           };
                         })}
                         value={podValue}
+                        onInputChange={(val) => {
+                          getPodOptions(val);
+                        }}
                         onChange={(data) => {
                           setPodValue(data);
                           setFieldValue("pod", data.value);
@@ -552,6 +552,9 @@ const EditEnquiry = (props) => {
                           };
                         })}
                         value={poaValue}
+                        onInputChange={(val) => {
+                          getPoaOptions(val);
+                        }}
                         onChange={(data) => {
                           setPoaValue(data);
                           setFieldValue("poa", data.value);

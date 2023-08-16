@@ -17,6 +17,8 @@ const CreateNewJob = (props) => {
   const [etd, setEtd] = useState(new Date());
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
+  const [selPoa, setSelPoa] = useState(null);
+  const [selPod, setSelPod] = useState(null);
   const [organization_type, setOrganization_type] = useState([]);
   const [polValue, setPolValue] = useState(null);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
@@ -157,10 +159,9 @@ const CreateNewJob = (props) => {
     },
   ];
 
-  const getPoaOptions = () => {
+  const getPoaOptions = (val) => {
     apiAuth
-      .get("api/master/poa/")
-
+      .get(`/api/master/poa/?page=${1}&search=${val || ""}`)
       .then((response) => {
         let data = response.data.results;
         console.log("dswdwd", data);
@@ -233,10 +234,9 @@ const CreateNewJob = (props) => {
       });
   };
 
-  const getPodOptions = () => {
+  const getPodOptions = (val) => {
     apiAuth
-      .get("api/master/pod/")
-
+      .get(`/api/master/pod/?page=${1}&search=${val || ""}`)
       .then((response) => {
         let data = response.data.results;
         setPodOptions(data);
@@ -611,7 +611,8 @@ const CreateNewJob = (props) => {
                                 value: item.name,
                               };
                             })}
-                            // value={podValue}
+                            value={selPod}
+                            onInputChange={(val) => getPodOptions(val)}
                             onChange={(data) => {
                               //   setPodValue(data);
                               setFieldValue("pod", data.value);
@@ -673,7 +674,8 @@ const CreateNewJob = (props) => {
                                 value: item.name,
                               };
                             })}
-                            // value={poaValue}
+                            value={selPoa}
+                            onInputChange={(val) => getPoaOptions(val)}
                             onChange={(data) => {
                               //   setPoaValue(data);
                               setFieldValue("poa", data.value);
