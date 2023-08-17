@@ -14,6 +14,7 @@ const Navdata = () => {
   const [isMyAccount, setisMyAccount] = useState(false);
   const [isCompany, setIsCompany] = useState(false);
   const [isCoa, setIsCoa] = useState(false);
+  const [isCoag, setIsCoag] = useState(false);
   const [isCostEntry, setIsCostEntry] = useState(false);
   const [isCharge, setIsCharge] = useState(false);
   const [isUserManagement, setisUserManagement] = useState(false);
@@ -85,6 +86,9 @@ const Navdata = () => {
     }
     if (iscurrentState !== "Coa") {
       setIsCoa(false);
+    }
+    if (iscurrentState !== "Coag") {
+      setIsCoag(false);
     }
     if (iscurrentState !== "cost-entry") {
       setIsCostEntry(false);
@@ -170,6 +174,14 @@ const Navdata = () => {
       icon: "ri-line-chart-fill",
       link: "/coa",
       stateVariables: isCoa,
+      roles: ["superadmin", "admin", "user"],
+    },
+    {
+      id: "coag",
+      label: "COA Groups",
+      icon: "ri-line-chart-fill",
+      link: "/coag",
+      stateVariables: isCoag,
       roles: ["superadmin", "admin", "user"],
     },
     {

@@ -47,7 +47,7 @@ import ViewProject from "../views/Project/ViewProject";
 import Report from "../views/Project/Report";
 import Jobs from "../views/Jobs";
 import Vouchers from "../views/Vouchers";
-import JournalVoucher from "../views/Vouchers/JournalVoucher";
+import JournalVoucher from "../views/Vouchers/journalVoucher";
 import Invoices from "../views/Invoices";
 import Purchase from "../views/Invoices/Purchase";
 import Sales from "../views/Invoices/Sales";
@@ -60,6 +60,8 @@ import TaxInvoice from "../views/TaxInvoice/TaxInvoice";
 import TaxInvoiceSecond from "../views/TaxInvoice/TaxInvoiceSecond";
 import ChartOfAccounts from "../views/ChartOfAccounts";
 import AddCOA from "../views/ChartOfAccounts/AddCOA";
+import AddCOAGroup from "../views/COAGroups/AddCOAGroup";
+import COAGroup from "../views/COAGroups/index";
 import CostEntry from "../views/Cost Entry";
 import AddCostEntry from "../views/Cost Entry/AddCostEntry";
 import AddCharge from "../views/Charge/AddCharge";
@@ -83,6 +85,8 @@ const authProtectedRoutes = [
   { path: "/organization/add", component: AddOrganization },
   { path: "/coa/add", component: AddCOA },
   { path: "/coa", component: ChartOfAccounts },
+  { path: "/coag/add", component: AddCOAGroup },
+  { path: "/coag", component: COAGroup },
   { path: "/cost-entry/add", component: AddCostEntry },
   { path: "/cost-entry", component: CostEntry },
   { path: "/charge/add", component: AddCharge },
