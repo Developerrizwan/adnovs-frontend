@@ -28,7 +28,7 @@ const AddOrganization = (props) => {
 
   const [coaOptions, setCoaOptions] = useState([]);
   const [selCurrency, setSelCurrency] = useState(null);
-  const [typeValue, setTypeValue] = useState(null);
+  const [typeValue, setTypeValue] = useState([]);
   const [coaValue, setCoaValue] = useState(null);
   const [gstValue, setGstValue] = useState({
     value: false,
@@ -39,7 +39,7 @@ const AddOrganization = (props) => {
   const [countryOptions, setCountryOptions] = useState([]);
   const [stateOptions, setStateOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
-  const [branchValue, setBranchValue] = useState("JEDDHA");
+  const [branchValue, setBranchValue] = useState(null);
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -54,6 +54,34 @@ const AddOrganization = (props) => {
       value: "Client",
       label: "Client",
     },
+    {
+      value: "Supplier",
+      label: "Supplier",
+    },
+    {
+      value: "Shipper",
+      label: "Shipper",
+    },
+    {
+      value: "Notify",
+      label: "Notify",
+    },
+    {
+      value: "Counterpart",
+      label: "Counterpart",
+    },
+    {
+      value: "Broker",
+      label: "Broker",
+    },
+    {
+      value: "Agents",
+      label: "Agents",
+    },
+    {
+      value: "Others",
+      label: "Others",
+    },
   ];
 
   const registeredOptions = [
@@ -67,7 +95,10 @@ const AddOrganization = (props) => {
     },
   ];
 
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [
+    { label: "JEDDAH", value: "JEDDAH" },
+    { label: "DUBAI", value: "DUBAI" },
+  ];
 
   const getCoaOptions = () => {
     apiAuth
@@ -254,20 +285,20 @@ const AddOrganization = (props) => {
                     .max(20, "Must be 20 characters or less")
                     .trim()
                     .required("Name is Required"),
-                  email: Yup.string()
-                    .email("Email must be a valid email")
-                    .required("Email is Required"),
-                  mobile: Yup.string()
-                    .matches(
-                      /^[0-9]{10}$/,
-                      "Invalid Mobile number, must be exactly 10 digits"
-                    )
-                    .required("Mobile Number is Required"),
+                  // email: Yup.string()
+                  //   .email("Email must be a valid email")
+                  //   .required("Email is Required"),
+                  // mobile: Yup.string()
+                  //   .matches(
+                  //     /^[0-9]{10}$/,
+                  //     "Invalid Mobile number, must be exactly 10 digits"
+                  //   )
+                  //   .required("Mobile Number is Required"),
 
-                  vat_trn_number: Yup.string()
-                    .max(20, "Must be 20 characters or less")
-                    .trim()
-                    .required("Vat Trn Number is Required"),
+                  // vat_trn_number: Yup.string()
+                  //   .max(20, "Must be 20 characters or less")
+                  //   .trim()
+                  //   .required("Vat Trn Number is Required"),
                   currency: Yup.string()
                     .ensure()
                     .required("Currency is Required"),
@@ -287,9 +318,9 @@ const AddOrganization = (props) => {
                     .ensure()
                     .required("State is Required"),
                   city: Yup.string().ensure().required("City is Required"),
-                  building_name: Yup.string().required(
-                    "Building Name is Required"
-                  ),
+                  // building_name: Yup.string().required(
+                  //   "Building Name is Required"
+                  // ),
                   website: Yup.string()
                     .url("Invalid URL format")
                     .required("Website URL is required"),
@@ -400,7 +431,7 @@ const AddOrganization = (props) => {
                         <div className="form-group mb-3">
                           <Label htmlFor="email">
                             Email
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </Label>
                           <Field
                             className="form-control"
@@ -421,7 +452,7 @@ const AddOrganization = (props) => {
                         <div className=" mb-3">
                           <Label htmlFor="mobile">
                             Mobile Number
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </Label>
                           <Field
                             className="form-control"
@@ -448,7 +479,7 @@ const AddOrganization = (props) => {
                             className="form-label"
                           >
                             Vat Trn Number
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </Label>
                           <Field
                             className="form-control"
@@ -467,7 +498,7 @@ const AddOrganization = (props) => {
                       </Grid>
 
                       <Grid item lg={4} xs={12}>
-                        <div style={{ zIndex: 300 }} className="mb-3">
+                        <div className="mb-3">
                           <label htmlFor="currency" className="form-label">
                             Currency
                             <span className="text-danger">*</span>
@@ -500,9 +531,9 @@ const AddOrganization = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={branchOptions}
-                            defaultValue={{ label: branchValue }}
+                            value={branchValue}
                             onChange={(data) => {
-                              // setBranchValue(data);
+                              setBranchValue(data);
                               setFieldValue("branch", data.value);
                             }}
                           />
@@ -558,14 +589,14 @@ const AddOrganization = (props) => {
                           />
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12} style={{ zIndex: 900 }}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="type" className="form-label">
                             Type
                             <span className="text-danger">*</span>
                           </Label>
                           <Select
-                            name="type"
+                            isMulti
                             value={typeValue}
                             placeholder={"Select"}
                             options={typeOptions}
@@ -586,7 +617,7 @@ const AddOrganization = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item xs={12} lg={4} style={{ zIndex: "200" }}>
+                      <Grid item xs={12} lg={4}>
                         <div className="mb-3">
                           <label htmlFor="country" className="form-label">
                             Country
@@ -668,7 +699,7 @@ const AddOrganization = (props) => {
                         <div className="mb-3">
                           <Label htmlFor="website" className="form-label">
                             Building Name
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </Label>
                           <Field
                             className="form-control"

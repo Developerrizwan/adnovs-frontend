@@ -18,14 +18,19 @@ const EditJob = (props) => {
   const [containerTypesValue, setContainerTypesValue] = useState(null);
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
-  const [branchValue, setBranchValue] = useState("JEDDHA");
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const [branchValue, setBranchValue] = useState(null);
+
   const [polValue, setPolValue] = useState(null);
   const [clientNameValue, setClientNameValue] = useState(null);
   const [consigneeNameValue, setConsigneeNameValue] = useState(null);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [clientOptions, setClientOptions] = useState([]);
+
+  const branchOptions = [
+    { label: "JEDDAH", value: "JEDDAH" },
+    { label: "DUBAI", value: "DUBAI" },
+  ];
 
   const options = [
     {
@@ -479,9 +484,7 @@ const EditJob = (props) => {
                     return { label: ot, value: ot };
                   })
                 : [],
-              branch: props?.allJobs?.branch
-                ? props?.allJobs?.branch
-                : "JEDDHA",
+              branch: props?.allJobs?.branch ? props?.allJobs?.branch : "",
             }}
             validationSchema={Yup.object({
               bl_number: Yup.string().required("BL Number is Required"),
@@ -987,11 +990,9 @@ const EditJob = (props) => {
                         placeholder={"Select"}
                         styles={customStyles}
                         options={branchOptions}
-                        defaultValue={{
-                          label: branchValue,
-                          value: branchValue,
-                        }}
+                        value={branchValue}
                         onChange={(data) => {
+                          setBranchValue(data);
                           setFieldValue("branch", data.value);
                         }}
                       />

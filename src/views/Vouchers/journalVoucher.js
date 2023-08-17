@@ -15,28 +15,31 @@ import { useParams } from "react-router";
 const JournalVoucher = (props) => {
   const history = useHistory();
   const { voucherId } = useParams();
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
 
-  const [jobs, setJobs] = useState([]);
+  const branchOptions = [
+    { label: " JEDDAH", value: " JEDDAH" },
+    { label: " DUBAI", value: " DUBAI" },
+  ];
+
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [date, setDate] = useState(new Date());
-  const [glDate, setGlDate] = useState(new Date());
-  const [refDate, setRefDate] = useState(new Date());
+  const [period, setPeriod] = useState(``);
+  // const [period, setPeriod] = useState(`${date.getMonth()} ${date.getFullYear()}`)
   const [selectedParty, setSelectedParty] = useState(null);
+  const [selBranch, setSelBranch] = useState(null);
   const [selectedConcern, setSelectedConcern] = useState(null);
   const [selOutAmtoption, setSelOutAmtoption] = useState(null);
   const [selCategory, setSelCategory] = useState(null);
   const [selCurrency, setSelCurrency] = useState(null);
-  const [branchValue, setBranchValue] = useState("JEDDHA");
 
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Journal",
     label: "Journal",
   });
   const [selStatus, setSelStatus] = useState({
-    value: "Active",
-    label: "Active",
+    value: "Created",
+    label: "Created",
   });
   const [selInstType, setSelInstType] = useState({
     value: "Cash",
@@ -54,8 +57,8 @@ const JournalVoucher = (props) => {
   ];
 
   const statusOptions = [
-    { value: "Active", label: "Active" },
-    { value: "Inactive", label: "Inactive" },
+    { value: "Created", label: "Created" },
+    { value: "Posted", label: "Posted" },
   ];
 
   const voucherOptions = [
@@ -71,59 +74,26 @@ const JournalVoucher = (props) => {
     getPartyOptions();
     getAllCurrencyCodes();
     getCategoryOptions();
-    setSelectedVoucher({
-      label: voucherId,
-      value: voucherId,
-    });
+
+    if (props?.isEdit) {
+      const selectedStatus =
+        props.voucherData?.status && props.voucherData.status === "Created"
+          ? { label: "Created", value: "Created" }
+          : { label: "Posted", value: "Posted" };
+      setSelStatus(selectedStatus);
+
+      setSelBranch({
+        label: props.voucherData?.branch,
+        value: props.voucherData?.branch,
+      });
+
+      const selvoucher = voucherOptions.find(
+        (dd) => dd.value === props.voucherData?.voucher_type
+      );
+      setSelectedVoucher(selvoucher);
+    }
   }, []);
 
-  useEffect(() => {
-    if (
-      props.isEdit &&
-      jobOptions.length &&
-      partyOptions.length &&
-      categoryOptions.length
-    ) {
-      getInitialValues();
-    }
-  }, [
-    props.isEdit,
-    jobOptions.length,
-    partyOptions.length,
-    categoryOptions.length,
-  ]);
-
-  const getInitialValues = () => {
-    const selvoucher = voucherOptions.find(
-      (dd) => dd.value === props.voucherData?.voucher_type
-    );
-    setSelectedVoucher(selvoucher);
-
-    const selectedCategory = categoryOptions.find(
-      (dd) => dd.value === props.voucherData?.category
-    );
-    setSelCategory(selectedCategory);
-
-    const selectedStatus = props.voucherData.status
-      ? { label: "Active", value: true }
-      : { label: "Inactive", value: false };
-    setSelStatus(selectedStatus);
-
-    const selCurr = currencyOptions.find(
-      (cur) => cur.value === props.voucherData?.currency
-    );
-    setSelCurrency(selCurr);
-
-    const selParty = partyOptions.find(
-      (cur) => cur.value === Number(props.voucherData?.party_account)
-    );
-    setSelectedParty(selParty);
-
-    const selJob = jobOptions.find(
-      (cur) => cur.value === props.voucherData?.job?.id
-    );
-    setSelectedJob(selJob);
-  };
   const getAllCurrencyCodes = () => {
     let allCurrencies = getAllISOCodes();
     allCurrencies = allCurrencies.map((cur) => {
@@ -132,6 +102,13 @@ const JournalVoucher = (props) => {
         value: cur.currency + "  -  " + cur.countryName,
       };
     });
+    if (props.isEdit) {
+      const selCurr = allCurrencies.find(
+        (cur) => cur.value === props.voucherData?.currency
+      );
+
+      setSelCurrency(selCurr);
+    }
     setCurrencyOptions(allCurrencies);
   };
 
@@ -162,6 +139,10 @@ const JournalVoucher = (props) => {
             value: rr.id,
           };
         });
+        const selParty = data.find(
+          (cur) => cur.value === props.voucherData?.party_account?.id
+        );
+        setSelectedParty(selParty);
         setPartyOptions(data);
       })
       .catch((err) => console.log(err));
@@ -174,10 +155,16 @@ const JournalVoucher = (props) => {
         const { data } = res;
         let jobOpts = data.results.map((opt) => {
           return {
-            label: opt?.job_number,
+            label: ` ${opt?.type} - ${opt?.job_number}`,
             value: opt?.id,
           };
         });
+        if (props.isEdit) {
+          const selJob = jobOpts.find(
+            (cur) => cur.value === props.voucherData?.job?.id
+          );
+          setSelectedJob(selJob);
+        }
         setJobOptions(jobOpts);
       })
       .catch((err) => console.log(err));
@@ -241,14 +228,14 @@ const JournalVoucher = (props) => {
                   voucher_type:
                     props.voucherData?.voucher_type || selectedVoucher.value,
                   branch: props.voucherData?.branch || "",
-                  period: props.voucherData?.period || "",
-                  book: props.voucherData?.book || "",
-                  category: props.voucherData?.category || "",
-                  status: props.voucherData?.status || false,
+                  period: props.voucherData?.period
+                    ? new Date(props.voucherData?.period)
+                    : new Date(),
+                  status: props.voucherData?.status || "",
                   job: props.voucherData?.job?.id || "",
-                  party_account: props.voucherData?.party_account || 1,
+                  party_account: props.voucherData?.party_account?.id || "",
                   currency: props.voucherData?.currency || "",
-                  ex_rate: props.voucherData?.ex_rate || "",
+                  ex_rate: props.voucherData?.ex_rate || 1,
                   address: props.voucherData?.address || "",
                   fc_amount: props.voucherData?.fc_amount || "",
                   amount_sar: props.voucherData?.amount_sar || "",
@@ -257,16 +244,21 @@ const JournalVoucher = (props) => {
                     ? new Date(props.voucherData?.ref_date)
                     : new Date(),
                   naration: props.voucherData?.naration || "",
-                  party_state_code: props.voucherData?.party_state_code || "",
                   division: props.voucherData?.division || "",
                   remarks: props.voucherData?.remarks || "",
                 }}
                 validationSchema={Yup.object({
                   branch: Yup.string().required("Required!"),
-                  book: Yup.string().required("Required!"),
                   period: Yup.string().required("Required!"),
-                  // job: Yup.string().required("Required!"),
-                  // party_account: Yup.string().ensure().required("Required!"),
+                  job: Yup.string().ensure().required("Required!"),
+                  address: Yup.string().required("Required!"),
+                  naration: Yup.string().required("Required!"),
+                  division: Yup.string().required("Required!"),
+                  remarks: Yup.string().required("Required!"),
+                  amount_sar: Yup.string().required("Required!"),
+                  ref_no: Yup.string().required("Required!"),
+                  party_account: Yup.string().ensure().required("Required!"),
+                  currency: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
                   if (props.isEdit && props.voucherData) {
@@ -470,12 +462,14 @@ const JournalVoucher = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={branchOptions}
-                            defaultValue={{
-                              label: branchValue,
-                              value: branchValue,
-                            }}
+                            value={selBranch}
                             onChange={(data) => {
+                              setSelBranch(data);
                               setFieldValue("branch", data.value);
+                              // if (data.value === "DUBAI") {
+                              //   setFieldValue("ex_rate", 1);
+                              //   setFieldValue("amount_sar", "AED");
+                              // }
                             }}
                           />
                           <ErrorMessage
@@ -492,12 +486,44 @@ const JournalVoucher = (props) => {
                             Period
                             <span className="text-danger">*</span>
                           </label>
-                          <Field
-                            placeholder="Period"
-                            className="form-control"
-                            name="period"
-                            style={{ background: "#EDEDED" }}
-                          />
+                          <div
+                            style={{
+                              display: "flex",
+                            }}
+                          >
+                            <DatePicker
+                              placeholder="Period"
+                              selected={values["period"]}
+                              onChange={(date) => {
+                                setFieldValue("period", date);
+                              }}
+                              dateFormat="yyyy MMMM"
+                              showMonthYearPicker
+                            />
+                            <div
+                              style={{
+                                position: "relative",
+                                // cursor: "pointer",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 10,
+                                  fill: "red",
+                                }}
+                              >
+                                {/* <i className="bi bi-calendar4-week"></i> */}
+                                <img
+                                  src="/calendar.svg"
+                                  alt="calendar"
+                                  width="20px"
+                                  height="20px"
+                                />
+                              </span>
+                            </div>
+                          </div>
                           {errors.period && touched.period && (
                             <div className="invalid-feedback d-block">
                               {errors.period}
@@ -505,50 +531,7 @@ const JournalVoucher = (props) => {
                           )}
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="book" className="form-label">
-                            Book
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            className="form-control"
-                            placeholder="Book"
-                            name="book"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.book && touched.book && (
-                            <div className="invalid-feedback d-block">
-                              {errors.book}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                    </Grid>
 
-                    <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="category" className="form-label">
-                            Category
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            options={categoryOptions}
-                            value={selCategory}
-                            onChange={(data) => {
-                              setFieldValue("category", data.label);
-                              setSelCategory(data);
-                            }}
-                            styles={customStyles}
-                          />
-                          {errors.category && touched.category && (
-                            <div className="invalid-feedback d-block">
-                              {errors.category}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="status" className="form-label">
@@ -571,6 +554,9 @@ const JournalVoucher = (props) => {
                           )}
                         </div>
                       </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="currency" className="form-label">
@@ -591,6 +577,44 @@ const JournalVoucher = (props) => {
                           {errors.currency && touched.currency && (
                             <div className="invalid-feedback d-block">
                               {errors.currency}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="fc_amount" className="form-label">
+                            FC Amount
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <Field
+                            placeholder="FC Amount"
+                            className="form-control"
+                            name="fc_amount"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.fc_amount && touched.fc_amount && (
+                            <div className="invalid-feedback d-block">
+                              {errors.fc_amount}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="amount_sar" className="form-label">
+                            Amount (SAR)
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Field
+                            placeholder="Amount (SAR)"
+                            className="form-control"
+                            name="amount_sar"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.amount_sar && touched.amount_sar && (
+                            <div className="invalid-feedback d-block">
+                              {errors.amount_sar}
                             </div>
                           )}
                         </div>
@@ -652,7 +676,7 @@ const JournalVoucher = (props) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Field
-                            placeholder="Ex Rate"
+                            placeholder="1"
                             className="form-control"
                             name="ex_rate"
                             style={{ background: "#EDEDED" }}
@@ -744,44 +768,6 @@ const JournalVoucher = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="fc_amount" className="form-label">
-                            FC Amount
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            placeholder="FCY Amount"
-                            className="form-control"
-                            name="fc_amount"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.fc_amount && touched.fc_amount && (
-                            <div className="invalid-feedback d-block">
-                              {errors.fc_amount}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="amount_sar" className="form-label">
-                            Amount (SAR)
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            placeholder="Amount (SAR)"
-                            className="form-control"
-                            name="amount_sar"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.amount_sar && touched.amount_sar && (
-                            <div className="invalid-feedback d-block">
-                              {errors.amount_sar}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
                           <label htmlFor="ref_no" className="form-label">
                             Ref No
                             <span className="text-danger">*</span>
@@ -799,9 +785,6 @@ const JournalVoucher = (props) => {
                           )}
                         </div>
                       </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="naration" className="form-label">
@@ -821,29 +804,7 @@ const JournalVoucher = (props) => {
                           )}
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label
-                            htmlFor="party_state_code"
-                            className="form-label"
-                          >
-                            Party State Code
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            name="party_state_code"
-                            className="form-control"
-                            placeholder="Party State Code"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.party_state_code &&
-                            touched.party_state_code && (
-                              <div className="invalid-feedback d-block">
-                                {errors.party_state_code}
-                              </div>
-                            )}
-                        </div>
-                      </Grid>
+
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="division" className="form-label">

@@ -12,7 +12,7 @@ import { Label } from "reactstrap";
 
 const CreateNewJob = (props) => {
   const [jobType, setJobType] = useState("Job");
-  const [branchValue, setBranchValue] = useState("JEDDHA");
+  const [branchValue, setBranchValue] = useState(null);
   const [eta, setEta] = useState(new Date());
   const [etd, setEtd] = useState(new Date());
   const [poaOptions, setPoaOptions] = useState([]);
@@ -32,7 +32,10 @@ const CreateNewJob = (props) => {
     },
   ];
 
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [
+    { label: "JEDDAH", value: "JEDDAH" },
+    { label: "DUBAI", value: "DUBAI" },
+  ];
 
   const statusOptions = [
     {
@@ -113,6 +116,14 @@ const CreateNewJob = (props) => {
     {
       label: "Warehousing",
       value: "Warehousing",
+    },
+    {
+      label: "Customs Clearance",
+      value: "Customs Clearance",
+    },
+    {
+      label: "Other",
+      value: "Other",
     },
   ];
 
@@ -417,7 +428,7 @@ const CreateNewJob = (props) => {
                   eta: null,
                   etd: null,
                   organization_type: "",
-                  branch: "JEDDHA",
+                  branch: "",
                 }}
                 validationSchema={Yup.object({
                   bl_number: Yup.string().required("BL Number is Required"),
@@ -924,11 +935,9 @@ const CreateNewJob = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={branchOptions}
-                            defaultValue={{
-                              label: branchValue,
-                              value: branchValue,
-                            }}
+                            value={branchValue}
                             onChange={(data) => {
+                              setBranchValue(data);
                               setFieldValue("branch", data.value);
                             }}
                           />

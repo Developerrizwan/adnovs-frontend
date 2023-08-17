@@ -186,7 +186,16 @@ const EditEnquiry = (props) => {
       label: "Warehousing",
       value: "Warehousing",
     },
+    {
+      label: "Customs Clearance",
+      value: "Customs Clearance",
+    },
+    {
+      label: "Other",
+      value: "Other",
+    },
   ];
+
   const scopeofworkOptions = [
     {
       label: "D2D",
@@ -634,23 +643,25 @@ const EditEnquiry = (props) => {
                   </Grid>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="eta" className="form-label">
-                        ETA
-                        {/* <span className="text-danger">*</span> */}
+                      <Label htmlFor="type" className="form-label">
+                        Type
+                        <span className="text-danger">*</span>
                       </Label>
-                      <DatePicker
-                        selected={eta}
-                        onChange={(date) => {
-                          setEta(date);
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={typeOptions}
+                        value={typevalue}
+                        onChange={(data) => {
+                          setTypevalue(data);
+                          setFieldValue("type", data.value);
                         }}
-                        showTimeSelect
-                        timeFormat="HH:mm"
-                        timeIntervals={15}
-                        timeCaption="Time"
-                        dateFormat="d MMMM yyyy h:mm aa"
                       />
+
                       <ErrorMessage
-                        name="eta"
+                        name="type"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -716,25 +727,23 @@ const EditEnquiry = (props) => {
                 <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="type" className="form-label">
-                        Type
-                        <span className="text-danger">*</span>
+                      <Label htmlFor="eta" className="form-label">
+                        ETA
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
-
-                      <Select
-                        name="type"
-                        placeholder={"Select"}
-                        styles={customStyles}
-                        options={typeOptions}
-                        value={typevalue}
-                        onChange={(data) => {
-                          setTypevalue(data);
-                          setFieldValue("type", data.value);
+                      <DatePicker
+                        selected={eta}
+                        onChange={(date) => {
+                          setEta(date);
                         }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="d MMMM yyyy h:mm aa"
                       />
-
                       <ErrorMessage
-                        name="type"
+                        name="eta"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
