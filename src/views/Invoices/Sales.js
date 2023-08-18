@@ -172,6 +172,10 @@ const Sales = (props) => {
     getPodOptions();
     getAllCurrencyCodes();
     getJobs();
+    setSelectedInvoice({
+      label: invoicesId,
+      value: invoicesId,
+    });
 
     if (props.isEdit) {
       setBranchValue({
@@ -182,10 +186,7 @@ const Sales = (props) => {
         label: props?.data?.pod,
         value: props?.data?.pod,
       });
-      setSelectedInvoice({
-        label: invoicesId,
-        value: invoicesId,
-      });
+
       const sel = consigneeOptions.find(
         (item) => item.value === props?.data?.consignee_name?.id
       );
@@ -711,7 +712,7 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <label htmlFor="party_account" className="form-label">
                             Party A/C
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             name="party_account"
@@ -770,7 +771,7 @@ const Sales = (props) => {
                             <Label htmlFor="amount_sar" className="pe-2 w-50">
                               {" "}
                               Amount
-                              <span className="text-danger">*</span>
+                              {/* <span className="text-danger">*</span> */}
                             </Label>
                             <Field
                               className="form-control"

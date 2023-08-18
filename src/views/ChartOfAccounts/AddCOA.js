@@ -173,7 +173,7 @@ const AddCOA = (props) => {
         const grpOptions = data.results.map((dd) => {
           return {
             label: dd?.name,
-            value: dd?.name,
+            value: dd?.id,
           };
         });
         setSubGroupOptions(grpOptions);
@@ -265,7 +265,7 @@ const AddCOA = (props) => {
                   dr_cr: Yup.string().ensure().required("Required!"),
                   category: Yup.string().ensure().required("Required!"),
                   group: Yup.string().ensure().required("Required!"),
-                  subgroup: Yup.string(),
+                  subgroup: Yup.string().ensure().required("Required!"),
                   type: Yup.string().ensure().required("Required!"),
                   short_name: Yup.string(),
                   long_name: Yup.string(),
@@ -451,7 +451,7 @@ const AddCOA = (props) => {
                             className="form-label "
                           >
                             Subledger Required?
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <ToggleButtonGroup
                             color="success"
@@ -495,7 +495,7 @@ const AddCOA = (props) => {
                             className="form-label "
                           >
                             Charge Required?
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <ToggleButtonGroup
                             color="success"
@@ -536,7 +536,7 @@ const AddCOA = (props) => {
                         <div className="mb-3 d-flex flex-column">
                           <label htmlFor="job_required" className="form-label ">
                             Job Required?
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <ToggleButtonGroup
                             color="success"
@@ -580,7 +580,7 @@ const AddCOA = (props) => {
                             className="form-label "
                           >
                             Asset Required
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
 
                           <ToggleButtonGroup
@@ -682,7 +682,7 @@ const AddCOA = (props) => {
                             options={groupOptions}
                             styles={customStyles}
                             onChange={(data) => {
-                              setFieldValue("group", data.label);
+                              setFieldValue("group", data.value);
                               setSelGroup(data);
                             }}
                           />
@@ -697,7 +697,7 @@ const AddCOA = (props) => {
                         <div className="mb-3">
                           <label htmlFor="subgroup" className="form-label">
                             Sub Group
-                            {/* <span className="text-danger">*</span> */}
+                            <span className="text-danger">*</span>
                           </label>
                           <Select
                             name="subgroup"
@@ -705,7 +705,7 @@ const AddCOA = (props) => {
                             options={subGroupOptions}
                             styles={customStyles}
                             onChange={(data) => {
-                              setFieldValue("subgroup", data.label);
+                              setFieldValue("subgroup", data.value);
                               setSelSubGroup(data);
                             }}
                           />
