@@ -254,6 +254,7 @@ const TaxInvoiceSecond = (props) => {
                 alignItems: "center",
                 width: "100%",
                 marginBottom: "10px",
+                textDecoration: "underline",
               }}
             >
               <h3>
@@ -695,11 +696,25 @@ const TaxInvoiceSecond = (props) => {
                       width: "150px",
                     }}
                   >
+                    Type
+                    <Translate text="Type" />
+                  </div>
+                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                    : {state?.invoice?.job?.type}
+                  </div>
+                </p>
+                <p>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      width: "150px",
+                    }}
+                  >
                     Container
                     <Translate text="Container" />
                   </div>
                   <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                    :
+                    : {state?.invoice?.job?.container_type}
                   </div>
                 </p>
                 <p>

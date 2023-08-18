@@ -173,7 +173,7 @@ const AddCOA = (props) => {
         const grpOptions = data.results.map((dd) => {
           return {
             label: dd?.name,
-            value: dd?.name,
+            value: dd?.id,
           };
         });
         setSubGroupOptions(grpOptions);
@@ -682,7 +682,7 @@ const AddCOA = (props) => {
                             options={groupOptions}
                             styles={customStyles}
                             onChange={(data) => {
-                              setFieldValue("group", data.label);
+                              setFieldValue("group", data.id);
                               setSelGroup(data);
                             }}
                           />
@@ -705,7 +705,7 @@ const AddCOA = (props) => {
                             options={subGroupOptions}
                             styles={customStyles}
                             onChange={(data) => {
-                              setFieldValue("subgroup", data.label);
+                              setFieldValue("subgroup", data.id);
                               setSelSubGroup(data);
                             }}
                           />

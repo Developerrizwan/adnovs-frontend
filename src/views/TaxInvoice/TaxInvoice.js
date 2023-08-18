@@ -630,7 +630,7 @@ const TaxInvoice = (props) => {
               </tr>
               <tr>
                 <td>1</td>
-                <td>20 DC</td>
+                <td>{state?.invoice?.job?.container_type}</td>
               </tr>
             </table>
           </div>
