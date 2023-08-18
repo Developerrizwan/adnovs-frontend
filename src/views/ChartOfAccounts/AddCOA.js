@@ -166,9 +166,9 @@ const AddCOA = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const getGroupOptions = (val) => {
+  const getGroupOptions = (val, page) => {
     apiAuth
-      .get(`/api/master/coagroup?search=${val || ""}`)
+      .get(`/api/get-coagroup?search=${val || ""}&page=${page || 1}`)
       .then((res) => {
         const { data } = res;
         const grpOptions = data.results.map((dd) => {
