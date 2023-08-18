@@ -235,7 +235,7 @@ const TaxInvoice = (props) => {
         </div>
 
         <div className="row mt-2 p-2">
-          <div className="col-lg-12">
+          <div className="col-lg-6">
             <h5 className="mb-4" style={{ fontWeight: 700, color: "#000" }}>
               INVOICE TO
               <Translate text={"INVOICE TO"} />{" "}
@@ -256,7 +256,7 @@ const TaxInvoice = (props) => {
               </div>
             </p>
           </div>
-          <div className="col-lg-6" style={{ borderRight: "1px solid #000" }}>
+          <div className="col-lg-6" style={{ borderLeft: "1px solid #000" }}>
             <p
               style={{
                 fontWeight: 600,

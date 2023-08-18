@@ -18,21 +18,8 @@ const AddEnquiry = (props) => {
   const [etd, setEtd] = useState(new Date());
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
-  // const [selConsignee, setSelConsignee] = useState(null);
-  // const [selClient, setSelClient] = useState(null);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
-
-  const options = [
-    // {
-    //   label: "Job",
-    //   value: "Job",
-    // },
-    {
-      label: "Enquiry",
-      value: "Enquiry",
-    },
-  ];
 
   const typeOptions = [
     {
@@ -615,8 +602,10 @@ const AddEnquiry = (props) => {
                                 value: item.name,
                               };
                             })}
+                            onInputChange={(val) => {
+                              getPoaOptions(val);
+                            }}
                             onChange={(data) => {
-                              // setJobType(data.value);
                               setFieldValue("pol", data.value);
                             }}
                           />

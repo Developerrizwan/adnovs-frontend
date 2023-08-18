@@ -47,7 +47,7 @@ import ViewProject from "../views/Project/ViewProject";
 import Report from "../views/Project/Report";
 import Jobs from "../views/Jobs";
 import Vouchers from "../views/Vouchers";
-import JournalVoucher from "../views/Vouchers/journalVoucher";
+import JournalVoucher from "../views/Vouchers/JournalVoucher";
 import Invoices from "../views/Invoices";
 import Purchase from "../views/Invoices/Purchase";
 import Sales from "../views/Invoices/Sales";
