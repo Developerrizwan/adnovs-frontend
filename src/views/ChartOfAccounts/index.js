@@ -25,7 +25,7 @@ const ChartOfAccounts = (props) => {
 
   const getAccounts = (pgdata, val) => {
     apiAuth
-      .get(`/api/get-coa/`)
+      .get(`/api/get-coa/?page=1`)
       .then((response) => {
         let data = response.data;
         // console.log("xswjhjwx", response);

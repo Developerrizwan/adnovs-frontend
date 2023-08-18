@@ -358,6 +358,7 @@ const AddOrganization = (props) => {
                   if (typeValue.length) {
                     values["type"] = typeValue.map((dd) => dd.value);
                   }
+                  values["coa"] = coaValue?.value;
                   props.isEdit
                     ? apiAuth
                         .patch(
