@@ -32,6 +32,7 @@ const JournalVoucher = (props) => {
   const [selOutAmtoption, setSelOutAmtoption] = useState(null);
   const [selCategory, setSelCategory] = useState(null);
   const [selCurrency, setSelCurrency] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Journal",
@@ -261,6 +262,7 @@ const JournalVoucher = (props) => {
                   currency: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
+                  setLoading(true);
                   if (props.isEdit && props.voucherData) {
                     apiAuth
                       .patch(
@@ -268,6 +270,7 @@ const JournalVoucher = (props) => {
                         values
                       )
                       .then((res) => {
+                        setLoading(false);
                         NotificationManager.success(
                           "Journal Voucher",
                           "Voucher Updated Successfully",
@@ -279,6 +282,7 @@ const JournalVoucher = (props) => {
                         props.closeAddPopup();
                       })
                       .catch((err) => {
+                        setLoading(false);
                         NotificationManager.error(
                           "Journal Voucher",
                           "Voucher Create Error",
@@ -292,6 +296,7 @@ const JournalVoucher = (props) => {
                     apiAuth
                       .post("/api/master/voucher/", values)
                       .then((res) => {
+                        setLoading(false);
                         NotificationManager.success(
                           "Journal Voucher",
                           "Voucher Created Successfully",
@@ -303,6 +308,7 @@ const JournalVoucher = (props) => {
                         history.push("/vouchers");
                       })
                       .catch((err) => {
+                        setLoading(false);
                         NotificationManager.error(
                           "Journal Voucher",
                           "Voucher Create Error",
@@ -943,11 +949,20 @@ const JournalVoucher = (props) => {
                       )}
                     </div>
 
-                    <div className="mt-4 mb-3">
-                      <button className="btn btn-success" type="submit">
-                        {props.isEdit ? "Update" : "Submit"}
-                      </button>
-                    </div>
+                    {loading ? (
+                      <div
+                        className="spinner-border text-success"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    ) : (
+                      <div className="mt-4 mb-3">
+                        <button className="btn btn-success" type="submit">
+                          {props.isEdit ? "Update" : "Submit"}
+                        </button>
+                      </div>
+                    )}
                   </Form>
                 )}
               </Formik>

@@ -9,6 +9,7 @@ import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 
 const AddCOAGroup = (props) => {
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
   const [isDRorCR, setIsDRorCR] = useState({
     value: "Dr",
@@ -110,6 +111,7 @@ const AddCOAGroup = (props) => {
                   remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
+                  setLoading(true);
                   if (props.isEdit && props.account) {
                     apiAuth
                       .patch(
@@ -117,6 +119,7 @@ const AddCOAGroup = (props) => {
                         values
                       )
                       .then((res) => {
+                        setLoading(false);
                         NotificationManager.success(
                           "Chart of accounts",
                           "Group Updated Successfully",
@@ -128,6 +131,7 @@ const AddCOAGroup = (props) => {
                         props.closeAddPopup();
                       })
                       .catch((err) => {
+                        setLoading(false);
                         NotificationManager.error(
                           "Chart of accounts",
                           "Group Update Error",
@@ -141,6 +145,7 @@ const AddCOAGroup = (props) => {
                     apiAuth
                       .post("/api/master/coagroup/", values)
                       .then((res) => {
+                        setLoading(false);
                         NotificationManager.success(
                           "Chart of accounts",
                           "Group Created Successfully",
@@ -152,6 +157,7 @@ const AddCOAGroup = (props) => {
                         history.push("/coag");
                       })
                       .catch((err) => {
+                        setLoading(false);
                         NotificationManager.error(
                           "Chart of accounts",
                           "Account Create Error",
@@ -296,11 +302,20 @@ const AddCOAGroup = (props) => {
                       )}
                     </div>
 
-                    <div className="mt-4 mb-3">
-                      <button className="btn btn-success" type="submit">
-                        {props.isEdit ? "Update" : "Submit"}
-                      </button>
-                    </div>
+                    {loading ? (
+                      <div
+                        className="spinner-border text-success"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    ) : (
+                      <div className="mt-4 mb-3">
+                        <button className="btn btn-success" type="submit">
+                          {props.isEdit ? "Update" : "Submit"}
+                        </button>
+                      </div>
+                    )}
                   </Form>
                 )}
               </Formik>

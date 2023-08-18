@@ -13,6 +13,7 @@ import { getAllISOCodes } from "iso-country-currency";
 
 const AddCOA = (props) => {
   const history = useHistory();
+  const [loading, setLoading] = useState(false);
   const [selStatus, setSelStatus] = useState({
     value: true,
     label: "Active",
@@ -272,10 +273,12 @@ const AddCOA = (props) => {
                   language_name: Yup.string(),
                 })}
                 onSubmit={(values) => {
+                  setLoading(true);
                   if (props.isEdit && props.account) {
                     apiAuth
                       .patch(`/api/master/coa/${props.account?.id}/`, values)
                       .then((res) => {
+                        setLoading(false);
                         NotificationManager.success(
                           "Chart of accounts",
                           "Account Updated Successfully",
@@ -287,6 +290,7 @@ const AddCOA = (props) => {
                         props.closeAddPopup();
                       })
                       .catch((err) => {
+                        setLoading(false);
                         NotificationManager.error(
                           "Chart of accounts",
                           "Account Update Error",
@@ -300,6 +304,7 @@ const AddCOA = (props) => {
                     apiAuth
                       .post("/api/master/coa/", values)
                       .then((res) => {
+                        setLoading(false);
                         NotificationManager.success(
                           "Chart of accounts",
                           "Account Created Successfully",
@@ -311,6 +316,7 @@ const AddCOA = (props) => {
                         history.push("/coa");
                       })
                       .catch((err) => {
+                        setLoading(false);
                         NotificationManager.error(
                           "Chart of accounts",
                           "Account Create Error",
@@ -879,11 +885,20 @@ const AddCOA = (props) => {
                       )}
                     </div>
 
-                    <div className="mt-4 mb-3">
-                      <button className="btn btn-success" type="submit">
-                        {props.isEdit ? "Update" : "Submit"}
-                      </button>
-                    </div>
+                    {loading ? (
+                      <div
+                        className="spinner-border text-success"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    ) : (
+                      <div className="mt-4 mb-3">
+                        <button className="btn btn-success" type="submit">
+                          {props.isEdit ? "Update" : "Submit"}
+                        </button>
+                      </div>
+                    )}
                   </Form>
                 )}
               </Formik>

@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
-import JournalVoucher from "./JournalVoucher";
+import JournalVoucher from "./journalVoucher";
 
 const VoucherTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);

@@ -38,27 +38,6 @@ const CaoGroupTable = (props) => {
     },
 
     {
-      name: <span className="font-weight-bold fs-13">Status</span>,
-      selector: (row) => row.status,
-      cell: (value) => <span>{value?.status ? "Active" : "Inactive"}</span>,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">COA Type</span>,
-      selector: (row) => row.coa_type,
-      cell: (value) => {
-        return <div>{value.coa_type}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Category</span>,
-      selector: (row) => row.category,
-      cell: (value) => {
-        return <div>{value.category}</div>;
-      },
-      sortable: true,
-    },
-    {
       name: <span className="font-weight-bold fs-13">Type</span>,
       selector: (row) => row.type,
       cell: (value) => {
@@ -66,20 +45,30 @@ const CaoGroupTable = (props) => {
       },
       sortable: true,
     },
+
     {
-      name: <span className="font-weight-bold fs-13">Currency</span>,
-      selector: (row) => row.currency,
+      name: <span className="font-weight-bold fs-13">Is Dr/Cr?</span>,
+      selector: (row) => row.dr_cr,
       cell: (value) => {
-        return <div>{value.currency}</div>;
+        return <div>{value.dr_cr}</div>;
       },
       sortable: true,
     },
 
     {
-      name: <span className="font-weight-bold fs-13">Refernce Code</span>,
-      selector: (row) => row.additional_reference_code,
+      name: <span className="font-weight-bold fs-13">Language Name</span>,
+      selector: (row) => row.language_name,
       cell: (value) => {
-        return <div>{value.additional_reference_code}</div>;
+        return <div>{value.language_name}</div>;
+      },
+      sortable: true,
+    },
+
+    {
+      name: <span className="font-weight-bold fs-13">Remarks</span>,
+      selector: (row) => row.remarks,
+      cell: (value) => {
+        return <div>{value.remarks}</div>;
       },
       sortable: true,
     },
@@ -165,7 +154,7 @@ const CaoGroupTable = (props) => {
             setEditModal((prev) => !prev);
           }}
         >
-          Edit Voucher
+          Edit COA Group
         </ModalHeader>
         <ModalBody>
           <AddCOAGroup
