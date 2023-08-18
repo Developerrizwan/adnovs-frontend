@@ -239,7 +239,7 @@ const AddCOA = (props) => {
                   category: props.account?.category || "category 1",
                   group: props.account?.group || "",
                   subgroup: props.account?.subgroup || "",
-                  type: props.account?.type || "",
+                  type: props.account?.type || "ASSET",
                   short_name: props.account?.short_name || "",
                   long_name: props.account?.long_name || "",
                   language_name: props.account?.language_name || "",

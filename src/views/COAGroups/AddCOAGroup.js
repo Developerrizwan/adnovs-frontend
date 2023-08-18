@@ -96,7 +96,7 @@ const AddCOAGroup = (props) => {
                   name: props.account?.name || "",
                   coa_type: props.account?.coa_type || "Balance Sheet",
                   dr_cr: props.account?.dr_cr || "Dr",
-                  type: props.account?.type || "",
+                  type: props.account?.type || "ASSET",
                   language_name: props.account?.language_name || "",
                   currency: props.account?.currency || "curr 1",
                   remarks: props.account?.remarks || "",

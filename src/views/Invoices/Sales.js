@@ -77,6 +77,10 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
+        const sel = ConsOpts.find(
+          (item) => item.value === props?.data?.consignee_name?.id
+        );
+        setConsigneeNameValue(sel);
         setConsigneeOptions(ConsOpts);
 
         setLoading(false);
@@ -108,7 +112,10 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
-
+        const clOptions = ClientOpts.find(
+          (item) => item.value === props.data?.client_name?.id
+        );
+        setClientNameValue(clOptions);
         setClientOptions(ClientOpts);
         setLoading(false);
       })
@@ -159,6 +166,7 @@ const Sales = (props) => {
             value: rr.id,
           };
         });
+        const sel = data.map((dd) => dd.value === props?.data?.coa);
         setPartyOptions(data);
       })
       .catch((err) => console.log(err));
@@ -186,15 +194,6 @@ const Sales = (props) => {
         label: props?.data?.pod,
         value: props?.data?.pod,
       });
-
-      const sel = consigneeOptions.find(
-        (item) => item.value === props?.data?.consignee_name?.id
-      );
-      setConsigneeNameValue(sel);
-      const clOptions = clientOptions.find(
-        (item) => item.value === props.data?.client_name?.id
-      );
-      setClientNameValue(clOptions);
     }
   }, []);
 
@@ -255,13 +254,14 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
-        setJobOptions(opts);
+
         if (props?.isEdit) {
           const selJob = opts.find(
-            (opt) => opt?.value === props.data?.job?.bl_number
+            (opt) => opt?.label === props.data?.job?.job_number
           );
           setSelectedJob(selJob);
         }
+        setJobOptions(opts);
       })
       .catch((err) => console.log(err));
   };
@@ -285,13 +285,14 @@ const Sales = (props) => {
           </>
         )}
         <Grid container spacing={2}>
+          {console.log("eeeeeeeee", props?.data)}
           <Grid item lg={11} style={{ margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
                   bl_number: props.isEdit ? props.data?.bl_number : "",
                   consignee_name: props.isEdit
-                    ? props.data?.consignee_name?.name
+                    ? props.data?.consignee_name?.id
                     : "",
                   due_date: props.isEdit ? props.data?.due_date : "",
                   currency_sar: props.isEdit ? props.data?.currency_sar : "",
@@ -299,13 +300,11 @@ const Sales = (props) => {
                   shipper_name: props.isEdit ? props.data?.shipper_name : "",
                   branch: props.isEdit
                     ? props.data?.consignee_name?.branch
-                    : "",
+                    : "JEDDAH",
                   // vendor: props.isEdit ? props.data?.vendor : "TEMP",
                   ex_rate: props.isEdit ? props.data?.ex_rate : "",
                   pod: props.isEdit ? props.data?.pod : "",
-                  client_name: props.isEdit
-                    ? props.data?.client_name?.name
-                    : "",
+                  client_name: props.isEdit ? props.data?.client_name?.id : "",
                   fc_amount: props.isEdit ? props.data?.fc_amount : "",
                   amount_sar: props.isEdit ? props.data?.amount_sar : "",
                   poa: props.isEdit ? props.data?.poa : "",
@@ -317,7 +316,7 @@ const Sales = (props) => {
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
                   narration: props.isEdit ? props.data?.narration : "",
                   job: props.isEdit ? props.data?.job?.bl_number : "",
-                  party_account: props.isEdit ? props.data?.party_account : "",
+                  coa: props.isEdit ? props.data?.coa : "",
                 }}
                 validationSchema={Yup.object({
                   bl_number: Yup.string().required("BL Number is Required"),
@@ -359,6 +358,7 @@ const Sales = (props) => {
                   )?.company_id;
                   values["company"] = company;
                   values["invoice_type"] = selectedInvoice?.value;
+
                   // values["consignee_name"] = consigneeNameValue?.value;
                   // values["client_name"] = clientNameValue?.value;
 
@@ -710,23 +710,23 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="party_account" className="form-label">
+                          <label htmlFor="coa" className="form-label">
                             Party A/C
                             {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
-                            name="party_account"
+                            name="coa"
                             styles={customStyles}
                             value={selectedParty}
                             options={partyOptions}
                             onChange={(data) => {
-                              setFieldValue("party_account", data.value);
+                              setFieldValue("coa", data.value);
                               setSelectedParty(data);
                             }}
                           />
-                          {errors.party_account && touched.party_account && (
+                          {errors.coa && touched.coa && (
                             <div className="invalid-feedback d-block">
-                              {errors.party_account}
+                              {errors.coa}
                             </div>
                           )}
                         </div>
