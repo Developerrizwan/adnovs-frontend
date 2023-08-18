@@ -198,15 +198,22 @@ const AddOrganization = (props) => {
     getAllCurrencyCodes();
     getCountries();
 
-    setTypeValue({
-      label: props.organizationData?.type,
-      value: props.organizationData?.type,
-    });
+    if (props.isEdit) {
+      setTypeValue({
+        label: props.organizationData?.type,
+        value: props.organizationData?.type,
+      });
 
-    setGstValue({
-      label: props?.organizationData?.gstin_registered ? "Yes" : "No",
-      value: props?.organizationData?.gstin_registered ? true : false,
-    });
+      setBranchValue({
+        label: props.organizationData?.branch,
+        value: props.organizationData?.branch,
+      });
+
+      setGstValue({
+        label: props?.organizationData?.gstin_registered ? "Yes" : "No",
+        value: props?.organizationData?.gstin_registered ? true : false,
+      });
+    }
   }, [props.isEdit]);
 
   return (
@@ -349,6 +356,9 @@ const AddOrganization = (props) => {
                   values.state_code = values.state_code
                     ? values.state_code
                     : undefined;
+                  if (typeValue.length) {
+                    values["type"] = typeValue.map((dd) => dd.value);
+                  }
                   props.isEdit
                     ? apiAuth
                         .patch(
@@ -602,7 +612,7 @@ const AddOrganization = (props) => {
                             options={typeOptions}
                             styles={customStyles}
                             onChange={(data) => {
-                              setFieldValue("type", data.value);
+                              // setFieldValue("type", data.value);
                               setTypeValue(data);
                             }}
                           />

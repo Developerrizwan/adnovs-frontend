@@ -583,47 +583,6 @@ const JournalVoucher = (props) => {
                       </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="fc_amount" className="form-label">
-                            FC Amount
-                            {/* <span className="text-danger">*</span> */}
-                          </label>
-                          <Field
-                            placeholder="FC Amount"
-                            className="form-control"
-                            name="fc_amount"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.fc_amount && touched.fc_amount && (
-                            <div className="invalid-feedback d-block">
-                              {errors.fc_amount}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="amount_sar" className="form-label">
-                            Amount (SAR)
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            placeholder="Amount (SAR)"
-                            className="form-control"
-                            name="amount_sar"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.amount_sar && touched.amount_sar && (
-                            <div className="invalid-feedback d-block">
-                              {errors.amount_sar}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
                           <label htmlFor="party_account" className="form-label">
                             Party A/C
                             <span className="text-danger">*</span>
@@ -668,7 +627,9 @@ const JournalVoucher = (props) => {
                           )}
                         </div>
                       </Grid>
+                    </Grid>
 
+                    <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="ex_rate" className="form-label">
@@ -680,10 +641,68 @@ const JournalVoucher = (props) => {
                             className="form-control"
                             name="ex_rate"
                             style={{ background: "#EDEDED" }}
+                            onChange={(e) => {
+                              setFieldValue("ex_rate", e.target.value);
+                              if (values["fc_amount"].length) {
+                                setFieldValue(
+                                  "amount_sar",
+                                  Number(e.target.value) *
+                                    Number(values["fc_amount"])
+                                );
+                              }
+                            }}
                           />
                           {errors.ex_rate && touched.ex_rate && (
                             <div className="invalid-feedback d-block">
                               {errors.ex_rate}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="fc_amount" className="form-label">
+                            FC Amount
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <Field
+                            placeholder="FC Amount"
+                            className="form-control"
+                            name="fc_amount"
+                            style={{ background: "#EDEDED" }}
+                            onChange={(e) => {
+                              setFieldValue("fc_amount", e.target.value);
+                              if (values["ex_rate"] > 0) {
+                                setFieldValue(
+                                  "amount_sar",
+                                  Number(e.target.value) *
+                                    Number(values["ex_rate"])
+                                );
+                              }
+                            }}
+                          />
+                          {errors.fc_amount && touched.fc_amount && (
+                            <div className="invalid-feedback d-block">
+                              {errors.fc_amount}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="amount_sar" className="form-label">
+                            Amount (SAR)
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Field
+                            placeholder="Amount (SAR)"
+                            className="form-control"
+                            name="amount_sar"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.amount_sar && touched.amount_sar && (
+                            <div className="invalid-feedback d-block">
+                              {errors.amount_sar}
                             </div>
                           )}
                         </div>

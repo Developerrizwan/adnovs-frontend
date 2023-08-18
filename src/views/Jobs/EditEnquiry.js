@@ -597,6 +597,9 @@ const EditEnquiry = (props) => {
                           };
                         })}
                         value={polValue}
+                        onInputChange={(val) => {
+                          getPoaOptions(val);
+                        }}
                         onChange={(data) => {
                           setPolValue(data);
                           setFieldValue("pol", data.value);
