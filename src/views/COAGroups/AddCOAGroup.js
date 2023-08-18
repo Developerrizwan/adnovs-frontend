@@ -103,10 +103,11 @@ const AddCOAGroup = (props) => {
                 validationSchema={Yup.object({
                   code: Yup.string().required("Code is Required"),
                   name: Yup.string().required("Name is Required"),
-                  coa_type: Yup.string().ensure().required("Required!"),
+                  // coa_type: Yup.string().ensure().required("Required!"),
                   dr_cr: Yup.string().ensure().required("Required!"),
                   type: Yup.string().ensure().required("Required!"),
                   language_name: Yup.string(),
+                  remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
                   if (props.isEdit && props.account) {
@@ -118,7 +119,7 @@ const AddCOAGroup = (props) => {
                       .then((res) => {
                         NotificationManager.success(
                           "Chart of accounts",
-                          "Account Updated Successfully",
+                          "Group Updated Successfully",
                           3000,
                           null,
                           null,
@@ -129,7 +130,7 @@ const AddCOAGroup = (props) => {
                       .catch((err) => {
                         NotificationManager.error(
                           "Chart of accounts",
-                          "Account Update Error",
+                          "Group Update Error",
                           3000,
                           null,
                           null,
@@ -142,7 +143,7 @@ const AddCOAGroup = (props) => {
                       .then((res) => {
                         NotificationManager.success(
                           "Chart of accounts",
-                          "Account Created Successfully",
+                          "Group Created Successfully",
                           3000,
                           null,
                           null,
@@ -280,7 +281,7 @@ const AddCOAGroup = (props) => {
                     <div className="mb-3">
                       <label htmlFor="remarks" className="form-label">
                         Remarks
-                        {/* <span className="text-danger">*</span> */}
+                        <span className="text-danger">*</span>
                       </label>
                       <Field
                         as="textarea"

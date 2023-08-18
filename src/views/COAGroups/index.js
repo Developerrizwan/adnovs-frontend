@@ -49,7 +49,7 @@ const COAGroup = (props) => {
         const newdata = response.data;
         NotificationManager.success(
           "",
-          "Account Deleted Successfully",
+          "Group Deleted Successfully",
           3000,
           null,
           null,

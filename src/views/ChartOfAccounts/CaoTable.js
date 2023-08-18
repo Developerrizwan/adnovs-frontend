@@ -139,7 +139,7 @@ const CaoTable = (props) => {
           });
         }}
         onChangeRowsPerPage={(c, t) => {
-          props.pagination({
+          props.handlePagination({
             ...props.pagination,
             rowsPerPage: c,
             currentPage: t,
