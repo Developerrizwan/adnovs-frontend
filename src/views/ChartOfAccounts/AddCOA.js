@@ -165,15 +165,14 @@ const AddCOA = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const getGroupOptions = () => {
+  const getGroupOptions = (val) => {
     apiAuth
-      .get("/api/master/coagroup/")
+      .get(`/api/master/coagroup?search=${val || ""}`)
       .then((res) => {
         const { data } = res;
         const grpOptions = data.results.map((dd) => {
           return {
             label: dd?.name,
-            value: dd?.id,
             value: dd?.id,
           };
         });
@@ -682,6 +681,9 @@ const AddCOA = (props) => {
                             value={selGroup}
                             options={groupOptions}
                             styles={customStyles}
+                            onInputChange={(val) => {
+                              getGroupOptions(val);
+                            }}
                             onChange={(data) => {
                               setFieldValue("group", data.value);
                               setSelGroup(data);
@@ -705,6 +707,9 @@ const AddCOA = (props) => {
                             value={selSubGroup}
                             options={subGroupOptions}
                             styles={customStyles}
+                            onInputChange={(val) => {
+                              getGroupOptions(val);
+                            }}
                             onChange={(data) => {
                               setFieldValue("subgroup", data.value);
                               setSelSubGroup(data);
