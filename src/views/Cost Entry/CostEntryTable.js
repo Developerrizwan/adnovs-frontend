@@ -28,11 +28,11 @@ const CostEntryTable = (props) => {
       },
       sortable: true,
     },
-    {
-      name: <span className="font-weight-bold fs-13">Voucher</span>,
-      selector: (row) => row.voucher_type,
-      sortable: true,
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Voucher</span>,
+    //   selector: (row) => row.voucher_type,
+    //   sortable: true,
+    // },
     {
       name: <span className="font-weight-bold fs-13">Job No</span>,
       selector: (row) => row.job_no,
@@ -121,14 +121,14 @@ const CostEntryTable = (props) => {
       },
       sortable: true,
     },
-    {
-      name: <span className="font-weight-bold fs-13">Prorate Method</span>,
-      selector: (row) => row.prorate_method,
-      cell: (value) => {
-        return <div>{value.prorate_method}</div>;
-      },
-      sortable: true,
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Prorate Method</span>,
+    //   selector: (row) => row.prorate_method,
+    //   cell: (value) => {
+    //     return <div>{value.prorate_method}</div>;
+    //   },
+    //   sortable: true,
+    // },
     {
       name: <span className="font-weight-bold fs-13">Tax Method</span>,
       selector: (row) => row.tax_group_code,

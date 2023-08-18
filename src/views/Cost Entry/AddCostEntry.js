@@ -146,14 +146,16 @@ const AddCostEntry = (props) => {
     setSelVoucher(selectedVoucher);
 
     const selectedCharge = chargeOptions.find(
-      (dd) => dd.value === props.entry?.charge
+      (dd) => dd.value === props.entry?.charge?.id
     );
     setSelCharge(selectedCharge);
 
     const selectedJob = jobOptions.find(
-      (dd) => dd.value === props.entry?.job_no
+      (dd) => dd.value === props.entry?.job_no?.id
     );
     setSelJob(selectedJob);
+    console.log("props.entry?.job_no", props.entry?.job_no?.id);
+    // console.log("dd.value", dd.value);
 
     const selectedStatus = props.entry.job_no
       ? { label: "Active", value: true }
@@ -223,7 +225,7 @@ const AddCostEntry = (props) => {
               <Formik
                 initialValues={{
                   // voucher_type: props.entry?.voucher_type || "Journal",
-                  charge: props.entry?.charge || 0,
+                  charge: props.entry?.charge || "",
                   description: props.entry?.description || "",
                   job_no: props.entry?.job_no || 0,
                   shipment_no: props.entry?.shipment_no || "",
@@ -237,12 +239,14 @@ const AddCostEntry = (props) => {
                   tax_group_code: props.entry?.tax_group_code || "",
                 }}
                 validationSchema={Yup.object({
+                  charge: Yup.string().ensure().required("Required!"),
                   description: Yup.string().required("Required!"),
+                  // job_no: Yup.string().ensure().required("Required!"),
                   shipment_no: Yup.string().required("Required!"),
                   currency: Yup.string().ensure().required("Required!"),
                   tax_group_code: Yup.string().ensure().required("Required!"),
-                  sale_cost: Yup.string().ensure().required("Required!"),
                   dr_cr: Yup.string().ensure().required("Required!"),
+                  sale_cost: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
                   if (props.isEdit && props.entry) {
@@ -374,7 +378,7 @@ const AddCostEntry = (props) => {
                         <div className="mb-3">
                           <label htmlFor="job_no" className="form-label">
                             Job No
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             name="job_no"
