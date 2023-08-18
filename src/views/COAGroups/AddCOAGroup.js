@@ -230,9 +230,6 @@ const AddCOAGroup = (props) => {
                           )}
                         </div>
                       </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="type" className="form-label">
