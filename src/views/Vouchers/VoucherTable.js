@@ -45,14 +45,14 @@ const VoucherTable = (props) => {
       },
       sortable: true,
     },
-    {
-      name: <span className="font-weight-bold fs-13">Book</span>,
-      selector: (row) => row.book,
-      cell: (value) => {
-        return <div>{value.book}</div>;
-      },
-      sortable: true,
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Book</span>,
+    //   selector: (row) => row.book,
+    //   cell: (value) => {
+    //     return <div>{value.book}</div>;
+    //   },
+    //   sortable: true,
+    // },
     {
       name: <span className="font-weight-bold fs-13">Date</span>,
       selector: (row) => row,

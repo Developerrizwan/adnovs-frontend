@@ -21,7 +21,7 @@ const CreateJob = (props) => {
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
   const [poaValue, setPoaValue] = useState(null);
-  const [branchValue, setBranchValue] = useState("JEDDHA");
+  const [branchValue, setBranchValue] = useState(null);
   const [podValue, setPodValue] = useState(null);
   const [eta, setEta] = useState(etaDateObj);
   const [etd, setEtd] = useState(etdDateObj);
@@ -42,7 +42,10 @@ const CreateJob = (props) => {
     },
   ];
 
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [
+    { label: "JEDDAH", value: "JEDDAH" },
+    { label: "DUBAI", value: "DUBAI" },
+  ];
 
   const statusOptions = [
     {
@@ -123,6 +126,14 @@ const CreateJob = (props) => {
     {
       label: "Warehousing",
       value: "Warehousing",
+    },
+    {
+      label: "Customs Clearance",
+      value: "Customs Clearance",
+    },
+    {
+      label: "Other",
+      value: "Other",
     },
   ];
 

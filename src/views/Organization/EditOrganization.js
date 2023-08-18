@@ -27,11 +27,12 @@ const EditOrganization = (props) => {
   const [coaOptions, setCoaOptions] = useState([]);
   const [selCurrency, setSelCurrency] = useState(null);
   const [currencyOptions, setCurrencyOptions] = useState([]);
-  const [branchValue, setBranchValue] = useState("JEDDHA");
+  const [branchValue, setBranchValue] = useState();
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
+  const [selectedType, setSelectedType] = useState([]);
 
   const typeOptions = [
     {
@@ -41,6 +42,34 @@ const EditOrganization = (props) => {
     {
       value: "Client",
       label: "Client",
+    },
+    {
+      value: "Supplier",
+      label: "Supplier",
+    },
+    {
+      value: "Shipper",
+      label: "Shipper",
+    },
+    {
+      value: "Notify",
+      label: "Notify",
+    },
+    {
+      value: "Counterpart",
+      label: "Counterpart",
+    },
+    {
+      value: "Broker",
+      label: "Broker",
+    },
+    {
+      value: "Agents",
+      label: "Agents",
+    },
+    {
+      value: "Others",
+      label: "Others",
     },
   ];
 
@@ -55,7 +84,10 @@ const EditOrganization = (props) => {
     },
   ];
 
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [
+    { label: "JEDDAH", value: "JEDDAH" },
+    { label: "DUBAI", value: "DUBAI" },
+  ];
 
   const getCoaOptions = () => {
     apiAuth
@@ -288,7 +320,7 @@ const EditOrganization = (props) => {
                   </Grid>
 
                   <Grid item lg={4} xs={12}>
-                    <div style={{ zIndex: 300 }} className="mb-3">
+                    <div className="mb-3">
                       <label htmlFor="currency" className="form-label">
                         Currency
                         <span className="text-danger">*</span>
@@ -317,17 +349,19 @@ const EditOrganization = (props) => {
                         Branch
                         <span className="text-danger">*</span>
                       </Label>
-                      <Select
-                        name="type"
-                        placeholder={"Select"}
-                        styles={customStyles}
-                        options={branchOptions}
-                        defaultValue={{ label: branchValue }}
-                        onChange={(data) => {
-                          // setBranchValue(data);
-                          setFieldValue("branch", data.value);
-                        }}
-                      />
+                      <div>
+                        <Select
+                          name="type"
+                          placeholder={"Select"}
+                          styles={customStyles}
+                          options={branchOptions}
+                          value={branchValue}
+                          onChange={(data) => {
+                            setBranchValue(data);
+                            setFieldValue("branch", data.value);
+                          }}
+                        />
+                      </div>
                       <ErrorMessage
                         name="job_status"
                         render={(msg) => (
@@ -387,8 +421,9 @@ const EditOrganization = (props) => {
                         <span className="text-danger">*</span>
                       </Label>
                       <Select
-                        name="type"
+                        isMulti
                         placeholder={"Select"}
+                        value={selectedType}
                         options={typeOptions}
                         styles={customStyles}
                         onChange={(data) => {
@@ -406,7 +441,7 @@ const EditOrganization = (props) => {
                 </Grid>
 
                 <Grid container spacing={2}>
-                  <Grid item xs={12} lg={4} style={{ zIndex: "200" }}>
+                  <Grid item xs={12} lg={4}>
                     <div className="mb-3">
                       <label htmlFor="country" className="form-label">
                         Country

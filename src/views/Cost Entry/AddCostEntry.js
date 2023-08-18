@@ -122,10 +122,6 @@ const AddCostEntry = (props) => {
       .catch((err) => console.log(err));
   };
 
-  // useEffect(() => {
-  //   if (searchValue.length) getJobOptions(searchValue);
-  // }, [searchValue]);
-
   useEffect(() => {
     getAllCurrencyCodes();
     getJobOptions();
@@ -226,7 +222,7 @@ const AddCostEntry = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  voucher_type: props.entry?.voucher_type || "Journal",
+                  // voucher_type: props.entry?.voucher_type || "Journal",
                   charge: props.entry?.charge || 0,
                   description: props.entry?.description || "",
                   job_no: props.entry?.job_no || 0,
@@ -237,17 +233,13 @@ const AddCostEntry = (props) => {
                   amount: props.entry?.amount || "",
                   sale_cost: props.entry?.sale_cost || "",
                   dr_cr: props.entry?.dr_cr || "",
-                  prorate_method: props.entry?.prorate_method || "",
+                  // prorate_method: props.entry?.prorate_method || "",
                   tax_group_code: props.entry?.tax_group_code || "",
                 }}
                 validationSchema={Yup.object({
-                  voucher_type: Yup.string().ensure().required("Required!"),
-                  // charge: Yup.number().typeError().required("Required!"),
                   description: Yup.string().required("Required!"),
-                  // job_no: Yup.number().required("Required!"),
                   shipment_no: Yup.string().required("Required!"),
                   currency: Yup.string().ensure().required("Required!"),
-                  prorate_method: Yup.string().ensure().required("Required!"),
                   tax_group_code: Yup.string().ensure().required("Required!"),
                   sale_cost: Yup.string().ensure().required("Required!"),
                   dr_cr: Yup.string().ensure().required("Required!"),
@@ -309,7 +301,7 @@ const AddCostEntry = (props) => {
               >
                 {({ values, errors, touched, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
-                    <Grid container spacing={2}>
+                    {/* <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="voucher_type" className="form-label">
@@ -332,7 +324,7 @@ const AddCostEntry = (props) => {
                           )}
                         </div>
                       </Grid>
-                    </Grid>
+                    </Grid> */}
                     <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
@@ -545,33 +537,6 @@ const AddCostEntry = (props) => {
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label
-                            htmlFor="prorate_method"
-                            className="form-label"
-                          >
-                            Prorate Method
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            name="prorate_method"
-                            placeholder="Select"
-                            styles={customStyles}
-                            value={selProrate}
-                            options={prorateOptions}
-                            onChange={(data) => {
-                              setFieldValue("prorate_method", data.value);
-                              setSelProrate(data);
-                            }}
-                          />
-                          {errors.prorate_method && touched.prorate_method && (
-                            <div className="invalid-feedback d-block">
-                              {errors.prorate_method}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label
                             htmlFor="tax_group_code"
                             className="form-label"
                           >
@@ -595,9 +560,60 @@ const AddCostEntry = (props) => {
                           )}
                         </div>
                       </Grid>
+
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="dr_cr" className="form-label">
+                            Dr/Cr
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="dr_cr"
+                            styles={customStyles}
+                            value={isDRorCR}
+                            options={drOrCrOptions}
+                            onChange={(data) => {
+                              setFieldValue("dr_cr", data.value);
+                              setIsDRorCR(data);
+                            }}
+                          />
+                          {errors.dr_cr && touched.dr_cr && (
+                            <div className="invalid-feedback d-block">
+                              {errors.dr_cr}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
                     </Grid>
 
                     <Grid container spacing={2}>
+                      {/* <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <label
+                            htmlFor="prorate_method"
+                            className="form-label"
+                          >
+                            Prorate Method
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="prorate_method"
+                            placeholder="Select"
+                            styles={customStyles}
+                            value={selProrate}
+                            options={prorateOptions}
+                            onChange={(data) => {
+                              setFieldValue("prorate_method", data.value);
+                              setSelProrate(data);
+                            }}
+                          />
+                          {errors.prorate_method && touched.prorate_method && (
+                            <div className="invalid-feedback d-block">
+                              {errors.prorate_method}
+                            </div>
+                          )}
+                        </div>
+                      </Grid> */}
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="sale_cost" className="form-label">
@@ -618,29 +634,6 @@ const AddCostEntry = (props) => {
                           {errors.sale_cost && touched.sale_cost && (
                             <div className="invalid-feedback d-block">
                               {errors.sale_cost}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                      <Grid item lg={6} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="dr_cr" className="form-label">
-                            Dr/Cr
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            name="dr_cr"
-                            styles={customStyles}
-                            value={isDRorCR}
-                            options={drOrCrOptions}
-                            onChange={(data) => {
-                              setFieldValue("dr_cr", data.value);
-                              setIsDRorCR(data);
-                            }}
-                          />
-                          {errors.dr_cr && touched.dr_cr && (
-                            <div className="invalid-feedback d-block">
-                              {errors.dr_cr}
                             </div>
                           )}
                         </div>

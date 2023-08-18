@@ -33,6 +33,7 @@ const Sales = (props) => {
   const [dueDate, setDueDate] = useState(new Date());
   const [invoiceId, setInvoiceId] = useState(null);
   const [podValue, setPodValue] = useState(null);
+  const [selectedParty, setSelectedParty] = useState(null);
   const [selectedInvoice, setSelectedInvoice] = useState({
     value: "Sales",
     label: "Sales",
@@ -44,11 +45,15 @@ const Sales = (props) => {
     value: "JEDDAH",
   });
   const [Vendorvalue, setVendorvalue] = useState("TEMP");
+  const [partyOptions, setPartyOptions] = useState([]);
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
 
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [
+    { label: "JEDDAH", value: "JEDDAH" },
+    { label: "DUBAI", value: "DUBAI" },
+  ];
   const VendorOptions = [{ label: "TEMP", value: "TEMP" }];
 
   const history = useHistory();
@@ -143,7 +148,24 @@ const Sales = (props) => {
       });
   };
 
+  const getPartyOptions = (val) => {
+    apiAuth
+      .get(`/api/get-coa/?search=${val || ""}`)
+      .then((res) => {
+        let { data } = res;
+        data = data.map((rr) => {
+          return {
+            label: rr.code,
+            value: rr.id,
+          };
+        });
+        setPartyOptions(data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
+    getPartyOptions();
     getOrganization(searchValue);
     getClientOrganization(searchValue);
     getPoaOptions();
@@ -294,6 +316,7 @@ const Sales = (props) => {
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
                   narration: props.isEdit ? props.data?.narration : "",
                   job: props.isEdit ? props.data?.job?.bl_number : "",
+                  party_account: props.isEdit ? props.data?.party_account : "",
                 }}
                 validationSchema={Yup.object({
                   bl_number: Yup.string().required("BL Number is Required"),
@@ -564,27 +587,30 @@ const Sales = (props) => {
 
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <div>
-                            <Label
-                              htmlFor="shipper_name"
-                              className=" w-50 p e-2"
-                            >
-                              Shipper Name
-                              <span className="text-danger">*</span>
-                            </Label>
-                            <Field
-                              className="form-control "
-                              name="shipper_name"
-                              placeholder="Shipper Name"
-                              type="text"
-                              style={{ background: "#EDEDED" }}
-                            />
-                          </div>
-                          {errors.shipper_name && touched.shipper_name && (
-                            <div className="invalid-feedback d-block">
-                              {errors.shipper_name}
-                            </div>
-                          )}
+                          <Label htmlFor="client_name" className="form-label">
+                            Client Name
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={clientOptions}
+                            value={clientNameValue}
+                            onInputChange={(val) => {
+                              getClientOrganization(val);
+                            }}
+                            onChange={(data) => {
+                              setClientNameValue(data);
+                              setFieldValue("client_name", data.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="client_name"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
                         </div>
                       </Grid>
                     </Grid>
@@ -683,32 +709,28 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="client_name" className="form-label">
-                            Client Name
+                          <label htmlFor="party_account" className="form-label">
+                            Party A/C
                             <span className="text-danger">*</span>
-                          </Label>
+                          </label>
                           <Select
-                            name="type"
-                            placeholder={"Select"}
+                            name="party_account"
                             styles={customStyles}
-                            options={clientOptions}
-                            value={clientNameValue}
-                            onInputChange={(val) => {
-                              getClientOrganization(val);
-                            }}
+                            value={selectedParty}
+                            options={partyOptions}
                             onChange={(data) => {
-                              setClientNameValue(data);
-                              setFieldValue("client_name", data.value);
+                              setFieldValue("party_account", data.value);
+                              setSelectedParty(data);
                             }}
                           />
-                          <ErrorMessage
-                            name="client_name"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
+                          {errors.party_account && touched.party_account && (
+                            <div className="invalid-feedback d-block">
+                              {errors.party_account}
+                            </div>
+                          )}
                         </div>
                       </Grid>
+
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
@@ -911,6 +933,32 @@ const Sales = (props) => {
                       </Grid>
                     )}
                     <Grid spacing={2} container>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <div>
+                            <Label
+                              htmlFor="shipper_name"
+                              className=" w-50 p e-2"
+                            >
+                              Shipper Name
+                              <span className="text-danger">*</span>
+                            </Label>
+                            <Field
+                              className="form-control "
+                              name="shipper_name"
+                              placeholder="Shipper Name"
+                              type="text"
+                              style={{ background: "#EDEDED" }}
+                            />
+                          </div>
+                          {errors.shipper_name && touched.shipper_name && (
+                            <div className="invalid-feedback d-block">
+                              {errors.shipper_name}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="remarks" className="form-label">

@@ -55,6 +55,14 @@ const AddEnquiry = (props) => {
       label: "Warehousing",
       value: "Warehousing",
     },
+    {
+      label: "Customs Clearance",
+      value: "Customs Clearance",
+    },
+    {
+      label: "Other",
+      value: "Other",
+    },
   ];
   const scopeofworkOptions = [
     {
@@ -419,7 +427,6 @@ const AddEnquiry = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={consigneeOptions}
@@ -440,21 +447,29 @@ const AddEnquiry = (props) => {
                           />
                         </div>
                       </Grid>
-
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="shipper_name" className="form-label">
-                            Shipper Name
+                          <Label htmlFor="type" className="form-label">
+                            Type
                             <span className="text-danger">*</span>
                           </Label>
-                          <Field
-                            className="form-control"
-                            name="shipper_name"
-                            style={{ background: "#EDEDED" }}
+
+                          <Select
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={typeOptions}
+                            // defaultValue={{ label: jobType }}
+                            // onChange={(event) => {
+                            //   setJobType(event.value);
+                            // }}
+                            onChange={(data) => {
+                              setJobType(data.value);
+                              setFieldValue("type", data.value);
+                            }}
                           />
 
                           <ErrorMessage
-                            name="shipper_name"
+                            name="type"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
@@ -497,7 +512,6 @@ const AddEnquiry = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={podOptions?.map((item) => {
@@ -530,7 +544,6 @@ const AddEnquiry = (props) => {
                             <span className="text-danger">*</span>
                           </Label>
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={clientOptions}
@@ -561,7 +574,6 @@ const AddEnquiry = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={poaOptions?.map((item) => {
@@ -595,7 +607,6 @@ const AddEnquiry = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={poaOptions?.map((item) => {
@@ -713,7 +724,6 @@ const AddEnquiry = (props) => {
                             <span className="text-danger">*</span>
                           </Label>
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={statusOptions}
@@ -739,7 +749,6 @@ const AddEnquiry = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={scopeofworkOptions}
@@ -765,28 +774,18 @@ const AddEnquiry = (props) => {
                     <Grid spacing={2} container>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="type" className="form-label">
-                            Type
+                          <Label htmlFor="shipper_name" className="form-label">
+                            Shipper Name
                             <span className="text-danger">*</span>
                           </Label>
-
-                          <Select
-                            name="type"
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            options={typeOptions}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
-                            onChange={(data) => {
-                              setJobType(data.value);
-                              setFieldValue("type", data.value);
-                            }}
+                          <Field
+                            className="form-control"
+                            name="shipper_name"
+                            style={{ background: "#EDEDED" }}
                           />
 
                           <ErrorMessage
-                            name="type"
+                            name="shipper_name"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
