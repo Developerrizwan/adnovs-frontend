@@ -135,9 +135,9 @@ const Sales = (props) => {
 
   const getPoaOptions = (val) => {
     apiAuth
-      .get(`/api/master/poa/?page=${1}&search=${val || ""}`)
+      .get(`/api/master/poa/`)
       .then((response) => {
-        const data = response.data.results;
+        const { data } = response;
         const opts = data.map((dd) => {
           return {
             label: dd?.name,
@@ -199,9 +199,9 @@ const Sales = (props) => {
 
   const getPodOptions = (val) => {
     apiAuth
-      .get(`/api/master/pod/?page=${1}&search=${val || ""}`)
+      .get(`/api/master/pod/`)
       .then((response) => {
-        let data = response?.data?.results;
+        let { data } = response;
         data = data.map((dd) => {
           return {
             label: dd?.name,
@@ -688,9 +688,9 @@ const Sales = (props) => {
                             styles={customStyles}
                             options={podOptions}
                             value={podValue}
-                            onInputChange={(val) => {
-                              getPodOptions(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getPodOptions(val);
+                            // }}
                             onChange={(data) => {
                               setPodValue(data);
                               setFieldValue("pod", data.value);
@@ -803,9 +803,9 @@ const Sales = (props) => {
                             styles={customStyles}
                             value={poaValue}
                             options={poaOptions}
-                            onInputChange={(val) => {
-                              getPoaOptions(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getPoaOptions(val);
+                            // }}
                             onChange={(data) => {
                               setPoaValue(data);
                               setFieldValue("poa", data.value);

@@ -172,10 +172,9 @@ const CreateNewJob = (props) => {
 
   const getPoaOptions = (val) => {
     apiAuth
-      .get(`/api/master/poa/?page=${1}&search=${val || ""}`)
+      .get(`/api/master/poa/`)
       .then((response) => {
-        let data = response.data.results;
-        console.log("dswdwd", data);
+        let { data } = response;
         setPoaOptions(data);
       })
       .catch((error) => {
@@ -247,11 +246,10 @@ const CreateNewJob = (props) => {
 
   const getPodOptions = (val) => {
     apiAuth
-      .get(`/api/master/pod/?page=${1}&search=${val || ""}`)
+      .get(`/api/master/pod/`)
       .then((response) => {
-        let data = response.data.results;
+        let { data } = response;
         setPodOptions(data);
-        console.log("poa", data);
       })
       .catch((error) => {
         console.log(error);
@@ -623,7 +621,7 @@ const CreateNewJob = (props) => {
                               };
                             })}
                             value={selPod}
-                            onInputChange={(val) => getPodOptions(val)}
+                            // onInputChange={(val) => getPodOptions(val)}
                             onChange={(data) => {
                               //   setPodValue(data);
                               setFieldValue("pod", data.value);
@@ -686,7 +684,7 @@ const CreateNewJob = (props) => {
                               };
                             })}
                             value={selPoa}
-                            onInputChange={(val) => getPoaOptions(val)}
+                            // onInputChange={(val) => getPoaOptions(val)}
                             onChange={(data) => {
                               //   setPoaValue(data);
                               setFieldValue("poa", data.value);
@@ -720,9 +718,9 @@ const CreateNewJob = (props) => {
                               };
                             })}
                             value={polValue}
-                            onInputChange={(val) => {
-                              getPoaOptions(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getPoaOptions(val);
+                            // }}
                             onChange={(data) => {
                               setPolValue(data);
                               setFieldValue("pol", data.value);
