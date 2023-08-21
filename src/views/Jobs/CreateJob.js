@@ -21,7 +21,7 @@ const CreateJob = (props) => {
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
   const [poaValue, setPoaValue] = useState(null);
-  const [branchValue, setBranchValue] = useState("JEDDHA");
+  const [branchValue, setBranchValue] = useState(null);
   const [podValue, setPodValue] = useState(null);
   const [eta, setEta] = useState(etaDateObj);
   const [etd, setEtd] = useState(etdDateObj);
@@ -42,7 +42,10 @@ const CreateJob = (props) => {
     },
   ];
 
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [
+    { label: "JEDDAH", value: "JEDDAH" },
+    { label: "DUBAI", value: "DUBAI" },
+  ];
 
   const statusOptions = [
     {
@@ -123,6 +126,14 @@ const CreateJob = (props) => {
     {
       label: "Warehousing",
       value: "Warehousing",
+    },
+    {
+      label: "Customs Clearance",
+      value: "Customs Clearance",
+    },
+    {
+      label: "Other",
+      value: "Other",
     },
   ];
 
@@ -230,12 +241,11 @@ const CreateJob = (props) => {
       value: "Other",
     },
   ];
-  const getPoaOptions = () => {
+  const getPoaOptions = (val) => {
     apiAuth
-      .get("api/master/poa/")
-
+      .get(`/api/master/poa/`)
       .then((response) => {
-        let data = response.data.results;
+        let { data } = response;
         setPoaOptions(data);
       })
       .catch((error) => {
@@ -243,12 +253,11 @@ const CreateJob = (props) => {
       });
   };
 
-  const getPodOptions = () => {
+  const getPodOptions = (val) => {
     apiAuth
-      .get("api/master/pod/")
-
+      .get(`/api/master/pod/`)
       .then((response) => {
-        let data = response.data.results;
+        let { data } = response;
         setPodOptions(data);
       })
       .catch((error) => {
@@ -669,6 +678,9 @@ const CreateJob = (props) => {
                           };
                         })}
                         value={podValue}
+                        // onInputChange={(val) => {
+                        //   getPodOptions(val);
+                        // }}
                         onChange={(data) => {
                           setPodValue(data);
                           setFieldValue("pod", data.value);
@@ -733,6 +745,9 @@ const CreateJob = (props) => {
                           };
                         })}
                         value={poaValue}
+                        // onInputChange={(val) => {
+                        //   getPoaOptions(val);
+                        // }}
                         onChange={(data) => {
                           setPoaValue(data);
                           setFieldValue("poa", data.value);
@@ -766,6 +781,9 @@ const CreateJob = (props) => {
                           };
                         })}
                         value={polValue}
+                        // onInputChange={(val) => {
+                        //   getPoaOptions(val);
+                        // }}
                         onChange={(data) => {
                           setPolValue(data);
                           setFieldValue("pol", data.value);

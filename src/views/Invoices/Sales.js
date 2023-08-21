@@ -33,6 +33,7 @@ const Sales = (props) => {
   const [dueDate, setDueDate] = useState(new Date());
   const [invoiceId, setInvoiceId] = useState(null);
   const [podValue, setPodValue] = useState(null);
+  const [selectedParty, setSelectedParty] = useState(null);
   const [selectedInvoice, setSelectedInvoice] = useState({
     value: "Sales",
     label: "Sales",
@@ -44,11 +45,15 @@ const Sales = (props) => {
     value: "JEDDAH",
   });
   const [Vendorvalue, setVendorvalue] = useState("TEMP");
+  const [partyOptions, setPartyOptions] = useState([]);
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
 
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [
+    { label: "JEDDAH", value: "JEDDAH" },
+    { label: "DUBAI", value: "DUBAI" },
+  ];
   const VendorOptions = [{ label: "TEMP", value: "TEMP" }];
 
   const history = useHistory();
@@ -72,6 +77,10 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
+        const sel = ConsOpts.find(
+          (item) => item.value === props?.data?.consignee_name?.id
+        );
+        setConsigneeNameValue(sel);
         setConsigneeOptions(ConsOpts);
 
         setLoading(false);
@@ -103,7 +112,10 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
-
+        const clOptions = ClientOpts.find(
+          (item) => item.value === props.data?.client_name?.id
+        );
+        setClientNameValue(clOptions);
         setClientOptions(ClientOpts);
         setLoading(false);
       })
@@ -121,12 +133,11 @@ const Sales = (props) => {
       });
   };
 
-  const getPoaOptions = () => {
+  const getPoaOptions = (val) => {
     apiAuth
-      .get("api/master/poa/")
-
+      .get(`/api/master/poa/`)
       .then((response) => {
-        const data = response.data.results;
+        const { data } = response;
         const opts = data.map((dd) => {
           return {
             label: dd?.name,
@@ -144,15 +155,36 @@ const Sales = (props) => {
       });
   };
 
+  const getPartyOptions = (val) => {
+    apiAuth
+      .get(`/api/get-coa/?search=${val || ""}`)
+      .then((res) => {
+        let { data } = res;
+        data = data.map((rr) => {
+          return {
+            label: rr.code,
+            value: rr.id,
+          };
+        });
+        const sel = data.map((dd) => dd.value === props?.data?.coa);
+        setPartyOptions(data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
+    getPartyOptions();
     getOrganization(searchValue);
     getClientOrganization(searchValue);
     getPoaOptions();
     getPodOptions();
     getAllCurrencyCodes();
     getJobs();
-    getPoaOptions();
-    getPodOptions();
+    setSelectedInvoice({
+      label: invoicesId,
+      value: invoicesId,
+    });
+
     if (props.isEdit) {
       setBranchValue({
         label: props.data?.consignee_name?.branch,
@@ -162,27 +194,14 @@ const Sales = (props) => {
         label: props?.data?.pod,
         value: props?.data?.pod,
       });
-      setSelectedInvoice({
-        label: invoicesId,
-        value: invoicesId,
-      });
-      const sel = consigneeOptions.find(
-        (item) => item.value === props?.data?.consignee_name?.id
-      );
-      setConsigneeNameValue(sel);
-      const clOptions = clientOptions.find(
-        (item) => item.value === props.data?.client_name?.id
-      );
-      setClientNameValue(clOptions);
     }
   }, []);
 
-  const getPodOptions = () => {
+  const getPodOptions = (val) => {
     apiAuth
-      .get("api/master/pod/")
-
+      .get(`/api/master/pod/`)
       .then((response) => {
-        let data = response?.data?.results;
+        let { data } = response;
         data = data.map((dd) => {
           return {
             label: dd?.name,
@@ -192,6 +211,7 @@ const Sales = (props) => {
         setPodOptions(data);
         if (props.isEdit) {
           const sel = data.find((dd) => dd.value === props.data?.pod);
+          setPodValue(sel);
         }
       })
       .catch((error) => {
@@ -234,13 +254,14 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
-        setJobOptions(opts);
+
         if (props?.isEdit) {
           const selJob = opts.find(
-            (opt) => opt?.value === props.data?.job?.bl_number
+            (opt) => opt?.label === props.data?.job?.job_number
           );
           setSelectedJob(selJob);
         }
+        setJobOptions(opts);
       })
       .catch((err) => console.log(err));
   };
@@ -264,13 +285,14 @@ const Sales = (props) => {
           </>
         )}
         <Grid container spacing={2}>
+          {console.log("eeeeeeeee", props?.data)}
           <Grid item lg={11} style={{ margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
                   bl_number: props.isEdit ? props.data?.bl_number : "",
                   consignee_name: props.isEdit
-                    ? props.data?.consignee_name?.name
+                    ? props.data?.consignee_name?.id
                     : "",
                   due_date: props.isEdit ? props.data?.due_date : "",
                   currency_sar: props.isEdit ? props.data?.currency_sar : "",
@@ -278,13 +300,11 @@ const Sales = (props) => {
                   shipper_name: props.isEdit ? props.data?.shipper_name : "",
                   branch: props.isEdit
                     ? props.data?.consignee_name?.branch
-                    : "",
+                    : "JEDDAH",
                   // vendor: props.isEdit ? props.data?.vendor : "TEMP",
                   ex_rate: props.isEdit ? props.data?.ex_rate : "",
                   pod: props.isEdit ? props.data?.pod : "",
-                  client_name: props.isEdit
-                    ? props.data?.client_name?.name
-                    : "",
+                  client_name: props.isEdit ? props.data?.client_name?.id : "",
                   fc_amount: props.isEdit ? props.data?.fc_amount : "",
                   amount_sar: props.isEdit ? props.data?.amount_sar : "",
                   poa: props.isEdit ? props.data?.poa : "",
@@ -296,6 +316,7 @@ const Sales = (props) => {
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
                   narration: props.isEdit ? props.data?.narration : "",
                   job: props.isEdit ? props.data?.job?.bl_number : "",
+                  coa: props.isEdit ? props.data?.coa : "",
                 }}
                 validationSchema={Yup.object({
                   bl_number: Yup.string().required("BL Number is Required"),
@@ -337,6 +358,7 @@ const Sales = (props) => {
                   )?.company_id;
                   values["company"] = company;
                   values["invoice_type"] = selectedInvoice?.value;
+
                   // values["consignee_name"] = consigneeNameValue?.value;
                   // values["client_name"] = clientNameValue?.value;
 
@@ -566,27 +588,30 @@ const Sales = (props) => {
 
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <div>
-                            <Label
-                              htmlFor="shipper_name"
-                              className=" w-50 p e-2"
-                            >
-                              Shipper Name
-                              <span className="text-danger">*</span>
-                            </Label>
-                            <Field
-                              className="form-control "
-                              name="shipper_name"
-                              placeholder="Shipper Name"
-                              type="text"
-                              style={{ background: "#EDEDED" }}
-                            />
-                          </div>
-                          {errors.shipper_name && touched.shipper_name && (
-                            <div className="invalid-feedback d-block">
-                              {errors.shipper_name}
-                            </div>
-                          )}
+                          <Label htmlFor="client_name" className="form-label">
+                            Client Name
+                            <span className="text-danger">*</span>
+                          </Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={clientOptions}
+                            value={clientNameValue}
+                            onInputChange={(val) => {
+                              getClientOrganization(val);
+                            }}
+                            onChange={(data) => {
+                              setClientNameValue(data);
+                              setFieldValue("client_name", data.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="client_name"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
                         </div>
                       </Grid>
                     </Grid>
@@ -663,9 +688,11 @@ const Sales = (props) => {
                             styles={customStyles}
                             options={podOptions}
                             value={podValue}
+                            // onInputChange={(val) => {
+                            //   getPodOptions(val);
+                            // }}
                             onChange={(data) => {
                               setPodValue(data);
-
                               setFieldValue("pod", data.value);
                             }}
                           />
@@ -683,32 +710,28 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="client_name" className="form-label">
-                            Client Name
-                            <span className="text-danger">*</span>
-                          </Label>
+                          <label htmlFor="coa" className="form-label">
+                            Party A/C
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
                           <Select
-                            name="type"
-                            placeholder={"Select"}
+                            name="coa"
                             styles={customStyles}
-                            options={clientOptions}
-                            value={clientNameValue}
-                            onInputChange={(val) => {
-                              getClientOrganization(val);
-                            }}
+                            value={selectedParty}
+                            options={partyOptions}
                             onChange={(data) => {
-                              setClientNameValue(data);
-                              setFieldValue("client_name", data.value);
+                              setFieldValue("coa", data.value);
+                              setSelectedParty(data);
                             }}
                           />
-                          <ErrorMessage
-                            name="client_name"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
+                          {errors.coa && touched.coa && (
+                            <div className="invalid-feedback d-block">
+                              {errors.coa}
+                            </div>
+                          )}
                         </div>
                       </Grid>
+
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
@@ -748,7 +771,7 @@ const Sales = (props) => {
                             <Label htmlFor="amount_sar" className="pe-2 w-50">
                               {" "}
                               Amount
-                              <span className="text-danger">*</span>
+                              {/* <span className="text-danger">*</span> */}
                             </Label>
                             <Field
                               className="form-control"
@@ -780,6 +803,9 @@ const Sales = (props) => {
                             styles={customStyles}
                             value={poaValue}
                             options={poaOptions}
+                            // onInputChange={(val) => {
+                            //   getPoaOptions(val);
+                            // }}
                             onChange={(data) => {
                               setPoaValue(data);
                               setFieldValue("poa", data.value);
@@ -908,6 +934,32 @@ const Sales = (props) => {
                       </Grid>
                     )}
                     <Grid spacing={2} container>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <div>
+                            <Label
+                              htmlFor="shipper_name"
+                              className=" w-50 p e-2"
+                            >
+                              Shipper Name
+                              <span className="text-danger">*</span>
+                            </Label>
+                            <Field
+                              className="form-control "
+                              name="shipper_name"
+                              placeholder="Shipper Name"
+                              type="text"
+                              style={{ background: "#EDEDED" }}
+                            />
+                          </div>
+                          {errors.shipper_name && touched.shipper_name && (
+                            <div className="invalid-feedback d-block">
+                              {errors.shipper_name}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="remarks" className="form-label">

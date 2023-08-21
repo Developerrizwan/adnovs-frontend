@@ -19,6 +19,7 @@ import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import moment from "moment";
 import QRCode from "react-qr-code";
+import Translate from "./Translate";
 
 const TaxInvoice = (props) => {
   const [state, setState] = useState({ costs: [] });
@@ -181,6 +182,7 @@ const TaxInvoice = (props) => {
 
   return (
     <>
+      {/* {console.log("eeeeeee", state.invoice)} */}
       <div
         style={{
           display: "flex",
@@ -235,13 +237,26 @@ const TaxInvoice = (props) => {
         <div className="row mt-2 p-2">
           <div className="col-lg-6">
             <h5 className="mb-4" style={{ fontWeight: 700, color: "#000" }}>
-              INVOICE TO:
+              INVOICE TO
+              <Translate text={"INVOICE TO"} />{" "}
+              <span
+                style={{
+                  marginLeft: "3px",
+                }}
+              >
+                :
+              </span>
             </h5>
             <p>{state.invoice?.client_name?.name}</p>
             <p>{state.invoice?.client_name?.address}</p>
-            <p>VAT No. : {state.invoice?.client_name?.vat_trn_number}</p>
+            <p>
+              VAT No. <Translate text={"VAT No"} /> :
+              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                : {state.invoice?.client_name?.vat_trn_number}
+              </div>
+            </p>
           </div>
-          <div className="col-lg-6" style={{ borderRight: "1px solid #000" }}>
+          <div className="col-lg-6" style={{ borderLeft: "1px solid #000" }}>
             <p
               style={{
                 fontWeight: 600,
@@ -249,7 +264,18 @@ const TaxInvoice = (props) => {
                 textTransform: "uppercase",
               }}
             >
-              Customer VAT No:{state.invoice?.client_name?.vat_trn_number}
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "400px",
+                }}
+              >
+                Customer VAT No
+                <Translate text="Customer VAT No" />
+              </div>
+              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                : {state.invoice?.client_name?.vat_trn_number}
+              </div>
             </p>
             <p
               style={{
@@ -258,8 +284,18 @@ const TaxInvoice = (props) => {
                 textTransform: "uppercase",
               }}
             >
-              {" "}
-              Invoice No: {state?.invoice?.id}
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "400px",
+                }}
+              >
+                Invoice No
+                <Translate text="Invoice No" />
+              </div>
+              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                : {state?.invoice?.id}
+              </div>
             </p>
             <p
               style={{
@@ -268,7 +304,18 @@ const TaxInvoice = (props) => {
                 textTransform: "uppercase",
               }}
             >
-              Invoice Date : {moment(state.invoice?.date).format("MM/DD/YYYY")}
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "400px",
+                }}
+              >
+                Invoice Date
+                <Translate text="Invoice Date" />
+              </div>
+              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                : {moment(state.invoice?.date).format("MM/DD/YYYY")}
+              </div>
             </p>
             <p
               style={{
@@ -277,11 +324,21 @@ const TaxInvoice = (props) => {
                 textTransform: "uppercase",
               }}
             >
-              {" "}
-              Payment Due Date :{" "}
-              {state.invoice?.due_date
-                ? moment(state.invoice?.due_date).format("MM/DD/YYYY")
-                : ""}
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "400px",
+                }}
+              >
+                Payment Due Date
+                <Translate text="Payment Due Date" />
+              </div>
+              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                :
+                {state.invoice?.due_date
+                  ? moment(state.invoice?.due_date).format("MM/DD/YYYY")
+                  : ""}
+              </div>
             </p>
           </div>
         </div>
@@ -296,60 +353,61 @@ const TaxInvoice = (props) => {
             <table className="w-100 mt-2 border-0">
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Shipper :
+                  Shipper
+                  <Translate text="Payment Due Date" />
                 </td>
-                <td className="border-0">{state.invoice?.shipper_name}</td>
+                <td className="border-0">: {state.invoice?.shipper_name}</td>
                 <td className="border-0"></td>
               </tr>
               <tr>
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Consignee :
+                  Consignee <Translate text={"Consignee"} />
                 </td>
                 <td className="border-0">
-                  {state.invoice?.consignee_name?.name}
+                  : {state.invoice?.consignee_name?.name}
                 </td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Place of Origin :
+                  Place of Origin <Translate text={"Place of Origin"} />
                 </td>
-                <td className="border-0">{state.invoice?.pod}</td>
+                <td className="border-0">: {state.invoice?.pod}</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Final Destination :
+                  Final Destination <Translate text={"Final Destination"} />
                 </td>
-                <td className="border-0">{state.invoice?.poa}</td>
+                <td className="border-0">: {state.invoice?.poa}</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Vessel / Flight :
+                  Vessel / Flight <Translate text={"Vessel / Flight"} />
                 </td>
-                <td className="border-0">CHENNAI EXPRESS/2320E</td>
+                <td className="border-0">: </td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Voy / Flt :
+                  Voy / Flt <Translate text={"Voy / Flt"} />
                 </td>
-                <td className="border-0">2320E</td>
+                <td className="border-0">:</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Cust. P/O No :
+                  Cust. P/O No <Translate text={"Cust. P/O No"} />
                 </td>
-                <td className="border-0"></td>
+                <td className="border-0">:</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Remarks :
+                  Remarks <Translate text={"Remarks"} />
                 </td>
-                <td className="border-0">{state.invoice?.remarks}</td>
+                <td className="border-0">: {state.invoice?.remarks}</td>
                 <td className="border-0"></td>
               </tr>
             </table>
@@ -358,17 +416,18 @@ const TaxInvoice = (props) => {
             <table className="w-100 mt-2 border-0">
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Job Number:
+                  Job Number <Translate text={"Job Number"} />
                 </td>
-                <td className="border-0">{state.invoice?.job?.job_number}</td>
+                <td className="border-0">: {state.invoice?.job?.job_number}</td>
                 <td className="border-0"></td>
               </tr>
               <tr>
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Job Date:
+                  Job Date <Translate text={"Job Date"} />
                 </td>
                 <td className="border-0">
                   {" "}
+                  :{" "}
                   {state.invoice?.job
                     ? moment(state.invoice?.job?.created_at).format(
                         "MM/DD/YYYY"
@@ -379,23 +438,24 @@ const TaxInvoice = (props) => {
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  Master:
+                  Master <Translate text={"Master"} />
                 </td>
-                <td className="border-0">WHSHAFDH/04-MAY</td>
+                <td className="border-0">: </td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  House No:
+                  House No <Translate text={"House No"} />
                 </td>
-                <td className="border-0"></td>
+                <td className="border-0">:</td>
                 <td className="border-0"></td>
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  ETD:
+                  ETD <Translate text={"etd"} />
                 </td>
                 <td className="border-0">
+                  :{" "}
                   {state.invoice?.job
                     ? moment(state.invoice?.job?.etd).format("MM/DD/YYYY")
                     : ""}
@@ -404,9 +464,10 @@ const TaxInvoice = (props) => {
               </tr>
               <tr className="border-0">
                 <td className="border-0" style={{ fontWeight: 600 }}>
-                  ETA:
+                  ETA <Translate text={"ETA"} />
                 </td>
                 <td className="border-0">
+                  :{" "}
                   {state.invoice?.job
                     ? moment(state.invoice?.job?.eta).format("MM/DD/YYYY")
                     : ""}
@@ -420,22 +481,42 @@ const TaxInvoice = (props) => {
         <div className="p-2" style={{ overflowX: "auto" }}>
           <table className="htmlTable mt-2 w-100">
             <tr style={{ background: "#dadedf" }}>
-              <th style={{ padding: "5px 0" }}>Charge Description</th>
-              <th>.Curr</th>
-              <th>Rate Per Unit</th>
-              <th>Unit</th>
-              <th>Curr. Amount</th>
+              <th style={{ padding: "5px 0" }}>
+                Charge Description <br />{" "}
+                <Translate text={"Charge Description"} />
+              </th>
+              <th>
+                .Curr <br /> <Translate text={".Curr"} />
+              </th>
+              <th>
+                Rate Per Unit <br /> <Translate text={"Rate Per Unit"} />
+              </th>
+              <th>
+                Unit <br /> <Translate text={"Unit"} />
+              </th>
+              <th>
+                Curr. Amount <br /> <Translate text={"Curr. Amount"} />{" "}
+              </th>
               {/* <th>ROE</th> */}
-              <th>Total Price excl. VAT</th>
-              <th>VAT%</th>
-              <th>VAT Amount</th>
-              <th>Total SAR</th>
+              <th>
+                Total Price excl. VAT <br />{" "}
+                <Translate text={"Total Price excl. VAT"} />
+              </th>
+              <th>
+                VAT% <br /> <Translate text={"VAT%"} />
+              </th>
+              <th>
+                VAT Amount <br /> <Translate text={"VAT AMOUNT"} />
+              </th>
+              <th>
+                Total SAR <br /> <Translate text={"Total SAR"} />
+              </th>
             </tr>
             {state.costs.map((cost, index) => (
               <>
                 <tr style={{ borderBottom: "1px solid #d3d3d3" }} key={index}>
                   {console.log("ccc", cost)}
-                  <td>{cost?.charge?.description}</td>
+                  <td>{cost?.charge?.name}</td>
                   <td>{cost?.currency}</td>
                   <td>
                     {" "}
@@ -482,10 +563,23 @@ const TaxInvoice = (props) => {
           <table className="w-100 mt-2 border-0">
             <tr className="border-0">
               <td className="border-0" style={{ fontWeight: 600 }}>
-                {state.word_amount} Only
+                {state.word_amount} Only{" "}
+                <Translate text={`${state.word_amount} Only`} />
               </td>
               <td className="border-0" style={{ fontWeight: 600 }}>
-                Total in: {state.invoice?.currency_sar}
+                {/* Total in: {state.invoice?.currency_sar} */}
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "150px",
+                  }}
+                >
+                  Total in
+                  <Translate text="Total in" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  :{state.invoice?.currency_sar}
+                </div>
               </td>
               <td className="border-0" style={{ fontWeight: 600 }}>
                 {Number(state.exd_vat_total_amount)?.toLocaleString("en-US", {
@@ -513,10 +607,12 @@ const TaxInvoice = (props) => {
         <div className="p-2" style={{ overflowX: "auto" }}>
           <table className="htmlTable mt-2 w-100">
             <tr style={{ background: "#dadedf" }}>
-              <th>Container Details</th>
+              <th>
+                Container Details <Translate text={"Container Details"} />
+              </th>
             </tr>
             <tr>
-              <td>FCIU6538307, YMMU6330305</td>
+              <td>FCIU6538307, YMMU6330305 </td>
             </tr>
           </table>
         </div>
@@ -525,12 +621,16 @@ const TaxInvoice = (props) => {
           <div className="col-lg-4 col-xs-12">
             <table className="htmlTable mt-2 w-100">
               <tr style={{ background: "#dadedf" }}>
-                <th>No. of Containers</th>
-                <th>TYPE</th>
+                <th>
+                  No. of Containers <Translate text={"No. of Containers"} />
+                </th>
+                <th>
+                  TYPE <Translate text={"TYPE"} />
+                </th>
               </tr>
               <tr>
                 <td>1</td>
-                <td>20 DC</td>
+                <td>{state?.invoice?.job?.container_type}</td>
               </tr>
             </table>
           </div>
@@ -540,7 +640,7 @@ const TaxInvoice = (props) => {
         <div className="row mt-4 p-2">
           <div className="col-lg-9 col-xs-12">
             <h5 style={{ color: "#000", fontWeight: 700 }}>
-              Terms & Conditions
+              Terms & Conditions <Translate text={"Terms & Conditions"} />
             </h5>
             <p>
               If any discrepancy in the invoice must be notified within 7 days
@@ -548,16 +648,72 @@ const TaxInvoice = (props) => {
               acknowledged.
             </p>
             <h5 className="mt-4" style={{ color: "#000", fontWeight: 700 }}>
-              BANK DETAILS
+              BANK DETAILS <Translate text={"BANK DETAILS"} />
             </h5>
-            <p>Account Name : {state?.invoice?.company?.account_name}</p>
-            <p>ACC NO : {state?.invoice?.company?.account_number}</p>
-            <p>IBAN NO : {state?.invoice?.company?.iban_code}</p>
-            <p>SWIFT : {state?.invoice?.company?.swift_code}</p>
+
+            <p>
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "250px",
+                }}
+              >
+                Account Name
+                <Translate text="Account Name" />
+              </div>
+              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                : {state?.invoice?.company?.account_name}
+              </div>
+            </p>
+
+            <p>
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "250px",
+                }}
+              >
+                Account Number
+                <Translate text="Account Name" />
+              </div>
+              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                : {state?.invoice?.company?.account_number}
+              </div>
+            </p>
+
+            <p>
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "250px",
+                }}
+              >
+                IBAN Code
+                <Translate text="IBAN Code" />
+              </div>
+              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                : {state?.invoice?.company?.iban_code}
+              </div>
+            </p>
+
+            <p>
+              <div
+                style={{
+                  display: "inline-block",
+                  width: "250px",
+                }}
+              >
+                Swift Code
+                <Translate text="Swift Code" />
+              </div>
+              <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                : {state?.invoice?.company?.swift_code}
+              </div>
+            </p>
           </div>
-          <div className="col-lg-3 col-xs-12">
+          <div className="col-lg-3 col-xs-12 mt-4">
             <span className="p-2">
-              <QRCode size={250} value={String(state.qrcodeString)} />
+              <QRCode size={150} value={String(state.qrcodeString)} />
             </span>
           </div>
         </div>

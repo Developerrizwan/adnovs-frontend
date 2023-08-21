@@ -32,12 +32,11 @@ const EditEnquiry = (props) => {
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
 
-  const getPoaOptions = () => {
+  const getPoaOptions = (val) => {
     apiAuth
-      .get("api/master/poa/")
-
+      .get(`/api/master/poa/`)
       .then((response) => {
-        let data = response.data.results;
+        let { data } = response;
         setPoaOptions(data);
       })
       .catch((error) => {
@@ -45,12 +44,11 @@ const EditEnquiry = (props) => {
       });
   };
 
-  const getPodOptions = () => {
+  const getPodOptions = (val) => {
     apiAuth
-      .get("api/master/pod/")
-
+      .get(`/api/master/pod/`)
       .then((response) => {
-        let data = response.data.results;
+        let { data } = response;
         setPodOptions(data);
       })
       .catch((error) => {
@@ -78,6 +76,10 @@ const EditEnquiry = (props) => {
             value: dd?.id,
           };
         });
+        const consignee_name = ConsOpts.find(
+          (item) => item.value === Number(props.allJobs?.consignee_name)
+        );
+        setConsigneeNameValue(consignee_name);
         setConsigneeOptions(ConsOpts);
         setLoading(false);
       })
@@ -108,6 +110,10 @@ const EditEnquiry = (props) => {
             value: dd?.id,
           };
         });
+        const client_name = ClientOpts.find(
+          (item) => item.value === Number(props.allJobs?.client_name)
+        );
+        setClientNameValue(client_name);
         setClientOptions(ClientOpts);
         setLoading(false);
       })
@@ -126,6 +132,7 @@ const EditEnquiry = (props) => {
   };
 
   useEffect(() => {
+    // console.log("sssssss", props.allJobs);
     getOrganization();
     getClientOrganization();
     const scopeType = scopeofworkOptions.find(
@@ -156,16 +163,6 @@ const EditEnquiry = (props) => {
       label: props.allJobs.pod,
       value: props.allJobs.pod,
     });
-
-    const consignee_name = consigneeOptions.find(
-      (item) => item.value === props.allJobs?.consignee_name
-    );
-    setConsigneeNameValue(consignee_name);
-
-    const client_name = clientOptions.find(
-      (item) => item.value === props.allJobs?.client_name
-    );
-    setClientNameValue(client_name);
   }, []);
 
   const typeOptions = [
@@ -189,7 +186,16 @@ const EditEnquiry = (props) => {
       label: "Warehousing",
       value: "Warehousing",
     },
+    {
+      label: "Customs Clearance",
+      value: "Customs Clearance",
+    },
+    {
+      label: "Other",
+      value: "Other",
+    },
   ];
+
   const scopeofworkOptions = [
     {
       label: "D2D",
@@ -488,6 +494,9 @@ const EditEnquiry = (props) => {
                           };
                         })}
                         value={podValue}
+                        // onInputChange={(val) => {
+                        //   getPodOptions(val);
+                        // }}
                         onChange={(data) => {
                           setPodValue(data);
                           setFieldValue("pod", data.value);
@@ -552,6 +561,9 @@ const EditEnquiry = (props) => {
                           };
                         })}
                         value={poaValue}
+                        // onInputChange={(val) => {
+                        //   getPoaOptions(val);
+                        // }}
                         onChange={(data) => {
                           setPoaValue(data);
                           setFieldValue("poa", data.value);
@@ -585,6 +597,9 @@ const EditEnquiry = (props) => {
                           };
                         })}
                         value={polValue}
+                        // onInputChange={(val) => {
+                        //   getPoaOptions(val);
+                        // }}
                         onChange={(data) => {
                           setPolValue(data);
                           setFieldValue("pol", data.value);
@@ -631,23 +646,25 @@ const EditEnquiry = (props) => {
                   </Grid>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="eta" className="form-label">
-                        ETA
-                        {/* <span className="text-danger">*</span> */}
+                      <Label htmlFor="type" className="form-label">
+                        Type
+                        <span className="text-danger">*</span>
                       </Label>
-                      <DatePicker
-                        selected={eta}
-                        onChange={(date) => {
-                          setEta(date);
+
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={typeOptions}
+                        value={typevalue}
+                        onChange={(data) => {
+                          setTypevalue(data);
+                          setFieldValue("type", data.value);
                         }}
-                        showTimeSelect
-                        timeFormat="HH:mm"
-                        timeIntervals={15}
-                        timeCaption="Time"
-                        dateFormat="d MMMM yyyy h:mm aa"
                       />
+
                       <ErrorMessage
-                        name="eta"
+                        name="type"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -713,25 +730,23 @@ const EditEnquiry = (props) => {
                 <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="type" className="form-label">
-                        Type
-                        <span className="text-danger">*</span>
+                      <Label htmlFor="eta" className="form-label">
+                        ETA
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
-
-                      <Select
-                        name="type"
-                        placeholder={"Select"}
-                        styles={customStyles}
-                        options={typeOptions}
-                        value={typevalue}
-                        onChange={(data) => {
-                          setTypevalue(data);
-                          setFieldValue("type", data.value);
+                      <DatePicker
+                        selected={eta}
+                        onChange={(date) => {
+                          setEta(date);
                         }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="d MMMM yyyy h:mm aa"
                       />
-
                       <ErrorMessage
-                        name="type"
+                        name="eta"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}

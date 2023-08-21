@@ -11,9 +11,9 @@ import {
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
-import AddCostEntry from "./AddCostEntry";
+import AddCOAGroup from "./AddCOAGroup";
 
-const CostEntryTable = (props) => {
+const CaoGroupTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
@@ -21,119 +21,54 @@ const CostEntryTable = (props) => {
 
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13">Charge</span>,
-      selector: (row) => row.charge,
+      name: <span className="font-weight-bold fs-13"> Code</span>,
+      selector: (row) => row.code,
       cell: (value) => {
-        return <div>{value.charge?.code}</div>;
+        return <div>{value.code}</div>;
       },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Voucher</span>,
-      selector: (row) => row.voucher_type,
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Job No</span>,
-      selector: (row) => row.job_no,
+      name: <span className="font-weight-bold fs-13">Name</span>,
+      selector: (row) => row.name,
       cell: (value) => {
-        return <div>{value.job_no?.job_number}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Amount</span>,
-      selector: (row) => row.amount,
-      cell: (value) => {
-        return <div>{value.amount}</div>;
+        return <div>{value.name}</div>;
       },
       sortable: true,
     },
 
     {
-      name: <span className="font-weight-bold fs-13">Shipment No</span>,
-      selector: (row) => row.shipment_no,
+      name: <span className="font-weight-bold fs-13">Type</span>,
+      selector: (row) => row.type,
       cell: (value) => {
-        return <div>{value.shipment_no}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Currency</span>,
-      selector: (row) => row.currency,
-      cell: (value) => {
-        return <div>{value.currency}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Ex Rate</span>,
-      selector: (row) => row.ex_rate,
-      cell: (value) => {
-        return <div>{value.ex_rate}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Is Invoiced</span>,
-      selector: (row) => row.ex_rate,
-      cell: (value) => <span>{value?.is_included ? "Yes" : "No"}</span>,
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">FCY Amount</span>,
-      selector: (row) => row.fcy_amount,
-      cell: (value) => {
-        return <div>{value.fcy_amount}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Description</span>,
-      selector: (row) => row.description,
-      cell: (value) => {
-        return <div>{value.description}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Amount</span>,
-      selector: (row) => row.amount,
-      cell: (value) => {
-        return <div>{value.amount}</div>;
+        return <div>{value.type}</div>;
       },
       sortable: true,
     },
 
     {
-      name: <span className="font-weight-bold fs-13">Sale/Cost</span>,
-      selector: (row) => row.sale_cost,
-      cell: (value) => {
-        return <div>{value.sale_cost}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Dr/Cr</span>,
+      name: <span className="font-weight-bold fs-13">Is Dr/Cr?</span>,
       selector: (row) => row.dr_cr,
       cell: (value) => {
         return <div>{value.dr_cr}</div>;
       },
       sortable: true,
     },
+
     {
-      name: <span className="font-weight-bold fs-13">Prorate Method</span>,
-      selector: (row) => row.prorate_method,
+      name: <span className="font-weight-bold fs-13">Language Name</span>,
+      selector: (row) => row.language_name,
       cell: (value) => {
-        return <div>{value.prorate_method}</div>;
+        return <div>{value.language_name}</div>;
       },
       sortable: true,
     },
+
     {
-      name: <span className="font-weight-bold fs-13">Tax Method</span>,
-      selector: (row) => row.tax_group_code,
+      name: <span className="font-weight-bold fs-13">Remarks</span>,
+      selector: (row) => row.remarks,
       cell: (value) => {
-        return <div>{value.tax_group_code}</div>;
+        return <div>{value.remarks}</div>;
       },
       sortable: true,
     },
@@ -155,7 +90,7 @@ const CostEntryTable = (props) => {
                 className="edit-item-btn"
                 onClick={() => {
                   setSelectedAccount(value);
-                  console.log("wwwwwwwww", value);
+                  // console.log("wwwwwwwww", value);
                   setEditModal(true);
                 }}
               >
@@ -219,16 +154,16 @@ const CostEntryTable = (props) => {
             setEditModal((prev) => !prev);
           }}
         >
-          Edit Cost Entry
+          Edit COA Group
         </ModalHeader>
         <ModalBody>
-          <AddCostEntry
+          <AddCOAGroup
             closeAddPopup={() => {
               setEditModal(false);
               setSelectedAccount(null);
               props.getAccounts();
             }}
-            entry={selectedAccount}
+            account={selectedAccount}
             history={props.history}
             isEdit={true}
           />
@@ -259,7 +194,7 @@ const CostEntryTable = (props) => {
         <ModalFooter>
           <Button
             onClick={() => {
-              props.deleteColumn(deletId.id);
+              props.deleteAccount(deletId.id);
               setDeleteModal((prev) => !prev);
             }}
           >
@@ -272,4 +207,4 @@ const CostEntryTable = (props) => {
   );
 };
 
-export default CostEntryTable;
+export default CaoGroupTable;

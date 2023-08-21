@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
-import JournalVoucher from "./JournalVoucher";
+import JournalVoucher from "./journalVoucher";
 
 const VoucherTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -45,14 +45,14 @@ const VoucherTable = (props) => {
       },
       sortable: true,
     },
-    {
-      name: <span className="font-weight-bold fs-13">Book</span>,
-      selector: (row) => row.book,
-      cell: (value) => {
-        return <div>{value.book}</div>;
-      },
-      sortable: true,
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Book</span>,
+    //   selector: (row) => row.book,
+    //   cell: (value) => {
+    //     return <div>{value.book}</div>;
+    //   },
+    //   sortable: true,
+    // },
     {
       name: <span className="font-weight-bold fs-13">Date</span>,
       selector: (row) => row,

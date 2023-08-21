@@ -183,6 +183,7 @@ const TaxInvoiceSecond = (props) => {
   };
   return (
     <>
+      {console.log("eeeee", state.invoice)}
       <div style={{ padding: "25px" }}>
         <div
           style={{
@@ -202,11 +203,14 @@ const TaxInvoiceSecond = (props) => {
         <div className="card reportdownproject" style={{ padding: "20px" }}>
           <div className="row">
             <div className="col-lg-4">
-              <h3 style={{ color: "#000" }}>ADNOVS SHIPPING & LOGISTICS</h3>
-              <p>Al Boughdadia</p>
-              <p>Jeddah, Saudi Arabia - 22234</p>
+              <h3 style={{ color: "#000" }}>{state?.invoice?.company?.name}</h3>
+              <p>{state?.invoice?.company?.address}</p>
+              <p>
+                {state?.invoice?.company?.state} ,
+                {state?.invoice?.company?.country}
+              </p>
               <p style={{ fontWeight: 600 }}>
-                VAT NO : {state?.invoice?.client_name?.vat_trn_number}
+                VAT NO : {state?.invoice?.company?.vat}
               </p>
               {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
             </div>
@@ -220,55 +224,155 @@ const TaxInvoiceSecond = (props) => {
             </div>
             <div className="col-lg-4 d-flex flex-column align-items-end">
               <h3 style={{ color: "#000" }}>
-                <Translate text={"ADNOVS SHIPPING & LOGISTICS"} />
+                <Translate text={String(state?.invoice?.company?.name)} />
               </h3>
               <p>
-                <Translate text={"Al Boughdadia"} />
+                <Translate
+                  text={
+                    state?.invoice?.company?.address.length
+                      ? state?.invoice?.company?.address
+                      : ""
+                  }
+                />
               </p>
               <p>
-                <Translate text={"Jeddah, Saudi Arabia - 22234"} />
+                <Translate text={state?.invoice?.company?.state} />
+                <Translate text={state?.invoice?.company?.country} />
               </p>
               <p style={{ fontWeight: 600 }}>
-                <Translate text={"VAT NO"} />:{" "}
-                {state?.invoice?.client_name?.vat_trn_number}
+                <Translate text={"VAT NO"} />: {state?.invoice?.company?.vat}
               </p>
               {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
             </div>
           </div>
           <hr style={{ border: "1px solid #000" }} />
           <div className="row">
-            <div className="col-lg-4">
-              <h3 style={{ color: "#3cb043" }}>
-                <Translate text={"TAX INVOICE"} />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                marginBottom: "10px",
+                textDecoration: "underline",
+              }}
+            >
+              <h3>
+                TAX INVOICE / <Translate text={"TAX INVOICE"} />
               </h3>
-              <h3 style={{ color: "#3cb043" }}>TAX INVOICE</h3>
-              <h6>
-                To / <Translate text={"To"} /> :
-              </h6>
-              <div className="mb-2">
-                {/* <span>
+            </div>
+            <div className="col-lg-3">
+              <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "200px",
+                  }}
+                >
+                  Job No
+                  <Translate text="Job No" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  : {state.invoice?.job?.job_number}
+                </div>
+              </p>
+              <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "200px",
+                  }}
+                >
+                  Enquiry No
+                  <Translate text="Enquiry No" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  : {state.invoice?.job?.enquiry_no}
+                </div>
+              </p>
+              <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "200px",
+                  }}
+                >
+                  Client - Bill To
+                  <Translate text="Client - Bill To" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  :
+                </div>
+              </p>
+              {/* <div className="">
+                <span>
                   <Translate text={state?.invoice?.client_name?.address} />
-                </span> */}
-                <br />
-                <span>{state?.invoice?.client_name?.address}</span>
-              </div>
-              <div className="mb-2">
+                </span>
+                <span
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  {state?.invoice?.client_name?.address || ""}
+                </span>{" "}
+                ,
+              </div> */}
+              <div className="">
                 <span>
                   <Translate text={state?.invoice?.client_name?.city} />
                 </span>
-                <br />
-                <span>{state?.invoice?.client_name?.city}</span>
+                <span
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  {state?.invoice?.client_name?.city}
+                </span>{" "}
+                ,
               </div>
-              <div className="mb-2">
+              <div className="">
+                <span>
+                  <Translate text={state?.invoice?.client_name?.state_code} />
+                </span>
+                <span
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  {state?.invoice?.client_name?.state_code}
+                </span>{" "}
+                ,
+              </div>
+
+              <div className="">
                 <span>
                   <Translate text={state?.invoice?.client_name?.country} />
                 </span>
-                <br />
-                <span>{state?.invoice?.client_name?.country}</span>
+                <span
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  {state?.invoice?.client_name?.country}
+                </span>
               </div>
             </div>
-            <div className="col-lg-4">
-              <p style={{ color: "#3cb043" }}>
+            <div className="col-lg-5">
+              <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "250px",
+                  }}
+                >
+                  Invoice Date
+                  <Translate text="Invoice Date" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  : {moment(state.invoice?.created_at).format("MM/DD/YYYY")}
+                </div>
+              </p>
+              <p>
                 <div
                   style={{
                     display: "inline-block",
@@ -289,127 +393,186 @@ const TaxInvoiceSecond = (props) => {
                     width: "250px",
                   }}
                 >
+                  BL Number
+                  <Translate text="BL Number" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  : {state?.invoice?.bl_number}
+                </div>
+              </p>
+              <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "250px",
+                  }}
+                >
+                  Bayan Number
+                  <Translate text="Bayan Number" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  : {state?.invoice?.bayan_number}
+                </div>
+              </p>
+
+              <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "250px",
+                  }}
+                >
+                  Client Ref / PO No
+                  <Translate text="Client Ref / PO No" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  : {state.invoice?.client_name?.name}
+                </div>
+              </p>
+              <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "250px",
+                  }}
+                >
+                  ETA
+                  <Translate text="ETA" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  : {moment(state.invoice?.job?.eta).format("MM/DD/YYYY")}
+                </div>
+              </p>
+              <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "250px",
+                  }}
+                >
+                  ETD
+                  <Translate text="etd" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  : {moment(state.invoice?.job?.etd).format("MM/DD/YYYY")}
+                </div>
+              </p>
+            </div>
+            <div className="col-lg-4 ml-2">
+              {/* <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "200px",
+                  }}
+                >
                   Due Date
                   <Translate text="Due Date" />
                 </div>
                 <div style={{ display: "inline-block", marginLeft: "5px" }}>
                   : {moment(state.invoice?.due_date).format("MM/DD/YYYY")}
                 </div>
-              </p>
+              </p> */}
               {/* <p>Delivery Date : </p> */}
 
               <p>
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Job No
-                  <Translate text="Job No" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.job_number}
-                </div>
-              </p>
-
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
+                    width: "200px",
                   }}
                 >
                   Consignee
                   <Translate text="Consignee" />
                 </div>
                 <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state?.consignee_name}
+                  : {state.invoice?.consignee_name?.name}
                 </div>
               </p>
-
               <p>
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "200px",
                   }}
                 >
-                  Client Re/PO No
-                  <Translate text="Client Re/PO No" />
+                  Shipper Name
+                  <Translate text="Shipper Name" />
                 </div>
                 <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.client_name}
+                  : {state.invoice?.shipper_name}
                 </div>
               </p>
-
               <p>
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "200px",
+                  }}
+                >
+                  Notify
+                  <Translate text="Notify" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  :
+                </div>
+              </p>
+              <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "200px",
                   }}
                 >
                   POL
                   <Translate text="POL" />
                 </div>
                 <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {JSON.stringify(translatedObject.invoice?.job?.pol)}
+                  : {state.invoice?.job?.pol}
                 </div>
               </p>
-            </div>
-            <div className="col-lg-4">
               <p>
                 <div
                   style={{
                     display: "inline-block",
-                    width: "250px",
+                    width: "200px",
                   }}
                 >
-                  Invoice Date
-                  <Translate text="Invoice Date" />
+                  POD
+                  <Translate text="POD" />
                 </div>
                 <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {moment(state.invoice?.created_at).format("MM/DD/YYYY")}
+                  : {state.invoice?.job?.pod}
+                </div>
+              </p>
+              <p>
+                <div
+                  style={{
+                    display: "inline-block",
+                    width: "200px",
+                  }}
+                >
+                  POA
+                  <Translate text="poa" />
+                </div>
+                <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                  : {state.invoice?.job?.poa}
                 </div>
               </p>
 
               {/* <p>BL/AWB :</p> */}
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Bayan No
-                  <Translate text="Bayan No" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.bayan_number}
-                </div>
-              </p>
-
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Activity
-                  <Translate text="Activity" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.por}
-                </div>
-              </p>
             </div>
           </div>
 
           {/* <hr style={{ border: "1px solid #000" }} /> */}
 
-          <div style={{ overflowX: "auto" }}>
+          <div
+            style={{
+              overflowX: "auto",
+              marginTop: "10px",
+              marginBottom: "20px",
+            }}
+          >
             <table className="htmlTable mt-2 w-100">
               <tbody>
                 <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
@@ -525,12 +688,70 @@ const TaxInvoiceSecond = (props) => {
             style={{ border: "1px solid #000", padding: "20px 10px" }}
           >
             <div className="row">
-              <div className="col-lg-2 col-xs-12 d-flex justify-content-center align-items-center">
-                <span className="p-2" style={{ display: "contents" }}>
-                  <QRCode size={250} value={String(state.qrcodeString)} />
-                </span>
+              <div className="col-lg-5 col-xs-12">
+                <p>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      width: "150px",
+                    }}
+                  >
+                    Type
+                    <Translate text="Type" />
+                  </div>
+                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                    : {state?.invoice?.job?.type}
+                  </div>
+                </p>
+                <p>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      width: "150px",
+                    }}
+                  >
+                    Container
+                    <Translate text="Container" />
+                  </div>
+                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                    : {state?.invoice?.job?.container_type}
+                  </div>
+                </p>
+                <p>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      width: "150px",
+                    }}
+                  >
+                    Volume
+                    <Translate text="Volume" />
+                  </div>
+                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                    :
+                  </div>
+                </p>
+                <p>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      width: "150px",
+                    }}
+                  >
+                    Commodity
+                    <Translate text="Commodity" />
+                  </div>
+                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                    :
+                  </div>
+                </p>
               </div>
-              <div className="col-lg-10 col-xs-12">
+              <div
+                style={{
+                  borderLeft: "1px solid black",
+                }}
+                className="col-lg-7 col-xs-12"
+              >
                 <div className="row">
                   <div
                     className="col-lg-8 col-md-6"
@@ -629,105 +850,114 @@ const TaxInvoiceSecond = (props) => {
                       </span>
                     </h4>
                   </div>
-                  <div className="col-lg-5">
+                  {/* <div className="col-lg-5">
                     <p></p>
-                  </div>
+                  </div> */}
                 </div>
                 <hr style={{ border: "1px solid #000" }} />
               </div>
             </div>
           </div>
 
-          <div className="row mt-2">
-            <div className="col-lg-9 col-xs-12">
-              <h5 style={{ color: "#3cb043" }}>
-                <Translate text={"Payment Method"} />
-              </h5>
-              <h5 style={{ color: "#3cb043" }}>Payment Method</h5>
+          <div
+            className="card mt-4"
+            style={{ border: "1px solid #000", padding: "20px 10px" }}
+          >
+            <div className="row mt-2">
+              <div className="col-lg-8 col-xs-12">
+                <h5>
+                  <Translate text={"Payment Method"} />
+                </h5>
+                <h5>Payment Method</h5>
 
-              <h6 className="mt-3 mb-4" style={{ color: "#3d78e3" }}>
-                Account Details
-                <span style={{ marginRight: "5px" }}>
-                  <Translate text={"Account Details"} />
+                <h6 className="mt-3 mb-4">
+                  Account Details
+                  <span style={{ marginRight: "5px" }}>
+                    <Translate text={"Account Details"} />
+                  </span>
+                  :
+                </h6>
+                <div>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      width: "250px",
+                    }}
+                  >
+                    Account Name
+                    <Translate text="Account Name" />
+                  </div>
+                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                    : {state?.invoice?.company?.account_name}
+                  </div>
+                </div>
+
+                <div>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      width: "250px",
+                    }}
+                  >
+                    Bank Name
+                    <Translate text="Bank Name" />
+                  </div>
+                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                    : {state?.invoice?.company?.bank_name}
+                  </div>
+                </div>
+
+                <div>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      width: "250px",
+                    }}
+                  >
+                    Account No
+                    <Translate text="Account No" />
+                  </div>
+                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                    : {state?.invoice?.company?.account_number}
+                  </div>
+                </div>
+
+                <div>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      width: "250px",
+                    }}
+                  >
+                    IBAN Code
+                    <Translate text="IBAN Code" />
+                  </div>
+                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                    : {state?.invoice?.company?.iban_code}
+                  </div>
+                </div>
+
+                <div>
+                  <div
+                    style={{
+                      display: "inline-block",
+                      width: "250px",
+                    }}
+                  >
+                    Swift Code
+                    <Translate text="Swift Code" />
+                  </div>
+                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
+                    : {state?.invoice?.company?.swift_code}
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-4 col-xs-12 d-flex justify-content-center align-items-center">
+                <span className="p-2" style={{ display: "contents" }}>
+                  <QRCode size={150} value={String(state.qrcodeString)} />
                 </span>
-                :
-              </h6>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Account Name
-                  <Translate text="Account Name" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state?.invoice?.company?.account_name}
-                </div>
-              </p>
-
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Bank Name
-                  <Translate text="Bank Name" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state?.invoice?.company?.bank_name}
-                </div>
-              </p>
-
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Account No
-                  <Translate text="Account No" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state?.invoice?.company?.account_number}
-                </div>
-              </p>
-
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  IBAN Code
-                  <Translate text="IBAN Code" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state?.invoice?.company?.iban_code}
-                </div>
-              </p>
-
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Swift Code
-                  <Translate text="Swift Code" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state?.invoice?.company?.swift_code}
-                </div>
-              </p>
+              </div>
             </div>
-            <div className="col-lg-3 col-xs-12"></div>
           </div>
 
           <hr className="mt-5" style={{ border: "1px solid #000" }} />

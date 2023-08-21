@@ -18,21 +18,8 @@ const AddEnquiry = (props) => {
   const [etd, setEtd] = useState(new Date());
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
-  // const [selConsignee, setSelConsignee] = useState(null);
-  // const [selClient, setSelClient] = useState(null);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
-
-  const options = [
-    // {
-    //   label: "Job",
-    //   value: "Job",
-    // },
-    {
-      label: "Enquiry",
-      value: "Enquiry",
-    },
-  ];
 
   const typeOptions = [
     {
@@ -54,6 +41,14 @@ const AddEnquiry = (props) => {
     {
       label: "Warehousing",
       value: "Warehousing",
+    },
+    {
+      label: "Customs Clearance",
+      value: "Customs Clearance",
+    },
+    {
+      label: "Other",
+      value: "Other",
     },
   ];
   const scopeofworkOptions = [
@@ -166,12 +161,11 @@ const AddEnquiry = (props) => {
     },
   ];
 
-  const getPoaOptions = () => {
+  const getPoaOptions = (val) => {
     apiAuth
-      .get("api/master/poa/")
-
+      .get(`/api/master/poa/`)
       .then((response) => {
-        let data = response.data.results;
+        let { data } = response;
         setPoaOptions(data);
       })
       .catch((error) => {
@@ -179,12 +173,11 @@ const AddEnquiry = (props) => {
       });
   };
 
-  const getPodOptions = () => {
+  const getPodOptions = (val) => {
     apiAuth
-      .get("api/master/pod/")
-
+      .get(`/api/master/pod/`)
       .then((response) => {
-        let data = response.data.results;
+        let { data } = response;
         setPodOptions(data);
       })
       .catch((error) => {
@@ -421,7 +414,6 @@ const AddEnquiry = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={consigneeOptions}
@@ -442,21 +434,29 @@ const AddEnquiry = (props) => {
                           />
                         </div>
                       </Grid>
-
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="shipper_name" className="form-label">
-                            Shipper Name
+                          <Label htmlFor="type" className="form-label">
+                            Type
                             <span className="text-danger">*</span>
                           </Label>
-                          <Field
-                            className="form-control"
-                            name="shipper_name"
-                            style={{ background: "#EDEDED" }}
+
+                          <Select
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={typeOptions}
+                            // defaultValue={{ label: jobType }}
+                            // onChange={(event) => {
+                            //   setJobType(event.value);
+                            // }}
+                            onChange={(data) => {
+                              setJobType(data.value);
+                              setFieldValue("type", data.value);
+                            }}
                           />
 
                           <ErrorMessage
-                            name="shipper_name"
+                            name="type"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
@@ -499,7 +499,6 @@ const AddEnquiry = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={podOptions?.map((item) => {
@@ -508,12 +507,10 @@ const AddEnquiry = (props) => {
                                 value: item.name,
                               };
                             })}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
+                            // onInputChange={(val) => {
+                            //   getPodOptions(val);
                             // }}
                             onChange={(data) => {
-                              // setJobType(data.value);
                               setFieldValue("pod", data.value);
                             }}
                           />
@@ -534,7 +531,6 @@ const AddEnquiry = (props) => {
                             <span className="text-danger">*</span>
                           </Label>
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={clientOptions}
@@ -565,7 +561,6 @@ const AddEnquiry = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={poaOptions?.map((item) => {
@@ -574,12 +569,10 @@ const AddEnquiry = (props) => {
                                 value: item.name,
                               };
                             })}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
+                            // onInputChange={(val) => {
+                            //   getPoaOptions(val);
                             // }}
                             onChange={(data) => {
-                              // setJobType(data.value);
                               setFieldValue("poa", data.value);
                             }}
                           />
@@ -601,7 +594,6 @@ const AddEnquiry = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={poaOptions?.map((item) => {
@@ -610,8 +602,10 @@ const AddEnquiry = (props) => {
                                 value: item.name,
                               };
                             })}
+                            // onInputChange={(val) => {
+                            //   getPoaOptions(val);
+                            // }}
                             onChange={(data) => {
-                              // setJobType(data.value);
                               setFieldValue("pol", data.value);
                             }}
                           />
@@ -719,7 +713,6 @@ const AddEnquiry = (props) => {
                             <span className="text-danger">*</span>
                           </Label>
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={statusOptions}
@@ -745,7 +738,6 @@ const AddEnquiry = (props) => {
                           </Label>
 
                           <Select
-                            name="type"
                             placeholder={"Select"}
                             styles={customStyles}
                             options={scopeofworkOptions}
@@ -771,28 +763,18 @@ const AddEnquiry = (props) => {
                     <Grid spacing={2} container>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="type" className="form-label">
-                            Type
+                          <Label htmlFor="shipper_name" className="form-label">
+                            Shipper Name
                             <span className="text-danger">*</span>
                           </Label>
-
-                          <Select
-                            name="type"
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            options={typeOptions}
-                            // defaultValue={{ label: jobType }}
-                            // onChange={(event) => {
-                            //   setJobType(event.value);
-                            // }}
-                            onChange={(data) => {
-                              setJobType(data.value);
-                              setFieldValue("type", data.value);
-                            }}
+                          <Field
+                            className="form-control"
+                            name="shipper_name"
+                            style={{ background: "#EDEDED" }}
                           />
 
                           <ErrorMessage
-                            name="type"
+                            name="shipper_name"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}

@@ -12,11 +12,13 @@ import { Label } from "reactstrap";
 
 const CreateNewJob = (props) => {
   const [jobType, setJobType] = useState("Job");
-  const [branchValue, setBranchValue] = useState("JEDDHA");
+  const [branchValue, setBranchValue] = useState(null);
   const [eta, setEta] = useState(new Date());
   const [etd, setEtd] = useState(new Date());
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
+  const [selPoa, setSelPoa] = useState(null);
+  const [selPod, setSelPod] = useState(null);
   const [organization_type, setOrganization_type] = useState([]);
   const [polValue, setPolValue] = useState(null);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
@@ -30,7 +32,10 @@ const CreateNewJob = (props) => {
     },
   ];
 
-  const branchOptions = [{ label: "JEDDHA", value: "JEDDHA" }];
+  const branchOptions = [
+    { label: "JEDDAH", value: "JEDDAH" },
+    { label: "DUBAI", value: "DUBAI" },
+  ];
 
   const statusOptions = [
     {
@@ -112,6 +117,14 @@ const CreateNewJob = (props) => {
       label: "Warehousing",
       value: "Warehousing",
     },
+    {
+      label: "Customs Clearance",
+      value: "Customs Clearance",
+    },
+    {
+      label: "Other",
+      value: "Other",
+    },
   ];
 
   const OrganizationTypeOptions = [
@@ -157,13 +170,11 @@ const CreateNewJob = (props) => {
     },
   ];
 
-  const getPoaOptions = () => {
+  const getPoaOptions = (val) => {
     apiAuth
-      .get("api/master/poa/")
-
+      .get(`/api/master/poa/`)
       .then((response) => {
-        let data = response.data.results;
-        console.log("dswdwd", data);
+        let { data } = response;
         setPoaOptions(data);
       })
       .catch((error) => {
@@ -233,14 +244,12 @@ const CreateNewJob = (props) => {
       });
   };
 
-  const getPodOptions = () => {
+  const getPodOptions = (val) => {
     apiAuth
-      .get("api/master/pod/")
-
+      .get(`/api/master/pod/`)
       .then((response) => {
-        let data = response.data.results;
+        let { data } = response;
         setPodOptions(data);
-        console.log("poa", data);
       })
       .catch((error) => {
         console.log(error);
@@ -417,7 +426,7 @@ const CreateNewJob = (props) => {
                   eta: null,
                   etd: null,
                   organization_type: "",
-                  branch: "JEDDHA",
+                  branch: "",
                 }}
                 validationSchema={Yup.object({
                   bl_number: Yup.string().required("BL Number is Required"),
@@ -611,7 +620,8 @@ const CreateNewJob = (props) => {
                                 value: item.name,
                               };
                             })}
-                            // value={podValue}
+                            value={selPod}
+                            // onInputChange={(val) => getPodOptions(val)}
                             onChange={(data) => {
                               //   setPodValue(data);
                               setFieldValue("pod", data.value);
@@ -673,7 +683,8 @@ const CreateNewJob = (props) => {
                                 value: item.name,
                               };
                             })}
-                            // value={poaValue}
+                            value={selPoa}
+                            // onInputChange={(val) => getPoaOptions(val)}
                             onChange={(data) => {
                               //   setPoaValue(data);
                               setFieldValue("poa", data.value);
@@ -707,6 +718,9 @@ const CreateNewJob = (props) => {
                               };
                             })}
                             value={polValue}
+                            // onInputChange={(val) => {
+                            //   getPoaOptions(val);
+                            // }}
                             onChange={(data) => {
                               setPolValue(data);
                               setFieldValue("pol", data.value);
@@ -922,11 +936,9 @@ const CreateNewJob = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={branchOptions}
-                            defaultValue={{
-                              label: branchValue,
-                              value: branchValue,
-                            }}
+                            value={branchValue}
                             onChange={(data) => {
+                              setBranchValue(data);
                               setFieldValue("branch", data.value);
                             }}
                           />

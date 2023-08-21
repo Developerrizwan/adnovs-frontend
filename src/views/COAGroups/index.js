@@ -6,9 +6,10 @@ import apiAuth from "../../helpers/ApiAuth";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
-import CaoTable from "./CaoTable";
+import CaoGroupTable from "./CaoGroupTable";
+import { CheckLg } from "react-bootstrap-icons";
 
-const ChartOfAccounts = (props) => {
+const COAGroup = (props) => {
   const [createModal, setCreateModal] = useState(false);
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,14 +26,18 @@ const ChartOfAccounts = (props) => {
 
   const getAccounts = (pgdata, val) => {
     apiAuth
-      .get(`/api/get-coa/?page=1`)
+      .get(
+        `/api/master/coagroup?page=${pgdata?.currentPage}&search=${searchValue}`
+      )
       .then((response) => {
-        let data = response.data;
+        let data = response?.data?.results;
+        const totalRows = response?.data?.count;
+
         // console.log("xswjhjwx", response);
-        // setPagination({
-        //   ...pgdata,
-        //   totalRows: data.length,
-        // });
+        setPagination({
+          ...pgdata,
+          totalRows: totalRows,
+        });
         setAccounts(data);
         setLoading(false);
       })
@@ -40,14 +45,14 @@ const ChartOfAccounts = (props) => {
   };
 
   const deleteAccount = (id) => {
-    let url = `/api/master/coa/${id}/`;
+    let url = `/api/master/coagroup/${id}/`;
     apiAuth
       .delete(url)
       .then((response) => {
         const newdata = response.data;
         NotificationManager.success(
           "",
-          "Account Deleted Successfully",
+          "Group Deleted Successfully",
           3000,
           null,
           null,
@@ -68,13 +73,13 @@ const ChartOfAccounts = (props) => {
       <div className="page-content">
         <Container fluid>
           <BreadCrumb
-            title="Chart of Accounts"
+            title="COA Groups"
             pageTitle="Settings"
             add_new={true}
             createNew={() => {
               setCreateModal(true);
             }}
-            add_new_url={"/coa/add"}
+            add_new_url={"/coag/add"}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
@@ -92,7 +97,7 @@ const ChartOfAccounts = (props) => {
                 <>
                   {" "}
                   <Card>
-                    <CaoTable
+                    <CaoGroupTable
                       accounts={accounts}
                       deleteAccount={(id) => deleteAccount(id)}
                       handlePagination={(data) => {
@@ -141,4 +146,4 @@ const ChartOfAccounts = (props) => {
   );
 };
 
-export default ChartOfAccounts;
+export default COAGroup;
