@@ -26,15 +26,18 @@ const COAGroup = (props) => {
 
   const getAccounts = (pgdata, val) => {
     apiAuth
-      .get(`/api/master/coagroup`)
+      .get(
+        `/api/master/coagroup?page=${pgdata?.currentPage}&search=${searchValue}`
+      )
       .then((response) => {
         let data = response?.data?.results;
+        const totalRows = response?.data?.count;
 
         // console.log("xswjhjwx", response);
-        // setPagination({
-        //   ...pgdata,
-        //   totalRows: data.length,
-        // });
+        setPagination({
+          ...pgdata,
+          totalRows: totalRows,
+        });
         setAccounts(data);
         setLoading(false);
       })
@@ -49,7 +52,7 @@ const COAGroup = (props) => {
         const newdata = response.data;
         NotificationManager.success(
           "",
-          "Account Deleted Successfully",
+          "Group Deleted Successfully",
           3000,
           null,
           null,

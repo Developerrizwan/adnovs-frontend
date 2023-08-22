@@ -516,7 +516,7 @@ const TaxInvoice = (props) => {
               <>
                 <tr style={{ borderBottom: "1px solid #d3d3d3" }} key={index}>
                   {console.log("ccc", cost)}
-                  <td>{cost?.charge?.description}</td>
+                  <td>{cost?.charge?.name}</td>
                   <td>{cost?.currency}</td>
                   <td>
                     {" "}
@@ -630,7 +630,7 @@ const TaxInvoice = (props) => {
               </tr>
               <tr>
                 <td>1</td>
-                <td>20 DC</td>
+                <td>{state?.invoice?.job?.container_type}</td>
               </tr>
             </table>
           </div>

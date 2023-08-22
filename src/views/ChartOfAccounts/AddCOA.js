@@ -13,6 +13,7 @@ import { getAllISOCodes } from "iso-country-currency";
 
 const AddCOA = (props) => {
   const history = useHistory();
+  const [loading, setLoading] = useState(false);
   const [selStatus, setSelStatus] = useState({
     value: true,
     label: "Active",
@@ -165,15 +166,15 @@ const AddCOA = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const getGroupOptions = () => {
+  const getGroupOptions = (val, page) => {
     apiAuth
-      .get("/api/master/coagroup/")
+      .get(`/api/get-coagroup?search=${val || ""}&page=${page || 1}`)
       .then((res) => {
         const { data } = res;
         const grpOptions = data.results.map((dd) => {
           return {
             label: dd?.name,
-            value: dd?.name,
+            value: dd?.id,
           };
         });
         setSubGroupOptions(grpOptions);
@@ -238,7 +239,7 @@ const AddCOA = (props) => {
                   category: props.account?.category || "category 1",
                   group: props.account?.group || "",
                   subgroup: props.account?.subgroup || "",
-                  type: props.account?.type || "",
+                  type: props.account?.type || "ASSET",
                   short_name: props.account?.short_name || "",
                   long_name: props.account?.long_name || "",
                   language_name: props.account?.language_name || "",
@@ -265,17 +266,19 @@ const AddCOA = (props) => {
                   dr_cr: Yup.string().ensure().required("Required!"),
                   category: Yup.string().ensure().required("Required!"),
                   group: Yup.string().ensure().required("Required!"),
-                  subgroup: Yup.string(),
+                  subgroup: Yup.string().ensure().required("Required!"),
                   type: Yup.string().ensure().required("Required!"),
                   short_name: Yup.string(),
                   long_name: Yup.string(),
                   language_name: Yup.string(),
                 })}
                 onSubmit={(values) => {
+                  setLoading(true);
                   if (props.isEdit && props.account) {
                     apiAuth
                       .patch(`/api/master/coa/${props.account?.id}/`, values)
                       .then((res) => {
+                        setLoading(false);
                         NotificationManager.success(
                           "Chart of accounts",
                           "Account Updated Successfully",
@@ -287,6 +290,7 @@ const AddCOA = (props) => {
                         props.closeAddPopup();
                       })
                       .catch((err) => {
+                        setLoading(false);
                         NotificationManager.error(
                           "Chart of accounts",
                           "Account Update Error",
@@ -300,6 +304,7 @@ const AddCOA = (props) => {
                     apiAuth
                       .post("/api/master/coa/", values)
                       .then((res) => {
+                        setLoading(false);
                         NotificationManager.success(
                           "Chart of accounts",
                           "Account Created Successfully",
@@ -311,6 +316,7 @@ const AddCOA = (props) => {
                         history.push("/coa");
                       })
                       .catch((err) => {
+                        setLoading(false);
                         NotificationManager.error(
                           "Chart of accounts",
                           "Account Create Error",
@@ -451,7 +457,7 @@ const AddCOA = (props) => {
                             className="form-label "
                           >
                             Subledger Required?
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <ToggleButtonGroup
                             color="success"
@@ -495,7 +501,7 @@ const AddCOA = (props) => {
                             className="form-label "
                           >
                             Charge Required?
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <ToggleButtonGroup
                             color="success"
@@ -536,7 +542,7 @@ const AddCOA = (props) => {
                         <div className="mb-3 d-flex flex-column">
                           <label htmlFor="job_required" className="form-label ">
                             Job Required?
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <ToggleButtonGroup
                             color="success"
@@ -580,7 +586,7 @@ const AddCOA = (props) => {
                             className="form-label "
                           >
                             Asset Required
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
 
                           <ToggleButtonGroup
@@ -681,8 +687,11 @@ const AddCOA = (props) => {
                             value={selGroup}
                             options={groupOptions}
                             styles={customStyles}
+                            onInputChange={(val) => {
+                              getGroupOptions(val);
+                            }}
                             onChange={(data) => {
-                              setFieldValue("group", data.label);
+                              setFieldValue("group", data.value);
                               setSelGroup(data);
                             }}
                           />
@@ -697,15 +706,18 @@ const AddCOA = (props) => {
                         <div className="mb-3">
                           <label htmlFor="subgroup" className="form-label">
                             Sub Group
-                            {/* <span className="text-danger">*</span> */}
+                            <span className="text-danger">*</span>
                           </label>
                           <Select
                             name="subgroup"
                             value={selSubGroup}
                             options={subGroupOptions}
                             styles={customStyles}
+                            onInputChange={(val) => {
+                              getGroupOptions(val);
+                            }}
                             onChange={(data) => {
-                              setFieldValue("subgroup", data.label);
+                              setFieldValue("subgroup", data.value);
                               setSelSubGroup(data);
                             }}
                           />
@@ -873,11 +885,20 @@ const AddCOA = (props) => {
                       )}
                     </div>
 
-                    <div className="mt-4 mb-3">
-                      <button className="btn btn-success" type="submit">
-                        {props.isEdit ? "Update" : "Submit"}
-                      </button>
-                    </div>
+                    {loading ? (
+                      <div
+                        className="spinner-border text-success"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    ) : (
+                      <div className="mt-4 mb-3">
+                        <button className="btn btn-success" type="submit">
+                          {props.isEdit ? "Update" : "Submit"}
+                        </button>
+                      </div>
+                    )}
                   </Form>
                 )}
               </Formik>

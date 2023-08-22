@@ -9,6 +9,7 @@ import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 
 const AddCOAGroup = (props) => {
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
   const [isDRorCR, setIsDRorCR] = useState({
     value: "Dr",
@@ -95,7 +96,7 @@ const AddCOAGroup = (props) => {
                   name: props.account?.name || "",
                   coa_type: props.account?.coa_type || "Balance Sheet",
                   dr_cr: props.account?.dr_cr || "Dr",
-                  type: props.account?.type || "",
+                  type: props.account?.type || "ASSET",
                   language_name: props.account?.language_name || "",
                   currency: props.account?.currency || "curr 1",
                   remarks: props.account?.remarks || "",
@@ -103,12 +104,14 @@ const AddCOAGroup = (props) => {
                 validationSchema={Yup.object({
                   code: Yup.string().required("Code is Required"),
                   name: Yup.string().required("Name is Required"),
-                  coa_type: Yup.string().ensure().required("Required!"),
+                  // coa_type: Yup.string().ensure().required("Required!"),
                   dr_cr: Yup.string().ensure().required("Required!"),
                   type: Yup.string().ensure().required("Required!"),
                   language_name: Yup.string(),
+                  remarks: Yup.string().required("Remarks is Required"),
                 })}
                 onSubmit={(values) => {
+                  setLoading(true);
                   if (props.isEdit && props.account) {
                     apiAuth
                       .patch(
@@ -116,9 +119,10 @@ const AddCOAGroup = (props) => {
                         values
                       )
                       .then((res) => {
+                        setLoading(false);
                         NotificationManager.success(
                           "Chart of accounts",
-                          "Account Updated Successfully",
+                          "Group Updated Successfully",
                           3000,
                           null,
                           null,
@@ -127,9 +131,10 @@ const AddCOAGroup = (props) => {
                         props.closeAddPopup();
                       })
                       .catch((err) => {
+                        setLoading(false);
                         NotificationManager.error(
                           "Chart of accounts",
-                          "Account Update Error",
+                          "Group Update Error",
                           3000,
                           null,
                           null,
@@ -140,9 +145,10 @@ const AddCOAGroup = (props) => {
                     apiAuth
                       .post("/api/master/coagroup/", values)
                       .then((res) => {
+                        setLoading(false);
                         NotificationManager.success(
                           "Chart of accounts",
-                          "Account Created Successfully",
+                          "Group Created Successfully",
                           3000,
                           null,
                           null,
@@ -151,6 +157,7 @@ const AddCOAGroup = (props) => {
                         history.push("/coag");
                       })
                       .catch((err) => {
+                        setLoading(false);
                         NotificationManager.error(
                           "Chart of accounts",
                           "Account Create Error",
@@ -230,9 +237,6 @@ const AddCOAGroup = (props) => {
                           )}
                         </div>
                       </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="type" className="form-label">
@@ -283,7 +287,7 @@ const AddCOAGroup = (props) => {
                     <div className="mb-3">
                       <label htmlFor="remarks" className="form-label">
                         Remarks
-                        {/* <span className="text-danger">*</span> */}
+                        <span className="text-danger">*</span>
                       </label>
                       <Field
                         as="textarea"
@@ -298,11 +302,20 @@ const AddCOAGroup = (props) => {
                       )}
                     </div>
 
-                    <div className="mt-4 mb-3">
-                      <button className="btn btn-success" type="submit">
-                        {props.isEdit ? "Update" : "Submit"}
-                      </button>
-                    </div>
+                    {loading ? (
+                      <div
+                        className="spinner-border text-success"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    ) : (
+                      <div className="mt-4 mb-3">
+                        <button className="btn btn-success" type="submit">
+                          {props.isEdit ? "Update" : "Submit"}
+                        </button>
+                      </div>
+                    )}
                   </Form>
                 )}
               </Formik>

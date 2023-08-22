@@ -77,6 +77,10 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
+        const sel = ConsOpts.find(
+          (item) => item.value === props?.data?.consignee_name?.id
+        );
+        setConsigneeNameValue(sel);
         setConsigneeOptions(ConsOpts);
 
         setLoading(false);
@@ -108,7 +112,10 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
-
+        const clOptions = ClientOpts.find(
+          (item) => item.value === props.data?.client_name?.id
+        );
+        setClientNameValue(clOptions);
         setClientOptions(ClientOpts);
         setLoading(false);
       })
@@ -128,17 +135,17 @@ const Sales = (props) => {
 
   const getPoaOptions = (val) => {
     apiAuth
-      .get(`/api/master/poa/?page=${1}&search=${val || ""}`)
+      .get(`/api/master/poa/`)
       .then((response) => {
-        const data = response.data.results;
+        const { data } = response;
         const opts = data.map((dd) => {
           return {
-            label: dd?.name,
+            label: `${dd?.code}-${dd?.name}-${dd?.country}`,
             value: dd?.name,
           };
         });
         if (props.isEdit) {
-          const sel = opts.find((dd) => dd.label === props?.data.poa);
+          const sel = opts.find((dd) => dd.value === props?.data.poa);
           setPoaValue(sel);
         }
         setPoaOptions(opts);
@@ -159,6 +166,7 @@ const Sales = (props) => {
             value: rr.id,
           };
         });
+        const sel = data.map((dd) => dd.value === props?.data?.coa);
         setPartyOptions(data);
       })
       .catch((err) => console.log(err));
@@ -172,6 +180,10 @@ const Sales = (props) => {
     getPodOptions();
     getAllCurrencyCodes();
     getJobs();
+    setSelectedInvoice({
+      label: invoicesId,
+      value: invoicesId,
+    });
 
     if (props.isEdit) {
       setBranchValue({
@@ -182,29 +194,17 @@ const Sales = (props) => {
         label: props?.data?.pod,
         value: props?.data?.pod,
       });
-      setSelectedInvoice({
-        label: invoicesId,
-        value: invoicesId,
-      });
-      const sel = consigneeOptions.find(
-        (item) => item.value === props?.data?.consignee_name?.id
-      );
-      setConsigneeNameValue(sel);
-      const clOptions = clientOptions.find(
-        (item) => item.value === props.data?.client_name?.id
-      );
-      setClientNameValue(clOptions);
     }
   }, []);
 
   const getPodOptions = (val) => {
     apiAuth
-      .get(`/api/master/pod/?page=${1}&search=${val || ""}`)
+      .get(`/api/master/pod/`)
       .then((response) => {
-        let data = response?.data?.results;
+        let { data } = response;
         data = data.map((dd) => {
           return {
-            label: dd?.name,
+            label: `${dd?.code}-${dd?.name}-${dd?.country}`,
             value: dd?.name,
           };
         });
@@ -254,13 +254,14 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
-        setJobOptions(opts);
+
         if (props?.isEdit) {
           const selJob = opts.find(
-            (opt) => opt?.value === props.data?.job?.bl_number
+            (opt) => opt?.label === props.data?.job?.job_number
           );
           setSelectedJob(selJob);
         }
+        setJobOptions(opts);
       })
       .catch((err) => console.log(err));
   };
@@ -284,13 +285,14 @@ const Sales = (props) => {
           </>
         )}
         <Grid container spacing={2}>
+          {console.log("eeeeeeeee", props?.data)}
           <Grid item lg={11} style={{ margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
                   bl_number: props.isEdit ? props.data?.bl_number : "",
                   consignee_name: props.isEdit
-                    ? props.data?.consignee_name?.name
+                    ? props.data?.consignee_name?.id
                     : "",
                   due_date: props.isEdit ? props.data?.due_date : "",
                   currency_sar: props.isEdit ? props.data?.currency_sar : "",
@@ -298,13 +300,11 @@ const Sales = (props) => {
                   shipper_name: props.isEdit ? props.data?.shipper_name : "",
                   branch: props.isEdit
                     ? props.data?.consignee_name?.branch
-                    : "",
+                    : "JEDDAH",
                   // vendor: props.isEdit ? props.data?.vendor : "TEMP",
                   ex_rate: props.isEdit ? props.data?.ex_rate : "",
                   pod: props.isEdit ? props.data?.pod : "",
-                  client_name: props.isEdit
-                    ? props.data?.client_name?.name
-                    : "",
+                  client_name: props.isEdit ? props.data?.client_name?.id : "",
                   fc_amount: props.isEdit ? props.data?.fc_amount : "",
                   amount_sar: props.isEdit ? props.data?.amount_sar : "",
                   poa: props.isEdit ? props.data?.poa : "",
@@ -316,7 +316,7 @@ const Sales = (props) => {
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
                   narration: props.isEdit ? props.data?.narration : "",
                   job: props.isEdit ? props.data?.job?.bl_number : "",
-                  party_account: props.isEdit ? props.data?.party_account : "",
+                  coa: props.isEdit ? props.data?.coa : "",
                 }}
                 validationSchema={Yup.object({
                   bl_number: Yup.string().required("BL Number is Required"),
@@ -358,6 +358,7 @@ const Sales = (props) => {
                   )?.company_id;
                   values["company"] = company;
                   values["invoice_type"] = selectedInvoice?.value;
+
                   // values["consignee_name"] = consigneeNameValue?.value;
                   // values["client_name"] = clientNameValue?.value;
 
@@ -687,9 +688,9 @@ const Sales = (props) => {
                             styles={customStyles}
                             options={podOptions}
                             value={podValue}
-                            onInputChange={(val) => {
-                              getPodOptions(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getPodOptions(val);
+                            // }}
                             onChange={(data) => {
                               setPodValue(data);
                               setFieldValue("pod", data.value);
@@ -709,23 +710,23 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="party_account" className="form-label">
+                          <label htmlFor="coa" className="form-label">
                             Party A/C
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
-                            name="party_account"
+                            name="coa"
                             styles={customStyles}
                             value={selectedParty}
                             options={partyOptions}
                             onChange={(data) => {
-                              setFieldValue("party_account", data.value);
+                              setFieldValue("coa", data.value);
                               setSelectedParty(data);
                             }}
                           />
-                          {errors.party_account && touched.party_account && (
+                          {errors.coa && touched.coa && (
                             <div className="invalid-feedback d-block">
-                              {errors.party_account}
+                              {errors.coa}
                             </div>
                           )}
                         </div>
@@ -770,7 +771,7 @@ const Sales = (props) => {
                             <Label htmlFor="amount_sar" className="pe-2 w-50">
                               {" "}
                               Amount
-                              <span className="text-danger">*</span>
+                              {/* <span className="text-danger">*</span> */}
                             </Label>
                             <Field
                               className="form-control"
@@ -802,9 +803,9 @@ const Sales = (props) => {
                             styles={customStyles}
                             value={poaValue}
                             options={poaOptions}
-                            onInputChange={(val) => {
-                              getPoaOptions(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getPoaOptions(val);
+                            // }}
                             onChange={(data) => {
                               setPoaValue(data);
                               setFieldValue("poa", data.value);

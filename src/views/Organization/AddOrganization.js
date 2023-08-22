@@ -44,6 +44,7 @@ const AddOrganization = (props) => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const typeOptions = [
     {
@@ -199,10 +200,13 @@ const AddOrganization = (props) => {
     getCountries();
 
     if (props.isEdit) {
-      setTypeValue({
-        label: props.organizationData?.type,
-        value: props.organizationData?.type,
+      const types = props?.organizationData?.type.map((dd) => {
+        return {
+          label: dd,
+          value: dd,
+        };
       });
+      setTypeValue(types);
 
       setBranchValue({
         label: props.organizationData?.branch,
@@ -254,9 +258,7 @@ const AddOrganization = (props) => {
                   currency: props.isEdit
                     ? props.organizationData?.currency
                     : "",
-                  branch: props.isEdit
-                    ? props.organizationData?.branch
-                    : "JEDDHA",
+                  branch: props.isEdit ? props.organizationData?.branch : "",
                   payment_terms: props.isEdit
                     ? props.organizationData?.payment_terms
                     : "",
@@ -317,7 +319,7 @@ const AddOrganization = (props) => {
                     .max(20, "Must be 20 characters or less")
                     .trim()
                     .required("Language Name is Required"),
-                  type: Yup.string().ensure().required("Type is Required"),
+                  // type: Yup.string().ensure().required("Type is Required"),
                   country: Yup.string()
                     .ensure()
                     .required("Country is Required"),
@@ -347,18 +349,16 @@ const AddOrganization = (props) => {
                   //   .required("Remarks is Required"),
                 })}
                 onSubmit={(values, { reset }) => {
+                  setLoading(true);
+                  // console.log("eeeee", values);
                   const company = JSON.parse(
                     localStorage.getItem("authUser")
                   )?.company_id;
                   values["company"] = company;
-                  values["coa"] = coaValue.value;
-                  values.country = values.country ? values.country : undefined;
-                  values.state_code = values.state_code
-                    ? values.state_code
-                    : undefined;
                   if (typeValue.length) {
                     values["type"] = typeValue.map((dd) => dd.value);
                   }
+                  values["coa"] = coaValue?.value;
                   props.isEdit
                     ? apiAuth
                         .patch(
@@ -366,6 +366,7 @@ const AddOrganization = (props) => {
                           values
                         )
                         .then((response) => {
+                          setLoading(false);
                           NotificationManager.success(
                             "",
                             `Organization Updated Successfully`,
@@ -379,6 +380,7 @@ const AddOrganization = (props) => {
                             : props?.history?.push("/organization");
                         })
                         .catch((error) => {
+                          setLoading(false);
                           NotificationManager.error(
                             "",
                             `Organization Update Error`,
@@ -391,6 +393,7 @@ const AddOrganization = (props) => {
                     : apiAuth
                         .post("/api/master/organization/", values)
                         .then((response) => {
+                          setLoading(false);
                           NotificationManager.success(
                             "",
                             `Organization Created Successfully`,
@@ -402,6 +405,7 @@ const AddOrganization = (props) => {
                           props?.history?.push("/organization");
                         })
                         .catch((error) => {
+                          setLoading(false);
                           NotificationManager.error(
                             "",
                             `Organization Create Error`,
@@ -612,7 +616,7 @@ const AddOrganization = (props) => {
                             options={typeOptions}
                             styles={customStyles}
                             onChange={(data) => {
-                              // setFieldValue("type", data.value);
+                              setFieldValue("type", data.value);
                               setTypeValue(data);
                             }}
                           />
@@ -805,7 +809,7 @@ const AddOrganization = (props) => {
                             value={coaValue}
                             styles={customStyles}
                             onChange={(data) => {
-                              setFieldValue("coa", data.label);
+                              setFieldValue("coa", data.value);
                               setCoaValue(data);
                             }}
                           />
@@ -966,11 +970,20 @@ const AddOrganization = (props) => {
                       </Grid>
                     </Grid>
 
-                    <div className="mt-4 mb-3">
-                      <button className="btn btn-success" type="submit">
-                        {props.isEdit ? "Update" : "Submit"}
-                      </button>
-                    </div>
+                    {loading ? (
+                      <div
+                        className="spinner-border text-success"
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    ) : (
+                      <div className="mt-4 mb-3">
+                        <button className="btn btn-success" type="submit">
+                          {props.isEdit ? "Update" : "Submit"}
+                        </button>
+                      </div>
+                    )}
                   </Form>
                 )}
               </Formik>
