@@ -13,7 +13,6 @@ import { getAllISOCodes } from "iso-country-currency";
 
 const AddCostEntry = (props) => {
   const history = useHistory();
-
   const [selVoucher, setSelVoucher] = useState({
     value: "Journal",
     label: "Journal",
@@ -146,12 +145,12 @@ const AddCostEntry = (props) => {
     setSelVoucher(selectedVoucher);
 
     const selectedCharge = chargeOptions.find(
-      (dd) => dd.value === props.entry?.charge
+      (dd) => dd.value === props.entry?.charge?.id
     );
     setSelCharge(selectedCharge);
 
     const selectedJob = jobOptions.find(
-      (dd) => dd.value === props.entry?.job_no
+      (dd) => dd.value === props.entry?.job_no?.id
     );
     setSelJob(selectedJob);
 
@@ -223,9 +222,9 @@ const AddCostEntry = (props) => {
               <Formik
                 initialValues={{
                   // voucher_type: props.entry?.voucher_type || "Journal",
-                  charge: props.entry?.charge || 0,
+                  charge: props.entry?.charge?.id || 0,
                   description: props.entry?.description || "",
-                  job_no: props.entry?.job_no || 0,
+                  job_no: props.entry?.job_no?.id || 0,
                   shipment_no: props.entry?.shipment_no || "",
                   currency: props.entry?.currency || "",
                   ex_rate: props.entry?.ex_rate || "",
