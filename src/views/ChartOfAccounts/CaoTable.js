@@ -79,7 +79,13 @@ const CaoTable = (props) => {
       name: <span className="font-weight-bold fs-13">Refernce Code</span>,
       selector: (row) => row.additional_reference_code,
       cell: (value) => {
-        return <div>{value.additional_reference_code}</div>;
+        return (
+          <div>
+            {value.additional_reference_code
+              ? value.additional_reference_code
+              : "-"}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -131,23 +137,23 @@ const CaoTable = (props) => {
         customStyles={customStyles}
         columns={cols}
         data={props.accounts}
-        paginationPerPage={props.pagination?.rowsPerPage}
-        onChangePage={(p, t) => {
-          props.handlePagination({
-            ...props.pagination,
-            currentPage: p,
-          });
-        }}
-        onChangeRowsPerPage={(c, t) => {
-          props.handlePagination({
-            ...props.pagination,
-            rowsPerPage: c,
-            currentPage: t,
-          });
-        }}
-        paginationServer
-        paginationDefaultPage={props.pagination?.currentPage}
-        paginationTotalRows={props.pagination?.totalRows}
+        // paginationPerPage={props.pagination?.rowsPerPage}
+        // onChangePage={(p, t) => {
+        //   props.handlePagination({
+        //     ...props.pagination,
+        //     currentPage: p,
+        //   });
+        // }}
+        // onChangeRowsPerPage={(c, t) => {
+        //   props.handlePagination({
+        //     ...props.pagination,
+        //     rowsPerPage: c,
+        //     currentPage: t,
+        //   });
+        // }}
+        // paginationServer
+        // paginationDefaultPage={props.pagination?.currentPage}
+        // paginationTotalRows={props.pagination?.totalRows}
         pagination={true}
       />
       <Modal

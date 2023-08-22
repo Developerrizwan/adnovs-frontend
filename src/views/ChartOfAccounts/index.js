@@ -20,20 +20,23 @@ const ChartOfAccounts = (props) => {
   });
 
   useEffect(() => {
-    getAccounts(pagination, searchValue);
+    getAccounts();
   }, []);
 
-  const getAccounts = (pgdata, val) => {
+  const getAccounts = () => {
     apiAuth
-      .get(`/api/get-coa/?page=1`)
+      .get(`/api/get-coa/`)
       .then((response) => {
         let data = response.data;
+        const filteredData = data.filter((item) =>
+          item.name.toLowerCase().includes(searchValue.toLowerCase())
+        );
         // console.log("xswjhjwx", response);
         // setPagination({
         //   ...pgdata,
         //   totalRows: data.length,
         // });
-        setAccounts(data);
+        setAccounts(filteredData);
         setLoading(false);
       })
       .catch((err) => console.log(err));
@@ -53,7 +56,7 @@ const ChartOfAccounts = (props) => {
           null,
           ""
         );
-        getAccounts(pagination, searchValue);
+        getAccounts();
       })
       .catch(function (error) {
         console.log(error);
@@ -79,7 +82,7 @@ const ChartOfAccounts = (props) => {
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getAccounts(pagination, val);
+              getAccounts();
             }}
           />
         </Container>
@@ -97,10 +100,10 @@ const ChartOfAccounts = (props) => {
                       deleteAccount={(id) => deleteAccount(id)}
                       handlePagination={(data) => {
                         setPagination(data);
-                        getAccounts(pagination, searchValue);
+                        getAccounts();
                       }}
                       getAccounts={() => {
-                        getAccounts(pagination, searchValue);
+                        getAccounts();
                       }}
                     />
                   </Card>
