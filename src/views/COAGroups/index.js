@@ -32,8 +32,6 @@ const COAGroup = (props) => {
       .then((response) => {
         let data = response?.data?.results;
         const totalRows = response?.data?.count;
-
-        // console.log("xswjhjwx", response);
         setPagination({
           ...pgdata,
           totalRows: totalRows,
@@ -98,11 +96,12 @@ const COAGroup = (props) => {
                   {" "}
                   <Card>
                     <CaoGroupTable
+                      pagination={pagination}
                       accounts={accounts}
                       deleteAccount={(id) => deleteAccount(id)}
                       handlePagination={(data) => {
                         setPagination(data);
-                        getAccounts(pagination, searchValue);
+                        getAccounts(data, searchValue);
                       }}
                       getAccounts={() => {
                         getAccounts(pagination, searchValue);

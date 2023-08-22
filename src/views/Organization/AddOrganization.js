@@ -103,12 +103,12 @@ const AddOrganization = (props) => {
 
   const getCoaOptions = () => {
     apiAuth
-      .get("api/master/coa/")
+      .get("api/get-coa/")
       .then((response) => {
-        let data = response.data.results;
+        let data = response.data;
         const opts = data.map((dd) => {
           return {
-            label: dd.code,
+            label: `${dd.code}-${dd.name}`,
             value: dd.id,
           };
         });

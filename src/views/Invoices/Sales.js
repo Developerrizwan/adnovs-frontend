@@ -162,7 +162,7 @@ const Sales = (props) => {
         let { data } = res;
         data = data.map((rr) => {
           return {
-            label: rr.code,
+            label: `${rr.code}-${rr.name}`,
             value: rr.id,
           };
         });

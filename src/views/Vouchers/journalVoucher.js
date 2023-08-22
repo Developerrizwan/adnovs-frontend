@@ -23,14 +23,14 @@ const JournalVoucher = (props) => {
 
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [date, setDate] = useState(new Date());
-  const [period, setPeriod] = useState(``);
+  // const [date, setDate] = useState(new Date());
+  // const [period, setPeriod] = useState(``);
   // const [period, setPeriod] = useState(`${date.getMonth()} ${date.getFullYear()}`)
   const [selectedParty, setSelectedParty] = useState(null);
   const [selBranch, setSelBranch] = useState(null);
-  const [selectedConcern, setSelectedConcern] = useState(null);
-  const [selOutAmtoption, setSelOutAmtoption] = useState(null);
-  const [selCategory, setSelCategory] = useState(null);
+  // const [selectedConcern, setSelectedConcern] = useState(null);
+  // const [selOutAmtoption, setSelOutAmtoption] = useState(null);
+  // const [selCategory, setSelCategory] = useState(null);
   const [selCurrency, setSelCurrency] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -47,10 +47,10 @@ const JournalVoucher = (props) => {
     label: "Cash",
   });
 
-  const [categoryOptions, setCategoryOptions] = useState([]);
+  // const [categoryOptions, setCategoryOptions] = useState([]);
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [partyOptions, setPartyOptions] = useState([]);
-  const [coaOptions, setCoaOptions] = useState([]);
+  // const [coaOptions, setCoaOptions] = useState([]);
 
   const instTypeOptions = [
     { value: "Cash", label: "Cash" },
@@ -74,7 +74,7 @@ const JournalVoucher = (props) => {
     getJobOptions();
     getPartyOptions();
     getAllCurrencyCodes();
-    getCategoryOptions();
+    // getCategoryOptions();
 
     if (props?.isEdit) {
       const selectedStatus =
@@ -113,21 +113,21 @@ const JournalVoucher = (props) => {
     setCurrencyOptions(allCurrencies);
   };
 
-  const getCategoryOptions = () => {
-    apiAuth
-      .get("/api/master/coacategory/")
-      .then((res) => {
-        const { data } = res;
-        const catOptions = data.results.map((dd) => {
-          return {
-            label: dd?.name,
-            value: dd?.name,
-          };
-        });
-        setCategoryOptions(catOptions);
-      })
-      .catch((err) => console.log(err));
-  };
+  // const getCategoryOptions = () => {
+  //   apiAuth
+  //     .get("/api/master/coacategory/")
+  //     .then((res) => {
+  //       const { data } = res;
+  //       const catOptions = data.results.map((dd) => {
+  //         return {
+  //           label: dd?.name,
+  //           value: dd?.name,
+  //         };
+  //       });
+  //       setCategoryOptions(catOptions);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
   const getPartyOptions = () => {
     apiAuth
@@ -136,7 +136,7 @@ const JournalVoucher = (props) => {
         let { data } = res;
         data = data.map((rr) => {
           return {
-            label: rr.code,
+            label: `${rr.code}-${rr.name}`,
             value: rr.id,
           };
         });
@@ -620,6 +620,9 @@ const JournalVoucher = (props) => {
                             name="job"
                             options={jobOptions}
                             value={selectedJob}
+                            onInputChange={(val) => {
+                              getJobOptions(val);
+                            }}
                             onChange={(data) => {
                               setFieldValue("job", data.value);
                               setSelectedJob(data);
