@@ -319,30 +319,8 @@ const Sales = (props) => {
                   coa: props.isEdit ? props.data?.coa : "",
                 }}
                 validationSchema={Yup.object({
-                  bl_number: Yup.string().required("BL Number is Required"),
-                  consignee_name: Yup.string()
-                    .ensure()
-                    .required("Consignee Name is Required"),
-                  // date: Yup.string().required("Date is Required"),
-                  currency_sar: Yup.string()
-                    .ensure()
-                    .required("Currency is Required"),
-                  bayan_number: Yup.string().required(
-                    "Bayan Number is Required"
-                  ),
-                  shipper_name: Yup.string().required(
-                    "Shipper Name is Required"
-                  ),
-                  branch: Yup.string().ensure().required("Branch is Required"),
-                  ex_rate: Yup.string().required("Rate is Required"),
-                  pod: Yup.string().ensure().required("POD is Required"),
-                  client_name: Yup.string()
-                    .ensure()
-                    .required("Client Name is Required"),
-                  fc_amount: Yup.string().required("FC Amount is Required"),
-                  poa: Yup.string().required("POA is Required"),
                   job: Yup.string().ensure().required("Job is Required"),
-                  remarks: Yup.string().required("Remarks is Required"),
+                  coa: Yup.string().ensure().required("Party A/C is Required"),
                 })}
                 onSubmit={(values, reset) => {
                   values["due_date"] = moment(dueDate).format(
@@ -440,7 +418,6 @@ const Sales = (props) => {
                             <Label htmlFor="bl_number" className="pe-2 w-50">
                               {" "}
                               BL Number
-                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control"
@@ -465,7 +442,6 @@ const Sales = (props) => {
                             className="form-label"
                           >
                             Consignee Name
-                            <span className="text-danger">*</span>
                           </Label>
 
                           <Select
@@ -539,7 +515,6 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <label htmlFor="currency_sar" className="form-label">
                             Currency
-                            <span className="text-danger">*</span>
                           </label>
                           <Select
                             name="currency_sar"
@@ -568,7 +543,6 @@ const Sales = (props) => {
                               className="  w-50 pe-2"
                             >
                               Bayan Number
-                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control"
@@ -590,7 +564,6 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <Label htmlFor="client_name" className="form-label">
                             Client Name
-                            <span className="text-danger">*</span>
                           </Label>
                           <Select
                             name="type"
@@ -621,7 +594,6 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <Label htmlFor="branch" className="form-label">
                             Branch
-                            <span className="text-danger">*</span>
                           </Label>
                           <Select
                             value={branchValue}
@@ -647,7 +619,6 @@ const Sales = (props) => {
                           <div>
                             <Label htmlFor="ex_rate" className="pe-2 w-50">
                               Ex. Rate
-                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control "
@@ -679,7 +650,6 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <Label htmlFor="pod" className="form-label">
                             POD
-                            <span className="text-danger">*</span>
                           </Label>
 
                           <Select
@@ -712,7 +682,7 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <label htmlFor="coa" className="form-label">
                             Party A/C
-                            {/* <span className="text-danger">*</span> */}
+                            <span className="text-danger">*</span>
                           </label>
                           <Select
                             name="coa"
@@ -737,7 +707,6 @@ const Sales = (props) => {
                           <div>
                             <Label htmlFor="fc_amount" className="pe-2 w-50">
                               FC Amount
-                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control"
@@ -771,7 +740,6 @@ const Sales = (props) => {
                             <Label htmlFor="amount_sar" className="pe-2 w-50">
                               {" "}
                               Amount
-                              {/* <span className="text-danger">*</span> */}
                             </Label>
                             <Field
                               className="form-control"
@@ -794,7 +762,6 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <Label htmlFor="poa" className="form-label">
                             POA
-                            <span className="text-danger">*</span>
                           </Label>
 
                           <Select
@@ -942,7 +909,6 @@ const Sales = (props) => {
                               className=" w-50 p e-2"
                             >
                               Shipper Name
-                              <span className="text-danger">*</span>
                             </Label>
                             <Field
                               className="form-control "
@@ -964,7 +930,6 @@ const Sales = (props) => {
                         <div className="mb-3">
                           <label htmlFor="remarks" className="form-label">
                             Remarks
-                            <span className="text-danger">*</span>
                           </label>
                           <Field
                             as="textarea"
