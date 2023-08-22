@@ -118,6 +118,7 @@ const AddCharge = (props) => {
                   code: Yup.string().required("Code is Required"),
                   name: Yup.string().required("Name is Required"),
                   status: Yup.boolean().required("Status is Required"),
+                  coa: Yup.string().required("COA is Required"),
                   // iata_code: Yup.string().required("Required!"),
                 })}
                 onSubmit={(values) => {
@@ -268,6 +269,7 @@ const AddCharge = (props) => {
                           <label htmlFor="coa" className="form-label">
                             COA
                           </label>
+                          <span className="text-danger">*</span>
                           <Select
                             name="type"
                             styles={customStyles}
