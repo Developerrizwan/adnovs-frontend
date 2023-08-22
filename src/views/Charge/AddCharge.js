@@ -35,14 +35,11 @@ const AddCharge = (props) => {
 
   const getCoaOptions = () => {
     apiAuth
-      .get(`/api/master/coa/`)
+      .get(`/api/get-coa/`)
       .then((res) => {
-        let {
-          data: { results },
-        } = res;
-        results = results.map((rr) => {
+        let results = res?.data?.map((rr) => {
           return {
-            label: rr.code,
+            label: `${rr.code}-${rr.name}`,
             value: rr.id,
           };
         });
