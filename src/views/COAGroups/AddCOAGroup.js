@@ -160,7 +160,7 @@ const AddCOAGroup = (props) => {
                         setLoading(false);
                         NotificationManager.error(
                           "Chart of accounts",
-                          "Account Create Error",
+                          "Group Create Error",
                           3000,
                           null,
                           null,

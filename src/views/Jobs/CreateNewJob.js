@@ -623,7 +623,7 @@ const CreateNewJob = (props) => {
                             value={selPod}
                             // onInputChange={(val) => getPodOptions(val)}
                             onChange={(data) => {
-                              //   setPodValue(data);
+                              setSelPod(data);
                               setFieldValue("pod", data.value);
                             }}
                           />
@@ -686,7 +686,7 @@ const CreateNewJob = (props) => {
                             value={selPoa}
                             // onInputChange={(val) => getPoaOptions(val)}
                             onChange={(data) => {
-                              //   setPoaValue(data);
+                              setSelPoa(data);
                               setFieldValue("poa", data.value);
                             }}
                           />
