@@ -148,6 +148,11 @@ const InvoiceTable = (props) => {
       cell: (value) => <div>{value.remarks}</div>,
     },
     {
+      name: <span className="font-weight-bold fs-13">Language Address</span>,
+      selector: (row) => row.language_address,
+      cell: (value) => <div>{value?.language_address}</div>,
+    },
+    {
       name: <span className="font-weight-bold fs-13">View Invoice</span>,
       selector: (row) => row,
       cell: (value) => {

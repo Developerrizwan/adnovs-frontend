@@ -227,18 +227,21 @@ const TaxInvoiceSecond = (props) => {
                 <Translate text={String(state?.invoice?.company?.name)} />
               </h3>
               <p>
-                <Translate
+                {/* <Translate
                   text={
                     state?.invoice?.company?.address.length
                       ? state?.invoice?.company?.address
                       : ""
                   }
-                />
+                /> */}
+                {state?.invoice?.language_address?.length
+                  ? state?.invoice?.language_address
+                  : ""}
               </p>
-              <p>
+              {/* <p>
                 <Translate text={state?.invoice?.company?.state} />
                 <Translate text={state?.invoice?.company?.country} />
-              </p>
+              </p> */}
               <p style={{ fontWeight: 600 }}>
                 <Translate text={"VAT NO"} />: {state?.invoice?.company?.vat}
               </p>

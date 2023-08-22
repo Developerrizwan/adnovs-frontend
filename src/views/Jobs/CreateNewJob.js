@@ -20,6 +20,7 @@ const CreateNewJob = (props) => {
   const [selPoa, setSelPoa] = useState(null);
   const [selPod, setSelPod] = useState(null);
   const [organization_type, setOrganization_type] = useState([]);
+  const [parties, setParties] = useState([]);
   const [polValue, setPolValue] = useState(null);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -390,6 +391,10 @@ const CreateNewJob = (props) => {
     setOrganization_type(data.map((item) => item.label));
   };
 
+  const handlePartiesHandler = (data) => {
+    setParties(data.map((item) => item.label));
+  };
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -425,7 +430,8 @@ const CreateNewJob = (props) => {
                   scope_of_work: "",
                   eta: null,
                   etd: null,
-                  organization_type: "",
+                  organization_type: [],
+                  parties: [],
                   branch: "",
                 }}
                 validationSchema={Yup.object({
@@ -442,7 +448,7 @@ const CreateNewJob = (props) => {
                     .ensure()
                     .required("Cosignee Name is Required"),
                   shipper_name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
+                    .max(50, "Must be 50 characters or less")
                     .trim()
                     .required("Shipper Name is Required"),
                   client_name: Yup.string()
@@ -477,6 +483,7 @@ const CreateNewJob = (props) => {
                   values["eta"] = eta;
                   values["etd"] = etd;
                   values["organization_type"] = organization_type;
+                  values["parties"] = parties;
                   const url = `/api/master/job/`;
                   apiAuth
                     .post(url, values)
@@ -975,6 +982,36 @@ const CreateNewJob = (props) => {
                           />
                           <ErrorMessage
                             name="organization_type"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="parties" className="form-label">
+                            Parties
+                            {/* <span className="text-danger">*</span> */}
+                          </Label>
+
+                          <Select
+                            name="parties"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={OrganizationTypeOptions}
+                            isMulti
+                            value={parties.map((label) => ({
+                              label,
+                              value: label,
+                            }))}
+                            onChange={handlePartiesHandler}
+                          />
+                          <ErrorMessage
+                            name="parties"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}

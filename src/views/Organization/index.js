@@ -21,12 +21,40 @@ const Organization = (props) => {
 
   const options = [
     {
-      label: "Consignee",
       value: "Consignee",
+      label: "Consignee",
     },
     {
-      label: "Client",
       value: "Client",
+      label: "Client",
+    },
+    {
+      value: "Supplier",
+      label: "Supplier",
+    },
+    {
+      value: "Shipper",
+      label: "Shipper",
+    },
+    {
+      value: "Notify",
+      label: "Notify",
+    },
+    {
+      value: "Counterpart",
+      label: "Counterpart",
+    },
+    {
+      value: "Broker",
+      label: "Broker",
+    },
+    {
+      value: "Agents",
+      label: "Agents",
+    },
+    {
+      value: "Others",
+      label: "Others",
     },
   ];
 
@@ -34,7 +62,9 @@ const Organization = (props) => {
     setLoading(true);
     apiAuth
       .get(
-        `/api/get-organization/?page=${pgdata?.currentPage}&search=${val || ""}&type=${type}`
+        `/api/get-organization/?page=${pgdata?.currentPage}&search=${
+          val || ""
+        }&type=${type}`
       )
       .then((response) => {
         console.log("dd", response);

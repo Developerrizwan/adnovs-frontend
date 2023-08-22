@@ -495,7 +495,7 @@ const EditJob = (props) => {
                 .ensure()
                 .required("Cosignee Name is Required"),
               shipper_name: Yup.string()
-                .max(20, "Must be 20 characters or less")
+                .max(50, "Must be 50 characters or less")
                 .trim()
                 .required("Shipper Name is Required"),
               client_name: Yup.string()

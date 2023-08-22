@@ -291,7 +291,7 @@ const AddOrganization = (props) => {
                 }}
                 validationSchema={Yup.object({
                   name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
+                    .max(50, "Must be 50 characters or less")
                     .trim()
                     .required("Name is Required"),
                   // email: Yup.string()
@@ -316,7 +316,7 @@ const AddOrganization = (props) => {
                     "Payment Terms is Required"
                   ),
                   language_name: Yup.string()
-                    .max(20, "Must be 20 characters or less")
+                    .max(50, "Must be 50 characters or less")
                     .trim()
                     .required("Language Name is Required"),
                   // type: Yup.string().ensure().required("Type is Required"),

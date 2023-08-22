@@ -73,11 +73,11 @@ const AddUser = (props) => {
                   }}
                   validationSchema={Yup.object({
                     first_name: Yup.string()
-                      .max(20, "Must be 20 characters or less")
+                      .max(50, "Must be 50 characters or less")
                       .trim()
                       .required("First Name is Required"),
                     last_name: Yup.string()
-                      .max(20, "Must be 20 characters or less")
+                      .max(50, "Must be 50 characters or less")
                       .trim()
                       .required("Last Name is Required"),
                     password: Yup.string().required("Password is Required"),
