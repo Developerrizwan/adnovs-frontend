@@ -31,9 +31,9 @@ const EnquiryTable = (props) => {
     },
     {
       name: <span className="font-weight-bold fs-13"> Consigee Name</span>,
-      selector: (row) => row.consignee_name,
+      selector: (row) => row.consignee_name?.name,
       cell: (value) => {
-        return <div>{value.consignee_name}</div>;
+        return <div>{value.consignee_name?.name}</div>;
       },
       sortable: true,
     },
@@ -56,9 +56,9 @@ const EnquiryTable = (props) => {
     },
     {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
-      selector: (row) => row.client_name,
+      selector: (row) => row.client_name?.name,
       cell: (value) => {
-        return <div>{value.client_name}</div>;
+        return <div>{value.client_name?.name}</div>;
       },
       sortable: true,
     },

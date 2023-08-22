@@ -28,15 +28,12 @@ const ChartOfAccounts = (props) => {
       .get(`/api/get-coa/`)
       .then((response) => {
         let data = response.data;
-        const filteredData = data.filter((item) =>
-          item.name.toLowerCase().includes(searchValue.toLowerCase())
-        );
         // console.log("xswjhjwx", response);
         // setPagination({
         //   ...pgdata,
         //   totalRows: data.length,
         // });
-        setAccounts(filteredData);
+        setAccounts(data);
         setLoading(false);
       })
       .catch((err) => console.log(err));
@@ -82,7 +79,6 @@ const ChartOfAccounts = (props) => {
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getAccounts();
             }}
           />
         </Container>
@@ -96,7 +92,15 @@ const ChartOfAccounts = (props) => {
                   {" "}
                   <Card>
                     <CaoTable
-                      accounts={accounts}
+                      accounts={accounts.filter(
+                        (item) =>
+                          String(item.name)
+                            ?.toLowerCase()
+                            .includes(String(searchValue)?.toLowerCase()) ||
+                          String(item.code)
+                            ?.toLowerCase()
+                            .includes(String(searchValue)?.toLowerCase())
+                      )}
                       deleteAccount={(id) => deleteAccount(id)}
                       handlePagination={(data) => {
                         setPagination(data);
