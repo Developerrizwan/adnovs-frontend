@@ -140,12 +140,12 @@ const Sales = (props) => {
         const { data } = response;
         const opts = data.map((dd) => {
           return {
-            label: dd?.name,
+            label: `${dd?.code}-${dd?.name}-${dd?.country}`,
             value: dd?.name,
           };
         });
         if (props.isEdit) {
-          const sel = opts.find((dd) => dd.label === props?.data.poa);
+          const sel = opts.find((dd) => dd.value === props?.data.poa);
           setPoaValue(sel);
         }
         setPoaOptions(opts);
@@ -204,7 +204,7 @@ const Sales = (props) => {
         let { data } = response;
         data = data.map((dd) => {
           return {
-            label: dd?.name,
+            label: `${dd?.code}-${dd?.name}-${dd?.country}`,
             value: dd?.name,
           };
         });

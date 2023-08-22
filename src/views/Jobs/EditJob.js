@@ -667,7 +667,7 @@ const EditJob = (props) => {
                         styles={customStyles}
                         options={podOptions?.map((item) => {
                           return {
-                            label: item.name,
+                            label: `${item.code}-${item.name}-${item.country}`,
                             value: item.name,
                           };
                         })}
@@ -733,7 +733,7 @@ const EditJob = (props) => {
                         styles={customStyles}
                         options={poaOptions?.map((item) => {
                           return {
-                            label: item.name,
+                            label: `${item.code}-${item.name}-${item.country}`,
                             value: item.name,
                           };
                         })}
