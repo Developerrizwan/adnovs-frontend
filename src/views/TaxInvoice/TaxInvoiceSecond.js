@@ -210,7 +210,7 @@ const TaxInvoiceSecond = (props) => {
                 {state?.invoice?.company?.country}
               </p>
               <p style={{ fontWeight: 600 }}>
-                VAT NO : {state?.invoice?.company?.vat}
+                VAT NO : {state?.invoice?.company?.vat_number}
               </p>
               {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
             </div>
@@ -224,9 +224,11 @@ const TaxInvoiceSecond = (props) => {
             </div>
             <div className="col-lg-4 d-flex flex-column align-items-end">
               <h3 style={{ color: "#000" }}>
-                <Translate text={String(state?.invoice?.company?.name)} />
+                <Translate
+                  text={String(state?.invoice?.company?.company_name_lang)}
+                />
               </h3>
-              <p>
+              <p style={{ fontWeight: 400 }}>
                 {/* <Translate
                   text={
                     state?.invoice?.company?.address.length
@@ -243,7 +245,13 @@ const TaxInvoiceSecond = (props) => {
                 <Translate text={state?.invoice?.company?.country} />
               </p> */}
               <p style={{ fontWeight: 600 }}>
-                <Translate text={"VAT NO"} />: {state?.invoice?.company?.vat}
+                <span style={{ marginRight: "5px" }}>
+                  <Translate text={"VAT NUMBER"} />
+                </span>
+                :
+                <span style={{ marginLeft: "5px" }}>
+                  {state?.invoice?.company?.vat_number}
+                </span>
               </p>
               {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
             </div>
@@ -503,7 +511,7 @@ const TaxInvoiceSecond = (props) => {
                   <Translate text="Shipper Name" />
                 </div>
                 <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.shipper_name}
+                  : {state.invoice?.job?.shipper_name}
                 </div>
               </p>
               <p>

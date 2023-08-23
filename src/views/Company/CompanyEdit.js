@@ -92,6 +92,12 @@ const CompanyEdit = (props) => {
               language_address: props?.companyData?.language_address
                 ? props?.companyData?.language_address
                 : "",
+              company_name_lang: props?.companyData?.company_name_lang
+                ? props?.companyData?.company_name_lang
+                : "",
+              vat_number: props?.companyData?.vat_number
+                ? props?.companyData?.vat_number
+                : "",
             }}
             validationSchema={Yup.object({
               name: Yup.string().required("Company Name is Required"),
@@ -109,6 +115,13 @@ const CompanyEdit = (props) => {
               bank_name: Yup.string().required("Bank Name is Required"),
               swift_code: Yup.string().required("Swift Code Name is Required"),
               iban_code: Yup.string().required("IBAN Code Name is Required"),
+              language_address: Yup.string().required(
+                "Language Address is Required"
+              ),
+              company_name_lang: Yup.string().required(
+                "Comapany Name in selected Language is Required"
+              ),
+              vat_number: Yup.string().required("VAT number is Required"),
             })}
             onSubmit={(values, { reset }) => {
               const company = JSON.parse(
@@ -307,25 +320,28 @@ const CompanyEdit = (props) => {
                   </Grid>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="iban_code" className="form-label">
-                        IBAN Code
+                      <Label htmlFor="vat_number" className="form-label">
+                        VAT Number
                         <span className="text-danger">*</span>
                       </Label>
                       <Field
                         className="form-control"
-                        name="iban_code"
+                        placeholder="VAT Number"
+                        name="vat_number"
                         style={{ background: "#EDEDED" }}
                       />
 
                       <ErrorMessage
-                        name="iban_code"
+                        name="vat_number"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
                       />
                     </div>
                   </Grid>
+                </Grid>
 
+                <Grid spacing={2} container>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="language_address" className="form-label">
@@ -341,6 +357,51 @@ const CompanyEdit = (props) => {
 
                       <ErrorMessage
                         name="language_address"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="company_name_lang" className="form-label">
+                        {`Company Name (in ${values.language_address})`}
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="company_name_lang"
+                        placeholder="Company name in selected Language."
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="company_name_lang"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid spacing={2} container>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="iban_code" className="form-label">
+                        IBAN Code
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="iban_code"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="iban_code"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
