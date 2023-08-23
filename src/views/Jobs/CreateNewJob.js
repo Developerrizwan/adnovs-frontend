@@ -513,7 +513,9 @@ const CreateNewJob = (props) => {
                   values["company"] = company;
                   values["eta"] = eta;
                   values["etd"] = etd;
-                  values["organization_type"] = organization_type;
+                  values["organization_type"] = organization_type.map(
+                    (dd) => dd?.label
+                  );
                   values["parties"] = selectedParties.map((item) => item.value);
                   const url = `/api/master/job/`;
                   apiAuth

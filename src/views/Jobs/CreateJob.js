@@ -562,7 +562,9 @@ const CreateJob = (props) => {
               values["etd"] = etd;
               values["consignee_name"] = consigneeNameValue.value;
               values["client_name"] = clientNameValue.value;
-              values["organization_type"] = organization_type;
+              values["organization_type"] = organization_type.map(
+                (dd) => dd?.label
+              );
               values["parties"] = selectedParties.map((item) => item.value);
 
               const url = `/api/master/job/`;

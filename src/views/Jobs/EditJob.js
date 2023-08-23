@@ -506,7 +506,7 @@ const EditJob = (props) => {
                 ? props?.allJobs?.shipper_name
                 : "",
               client_name: props?.allJobs?.client_name
-                ? props?.allJobs?.client_name
+                ? props?.allJobs?.client_name?.id
                 : "",
               remarks: props?.allJobs?.remarks ? props?.allJobs?.remarks : "",
               job_type: props?.allJobs?.job_type
@@ -534,9 +534,7 @@ const EditJob = (props) => {
                 : [],
               parties: props?.allJobs?.parties ? props?.allJobs?.parties : [],
               selected_organization_type: props?.allJobs?.organization_type
-                ? props?.allJobs?.organization_type?.map((ot) => {
-                    return { label: ot, value: ot };
-                  })
+                ? props?.allJobs?.organization_type
                 : [],
               branch: props?.allJobs?.branch ? props?.allJobs?.branch : "",
             }}
@@ -582,7 +580,11 @@ const EditJob = (props) => {
                 localStorage.getItem("authUser")
               )?.company_id;
               values["company"] = company;
+              values["organization_type"] = organization_type.map(
+                (dd) => dd?.label
+              );
               values["parties"] = selectedParties.map((item) => item.value);
+
               const url = `/api/master/job/${props.allJobs.id}/`;
               apiAuth
                 .patch(url, values)
