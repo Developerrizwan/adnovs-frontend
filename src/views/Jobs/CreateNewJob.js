@@ -20,12 +20,12 @@ const CreateNewJob = (props) => {
   const [selPoa, setSelPoa] = useState(null);
   const [selPod, setSelPod] = useState(null);
   const [organization_type, setOrganization_type] = useState([]);
-  const [parties, setParties] = useState([]);
   const [polValue, setPolValue] = useState(null);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
+  const [partiesOptions, setPartiesOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [clientOptions, setClientOptions] = useState([]);
-
+  const [selectedParties, setSelectedParties] = useState([]);
   const options = [
     {
       label: "Job",
@@ -215,6 +215,39 @@ const CreateNewJob = (props) => {
       });
   };
 
+  const getPartiesOptions = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${
+          val || ""
+        }&type=${organization_type}`
+      )
+      .then((response) => {
+        let data = response.data;
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setPartiesOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Parties Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
   const getClientOrganization = (val) => {
     setLoading(true);
     apiAuth
@@ -388,11 +421,8 @@ const CreateNewJob = (props) => {
   };
 
   const handleMultiSelectChange = (data) => {
+    getPartiesOptions();
     setOrganization_type(data.map((item) => item.label));
-  };
-
-  const handlePartiesHandler = (data) => {
-    setParties(data.map((item) => item.label));
   };
 
   return (
@@ -483,7 +513,7 @@ const CreateNewJob = (props) => {
                   values["eta"] = eta;
                   values["etd"] = etd;
                   values["organization_type"] = organization_type;
-                  values["parties"] = parties;
+                  values["parties"] = selectedParties.map((item) => item.value);
                   const url = `/api/master/job/`;
                   apiAuth
                     .post(url, values)
@@ -743,8 +773,8 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3" style={{ zIndex: "500" }}>
+                      <Grid item lg={4} xs={12} style={{ zIndex: 500 }}>
+                        <div className="mb-3">
                           <Label htmlFor="container" className="form-label">
                             Container/Consignment
                             <span className="text-danger">*</span>
@@ -958,7 +988,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 300 }}>
                         <div className="mb-3">
                           <Label
                             htmlFor="organization_type"
@@ -990,25 +1020,26 @@ const CreateNewJob = (props) => {
                       </Grid>
                     </Grid>
 
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2} style={{ zIndex: 200 }}>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="parties" className="form-label">
                             Parties
                             {/* <span className="text-danger">*</span> */}
                           </Label>
-
                           <Select
                             name="parties"
                             placeholder={"Select"}
                             styles={customStyles}
-                            options={OrganizationTypeOptions}
+                            options={partiesOptions}
                             isMulti
-                            value={parties.map((label) => ({
-                              label,
-                              value: label,
-                            }))}
-                            onChange={handlePartiesHandler}
+                            value={selectedParties}
+                            onInputChange={(val) => {
+                              getPartiesOptions(val);
+                            }}
+                            onChange={(data) => {
+                              setSelectedParties(data);
+                            }}
                           />
                           <ErrorMessage
                             name="parties"

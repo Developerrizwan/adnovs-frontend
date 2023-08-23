@@ -32,6 +32,9 @@ const CreateJob = (props) => {
   const [clientNameValue, setClientNameValue] = useState(null);
   const [polValue, setPolValue] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [partiesOptions, setPartiesOptions] = useState([]);
+  const [selectedParties, setSelectedParties] = useState([]);
+
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
 
@@ -160,6 +163,39 @@ const CreateJob = (props) => {
         NotificationManager.error(
           "",
           `${error.response?.data?.Error || `Consignee Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  const getPartiesOptions = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${
+          val || ""
+        }&type=${partiesOptions}`
+      )
+      .then((response) => {
+        let data = response.data;
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setPartiesOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Parties Get Error`}`,
           3000,
           null,
           null,
@@ -447,6 +483,7 @@ const CreateJob = (props) => {
   );
 
   const handleMultiSelectChange = (data) => {
+    getPartiesOptions();
     setOrganization_type(data.map((item) => item.label));
   };
   return (
@@ -493,8 +530,9 @@ const CreateJob = (props) => {
               etd: props?.allJobs?.etd ? props?.allJobs?.etd : new Date(),
               organization_type: props?.allJobs?.organization_type
                 ? props?.allJobs?.organization_type
-                : "",
+                : [],
               branch: "JEDDHA",
+              parties: props?.allJobs?.parties ? props?.allJobs?.parties : [],
             }}
             validationSchema={Yup.object({
               bl_number: Yup.string().required("BL Number is Required"),
@@ -539,6 +577,8 @@ const CreateJob = (props) => {
               values["consignee_name"] = consigneeNameValue.value;
               values["client_name"] = clientNameValue.value;
               values["organization_type"] = organization_type;
+              values["parties"] = selectedParties.map((item) => item.value);
+
               const url = `/api/master/job/`;
               apiAuth
                 .post(url, values)
@@ -799,8 +839,8 @@ const CreateJob = (props) => {
                     </div>
                   </Grid>
 
-                  <Grid item lg={4} xs={12}>
-                    <div className="mb-3" style={{ zIndex: "500" }}>
+                  <Grid item lg={4} xs={12} style={{ zIndex: 500 }}>
+                    <div className="mb-3">
                       <Label htmlFor="container" className="form-label">
                         Container/Consignment
                         <span className="text-danger">*</span>
@@ -1016,7 +1056,7 @@ const CreateJob = (props) => {
                     </div>
                   </Grid>
 
-                  <Grid item lg={6} xs={12}>
+                  <Grid item lg={6} xs={12} style={{ zIndex: 300 }}>
                     <div className="mb-3">
                       <Label htmlFor="organization_type" className="form-label">
                         Organization Type
@@ -1037,6 +1077,36 @@ const CreateJob = (props) => {
                       />
                       <ErrorMessage
                         name=" organization_type"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} style={{ zIndex: 200 }}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="parties" className="form-label">
+                        Parties
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Select
+                        name="parties"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={partiesOptions}
+                        isMulti
+                        value={selectedParties}
+                        onInputChange={(val) => {
+                          getPartiesOptions(val);
+                        }}
+                        onChange={(data) => {
+                          setSelectedParties(data);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="parties"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}

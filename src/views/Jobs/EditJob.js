@@ -26,6 +26,9 @@ const EditJob = (props) => {
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [clientOptions, setClientOptions] = useState([]);
+  const [partiesOptions, setPartiesOptions] = useState([]);
+  const [selectedParties, setSelectedParties] = useState([]);
+  const [partiesSelected, setPartiesSelected] = useState([]);
 
   const branchOptions = [
     { label: "JEDDAH", value: "JEDDAH" },
@@ -87,6 +90,42 @@ const EditJob = (props) => {
       });
   };
 
+  const getPartiesOptions = (val) => {
+    const s_patries = selectedParties.map((item) => item.label);
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=${
+          props?.allJobs?.organization_type
+            ? props?.allJobs?.organization_type.join(s_patries)
+            : s_patries
+        }`
+      )
+      .then((response) => {
+        let data = response.data;
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setPartiesOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Parties Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
   const getClientOrganization = (val) => {
     setLoading(true);
     apiAuth
@@ -134,6 +173,7 @@ const EditJob = (props) => {
     getPodOptions();
     getOrganization();
     getClientOrganization();
+    getPartiesOptions();
   }, []);
 
   const OrganizationTypeOptions = [
@@ -477,6 +517,7 @@ const EditJob = (props) => {
               organization_type: props?.allJobs?.organization_type
                 ? props?.allJobs?.organization_type
                 : [],
+              parties: props?.allJobs?.parties ? props?.allJobs?.parties : [],
               selected_organization_type: props?.allJobs?.organization_type
                 ? props?.allJobs?.organization_type?.map((ot) => {
                     return { label: ot, value: ot };
@@ -528,7 +569,7 @@ const EditJob = (props) => {
               values["company"] = company;
               values["client_name"] = clientNameValue.value;
               values["consignee_name"] = consigneeNameValue.value;
-
+              values["parties"] = selectedParties.map((item) => item.value);
               const url = `/api/master/job/${props.allJobs.id}/`;
               apiAuth
                 .patch(url, values)
@@ -1029,10 +1070,43 @@ const EditJob = (props) => {
                             "selected_organization_type",
                             data.value
                           );
+                          getPartiesOptions();
                         }}
                       />
                       <ErrorMessage
                         name=" organization_type"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2} style={{ zIndex: 200 }}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="parties" className="form-label">
+                        Parties
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Select
+                        name="parties"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={partiesOptions}
+                        isMulti
+                        value={selectedParties}
+                        onInputChange={(val) => {
+                          getPartiesOptions(val);
+                        }}
+                        onChange={(data) => {
+                          console.log("dddd", data);
+                          setSelectedParties(data);
+                          setPartiesSelected(data);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="parties"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
