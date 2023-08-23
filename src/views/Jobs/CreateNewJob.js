@@ -130,6 +130,10 @@ const CreateNewJob = (props) => {
 
   const OrganizationTypeOptions = [
     {
+      label: "All",
+      value: "All",
+    },
+    {
       label: "Consignee",
       value: "Consignee",
     },
@@ -215,22 +219,24 @@ const CreateNewJob = (props) => {
       });
   };
 
-  const getPartiesOptions = (val) => {
+  const getPartiesOptions = (data, val) => {
     setLoading(true);
+    console.log("s_parties", data);
+    const s_parties = data?.map((item) => item.label);
     apiAuth
       .get(
-        `/api/get-organization/?page=${1}&search=${
-          val || ""
-        }&type=${organization_type}`
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=${s_parties}`
       )
       .then((response) => {
         let data = response.data;
+        console.log("resposne", data);
         const ConsOpts = data.map((dd) => {
           return {
             label: dd?.name,
             value: dd?.id,
           };
         });
+        console.log("ConsOpts", ConsOpts);
         setPartiesOptions(ConsOpts);
         setLoading(false);
       })
@@ -420,11 +426,6 @@ const CreateNewJob = (props) => {
     }),
   };
 
-  const handleMultiSelectChange = (data) => {
-    getPartiesOptions();
-    setOrganization_type(data.map((item) => item.label));
-  };
-
   return (
     <React.Fragment>
       <div className="page-content">
@@ -563,7 +564,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 1000 }}>
                         <div className="mb-3">
                           <Label
                             htmlFor="consignee_name"
@@ -640,7 +641,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 900 }}>
                         <div className="mb-3">
                           <Label htmlFor="pod" className="form-label">
                             POD
@@ -674,7 +675,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 800 }}>
                         <div className="mb-3">
                           <Label htmlFor="client_name" className="form-label">
                             Client Name
@@ -703,7 +704,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={4} xs={12} style={{ zIndex: 700 }}>
                         <div className="mb-3">
                           <Label htmlFor="poa" className="form-label">
                             POA
@@ -737,7 +738,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={4} xs={12} style={{ zIndex: 600 }}>
                         <div className="mb-3">
                           <Label htmlFor="pol" className="form-label">
                             POL
@@ -820,7 +821,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 400 }}>
                         <div className="mb-3">
                           <Label htmlFor="type" className="form-label">
                             Type
@@ -850,7 +851,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 300 }}>
                         <div className="mb-3">
                           <Label htmlFor="scope_of_work" className="form-label">
                             Scope Of Work
@@ -878,7 +879,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 270 }}>
                         <div className="mb-3">
                           <Label htmlFor="eta" className="form-label">
                             ETA
@@ -906,7 +907,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 250 }}>
                         <div className="mb-3">
                           <Label htmlFor="etd" className="form-label">
                             ETD
@@ -933,7 +934,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 200 }}>
                         <div className="mb-3">
                           <Label htmlFor="job_status" className="form-label">
                             Job Status
@@ -962,7 +963,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 100 }}>
                         <div className="mb-3">
                           <Label htmlFor="branch" className="form-label">
                             Branch
@@ -988,7 +989,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12} style={{ zIndex: 300 }}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 80 }}>
                         <div className="mb-3">
                           <Label
                             htmlFor="organization_type"
@@ -1008,7 +1009,12 @@ const CreateNewJob = (props) => {
                               label,
                               value: label,
                             }))}
-                            onChange={handleMultiSelectChange}
+                            onChange={(data) => {
+                              setOrganization_type(
+                                data.map((item) => item.label)
+                              );
+                              getPartiesOptions(data, "");
+                            }}
                           />
                           <ErrorMessage
                             name="organization_type"
@@ -1020,8 +1026,8 @@ const CreateNewJob = (props) => {
                       </Grid>
                     </Grid>
 
-                    <Grid container spacing={2} style={{ zIndex: 200 }}>
-                      <Grid item lg={6} xs={12}>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6} xs={12} style={{ zIndex: 70 }}>
                         <div className="mb-3">
                           <Label htmlFor="parties" className="form-label">
                             Parties
@@ -1035,9 +1041,15 @@ const CreateNewJob = (props) => {
                             isMulti
                             value={selectedParties}
                             onInputChange={(val) => {
-                              getPartiesOptions(val);
+                              getPartiesOptions("", val);
                             }}
                             onChange={(data) => {
+                              // const optionObjects = data.map((option) => ({
+                              //   value: option,
+                              //   label: option,
+                              // }));
+                              // console.log("optionObjects", optionObjects);
+                              console.log("data", data);
                               setSelectedParties(data);
                             }}
                           />
