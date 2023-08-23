@@ -309,9 +309,9 @@ const Sales = (props) => {
                   amount_sar: props.isEdit ? props.data?.amount_sar : "",
                   poa: props.isEdit ? props.data?.poa : "",
                   remarks: props.isEdit ? props.data?.remarks : "",
-                  language_address: props.isEdit
-                    ? props.data?.language_address
-                    : "",
+                  // language_address: props.isEdit
+                  //   ? props.data?.language_address
+                  //   : "",
                   invoice_type: props.isEdit
                     ? props.data?.invoice_type
                     : selectedInvoice.value,
@@ -324,9 +324,9 @@ const Sales = (props) => {
                 validationSchema={Yup.object({
                   job: Yup.string().ensure().required("Job is Required"),
                   coa: Yup.string().ensure().required("Party A/C is Required"),
-                  language_address: Yup.string().required(
-                    "Langauge Address is Required"
-                  ),
+                  // language_address: Yup.string().required(
+                  //   "Langauge Address is Required"
+                  // ),
                 })}
                 onSubmit={(values, reset) => {
                   values["due_date"] = moment(dueDate).format(
@@ -951,7 +951,7 @@ const Sales = (props) => {
                           )}
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                      {/* <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label
                             htmlFor="language_address"
@@ -974,7 +974,7 @@ const Sales = (props) => {
                               </div>
                             )}
                         </div>
-                      </Grid>
+                      </Grid> */}
                     </Grid>
 
                     <div className="d-flex">

@@ -234,8 +234,8 @@ const TaxInvoiceSecond = (props) => {
                       : ""
                   }
                 /> */}
-                {state?.invoice?.language_address?.length
-                  ? state?.invoice?.language_address
+                {state?.invoice?.company?.language_address?.length
+                  ? state?.invoice?.company?.language_address
                   : ""}
               </p>
               {/* <p>

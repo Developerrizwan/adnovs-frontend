@@ -60,6 +60,22 @@ const CompanyTable = (props) => {
       },
       sortable: true,
     },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Language Name</span>,
+    //   selector: (row) => row.address,
+    //   cell: (value) => {
+    //     return <div>{value?.language_name}</div>;
+    //   },
+    //   sortable: true,
+    // },
+    {
+      name: <span className="font-weight-bold fs-13">Language Address</span>,
+      selector: (row) => row.address,
+      cell: (value) => {
+        return <div>{value?.language_address}</div>;
+      },
+      sortable: true,
+    },
 
     {
       name: <span className="font-weight-bold fs-13">Actions</span>,

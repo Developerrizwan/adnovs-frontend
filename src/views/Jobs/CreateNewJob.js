@@ -1005,14 +1005,9 @@ const CreateNewJob = (props) => {
                             styles={customStyles}
                             options={OrganizationTypeOptions}
                             isMulti
-                            value={organization_type.map((label) => ({
-                              label,
-                              value: label,
-                            }))}
+                            value={organization_type}
                             onChange={(data) => {
-                              setOrganization_type(
-                                data.map((item) => item.label)
-                              );
+                              setOrganization_type(data);
                               getPartiesOptions(data, "");
                             }}
                           />
@@ -1041,15 +1036,9 @@ const CreateNewJob = (props) => {
                             isMulti
                             value={selectedParties}
                             onInputChange={(val) => {
-                              getPartiesOptions("", val);
+                              getPartiesOptions(organization_type, val);
                             }}
                             onChange={(data) => {
-                              // const optionObjects = data.map((option) => ({
-                              //   value: option,
-                              //   label: option,
-                              // }));
-                              // console.log("optionObjects", optionObjects);
-                              console.log("data", data);
                               setSelectedParties(data);
                             }}
                           />

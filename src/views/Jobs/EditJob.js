@@ -10,171 +10,30 @@ import { Label, Button } from "reactstrap";
 
 const EditJob = (props) => {
   const [jobType, setJobType] = useState(null);
-  const [typevalue, setTypevalue] = useState(null);
+  const [selType, setSelType] = useState(null);
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
-  const [poaValue, setPoaValue] = useState(null);
+  const [selPOA, setSelPOA] = useState(null);
   const [podValue, setPodValue] = useState(null);
-  const [containerTypesValue, setContainerTypesValue] = useState(null);
+  const [selContainerTypes, setSelContainerTypes] = useState(null);
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
-  const [branchValue, setBranchValue] = useState(null);
+  const [selBranch, setSelBranch] = useState(null);
 
-  const [polValue, setPolValue] = useState(null);
-  const [clientNameValue, setClientNameValue] = useState(null);
-  const [consigneeNameValue, setConsigneeNameValue] = useState(null);
+  const [selPOL, setSelPOL] = useState(null);
+  const [selClient, setSelClient] = useState(null);
+  const [selConsignee, setSelConsignee] = useState(null);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [clientOptions, setClientOptions] = useState([]);
   const [partiesOptions, setPartiesOptions] = useState([]);
   const [selectedParties, setSelectedParties] = useState([]);
-  const [partiesSelected, setPartiesSelected] = useState([]);
+  const [organization_type, setOrganization_type] = useState([]);
 
   const branchOptions = [
     { label: "JEDDAH", value: "JEDDAH" },
     { label: "DUBAI", value: "DUBAI" },
   ];
-
-  const options = [
-    {
-      label: "Job",
-      value: "Job",
-    },
-    // {
-    //   label: "Enquiry",
-    //   value: "Enquiry",
-    // },
-  ];
-
-  const getPoaOptions = (val) => {
-    apiAuth
-      .get(`/api/master/poa/`)
-      .then((response) => {
-        let { data } = response;
-        setPoaOptions(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getOrganization = (val) => {
-    setLoading(true);
-    apiAuth
-      .get(
-        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
-      )
-      .then((response) => {
-        let data = response.data;
-
-        const ConsOpts = data.map((dd) => {
-          return {
-            label: dd?.name,
-            value: dd?.id,
-          };
-        });
-        setConsigneeOptions(ConsOpts);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        NotificationManager.error(
-          "",
-          `${error.response?.data?.Error || `Consignee Get Error`}`,
-          3000,
-          null,
-          null,
-          ""
-        );
-        setLoading(false);
-      });
-  };
-
-  const getPartiesOptions = (val) => {
-    const s_patries = selectedParties.map((item) => item.label);
-    setLoading(true);
-    apiAuth
-      .get(
-        `/api/get-organization/?page=${1}&search=${val || ""}&type=${
-          props?.allJobs?.organization_type
-            ? props?.allJobs?.organization_type.join(s_patries)
-            : s_patries
-        }`
-      )
-      .then((response) => {
-        let data = response.data;
-        const ConsOpts = data.map((dd) => {
-          return {
-            label: dd?.name,
-            value: dd?.id,
-          };
-        });
-        setPartiesOptions(ConsOpts);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        NotificationManager.error(
-          "",
-          `${error.response?.data?.Error || `Parties Get Error`}`,
-          3000,
-          null,
-          null,
-          ""
-        );
-        setLoading(false);
-      });
-  };
-
-  const getClientOrganization = (val) => {
-    setLoading(true);
-    apiAuth
-      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
-      .then((response) => {
-        let data = response.data;
-
-        const ClientOpts = data.map((dd) => {
-          return {
-            label: dd?.name,
-            value: dd?.id,
-          };
-        });
-        setClientOptions(ClientOpts);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        NotificationManager.error(
-          "",
-          `${error.response?.data?.Error || `Client Get Error`}`,
-          3000,
-          null,
-          null,
-          ""
-        );
-        setLoading(false);
-      });
-  };
-
-  const getPodOptions = (val) => {
-    apiAuth
-      .get(`/api/master/pod/`)
-      .then((response) => {
-        let { data } = response;
-        setPodOptions(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  useEffect(() => {
-    getPoaOptions();
-    getPodOptions();
-    getOrganization();
-    getClientOrganization();
-    getPartiesOptions();
-  }, []);
 
   const OrganizationTypeOptions = [
     {
@@ -219,55 +78,211 @@ const EditJob = (props) => {
     },
   ];
 
+  const options = [
+    {
+      label: "Job",
+      value: "Job",
+    },
+    // {
+    //   label: "Enquiry",
+    //   value: "Enquiry",
+    // },
+  ];
+
+  const getPoaOptions = (val) => {
+    apiAuth
+      .get(`/api/master/poa/`)
+      .then((response) => {
+        const { data } = response;
+        const opts = data.map((item) => {
+          return {
+            label: `${item.code}-${item.name}-${item.country}`,
+            value: item.name,
+          };
+        });
+        const sel = opts.find((item) => item?.value === props?.allJobs?.poa);
+        setSelPOA(sel);
+        setPoaOptions(opts);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const getOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
+      )
+      .then((response) => {
+        let data = response.data;
+
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        const consignee_name = ConsOpts.find(
+          (item) => item.value === props.allJobs?.consignee_name?.id
+        );
+        setSelConsignee(consignee_name);
+
+        setConsigneeOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Consignee Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  const getPartiesOptions = (data, val) => {
+    const s_patries = selectedParties.map((item) => item.label);
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=${s_patries}`
+      )
+      .then((response) => {
+        let data = response.data;
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        const partyOpts = ConsOpts.filter((opt) =>
+          props?.allJobs?.parties?.some((type) => type === opt?.value)
+        );
+        setSelectedParties(partyOpts);
+        setPartiesOptions(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Parties Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  const getClientOrganization = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .then((response) => {
+        let data = response?.data;
+
+        const ClientOpts = data?.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        const sel = ClientOpts.find(
+          (item) => item?.value === props.allJobs?.client_name?.id
+        );
+        setSelClient(sel);
+        setClientOptions(ClientOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Client Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  const getPodOptions = (val) => {
+    apiAuth
+      .get(`/api/master/pod/`)
+      .then((response) => {
+        let { data } = response;
+        const opts = data?.map((item) => {
+          return {
+            label: `${item?.code} - ${item?.name} - ${item?.country}`,
+            value: item?.name,
+          };
+        });
+        const sel = opts.find((item) => item?.value === props.allJobs?.pod);
+
+        setPodValue(sel);
+        setPodOptions(opts);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
+    // console.log("eeeeeeeee", props?.allJobs);
+    getPoaOptions();
+    getPodOptions();
+    getOrganization();
+    getClientOrganization();
+    getPartiesOptions(props?.allJobs?.organization_type, "");
+  }, []);
+
+  useEffect(() => {
+    const orgsOpts = OrganizationTypeOptions.filter((opt) =>
+      props?.allJobs?.organization_type?.some((type) => type === opt?.label)
+    );
+    setOrganization_type(orgsOpts);
+
     const jobtype = options.find(
       (item) => item.value === props.allJobs.job_type
     );
     setJobType(jobtype);
+
     const scopeType = scopeofworkOptions.find(
-      (item) => item.value === props.allJobs.scope_of_work
+      (item) => item.value === props.allJobs?.scope_of_work
     );
     setScopeType(scopeType);
+
     const type = typeOptions.find((item) => item.value === props.allJobs.type);
-    setTypevalue(type);
+    setSelType(type);
+
     const jobStatus = statusOptions.find(
       (item) => item.value === props.allJobs.job_status
     );
     setJobStatus(jobStatus);
 
     const container_type = containerTypes.find(
-      (item) => item.value === props.allJobs.container_type
+      (item) => item?.value === props.allJobs?.container_type
     );
-    setContainerTypesValue(container_type);
-    const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
-    setPoaValue({
-      label: props.allJobs.poa,
-      value: props.allJobs.poa,
-    });
-    const pod_Value = podOptions.find(
-      (item) => item.value === props.allJobs?.pod
-    );
+    setSelContainerTypes(container_type);
 
-    setPodValue({
-      label: props.allJobs.pod,
-      value: props.allJobs.pod,
-    });
-
-    // const polv = podOptions.find((item) => item.value === props.allJobs?.pol);
-    setPolValue({
+    setSelPOL({
       label: props.allJobs?.pol,
       value: props.allJobs?.pol,
     });
 
-    const consignee_name = consigneeOptions.find(
-      (item) => item.value === props.allJobs?.consignee_name
-    );
-    setConsigneeNameValue(consignee_name);
-
-    const client_name = clientOptions.find(
-      (item) => item.value === props.allJobs?.client_name
-    );
-    setClientNameValue(client_name);
+    setSelBranch({
+      label: props?.allJobs?.branch,
+      value: props?.allJobs?.branch,
+    });
   }, []);
 
   const typeOptions = [
@@ -485,7 +500,7 @@ const EditJob = (props) => {
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
               pol: props?.allJobs?.pol ? props?.allJobs?.pol : "",
               consignee_name: props?.allJobs?.consignee_name
-                ? props?.allJobs?.consignee_name
+                ? props?.allJobs?.consignee_name?.id
                 : "",
               shipper_name: props?.allJobs?.shipper_name
                 ? props?.allJobs?.shipper_name
@@ -546,8 +561,8 @@ const EditJob = (props) => {
                 .max(400, "Must be 400 characters or less")
                 .trim()
                 .required("Remarks is Required"),
-              por: Yup.string().required("Place Of Receipt is Required"),
-              job_type: Yup.string().required("Job Type is Required"),
+              // por: Yup.string().required("Place Of Receipt is Required"),
+              job_type: Yup.string().ensure().required("Job Type is Required"),
               type: Yup.string().required("Type is Required"),
               scope_of_work: Yup.string()
                 .ensure()
@@ -567,8 +582,6 @@ const EditJob = (props) => {
                 localStorage.getItem("authUser")
               )?.company_id;
               values["company"] = company;
-              values["client_name"] = clientNameValue.value;
-              values["consignee_name"] = consigneeNameValue.value;
               values["parties"] = selectedParties.map((item) => item.value);
               const url = `/api/master/job/${props.allJobs.id}/`;
               apiAuth
@@ -627,16 +640,15 @@ const EditJob = (props) => {
                         <span className="text-danger">*</span>
                       </Label>
                       <Select
-                        name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        value={consigneeNameValue}
+                        value={selConsignee}
                         options={consigneeOptions}
                         onInputChange={(val) => {
                           getOrganization(val);
                         }}
                         onChange={(data) => {
-                          setConsigneeNameValue(data);
+                          setSelConsignee(data);
                           setFieldValue("consignee_name", data.value);
                         }}
                       />
@@ -703,15 +715,9 @@ const EditJob = (props) => {
                       </Label>
 
                       <Select
-                        name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={podOptions?.map((item) => {
-                          return {
-                            label: `${item.code}-${item.name}-${item.country}`,
-                            value: item.name,
-                          };
-                        })}
+                        options={podOptions}
                         value={podValue}
                         // onInputChange={(val) => getPodOptions(val)}
                         onChange={(data) => {
@@ -736,16 +742,15 @@ const EditJob = (props) => {
                         <span className="text-danger">*</span>
                       </Label>
                       <Select
-                        name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        value={clientNameValue}
+                        value={selClient}
                         options={clientOptions}
                         onInputChange={(val) => {
                           getClientOrganization(val);
                         }}
                         onChange={(data) => {
-                          setClientNameValue(data);
+                          setSelClient(data);
                           setFieldValue("client_name", data.value);
                         }}
                       />
@@ -769,19 +774,13 @@ const EditJob = (props) => {
                       </Label>
 
                       <Select
-                        name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={poaOptions?.map((item) => {
-                          return {
-                            label: `${item.code}-${item.name}-${item.country}`,
-                            value: item.name,
-                          };
-                        })}
-                        value={poaValue}
+                        options={poaOptions}
+                        value={selPOA}
                         // onInputChange={(val) => getPoaOptions(val)}
                         onChange={(data) => {
-                          setPoaValue(data);
+                          setSelPOA(data);
                           setFieldValue("poa", data.value);
                         }}
                       />
@@ -803,21 +802,15 @@ const EditJob = (props) => {
                       </Label>
 
                       <Select
-                        name="type"
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={poaOptions?.map((item) => {
-                          return {
-                            label: item.name,
-                            value: item.name,
-                          };
-                        })}
-                        value={polValue}
+                        options={poaOptions}
+                        value={selPOL}
                         // onInputChange={(val) => {
                         //   getPoaOptions(val);
                         // }}
                         onChange={(data) => {
-                          setPolValue(data);
+                          setSelPOL(data);
                           setFieldValue("pol", data.value);
                         }}
                       />
@@ -838,13 +831,12 @@ const EditJob = (props) => {
                         <span className="text-danger">*</span>
                       </Label>
                       <Select
-                        name="type"
                         placeholder={"Select"}
                         styles={customStyles}
                         options={containerTypes}
-                        value={containerTypesValue}
+                        value={selContainerTypes}
                         onChange={(data) => {
-                          setContainerTypesValue(data);
+                          setSelContainerTypes(data);
                           setFieldValue("container_type", data.value);
                         }}
                       />
@@ -888,13 +880,12 @@ const EditJob = (props) => {
                       </Label>
 
                       <Select
-                        name="type"
                         placeholder={"Select"}
                         styles={customStyles}
                         options={typeOptions}
-                        value={typevalue}
+                        value={selType}
                         onChange={(data) => {
-                          setTypevalue(data);
+                          setSelType(data);
                           setFieldValue("type", data.value);
                         }}
                       />
@@ -1004,7 +995,6 @@ const EditJob = (props) => {
                         styles={customStyles}
                         value={jobStatus}
                         options={statusOptions}
-                        // defaultValue={{ label: jobStatus }}
                         onChange={(data) => {
                           setJobStatus(data);
                           setFieldValue("job_status", data.value);
@@ -1032,9 +1022,9 @@ const EditJob = (props) => {
                         placeholder={"Select"}
                         styles={customStyles}
                         options={branchOptions}
-                        value={branchValue}
+                        value={selBranch}
                         onChange={(data) => {
-                          setBranchValue(data);
+                          setSelBranch(data);
                           setFieldValue("branch", data.value);
                         }}
                       />
@@ -1060,17 +1050,10 @@ const EditJob = (props) => {
                         styles={customStyles}
                         options={OrganizationTypeOptions}
                         isMulti
-                        value={values["selected_organization_type"]}
+                        value={organization_type}
                         onChange={(data) => {
-                          setFieldValue(
-                            "organization_type",
-                            data.map((dd) => dd.value)
-                          );
-                          setFieldValue(
-                            "selected_organization_type",
-                            data.value
-                          );
-                          getPartiesOptions();
+                          setOrganization_type(data);
+                          getPartiesOptions(data, "");
                         }}
                       />
                       <ErrorMessage
@@ -1097,12 +1080,10 @@ const EditJob = (props) => {
                         isMulti
                         value={selectedParties}
                         onInputChange={(val) => {
-                          getPartiesOptions(val);
+                          getPartiesOptions(organization_type, val);
                         }}
                         onChange={(data) => {
-                          console.log("dddd", data);
                           setSelectedParties(data);
-                          setPartiesSelected(data);
                         }}
                       />
                       <ErrorMessage

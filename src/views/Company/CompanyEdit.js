@@ -89,6 +89,9 @@ const CompanyEdit = (props) => {
               iban_code: props?.companyData?.iban_code
                 ? props?.companyData?.iban_code
                 : "",
+              language_address: props?.companyData?.language_address
+                ? props?.companyData?.language_address
+                : "",
             }}
             validationSchema={Yup.object({
               name: Yup.string().required("Company Name is Required"),
@@ -322,9 +325,28 @@ const CompanyEdit = (props) => {
                       />
                     </div>
                   </Grid>
-                </Grid>
 
-                <Grid spacing={2} container>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="language_address" className="form-label">
+                        Language Address
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Language Address"
+                        name="language_address"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      <ErrorMessage
+                        name="language_address"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="swift_code" className="form-label">
@@ -345,6 +367,9 @@ const CompanyEdit = (props) => {
                       />
                     </div>
                   </Grid>
+                </Grid>
+
+                <Grid spacing={2} container>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="address" className="form-label">

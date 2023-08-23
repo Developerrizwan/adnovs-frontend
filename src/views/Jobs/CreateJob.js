@@ -427,65 +427,51 @@ const CreateJob = (props) => {
     }),
   };
 
-  useEffect(
-    () => {
-      const jobtype = options.find(
-        (item) => item.value === props.allJobs.job_type
-      );
-      setJobType(jobtype);
-      const scopeType = scopeofworkOptions.find(
-        (item) => item.value === props.allJobs.scope_of_work
-      );
-      setScopeType(scopeType);
-      const type = typeOptions.find(
-        (item) => item.value === props.allJobs.type
-      );
-      setTypevalue(type);
-      const jobStatus = statusOptions.find(
-        (item) => item.value === props.allJobs.job_status
-      );
-      setJobStatus(jobStatus);
+  useEffect(() => {
+    const jobtype = options.find(
+      (item) => item.value === props.allJobs.job_type
+    );
+    setJobType(jobtype);
+    const scopeType = scopeofworkOptions.find(
+      (item) => item.value === props.allJobs.scope_of_work
+    );
+    setScopeType(scopeType);
+    const type = typeOptions.find((item) => item.value === props.allJobs.type);
+    setTypevalue(type);
+    const jobStatus = statusOptions.find(
+      (item) => item.value === props.allJobs.job_status
+    );
+    setJobStatus(jobStatus);
 
-      const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
-      setPoaValue({
-        label: props.allJobs.poa,
-        value: props.allJobs.poa,
-      });
-      const pod_Value = podOptions.find(
-        (item) => item.value === props.allJobs?.pod
-      );
+    const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
+    setPoaValue({
+      label: props.allJobs.poa,
+      value: props.allJobs.poa,
+    });
+    const pod_Value = podOptions.find(
+      (item) => item.value === props.allJobs?.pod
+    );
 
-      setPodValue({
-        label: props.allJobs.pod,
-        value: props.allJobs.pod,
-      });
-      setPolValue({
-        label: props.allJobs?.pol,
-        value: props.allJobs?.pol,
-      });
+    setPodValue({
+      label: props.allJobs.pod,
+      value: props.allJobs.pod,
+    });
+    setPolValue({
+      label: props.allJobs?.pol,
+      value: props.allJobs?.pol,
+    });
 
-      const consignee_name = consigneeOptions.find(
-        (item) => item.value === props.allJobs?.consignee_name
-      );
-      setConsigneeNameValue(consignee_name);
+    const consignee_name = consigneeOptions.find(
+      (item) => item.value === props.allJobs?.consignee_name
+    );
+    setConsigneeNameValue(consignee_name);
 
-      const client_name = clientOptions.find(
-        (item) => item.value === props.allJobs?.client_name
-      );
-      setClientNameValue(client_name);
-    },
-    [
-      // props.allJobs.job_type,
-      // props.allJobs.scope_of_work,
-      // props.allJobs.type,
-      // props.allJobs.job_status,
-    ]
-  );
+    const client_name = clientOptions.find(
+      (item) => item.value === props.allJobs?.client_name
+    );
+    setClientNameValue(client_name);
+  }, []);
 
-  const handleMultiSelectChange = (data) => {
-    getPartiesOptions();
-    setOrganization_type(data.map((item) => item.label));
-  };
   return (
     <React.Fragment>
       {props.allJobs ? (
@@ -1059,7 +1045,7 @@ const CreateJob = (props) => {
                   <Grid item lg={6} xs={12} style={{ zIndex: 300 }}>
                     <div className="mb-3">
                       <Label htmlFor="organization_type" className="form-label">
-                        Organization Type
+                        Organization Typesss
                         {/* <span className="text-danger">*</span> */}
                       </Label>
 
@@ -1069,11 +1055,11 @@ const CreateJob = (props) => {
                         styles={customStyles}
                         options={OrganizationTypeOptions}
                         isMulti
-                        value={organization_type.map((label) => ({
-                          label,
-                          value: label,
-                        }))}
-                        onChange={handleMultiSelectChange}
+                        value={organization_type}
+                        onChange={(data) => {
+                          setOrganization_type(data);
+                          getPartiesOptions(data, "");
+                        }}
                       />
                       <ErrorMessage
                         name=" organization_type"
@@ -1099,7 +1085,7 @@ const CreateJob = (props) => {
                         isMulti
                         value={selectedParties}
                         onInputChange={(val) => {
-                          getPartiesOptions(val);
+                          getPartiesOptions(organization_type, val);
                         }}
                         onChange={(data) => {
                           setSelectedParties(data);
