@@ -14,6 +14,25 @@ import { Buffer } from "buffer";
 import numberToWords from "number-to-words";
 import Translate from "./Translate";
 
+const ShowDataWithTranslate = ({ label, value, width }) => {
+  return (
+    <p>
+      <div
+        style={{
+          display: "inline-block",
+          width: width,
+        }}
+      >
+        {label}
+        <Translate text={label} />
+      </div>
+      <div style={{ display: "inline-block", marginLeft: "5px" }}>
+        : {value ? value : ""}
+      </div>
+    </p>
+  );
+};
+
 const TaxInvoiceSecond = (props) => {
   const [state, setState] = useState({ costs: [] });
   const [objData, setObjData] = useState({});
@@ -273,61 +292,22 @@ const TaxInvoiceSecond = (props) => {
               </h3>
             </div>
             <div className="col-lg-3">
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                  }}
-                >
-                  Job No
-                  <Translate text="Job No" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.job_number}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                  }}
-                >
-                  Enquiry No
-                  <Translate text="Enquiry No" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.enquiry_no}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                  }}
-                >
-                  Client - Bill To
-                  <Translate text="Client - Bill To" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  :
-                </div>
-              </p>
-              {/* <div className="">
-                <span>
-                  <Translate text={state?.invoice?.client_name?.address} />
-                </span>
-                <span
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  {state?.invoice?.client_name?.address || ""}
-                </span>{" "}
-                ,
-              </div> */}
+              <ShowDataWithTranslate
+                width={"200px"}
+                label={"Job Number"}
+                value={state.invoice?.job?.job_number}
+              />
+              <ShowDataWithTranslate
+                width={"200px"}
+                label={"Enquiry Number"}
+                value={state.invoice?.job?.enquiry_no}
+              />
+              <ShowDataWithTranslate
+                width={"200px"}
+                label={"Client - Bill To"}
+                value={null}
+              />
+
               <div className="">
                 <span>
                   <Translate text={state?.invoice?.client_name?.city} />
@@ -369,209 +349,73 @@ const TaxInvoiceSecond = (props) => {
               </div>
             </div>
             <div className="col-lg-5">
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Invoice Date
-                  <Translate text="Invoice Date" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {moment(state.invoice?.created_at).format("MM/DD/YYYY")}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Invoice No
-                  <Translate text="Invoice No" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state?.invoice?.id}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  BL Number
-                  <Translate text="BL Number" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state?.invoice?.bl_number}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Bayan Number
-                  <Translate text="Bayan Number" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state?.invoice?.bayan_number}
-                </div>
-              </p>
-
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  Client Ref / PO No
-                  <Translate text="Client Ref / PO No" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.client_name?.name}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  ETA
-                  <Translate text="ETA" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {moment(state.invoice?.job?.eta).format("MM/DD/YYYY")}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "250px",
-                  }}
-                >
-                  ETD
-                  <Translate text="etd" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {moment(state.invoice?.job?.etd).format("MM/DD/YYYY")}
-                </div>
-              </p>
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"Invoice Date"}
+                value={moment(state.invoice?.created_at).format("MM/DD/YYYY")}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"Invoice Number"}
+                value={state?.invoice?.id}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"BL Number"}
+                value={state?.invoice?.bl_number}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"Bayan Number"}
+                value={state?.invoice?.bayan_number}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"Client Ref / PO No"}
+                value={state.invoice?.client_name?.name}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"ETA"}
+                value={moment(state.invoice?.job?.eta).format("MM/DD/YYYY")}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"ETD"}
+                value={moment(state.invoice?.job?.etd).format("MM/DD/YYYY")}
+              />
             </div>
             <div className="col-lg-4 ml-2">
-              {/* <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                  }}
-                >
-                  Due Date
-                  <Translate text="Due Date" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {moment(state.invoice?.due_date).format("MM/DD/YYYY")}
-                </div>
-              </p> */}
-              {/* <p>Delivery Date : </p> */}
-
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                  }}
-                >
-                  Consignee
-                  <Translate text="Consignee" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.consignee_name?.name}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                  }}
-                >
-                  Shipper Name
-                  <Translate text="Shipper Name" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.shipper_name}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                  }}
-                >
-                  Notify
-                  <Translate text="Notify" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  :
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                  }}
-                >
-                  POL
-                  <Translate text="POL" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.pol}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                  }}
-                >
-                  POD
-                  <Translate text="POD" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.pod}
-                </div>
-              </p>
-              <p>
-                <div
-                  style={{
-                    display: "inline-block",
-                    width: "200px",
-                  }}
-                >
-                  POA
-                  <Translate text="poa" />
-                </div>
-                <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                  : {state.invoice?.job?.poa}
-                </div>
-              </p>
-
-              {/* <p>BL/AWB :</p> */}
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"Consignee"}
+                value={state.invoice?.consignee_name?.name}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"Shipper Name"}
+                value={state.invoice?.job?.shipper_name}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"Notify"}
+                value={null}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"POL"}
+                value={state.invoice?.job?.pol}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"POD"}
+                value={state.invoice?.job?.pod}
+              />
+              <ShowDataWithTranslate
+                width={"250px"}
+                label={"POA"}
+                value={state.invoice?.job?.poa}
+              />
             </div>
           </div>
 
@@ -700,62 +544,26 @@ const TaxInvoiceSecond = (props) => {
           >
             <div className="row">
               <div className="col-lg-5 col-xs-12">
-                <p>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      width: "150px",
-                    }}
-                  >
-                    Type
-                    <Translate text="Type" />
-                  </div>
-                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                    : {state?.invoice?.job?.type}
-                  </div>
-                </p>
-                <p>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      width: "150px",
-                    }}
-                  >
-                    Container
-                    <Translate text="Container" />
-                  </div>
-                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                    : {state?.invoice?.job?.container_type}
-                  </div>
-                </p>
-                <p>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      width: "150px",
-                    }}
-                  >
-                    Volume
-                    <Translate text="Volume" />
-                  </div>
-                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                    :
-                  </div>
-                </p>
-                <p>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      width: "150px",
-                    }}
-                  >
-                    Commodity
-                    <Translate text="Commodity" />
-                  </div>
-                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                    :
-                  </div>
-                </p>
+                <ShowDataWithTranslate
+                  width={"150px"}
+                  label={"Type"}
+                  value={state?.invoice?.job?.type}
+                />
+                <ShowDataWithTranslate
+                  width={"150px"}
+                  label={"Container"}
+                  value={state?.invoice?.job?.container_type}
+                />
+                <ShowDataWithTranslate
+                  width={"150px"}
+                  label={"Volume"}
+                  value={null}
+                />
+                <ShowDataWithTranslate
+                  width={"150px"}
+                  label={"Commodity"}
+                  value={null}
+                />
               </div>
               <div
                 style={{
@@ -888,80 +696,31 @@ const TaxInvoiceSecond = (props) => {
                   </span>
                   :
                 </h6>
-                <div>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      width: "250px",
-                    }}
-                  >
-                    Account Name
-                    <Translate text="Account Name" />
-                  </div>
-                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                    : {state?.invoice?.company?.account_name}
-                  </div>
-                </div>
-
-                <div>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      width: "250px",
-                    }}
-                  >
-                    Bank Name
-                    <Translate text="Bank Name" />
-                  </div>
-                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                    : {state?.invoice?.company?.bank_name}
-                  </div>
-                </div>
-
-                <div>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      width: "250px",
-                    }}
-                  >
-                    Account No
-                    <Translate text="Account No" />
-                  </div>
-                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                    : {state?.invoice?.company?.account_number}
-                  </div>
-                </div>
-
-                <div>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      width: "250px",
-                    }}
-                  >
-                    IBAN Code
-                    <Translate text="IBAN Code" />
-                  </div>
-                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                    : {state?.invoice?.company?.iban_code}
-                  </div>
-                </div>
-
-                <div>
-                  <div
-                    style={{
-                      display: "inline-block",
-                      width: "250px",
-                    }}
-                  >
-                    Swift Code
-                    <Translate text="Swift Code" />
-                  </div>
-                  <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                    : {state?.invoice?.company?.swift_code}
-                  </div>
-                </div>
+                <ShowDataWithTranslate
+                  width={"250px"}
+                  label={"Account Name"}
+                  value={state?.invoice?.company?.account_name}
+                />
+                <ShowDataWithTranslate
+                  width={"250px"}
+                  label={"Bank Name"}
+                  value={state?.invoice?.company?.bank_name}
+                />
+                <ShowDataWithTranslate
+                  width={"250px"}
+                  label={"Account Number"}
+                  value={state?.invoice?.company?.account_number}
+                />
+                <ShowDataWithTranslate
+                  width={"250px"}
+                  label={"IBAN Code"}
+                  value={state?.invoice?.company?.iban_code}
+                />
+                <ShowDataWithTranslate
+                  width={"250px"}
+                  label={"Swift Code"}
+                  value={state?.invoice?.company?.swift_code}
+                />
               </div>
               <div className="col-lg-4 col-xs-12 d-flex justify-content-center align-items-center">
                 <span className="p-2" style={{ display: "contents" }}>
