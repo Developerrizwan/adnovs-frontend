@@ -172,13 +172,12 @@ const CreateJob = (props) => {
       });
   };
 
-  const getPartiesOptions = (val) => {
+  const getPartiesOptions = (data, val) => {
     setLoading(true);
+    const s_parties = data?.map((item) => item.label);
     apiAuth
       .get(
-        `/api/get-organization/?page=${1}&search=${
-          val || ""
-        }&type=${partiesOptions}`
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=${s_parties}`
       )
       .then((response) => {
         let data = response.data;
@@ -827,7 +826,7 @@ const CreateJob = (props) => {
                     </div>
                   </Grid>
 
-                  <Grid item lg={4} xs={12} style={{ zIndex: 500 }}>
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="container" className="form-label">
                         Container/Consignment
@@ -1044,10 +1043,10 @@ const CreateJob = (props) => {
                     </div>
                   </Grid>
 
-                  <Grid item lg={6} xs={12} style={{ zIndex: 300 }}>
+                  <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="organization_type" className="form-label">
-                        Organization Typesss
+                        Organization Types
                         {/* <span className="text-danger">*</span> */}
                       </Label>
 
@@ -1072,7 +1071,7 @@ const CreateJob = (props) => {
                     </div>
                   </Grid>
                 </Grid>
-                <Grid container spacing={2} style={{ zIndex: 200 }}>
+                <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="parties" className="form-label">

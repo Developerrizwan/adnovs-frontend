@@ -75,9 +75,9 @@ const AddCostEntry = (props) => {
     { label: "VAT 15%", value: 15 },
   ];
 
-  const getChargeData = () => {
+  const getChargeData = (val) => {
     apiAuth
-      .get(`/api/master/charge/?page=${1}`)
+      .get(`/api/master/charge/?page=${1}&search=${val}`)
       .then((response) => {
         let {
           data: { results },
@@ -124,7 +124,7 @@ const AddCostEntry = (props) => {
   useEffect(() => {
     getAllCurrencyCodes();
     getJobOptions();
-    getChargeData();
+    getChargeData("");
   }, []);
 
   useEffect(() => {
@@ -339,6 +339,7 @@ const AddCostEntry = (props) => {
                             styles={customStyles}
                             options={chargeOptions}
                             value={selCharge}
+                            onInputChange={(val) => getChargeData(val)}
                             onChange={(data) => {
                               setFieldValue("charge", data.value);
                               setFieldValue("description", data.description);

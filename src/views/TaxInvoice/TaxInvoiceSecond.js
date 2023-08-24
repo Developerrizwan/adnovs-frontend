@@ -33,6 +33,20 @@ const ShowDataWithTranslate = ({ label, value, width }) => {
   );
 };
 
+const ShowTableHeadWithTranslate = ({ label }) => {
+  return (
+    <>
+      <th className="border-0">
+        {label}
+        <br />
+        <span>
+          <Translate text={label} />
+        </span>
+      </th>
+    </>
+  );
+};
+
 const TaxInvoiceSecond = (props) => {
   const [state, setState] = useState({ costs: [] });
   const [objData, setObjData] = useState({});
@@ -202,7 +216,7 @@ const TaxInvoiceSecond = (props) => {
   };
   return (
     <>
-      {console.log("eeeee", state.invoice)}
+      {/* {console.log("eeeee", state.invoice)} */}
       <div style={{ padding: "25px" }}>
         <div
           style={{
@@ -265,7 +279,8 @@ const TaxInvoiceSecond = (props) => {
               </p> */}
               <p style={{ fontWeight: 600 }}>
                 <span style={{ marginRight: "5px" }}>
-                  <Translate text={"VAT NUMBER"} />
+                  {/* <Translate text={"VAT NUMBER"} /> */}
+                  الرقم الضريبي
                 </span>
                 :
                 <span style={{ marginLeft: "5px" }}>
@@ -439,51 +454,12 @@ const TaxInvoiceSecond = (props) => {
                   >
                     #
                   </th>
-
-                  <th className="border-0">
-                    Description
-                    <br />
-                    <span>
-                      <Translate text={"Description"} />
-                    </span>
-                  </th>
-                  <th className="border-0">
-                    Currency
-                    <br />
-                    <span>
-                      <Translate text={"Currency"} />
-                    </span>
-                  </th>
-                  {/* <th className="border-0">Quantity</th>
-                <th className="border-0">Rate</th> */}
-                  <th className="border-0">
-                    Amount
-                    <br />
-                    <span>
-                      <Translate text={"Amount"} />
-                    </span>
-                  </th>
-                  <th className="border-0">
-                    VAT%
-                    <br />
-                    <span>
-                      <Translate text={"VAT%"} />
-                    </span>
-                  </th>
-                  <th className="border-0">
-                    VAT
-                    <br />
-                    <span>
-                      <Translate text={"VAT"} />
-                    </span>
-                  </th>
-                  <th className="border-0 ">
-                    Total
-                    <br />
-                    <span>
-                      <Translate text={"Total"} />
-                    </span>
-                  </th>
+                  <ShowTableHeadWithTranslate label={"Description"} />
+                  <ShowTableHeadWithTranslate label={"Currency"} />
+                  <ShowTableHeadWithTranslate label={"Amount"} />
+                  <ShowTableHeadWithTranslate label={"VAT%"} />
+                  <ShowTableHeadWithTranslate label={"VAT"} />
+                  <ShowTableHeadWithTranslate label={"Total"} />
                 </tr>
                 {state.costs?.map((cost, index) => {
                   return (

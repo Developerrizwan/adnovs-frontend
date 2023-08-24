@@ -221,7 +221,6 @@ const CreateNewJob = (props) => {
 
   const getPartiesOptions = (data, val) => {
     setLoading(true);
-    console.log("s_parties", data);
     const s_parties = data?.map((item) => item.label);
     apiAuth
       .get(
@@ -229,14 +228,12 @@ const CreateNewJob = (props) => {
       )
       .then((response) => {
         let data = response.data;
-        console.log("resposne", data);
         const ConsOpts = data.map((dd) => {
           return {
             label: dd?.name,
             value: dd?.id,
           };
         });
-        console.log("ConsOpts", ConsOpts);
         setPartiesOptions(ConsOpts);
         setLoading(false);
       })
@@ -448,7 +445,6 @@ const CreateNewJob = (props) => {
                   bayan_number: "",
                   pod: "",
                   poa: "",
-                  por: "",
                   pol: "",
                   consignee_name: "",
                   shipper_name: "",
@@ -467,17 +463,16 @@ const CreateNewJob = (props) => {
                 }}
                 validationSchema={Yup.object({
                   bl_number: Yup.string().required("BL Number is Required"),
+                  consignee_name: Yup.string()
+                    .ensure()
+                    .required("Cosignee Name is Required"),
                   branch: Yup.string().required("Branch is Required"),
                   bayan_number: Yup.string().required(
                     "Bayan Number is Required"
                   ),
                   pod: Yup.string().ensure().required("POD is Required"),
                   poa: Yup.string().ensure().required("POA is Required"),
-                  por: Yup.string().required("Place Of Receipt is Required"),
                   pol: Yup.string().ensure().required("POL is Required"),
-                  consignee_name: Yup.string()
-                    .ensure()
-                    .required("Cosignee Name is Required"),
                   shipper_name: Yup.string()
                     .max(50, "Must be 50 characters or less")
                     .trim()
@@ -554,6 +549,7 @@ const CreateNewJob = (props) => {
                           </Label>
                           <Field
                             className="form-control jobs-field"
+                            placeholder="BL Number"
                             name="bl_number"
                             style={{ background: "#EDEDED" }}
                           />
@@ -566,7 +562,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12} style={{ zIndex: 1000 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label
                             htmlFor="consignee_name"
@@ -608,6 +604,7 @@ const CreateNewJob = (props) => {
                           </Label>
                           <Field
                             className="form-control"
+                            placeholder="Bayan Number"
                             name="bayan_number"
                             style={{ background: "#EDEDED" }}
                           />
@@ -643,7 +640,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12} style={{ zIndex: 900 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="pod" className="form-label">
                             POD
@@ -677,7 +674,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12} style={{ zIndex: 800 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="client_name" className="form-label">
                             Client Name
@@ -706,7 +703,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12} style={{ zIndex: 700 }}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="poa" className="form-label">
                             POA
@@ -740,7 +737,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={4} xs={12} style={{ zIndex: 600 }}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="pol" className="form-label">
                             POL
@@ -776,7 +773,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={4} xs={12} style={{ zIndex: 500 }}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="container" className="form-label">
                             Container/Consignment
@@ -823,7 +820,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12} style={{ zIndex: 400 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="type" className="form-label">
                             Type
@@ -853,7 +850,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12} style={{ zIndex: 300 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="scope_of_work" className="form-label">
                             Scope Of Work
@@ -881,7 +878,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12} style={{ zIndex: 270 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="eta" className="form-label">
                             ETA
@@ -909,7 +906,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12} style={{ zIndex: 250 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="etd" className="form-label">
                             ETD
@@ -936,7 +933,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12} style={{ zIndex: 200 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="job_status" className="form-label">
                             Job Status
@@ -965,7 +962,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12} style={{ zIndex: 100 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="branch" className="form-label">
                             Branch
@@ -991,7 +988,7 @@ const CreateNewJob = (props) => {
                         </div>
                       </Grid>
 
-                      <Grid item lg={6} xs={12} style={{ zIndex: 80 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label
                             htmlFor="organization_type"
@@ -1024,7 +1021,7 @@ const CreateNewJob = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={6} xs={12} style={{ zIndex: 70 }}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <Label htmlFor="parties" className="form-label">
                             Parties

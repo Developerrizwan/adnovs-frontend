@@ -147,7 +147,7 @@ const EditJob = (props) => {
   };
 
   const getPartiesOptions = (data, val) => {
-    const s_patries = selectedParties.map((item) => item.label);
+    const s_patries = data.map((item) => item?.label);
     setLoading(true);
     apiAuth
       .get(
@@ -237,15 +237,6 @@ const EditJob = (props) => {
       });
   };
   useEffect(() => {
-    // console.log("eeeeeeeee", props?.allJobs);
-    getPoaOptions();
-    getPodOptions();
-    getOrganization();
-    getClientOrganization();
-    getPartiesOptions(props?.allJobs?.organization_type, "");
-  }, []);
-
-  useEffect(() => {
     const orgsOpts = OrganizationTypeOptions.filter((opt) =>
       props?.allJobs?.organization_type?.some((type) => type === opt?.label)
     );
@@ -283,6 +274,12 @@ const EditJob = (props) => {
       label: props?.allJobs?.branch,
       value: props?.allJobs?.branch,
     });
+
+    getPoaOptions();
+    getPodOptions();
+    getOrganization();
+    getClientOrganization();
+    getPartiesOptions(orgsOpts, "");
   }, []);
 
   const typeOptions = [

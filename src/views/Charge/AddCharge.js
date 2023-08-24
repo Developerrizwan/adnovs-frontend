@@ -317,7 +317,7 @@ const AddCharge = (props) => {
                           </label>
                           <Field
                             className="form-control"
-                            placeholder="Rate"
+                            placeholder="Language Name"
                             name="language_name"
                             style={{ background: "#EDEDED" }}
                           />
