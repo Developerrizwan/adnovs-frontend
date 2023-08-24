@@ -146,13 +146,11 @@ const EditJob = (props) => {
       });
   };
 
-  const getPartiesOptions = (data, val) => {
+  const getPartiesOptions = (data) => {
     const s_patries = data.map((item) => item?.label);
     setLoading(true);
     apiAuth
-      .get(
-        `/api/get-organization/?page=${1}&search=${val || ""}&type=${s_patries}`
-      )
+      .get(`/api/get-organization/?type=${s_patries}`)
       .then((response) => {
         let data = response.data;
         const ConsOpts = data.map((dd) => {
@@ -279,7 +277,7 @@ const EditJob = (props) => {
     getPodOptions();
     getOrganization();
     getClientOrganization();
-    getPartiesOptions(orgsOpts, "");
+    getPartiesOptions(orgsOpts);
   }, []);
 
   const typeOptions = [
@@ -1052,7 +1050,7 @@ const EditJob = (props) => {
                         value={organization_type}
                         onChange={(data) => {
                           setOrganization_type(data);
-                          getPartiesOptions(data, "");
+                          getPartiesOptions(data);
                         }}
                       />
                       <ErrorMessage
@@ -1078,9 +1076,6 @@ const EditJob = (props) => {
                         options={partiesOptions}
                         isMulti
                         value={selectedParties}
-                        onInputChange={(val) => {
-                          getPartiesOptions(organization_type, val);
-                        }}
                         onChange={(data) => {
                           setSelectedParties(data);
                         }}

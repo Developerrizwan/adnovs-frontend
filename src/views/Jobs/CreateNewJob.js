@@ -219,13 +219,11 @@ const CreateNewJob = (props) => {
       });
   };
 
-  const getPartiesOptions = (data, val) => {
+  const getPartiesOptions = (data) => {
     setLoading(true);
     const s_parties = data?.map((item) => item.label);
     apiAuth
-      .get(
-        `/api/get-organization/?page=${1}&search=${val || ""}&type=${s_parties}`
-      )
+      .get(`/api/get-organization/?type=${s_parties}`)
       .then((response) => {
         let data = response.data;
         const ConsOpts = data.map((dd) => {
@@ -1007,7 +1005,7 @@ const CreateNewJob = (props) => {
                             value={organization_type}
                             onChange={(data) => {
                               setOrganization_type(data);
-                              getPartiesOptions(data, "");
+                              getPartiesOptions(data);
                             }}
                           />
                           <ErrorMessage
@@ -1034,9 +1032,6 @@ const CreateNewJob = (props) => {
                             options={partiesOptions}
                             isMulti
                             value={selectedParties}
-                            onInputChange={(val) => {
-                              getPartiesOptions(organization_type, val);
-                            }}
                             onChange={(data) => {
                               setSelectedParties(data);
                             }}
