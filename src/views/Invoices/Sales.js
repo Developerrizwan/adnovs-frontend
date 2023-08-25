@@ -44,17 +44,60 @@ const Sales = (props) => {
     label: "JEDDAH",
     value: "JEDDAH",
   });
-  const [Vendorvalue, setVendorvalue] = useState("TEMP");
-  const [partyOptions, setPartyOptions] = useState([]);
+
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
+  const [partiesOptions, setPartiesOptions] = useState([]);
+  const [selectedParties, setSelectedParties] = useState([]);
+  const [organization_type, setOrganization_type] = useState([]);
 
   const branchOptions = [
     { label: "JEDDAH", value: "JEDDAH" },
     { label: "DUBAI", value: "DUBAI" },
   ];
-  const VendorOptions = [{ label: "TEMP", value: "TEMP" }];
+  const OrganizationTypeOptions = [
+    {
+      label: "Consignee",
+      value: "Consignee",
+    },
+    {
+      label: "Client",
+      value: "Client",
+    },
+    {
+      label: "Notify",
+      value: "Notify",
+    },
+    {
+      label: "Shipper",
+      value: "Shipper",
+    },
+    {
+      label: "Broker",
+      value: "Broker",
+    },
+    {
+      label: "Transporter",
+      value: "Transporter",
+    },
+    {
+      label: "Counterpart",
+      value: "Counterpart",
+    },
+    {
+      label: "Coloader",
+      value: "Coloader",
+    },
+    {
+      label: "Supplier",
+      value: "Supplier",
+    },
+    {
+      label: "Other",
+      value: "Other",
+    },
+  ];
 
   const history = useHistory();
 
@@ -155,25 +198,46 @@ const Sales = (props) => {
       });
   };
 
-  const getPartyOptions = (val) => {
+  const getPartiesOptions = (data) => {
+    setLoading(true);
+
     apiAuth
-      .get(`/api/get-coa/?search=${val || ""}`)
-      .then((res) => {
-        let { data } = res;
-        data = data.map((rr) => {
+      .get(`/api/get-organization/?type=${data?.label}`)
+      .then((response) => {
+        let data = response.data;
+        const ConsOpts = data.map((dd) => {
           return {
-            label: `${rr.code}-${rr.name}`,
-            value: rr.id,
+            label: dd?.name,
+            value: dd?.id,
           };
         });
-        const sel = data.map((dd) => dd.value === props?.data?.coa);
-        setPartyOptions(data);
+        if (props?.isEdit) {
+          const sel = ConsOpts.find(
+            (dd) => dd.id === props?.data?.party_account
+          );
+          setSelectedParties(sel);
+        }
+        setPartiesOptions(ConsOpts);
+        setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Parties Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
-    getPartyOptions();
+    if (props?.isEdit) {
+      getPartiesOptions();
+    }
     getOrganization(searchValue);
     getClientOrganization(searchValue);
     getPoaOptions();
@@ -285,7 +349,7 @@ const Sales = (props) => {
           </>
         )}
         <Grid container spacing={2}>
-          {console.log("eeeeeeeee", props?.data)}
+          {/* {console.log("eeeeeeeee", props?.data)} */}
           <Grid item lg={11} style={{ margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
@@ -319,11 +383,11 @@ const Sales = (props) => {
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
                   narration: props.isEdit ? props.data?.narration : "",
                   job: props.isEdit ? props.data?.job?.bl_number : "",
-                  coa: props.isEdit ? props.data?.coa : "",
+                  party_account: props.isEdit ? props.data?.party_account : "",
                 }}
                 validationSchema={Yup.object({
                   job: Yup.string().ensure().required("Job is Required"),
-                  coa: Yup.string().ensure().required("Party A/C is Required"),
+                  // coa: Yup.string().ensure().required("Party A/C is Required"),
                   // language_address: Yup.string().required(
                   //   "Langauge Address is Required"
                   // ),
@@ -420,29 +484,6 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <div>
-                            <Label htmlFor="bl_number" className="pe-2 w-50">
-                              {" "}
-                              BL Number
-                            </Label>
-                            <Field
-                              className="form-control"
-                              name="bl_number"
-                              style={{ background: "#EDEDED" }}
-                              placeholder="BL Number"
-                              type="text"
-                            />
-                          </div>
-                          {errors.bl_number && touched.bl_number && (
-                            <div className="invalid-feedback d-block">
-                              {errors.bl_number}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
                           <Label
                             htmlFor="consignee_name"
                             className="form-label"
@@ -473,7 +514,312 @@ const Sales = (props) => {
                           />
                         </div>
                       </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="client_name" className="form-label">
+                            Client Name
+                          </Label>
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={clientOptions}
+                            value={clientNameValue}
+                            onInputChange={(val) => {
+                              getClientOrganization(val);
+                            }}
+                            onChange={(data) => {
+                              setClientNameValue(data);
+                              setFieldValue("client_name", data.value);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="client_name"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="job" className="form-label">
+                            Job No
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="job"
+                            options={jobOptions}
+                            value={selectedJob}
+                            onInputChange={(val) => {
+                              getJobs(val);
+                            }}
+                            onChange={(data) => {
+                              setSelectedJob(data);
+                              setFieldValue("job", data.label);
+                            }}
+                            styles={customStyles}
+                          />
+                          {errors.job && touched.job && (
+                            <div className="invalid-feedback d-block">
+                              {errors.job}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
 
+                    <Grid container spacing={2}>
+                      <Grid item lg={3} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="branch" className="form-label">
+                            Branch
+                          </Label>
+                          <Select
+                            value={branchValue}
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={branchOptions}
+                            onChange={(data) => {
+                              setBranchValue(data);
+                              setFieldValue("branch", data.label);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="branch"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={3} xs={12}>
+                        <div className="mb-3">
+                          <Label
+                            htmlFor="organization_type"
+                            className="form-label"
+                          >
+                            Organization Types
+                            {/* <span className="text-danger">*</span> */}
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={OrganizationTypeOptions}
+                            value={organization_type}
+                            onChange={(data) => {
+                              setOrganization_type(data);
+                              setSelectedParties(null);
+                              getPartiesOptions(data);
+                            }}
+                          />
+                          <ErrorMessage
+                            name=" organization_type"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={3} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="party_account" className="form-label">
+                            Party Account
+                            {/* <span className="text-danger">*</span> */}
+                          </Label>
+                          <Select
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={partiesOptions}
+                            value={selectedParties}
+                            onChange={(data) => {
+                              setFieldValue("party_account", data.value);
+                              setSelectedParties(data);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="party_account"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={3} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="pod" className="form-label">
+                            POD
+                          </Label>
+
+                          <Select
+                            // name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            options={podOptions}
+                            value={podValue}
+                            // onInputChange={(val) => {
+                            //   getPodOptions(val);
+                            // }}
+                            onChange={(data) => {
+                              setPodValue(data);
+                              setFieldValue("pod", data.value);
+                            }}
+                          />
+
+                          <ErrorMessage
+                            name="pod"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <Label htmlFor="poa" className="form-label">
+                            POA
+                          </Label>
+
+                          <Select
+                            name="type"
+                            placeholder={"Select"}
+                            styles={customStyles}
+                            value={poaValue}
+                            options={poaOptions}
+                            // onInputChange={(val) => {
+                            //   getPoaOptions(val);
+                            // }}
+                            onChange={(data) => {
+                              setPoaValue(data);
+                              setFieldValue("poa", data.value);
+                            }}
+                          />
+
+                          <ErrorMessage
+                            name="poa"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="currency_sar" className="form-label">
+                            Currency
+                          </label>
+                          <Select
+                            name="currency_sar"
+                            styles={customStyles}
+                            value={selCurrency}
+                            options={currencyOptions}
+                            onChange={(data) => {
+                              setFieldValue("currency_sar", data.value);
+                              // console.log("eeeee", data);
+                              setSelCurrency(data);
+                            }}
+                          />
+                          {errors.currency_sar && touched.currency_sar && (
+                            <div className="invalid-feedback d-block">
+                              {errors.currency_sar}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="ref_data" className="form-label">
+                            Ref Date
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <div
+                            style={{
+                              position: "relative",
+                              // cursor: "pointer",
+                            }}
+                          >
+                            <DatePicker
+                              selected={refDate}
+                              onChange={(date) => setRefDate(date)}
+                            />
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                right: 10,
+                                fill: "red",
+                              }}
+                            >
+                              <img
+                                src="/calendar.svg"
+                                alt="calendar"
+                                width="20px"
+                                height="20px"
+                              />
+                            </span>
+                          </div>
+
+                          {errors.ref_data && touched.ref_data && (
+                            <div className="invalid-feedback d-block">
+                              {errors.ref_data}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <div>
+                            <Label
+                              htmlFor="bayan_number"
+                              className="  w-50 pe-2"
+                            >
+                              Bayan Number
+                            </Label>
+                            <Field
+                              className="form-control"
+                              name="bayan_number"
+                              placeholder="Bayan Number"
+                              type="text"
+                              style={{ background: "#EDEDED" }}
+                            />
+                          </div>
+                          {errors.bayan_number && touched.bayan_number && (
+                            <div className="invalid-feedback d-block">
+                              {errors.bayan_number}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <div>
+                            <Label htmlFor="bl_number" className="pe-2 w-50">
+                              {" "}
+                              BL Number
+                            </Label>
+                            <Field
+                              className="form-control"
+                              name="bl_number"
+                              style={{ background: "#EDEDED" }}
+                              placeholder="BL Number"
+                              type="text"
+                            />
+                          </div>
+                          {errors.bl_number && touched.bl_number && (
+                            <div className="invalid-feedback d-block">
+                              {errors.bl_number}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="date" className="form-label">
@@ -519,109 +865,6 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="currency_sar" className="form-label">
-                            Currency
-                          </label>
-                          <Select
-                            name="currency_sar"
-                            styles={customStyles}
-                            value={selCurrency}
-                            options={currencyOptions}
-                            onChange={(data) => {
-                              setFieldValue("currency_sar", data.value);
-                              // console.log("eeeee", data);
-                              setSelCurrency(data);
-                            }}
-                          />
-                          {errors.currency_sar && touched.currency_sar && (
-                            <div className="invalid-feedback d-block">
-                              {errors.currency_sar}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <div>
-                            <Label
-                              htmlFor="bayan_number"
-                              className="  w-50 pe-2"
-                            >
-                              Bayan Number
-                            </Label>
-                            <Field
-                              className="form-control"
-                              name="bayan_number"
-                              placeholder="Bayan Number"
-                              type="text"
-                              style={{ background: "#EDEDED" }}
-                            />
-                          </div>
-                          {errors.bayan_number && touched.bayan_number && (
-                            <div className="invalid-feedback d-block">
-                              {errors.bayan_number}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="client_name" className="form-label">
-                            Client Name
-                          </Label>
-                          <Select
-                            name="type"
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            options={clientOptions}
-                            value={clientNameValue}
-                            onInputChange={(val) => {
-                              getClientOrganization(val);
-                            }}
-                            onChange={(data) => {
-                              setClientNameValue(data);
-                              setFieldValue("client_name", data.value);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="client_name"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="branch" className="form-label">
-                            Branch
-                          </Label>
-                          <Select
-                            value={branchValue}
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            options={branchOptions}
-                            onChange={(data) => {
-                              setBranchValue(data);
-                              setFieldValue("branch", data.label);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="branch"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
                           <div>
                             <Label htmlFor="ex_rate" className="pe-2 w-50">
                               Ex. Rate
@@ -651,63 +894,6 @@ const Sales = (props) => {
                           )}
                         </div>
                       </Grid>
-
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="pod" className="form-label">
-                            POD
-                          </Label>
-
-                          <Select
-                            // name="type"
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            options={podOptions}
-                            value={podValue}
-                            // onInputChange={(val) => {
-                            //   getPodOptions(val);
-                            // }}
-                            onChange={(data) => {
-                              setPodValue(data);
-                              setFieldValue("pod", data.value);
-                            }}
-                          />
-
-                          <ErrorMessage
-                            name="pod"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="coa" className="form-label">
-                            Party A/C
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            name="coa"
-                            styles={customStyles}
-                            value={selectedParty}
-                            options={partyOptions}
-                            onChange={(data) => {
-                              setFieldValue("coa", data.value);
-                              setSelectedParty(data);
-                            }}
-                          />
-                          {errors.coa && touched.coa && (
-                            <div className="invalid-feedback d-block">
-                              {errors.coa}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
@@ -739,7 +925,6 @@ const Sales = (props) => {
                           )}
                         </div>
                       </Grid>
-
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>
@@ -758,103 +943,6 @@ const Sales = (props) => {
                           {errors.amount_sar && touched.amount_sar && (
                             <div className="invalid-feedback d-block">
                               {errors.amount_sar}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <Label htmlFor="poa" className="form-label">
-                            POA
-                          </Label>
-
-                          <Select
-                            name="type"
-                            placeholder={"Select"}
-                            styles={customStyles}
-                            value={poaValue}
-                            options={poaOptions}
-                            // onInputChange={(val) => {
-                            //   getPoaOptions(val);
-                            // }}
-                            onChange={(data) => {
-                              setPoaValue(data);
-                              setFieldValue("poa", data.value);
-                            }}
-                          />
-
-                          <ErrorMessage
-                            name="poa"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="job" className="form-label">
-                            Job No
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            name="job"
-                            options={jobOptions}
-                            value={selectedJob}
-                            onInputChange={(val) => {
-                              getJobs(val);
-                            }}
-                            onChange={(data) => {
-                              setSelectedJob(data);
-                              setFieldValue("job", data.label);
-                            }}
-                            styles={customStyles}
-                          />
-                          {errors.job && touched.job && (
-                            <div className="invalid-feedback d-block">
-                              {errors.job}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="ref_data" className="form-label">
-                            Ref Date
-                            {/* <span className="text-danger">*</span> */}
-                          </label>
-                          <div
-                            style={{
-                              position: "relative",
-                              // cursor: "pointer",
-                            }}
-                          >
-                            <DatePicker
-                              selected={refDate}
-                              onChange={(date) => setRefDate(date)}
-                            />
-                            <span
-                              style={{
-                                position: "absolute",
-                                top: 8,
-                                right: 10,
-                                fill: "red",
-                              }}
-                            >
-                              <img
-                                src="/calendar.svg"
-                                alt="calendar"
-                                width="20px"
-                                height="20px"
-                              />
-                            </span>
-                          </div>
-
-                          {errors.ref_data && touched.ref_data && (
-                            <div className="invalid-feedback d-block">
-                              {errors.ref_data}
                             </div>
                           )}
                         </div>
