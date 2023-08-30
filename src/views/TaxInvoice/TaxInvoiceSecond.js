@@ -306,7 +306,7 @@ const TaxInvoiceSecond = (props) => {
                 TAX INVOICE / <Translate text={"TAX INVOICE"} />
               </h3>
             </div>
-            <div className="col-lg-3">
+            <div className="col-lg-4">
               <ShowDataWithTranslate
                 width={"200px"}
                 label={"Job Number"}
@@ -316,6 +316,11 @@ const TaxInvoiceSecond = (props) => {
                 width={"200px"}
                 label={"Enquiry Number"}
                 value={state.invoice?.job?.enquiry_no}
+              />
+              <ShowDataWithTranslate
+                width={"200px"}
+                label={"Client Vat Number"}
+                value={state.invoice?.client_name?.vat_trn_number}
               />
               <ShowDataWithTranslate
                 width={"200px"}
@@ -349,7 +354,6 @@ const TaxInvoiceSecond = (props) => {
                 </span>{" "}
                 ,
               </div>
-
               <div className="">
                 <span>
                   <Translate text={state?.invoice?.client_name?.country} />
@@ -363,39 +367,39 @@ const TaxInvoiceSecond = (props) => {
                 </span>
               </div>
             </div>
-            <div className="col-lg-5">
+            <div className="col-lg-4">
               <ShowDataWithTranslate
-                width={"300px"}
+                width={"250px"}
                 label={"Invoice Date"}
                 value={moment(state.invoice?.created_at).format("MM/DD/YYYY")}
               />
               <ShowDataWithTranslate
-                width={"300px"}
+                width={"250px"}
                 label={"Invoice Number"}
                 value={state?.invoice?.id}
               />
               <ShowDataWithTranslate
-                width={"300px"}
+                width={"250px"}
                 label={"BL Number"}
                 value={state?.invoice?.bl_number}
               />
               <ShowDataWithTranslate
-                width={"300px"}
+                width={"250px"}
                 label={"Bayan Number"}
                 value={state?.invoice?.bayan_number}
               />
               <ShowDataWithTranslate
-                width={"300px"}
+                width={"250px"}
                 label={"Client Ref / PO Number"}
                 value={state.invoice?.job?.client_ref}
               />
               <ShowDataWithTranslate
-                width={"300px"}
+                width={"250px"}
                 label={"ETA"}
                 value={moment(state.invoice?.job?.eta).format("MM/DD/YYYY")}
               />
               <ShowDataWithTranslate
-                width={"300px"}
+                width={"250px"}
                 label={"ETD"}
                 value={moment(state.invoice?.job?.etd).format("MM/DD/YYYY")}
               />
@@ -430,6 +434,16 @@ const TaxInvoiceSecond = (props) => {
                 width={"200px"}
                 label={"POA"}
                 value={state.invoice?.job?.poa}
+              />
+              <ShowDataWithTranslate
+                width={"200px"}
+                label={"Currency Amount"}
+                value={state.invoice?.currency_sar}
+              />
+              <ShowDataWithTranslate
+                width={"200px"}
+                label={"Exchange Rate"}
+                value={state.invoice?.ex_rate}
               />
             </div>
           </div>
