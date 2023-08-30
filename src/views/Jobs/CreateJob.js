@@ -8,6 +8,14 @@ import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
+import {
+  scopeofworkOptions,
+  branchOptions,
+  statusOptions,
+  typeOptions,
+  OrganizationTypeOptions,
+  containerTypes,
+} from "./Options";
 
 const CreateJob = (props) => {
   const etaTime = props.allJobs.eta;
@@ -34,6 +42,7 @@ const CreateJob = (props) => {
   const [loading, setLoading] = useState(false);
   const [partiesOptions, setPartiesOptions] = useState([]);
   const [selectedParties, setSelectedParties] = useState([]);
+  const [allParties, setAllParties] = useState([]);
 
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
@@ -42,101 +51,6 @@ const CreateJob = (props) => {
     {
       label: "Job",
       value: "Job",
-    },
-  ];
-
-  const branchOptions = [
-    { label: "JEDDAH", value: "JEDDAH" },
-    { label: "DUBAI", value: "DUBAI" },
-  ];
-
-  const statusOptions = [
-    {
-      label: "Cargo Collected",
-      value: "Cargo Collected",
-    },
-    {
-      label: "Under Export Clearance",
-      value: "Under Export Clearance",
-    },
-    {
-      label: "Departed",
-      value: "Departed",
-    },
-    {
-      label: "In Transit",
-      value: "In Transit",
-    },
-    {
-      label: "Arrived",
-      value: "Arrived",
-    },
-    {
-      label: "Under Import Clearance",
-      value: "Under Import Clearance",
-    },
-    {
-      label: "Do Collected",
-      value: "Do Collected",
-    },
-    {
-      label: "Gate Pass Issued",
-      value: "Gate Pass Issued",
-    },
-    {
-      label: "Under Delivery",
-      value: "Under Delivery",
-    },
-    {
-      label: "In Warehouse Storage",
-      value: "In Warehouse Storage",
-    },
-    {
-      label: "Delivered",
-      value: "Delivered",
-    },
-    {
-      label: "Invoiced",
-      value: "Invoiced",
-    },
-    {
-      label: "Finished",
-      value: "Finished",
-    },
-    {
-      label: "Cancelled",
-      value: "Cancelled",
-    },
-  ];
-
-  const typeOptions = [
-    {
-      label: "Air Freight",
-      value: "Air Freight",
-    },
-    {
-      label: "Sea Freight",
-      value: "Sea Freight",
-    },
-    {
-      label: "Land Freight",
-      value: "Land Freight",
-    },
-    {
-      label: "Transportation",
-      value: "Transportation",
-    },
-    {
-      label: "Warehousing",
-      value: "Warehousing",
-    },
-    {
-      label: "Customs Clearance",
-      value: "Customs Clearance",
-    },
-    {
-      label: "Other",
-      value: "Other",
     },
   ];
 
@@ -202,6 +116,34 @@ const CreateJob = (props) => {
       });
   };
 
+  const getAllParties = () => {
+    apiAuth
+      .get(`/api/get-organization/?type=all`)
+      .then((response) => {
+        let data = response.data;
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setAllParties(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Parties Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
   const getClientOrganization = (val) => {
     setLoading(true);
     apiAuth
@@ -232,48 +174,6 @@ const CreateJob = (props) => {
       });
   };
 
-  const OrganizationTypeOptions = [
-    {
-      label: "Consignee",
-      value: "Consignee",
-    },
-    {
-      label: "Client",
-      value: "Client",
-    },
-    {
-      label: "Notify",
-      value: "Notify",
-    },
-    {
-      label: "Shipper",
-      value: "Shipper",
-    },
-    {
-      label: "Broker",
-      value: "Broker",
-    },
-    {
-      label: "Transporter",
-      value: "Transporter",
-    },
-    {
-      label: "Counterpart",
-      value: "Counterpart",
-    },
-    {
-      label: "Coloader",
-      value: "Coloader",
-    },
-    {
-      label: "Supplier",
-      value: "Supplier",
-    },
-    {
-      label: "Other",
-      value: "Other",
-    },
-  ];
   const getPoaOptions = (val) => {
     apiAuth
       .get(`/api/master/poa/`)
@@ -303,117 +203,8 @@ const CreateJob = (props) => {
     getPodOptions();
     getOrganization();
     getClientOrganization();
+    getAllParties();
   }, []);
-
-  const scopeofworkOptions = [
-    {
-      label: "D2D",
-      value: "D2D",
-    },
-    {
-      label: "EXW",
-      value: "EXW",
-    },
-    {
-      label: "FOB",
-      value: "FOB",
-    },
-    {
-      label: "CIF",
-      value: "CIF",
-    },
-    {
-      label: "CNF",
-      value: "CNF",
-    },
-    {
-      label: "C&F",
-      value: "C&F",
-    },
-    {
-      label: "DDP",
-      value: "DDP",
-    },
-    {
-      label: "DAP",
-      value: "DAP",
-    },
-    {
-      label: "CPT",
-      value: "CPT",
-    },
-    {
-      label: "TRANS",
-      value: "TRANS",
-    },
-    {
-      label: "D-TRANS",
-      value: "D-TRANS",
-    },
-    {
-      label: "OTHERS",
-      value: "OTHERS",
-    },
-  ];
-
-  const containerTypes = [
-    {
-      label: "20DC",
-      value: "20DC",
-    },
-    {
-      label: "20RF",
-      value: "20RF",
-    },
-    {
-      label: "20ST",
-      value: "20ST",
-    },
-    {
-      label: "20OT",
-      value: "20OT",
-    },
-    {
-      label: "20HC",
-      value: "20HC",
-    },
-    {
-      label: "40DC",
-      value: "40DC",
-    },
-    {
-      label: "40DC",
-      value: "40DC",
-    },
-    {
-      label: "40RF",
-      value: "40RF",
-    },
-    {
-      label: "40ST",
-      value: "40ST",
-    },
-    {
-      label: "40OT",
-      value: "40OT",
-    },
-    {
-      label: "40HC",
-      value: "40HC",
-    },
-    {
-      label: "FLAT RACK",
-      value: "FLAT RACK",
-    },
-    {
-      label: "FTL",
-      value: "FTL",
-    },
-    {
-      label: "LTL",
-      value: "LTL",
-    },
-  ];
 
   const history = useHistory();
 
@@ -475,6 +266,7 @@ const CreateJob = (props) => {
         <Card className="p-3" style={{ background: "#EDEDED" }}>
           <Formik
             initialValues={{
+              company: JSON.parse(localStorage.getItem("authUser"))?.company_id,
               bl_number: props?.allJobs?.bl_number
                 ? props?.allJobs?.bl_number
                 : "",
@@ -486,13 +278,13 @@ const CreateJob = (props) => {
               por: props?.allJobs?.por ? props?.allJobs?.por : "",
               pol: props?.allJobs?.pol ? props?.allJobs?.pol : "",
               consignee_name: props?.allJobs?.consignee_name
-                ? props?.allJobs?.consignee_name
+                ? props?.allJobs?.consignee_name?.id
                 : "",
               shipper_name: props?.allJobs?.shipper_name
                 ? props?.allJobs?.shipper_name
                 : "",
               client_name: props?.allJobs?.client_name
-                ? props?.allJobs?.client_name
+                ? props?.allJobs?.client_name?.id
                 : "",
               remarks: props?.allJobs?.remarks ? props?.allJobs?.remarks : "",
               job_type:
@@ -516,6 +308,12 @@ const CreateJob = (props) => {
                 : [],
               branch: "JEDDHA",
               parties: props?.allJobs?.parties ? props?.allJobs?.parties : [],
+              notify: "",
+              client_ref: "",
+              broker: "",
+              transporter: "",
+              commodity: "",
+              quantity_text: "",
             }}
             validationSchema={Yup.object({
               bl_number: Yup.string().required("BL Number is Required"),
@@ -546,19 +344,11 @@ const CreateJob = (props) => {
               // organization_type: Yup.string().required(
               //   "Organization Type is Required"
               // ),
-              container_type: Yup.string().required(
-                "Container Type is Required"
-              ),
+              // container_type: Yup.string().required(
+              //   "Container Type is Required"
+              // ),
             })}
             onSubmit={(values, { reset }) => {
-              const company = JSON.parse(
-                localStorage.getItem("authUser")
-              )?.company_id;
-              values["company"] = company;
-              values["eta"] = eta;
-              values["etd"] = etd;
-              values["consignee_name"] = consigneeNameValue.value;
-              values["client_name"] = clientNameValue.value;
               values["organization_type"] = organization_type.map(
                 (dd) => dd?.label
               );
@@ -619,7 +409,6 @@ const CreateJob = (props) => {
                         Consignee Name
                         <span className="text-danger">*</span>
                       </Label>
-
                       <Select
                         name="type"
                         placeholder={"Select"}
@@ -631,7 +420,6 @@ const CreateJob = (props) => {
                           setFieldValue("consignee_name", data.value);
                         }}
                       />
-
                       <ErrorMessage
                         name="consignee_name"
                         render={(msg) => (
@@ -653,7 +441,6 @@ const CreateJob = (props) => {
                         name="bayan_number"
                         style={{ background: "#EDEDED" }}
                       />
-
                       <ErrorMessage
                         name="bayan_number"
                         render={(msg) => (
@@ -673,7 +460,6 @@ const CreateJob = (props) => {
                         name="shipper_name"
                         style={{ background: "#EDEDED" }}
                       />
-
                       <ErrorMessage
                         name="shipper_name"
                         render={(msg) => (
@@ -691,9 +477,7 @@ const CreateJob = (props) => {
                         POD
                         <span className="text-danger">*</span>
                       </Label>
-
                       <Select
-                        name="type"
                         placeholder={"Select"}
                         styles={customStyles}
                         options={podOptions?.map((item) => {
@@ -703,15 +487,11 @@ const CreateJob = (props) => {
                           };
                         })}
                         value={podValue}
-                        // onInputChange={(val) => {
-                        //   getPodOptions(val);
-                        // }}
                         onChange={(data) => {
                           setPodValue(data);
                           setFieldValue("pod", data.value);
                         }}
                       />
-
                       <ErrorMessage
                         name="pod"
                         render={(msg) => (
@@ -752,13 +532,12 @@ const CreateJob = (props) => {
                 </Grid>
 
                 <Grid container spacing={2}>
-                  <Grid item lg={4} xs={12}>
+                  <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="poa" className="form-label">
                         POA
                         <span className="text-danger">*</span>
                       </Label>
-
                       <Select
                         name="type"
                         placeholder={"Select"}
@@ -770,15 +549,11 @@ const CreateJob = (props) => {
                           };
                         })}
                         value={poaValue}
-                        // onInputChange={(val) => {
-                        //   getPoaOptions(val);
-                        // }}
                         onChange={(data) => {
                           setPoaValue(data);
                           setFieldValue("poa", data.value);
                         }}
                       />
-
                       <ErrorMessage
                         name="poa"
                         render={(msg) => (
@@ -788,13 +563,12 @@ const CreateJob = (props) => {
                     </div>
                   </Grid>
 
-                  <Grid item lg={4} xs={12}>
+                  <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="pol" className="form-label">
                         POL
                         <span className="text-danger">*</span>
                       </Label>
-
                       <Select
                         name="type"
                         placeholder={"Select"}
@@ -806,41 +580,13 @@ const CreateJob = (props) => {
                           };
                         })}
                         value={polValue}
-                        // onInputChange={(val) => {
-                        //   getPoaOptions(val);
-                        // }}
                         onChange={(data) => {
                           setPolValue(data);
                           setFieldValue("pol", data.value);
                         }}
                       />
-
                       <ErrorMessage
                         name="pol"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-
-                  <Grid item lg={4} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="container" className="form-label">
-                        Container/Consignment
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Select
-                        name="type"
-                        placeholder={"Select"}
-                        styles={customStyles}
-                        options={containerTypes}
-                        onChange={(data) => {
-                          setFieldValue("container_type", data.value);
-                        }}
-                      />
-                      <ErrorMessage
-                        name="container_type"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -861,7 +607,6 @@ const CreateJob = (props) => {
                         name="por"
                         style={{ background: "#EDEDED" }}
                       />
-
                       <ErrorMessage
                         name="por"
                         render={(msg) => (
@@ -877,7 +622,6 @@ const CreateJob = (props) => {
                         Type
                         <span className="text-danger">*</span>
                       </Label>
-
                       <Select
                         name="type"
                         placeholder={"Select"}
@@ -889,7 +633,6 @@ const CreateJob = (props) => {
                           setFieldValue("type", data.value);
                         }}
                       />
-
                       <ErrorMessage
                         name="type"
                         render={(msg) => (
@@ -907,7 +650,6 @@ const CreateJob = (props) => {
                         Scope Of Work
                         <span className="text-danger">*</span>
                       </Label>
-
                       <Select
                         name="type"
                         placeholder={"Select"}
@@ -919,7 +661,6 @@ const CreateJob = (props) => {
                           setFieldValue("scope_of_work", data.value);
                         }}
                       />
-
                       <ErrorMessage
                         name="scope_of_work"
                         render={(msg) => (
@@ -933,7 +674,6 @@ const CreateJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="eta" className="form-label">
                         ETA
-                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <DatePicker
                         selected={eta}
@@ -961,10 +701,8 @@ const CreateJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="etd" className="form-label">
                         ETD
-                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <DatePicker
-                        // selected={moment(etd).format("YYYY-MM-DD HH:mm:ss")}
                         selected={etd}
                         onChange={(date) => {
                           setEtd(date);
@@ -996,7 +734,6 @@ const CreateJob = (props) => {
                         styles={customStyles}
                         options={statusOptions}
                         value={jobStatus}
-                        // defaultValue={{ label: jobStatus }}
                         onChange={(data) => {
                           setJobStatus(data);
                           setFieldValue("job_status", data.value);
@@ -1045,9 +782,7 @@ const CreateJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="organization_type" className="form-label">
                         Organization Types
-                        {/* <span className="text-danger">*</span> */}
                       </Label>
-
                       <Select
                         name="type"
                         placeholder={"Select"}
@@ -1074,7 +809,6 @@ const CreateJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="parties" className="form-label">
                         Parties
-                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <Select
                         name="parties"
@@ -1095,23 +829,200 @@ const CreateJob = (props) => {
                       />
                     </div>
                   </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="notify" className="form-label">
+                        Notify
+                      </Label>
+                      <Select
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={allParties}
+                        isMulti
+                        value={
+                          allParties.find(
+                            (dd) => dd?.value === values?.notify
+                          ) || null
+                        }
+                        onChange={(data) => {
+                          setFieldValue("notify", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="notify"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
                 </Grid>
-                <div className="mb-3">
-                  <Label htmlFor="remarks" className="form-label">
-                    Remarks
-                    <span className="text-danger">*</span>
-                  </Label>
-                  <Field
-                    as="textarea"
-                    className="form-control"
-                    name="remarks"
-                    style={{ background: "#EDEDED" }}
-                  />
-                  <ErrorMessage
-                    name="remarks"
-                    render={(msg) => <div className="text-danger">{msg}</div>}
-                  />
-                </div>
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="broker" className="form-label">
+                        Broker
+                      </Label>
+                      <Select
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={allParties}
+                        isMulti
+                        value={
+                          allParties.find(
+                            (dd) => dd?.value === values?.broker
+                          ) || null
+                        }
+                        onChange={(data) => {
+                          setFieldValue("broker", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="broker"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="commodity" className="form-label">
+                        Commodity
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Commodity"
+                        name="commodity"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="commodity"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="container" className="form-label">
+                        Container/Consignment
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Select
+                        name="type"
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={containerTypes}
+                        onChange={(data) => {
+                          setFieldValue("container_type", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="container_type"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="transporter" className="form-label">
+                        Transporter
+                      </Label>
+                      <Select
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={allParties}
+                        isMulti
+                        value={
+                          allParties.find(
+                            (dd) => dd?.value === values?.transporter
+                          ) || null
+                        }
+                        onChange={(data) => {
+                          setFieldValue("transporter", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="transporter"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="quantity_text" className="form-label">
+                        Quantity
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Quantity"
+                        name="quantity_text"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="quantity_text"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="client_ref" className="form-label">
+                        Client Ref
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="client_ref"
+                        placeholder="Client Ref"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="client_ref"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="remarks" className="form-label">
+                        Remarks
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        as="textarea"
+                        className="form-control"
+                        name="remarks"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="remarks"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
 
                 <div className="d-flex justify-content-between">
                   <Button

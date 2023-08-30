@@ -7,6 +7,14 @@ import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
+import {
+  scopeofworkOptions,
+  branchOptions,
+  statusOptions,
+  typeOptions,
+  OrganizationTypeOptions,
+  containerTypes,
+} from "./Options";
 
 const EditJob = (props) => {
   const [jobType, setJobType] = useState(null);
@@ -19,6 +27,9 @@ const EditJob = (props) => {
   const [poaOptions, setPoaOptions] = useState([]);
   const [podOptions, setPodOptions] = useState([]);
   const [selBranch, setSelBranch] = useState(null);
+  const [selBroker, setSelBroker] = useState(null);
+  const [selNotify, setSelNotify] = useState(null);
+  const [selTransporter, setSelTransporter] = useState(null);
 
   const [selPOL, setSelPOL] = useState(null);
   const [selClient, setSelClient] = useState(null);
@@ -29,54 +40,7 @@ const EditJob = (props) => {
   const [partiesOptions, setPartiesOptions] = useState([]);
   const [selectedParties, setSelectedParties] = useState([]);
   const [organization_type, setOrganization_type] = useState([]);
-
-  const branchOptions = [
-    { label: "JEDDAH", value: "JEDDAH" },
-    { label: "DUBAI", value: "DUBAI" },
-  ];
-
-  const OrganizationTypeOptions = [
-    {
-      label: "Consignee",
-      value: "Consignee",
-    },
-    {
-      label: "Client",
-      value: "Client",
-    },
-    {
-      label: "Notify",
-      value: "Notify",
-    },
-    {
-      label: "Shipper",
-      value: "Shipper",
-    },
-    {
-      label: "Broker",
-      value: "Broker",
-    },
-    {
-      label: "Transporter",
-      value: "Transporter",
-    },
-    {
-      label: "Counterpart",
-      value: "Counterpart",
-    },
-    {
-      label: "Coloader",
-      value: "Coloader",
-    },
-    {
-      label: "Supplier",
-      value: "Supplier",
-    },
-    {
-      label: "Other",
-      value: "Other",
-    },
-  ];
+  const [allParties, setAllParties] = useState([]);
 
   const options = [
     {
@@ -180,6 +144,49 @@ const EditJob = (props) => {
       });
   };
 
+  const getAllParties = () => {
+    apiAuth
+      .get(`/api/get-organization/?type=all`)
+      .then((response) => {
+        let data = response.data;
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        const selBr = ConsOpts.find(
+          (dd) => dd.value === props.allJobs?.broker?.id
+        );
+        setSelBroker(selBr);
+
+        const selTrs = ConsOpts.find(
+          (dd) => dd?.value === props.allJobs?.transporter?.id
+        );
+        setSelTransporter(selTrs);
+
+        const selNtf = ConsOpts.find(
+          (dd) => dd?.value === props.allJobs?.notify?.id
+        );
+        setSelNotify(selNtf);
+
+        setAllParties(ConsOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Parties Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
   const getClientOrganization = (val) => {
     setLoading(true);
     apiAuth
@@ -234,6 +241,7 @@ const EditJob = (props) => {
         console.log(error);
       });
   };
+
   useEffect(() => {
     const orgsOpts = OrganizationTypeOptions.filter((opt) =>
       props?.allJobs?.organization_type?.some((type) => type === opt?.label)
@@ -258,10 +266,10 @@ const EditJob = (props) => {
     );
     setJobStatus(jobStatus);
 
-    const container_type = containerTypes.find(
-      (item) => item?.value === props.allJobs?.container_type
-    );
-    setSelContainerTypes(container_type);
+    setSelContainerTypes({
+      label: props.allJobs?.container_type,
+      value: props.allJobs?.container_type,
+    });
 
     setSelPOL({
       label: props.allJobs?.pol,
@@ -278,198 +286,8 @@ const EditJob = (props) => {
     getOrganization();
     getClientOrganization();
     getPartiesOptions(orgsOpts);
+    getAllParties();
   }, []);
-
-  const typeOptions = [
-    {
-      label: "Air Freight",
-      value: "Air Freight",
-    },
-    {
-      label: "Sea Freight",
-      value: "Sea Freight",
-    },
-    {
-      label: "Land Freight",
-      value: "Land Freight",
-    },
-    {
-      label: "Transportation",
-      value: "Transportation",
-    },
-    {
-      label: "Warehousing",
-      value: "Warehousing",
-    },
-  ];
-  const scopeofworkOptions = [
-    {
-      label: "D2D",
-      value: "D2D",
-    },
-    {
-      label: "EXW",
-      value: "EXW",
-    },
-    {
-      label: "FOB",
-      value: "FOB",
-    },
-    {
-      label: "CIF",
-      value: "CIF",
-    },
-    {
-      label: "CNF",
-      value: "CNF",
-    },
-    {
-      label: "C&F",
-      value: "C&F",
-    },
-    {
-      label: "DDP",
-      value: "DDP",
-    },
-    {
-      label: "DAP",
-      value: "DAP",
-    },
-    {
-      label: "CPT",
-      value: "CPT",
-    },
-    {
-      label: "TRANS",
-      value: "TRANS",
-    },
-    {
-      label: "D-TRANS",
-      value: "D-TRANS",
-    },
-    {
-      label: "OTHERS",
-      value: "OTHERS",
-    },
-  ];
-
-  const containerTypes = [
-    {
-      label: "20DC",
-      value: "20DC",
-    },
-    {
-      label: "20RF",
-      value: "20RF",
-    },
-    {
-      label: "20ST",
-      value: "20ST",
-    },
-    {
-      label: "20OT",
-      value: "20OT",
-    },
-    {
-      label: "20HC",
-      value: "20HC",
-    },
-    {
-      label: "40DC",
-      value: "40DC",
-    },
-    {
-      label: "40DC",
-      value: "40DC",
-    },
-    {
-      label: "40RF",
-      value: "40RF",
-    },
-    {
-      label: "40ST",
-      value: "40ST",
-    },
-    {
-      label: "40OT",
-      value: "40OT",
-    },
-    {
-      label: "40HC",
-      value: "40HC",
-    },
-    {
-      label: "FLAT RACK",
-      value: "FLAT RACK",
-    },
-    {
-      label: "FTL",
-      value: "FTL",
-    },
-    {
-      label: "LTL",
-      value: "LTL",
-    },
-  ];
-
-  const statusOptions = [
-    {
-      label: "Cargo Collected",
-      value: "Cargo Collected",
-    },
-    {
-      label: "Under Export Clearance",
-      value: "Under Export Clearance",
-    },
-    {
-      label: "Departed",
-      value: "Departed",
-    },
-    {
-      label: "In Transit",
-      value: "In Transit",
-    },
-    {
-      label: "Arrived",
-      value: "Arrived",
-    },
-    {
-      label: "Under Import Clearance",
-      value: "Under Import Clearance",
-    },
-    {
-      label: "Do Collected",
-      value: "Do Collected",
-    },
-    {
-      label: "Gate Pass Issued",
-      value: "Gate Pass Issued",
-    },
-    {
-      label: "Under Delivery",
-      value: "Under Delivery",
-    },
-    {
-      label: "In Warehouse Storage",
-      value: "In Warehouse Storage",
-    },
-    {
-      label: "Delivered",
-      value: "Delivered",
-    },
-    {
-      label: "Invoiced",
-      value: "Invoiced",
-    },
-    {
-      label: "Finished",
-      value: "Finished",
-    },
-    {
-      label: "Cancelled",
-      value: "Cancelled",
-    },
-  ];
 
   const customStyles = {
     control: (provided, state) => ({
@@ -480,6 +298,7 @@ const EditJob = (props) => {
 
   return (
     <React.Fragment>
+      {/* {console.log("rrrr", props.allJobs)} */}
       <span>Job Number: {props.allJobs.job_number}</span>
       {props.allJobs ? (
         <Card className="p-3" style={{ background: "#EDEDED" }}>
@@ -532,6 +351,20 @@ const EditJob = (props) => {
                 ? props?.allJobs?.organization_type
                 : [],
               branch: props?.allJobs?.branch ? props?.allJobs?.branch : "",
+              notify: props?.allJobs?.notify ? props?.allJobs?.notify?.id : "",
+              client_ref: props?.allJobs?.client_ref
+                ? props?.allJobs?.client_ref
+                : "",
+              broker: props?.allJobs?.broker ? props?.allJobs?.broker?.id : "",
+              transporter: props?.allJobs?.transporter
+                ? props?.allJobs?.transporter?.id
+                : "",
+              commodity: props?.allJobs?.commodity
+                ? props?.allJobs?.commodity
+                : "",
+              quantity_text: props?.allJobs?.quantity_text
+                ? props?.allJobs?.quantity_text
+                : "",
             }}
             validationSchema={Yup.object({
               bl_number: Yup.string().required("BL Number is Required"),
@@ -554,7 +387,6 @@ const EditJob = (props) => {
                 .max(400, "Must be 400 characters or less")
                 .trim()
                 .required("Remarks is Required"),
-              // por: Yup.string().required("Place Of Receipt is Required"),
               job_type: Yup.string().ensure().required("Job Type is Required"),
               type: Yup.string().required("Type is Required"),
               scope_of_work: Yup.string()
@@ -566,9 +398,9 @@ const EditJob = (props) => {
               // organization_type: Yup.string().required(
               //   "Organization Type is Required"
               // ),
-              container_type: Yup.string()
-                .ensure()
-                .required("Container Type is Required"),
+              // container_type: Yup.string()
+              //   .ensure()
+              //   .required("Container Type is Required"),
             })}
             onSubmit={(values, { reset }) => {
               const company = JSON.parse(
@@ -689,6 +521,7 @@ const EditJob = (props) => {
                       </Label>
                       <Field
                         className="form-control"
+                        placeholder="Shipper Name"
                         name="shipper_name"
                         style={{ background: "#EDEDED" }}
                       />
@@ -716,7 +549,6 @@ const EditJob = (props) => {
                         styles={customStyles}
                         options={podOptions}
                         value={podValue}
-                        // onInputChange={(val) => getPodOptions(val)}
                         onChange={(data) => {
                           setPodValue(data);
                           setFieldValue("pod", data.value);
@@ -763,7 +595,7 @@ const EditJob = (props) => {
                 </Grid>
 
                 <Grid container spacing={2}>
-                  <Grid item lg={4} xs={12}>
+                  <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="poa" className="form-label">
                         POA
@@ -775,7 +607,6 @@ const EditJob = (props) => {
                         styles={customStyles}
                         options={poaOptions}
                         value={selPOA}
-                        // onInputChange={(val) => getPoaOptions(val)}
                         onChange={(data) => {
                           setSelPOA(data);
                           setFieldValue("poa", data.value);
@@ -791,7 +622,7 @@ const EditJob = (props) => {
                     </div>
                   </Grid>
 
-                  <Grid item lg={4} xs={12}>
+                  <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="pol" className="form-label">
                         POL
@@ -803,9 +634,6 @@ const EditJob = (props) => {
                         styles={customStyles}
                         options={poaOptions}
                         value={selPOL}
-                        // onInputChange={(val) => {
-                        //   getPoaOptions(val);
-                        // }}
                         onChange={(data) => {
                           setSelPOL(data);
                           setFieldValue("pol", data.value);
@@ -814,31 +642,6 @@ const EditJob = (props) => {
 
                       <ErrorMessage
                         name="pol"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-
-                  <Grid item lg={4} xs={12}>
-                    <div className="mb-3" style={{ zIndex: "500" }}>
-                      <Label htmlFor="container" className="form-label">
-                        Container/Consignment
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Select
-                        placeholder={"Select"}
-                        styles={customStyles}
-                        options={containerTypes}
-                        value={selContainerTypes}
-                        onChange={(data) => {
-                          setSelContainerTypes(data);
-                          setFieldValue("container_type", data.value);
-                        }}
-                      />
-                      <ErrorMessage
-                        name="container_type"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -930,7 +733,6 @@ const EditJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="eta" className="form-label">
                         ETA
-                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <DatePicker
                         selected={values["eta"]}
@@ -958,7 +760,6 @@ const EditJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="etd" className="form-label">
                         ETD
-                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <DatePicker
                         selected={values["etd"]}
@@ -1038,7 +839,6 @@ const EditJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="organization_type" className="form-label">
                         Organization Type
-                        {/* <span className="text-danger">*</span> */}
                       </Label>
 
                       <Select
@@ -1067,7 +867,6 @@ const EditJob = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="parties" className="form-label">
                         Parties
-                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <Select
                         name="parties"
@@ -1082,6 +881,188 @@ const EditJob = (props) => {
                       />
                       <ErrorMessage
                         name="parties"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="notify" className="form-label">
+                        Notify
+                      </Label>
+                      <Select
+                        value={selNotify}
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={allParties}
+                        onChange={(data) => {
+                          setFieldValue("notify", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="notify"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="broker" className="form-label">
+                        Broker
+                      </Label>
+                      <Select
+                        value={selBroker}
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={allParties}
+                        onChange={(data) => {
+                          setFieldValue("broker", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="broker"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="commodity" className="form-label">
+                        Commodity
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Commodity"
+                        name="commodity"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="commodity"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="container_type" className="form-label">
+                        Container/Consignment
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Select
+                        name="type"
+                        value={selContainerTypes}
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={containerTypes}
+                        onChange={(data) => {
+                          setFieldValue("container_type", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="container_type"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="transporter" className="form-label">
+                        Transporter
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Select
+                        value={selTransporter}
+                        placeholder={"Select"}
+                        styles={customStyles}
+                        options={allParties}
+                        onChange={(data) => {
+                          setFieldValue("transporter", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="transporter"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="quantity_text" className="form-label">
+                        Quantity
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Quantity"
+                        name="quantity_text"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="quantity_text"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="client_ref" className="form-label">
+                        Client Ref
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="client_ref"
+                        placeholder="Client Ref"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="client_ref"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={2}>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="remarks" className="form-label">
+                        Remarks
+                        <span className="text-danger">*</span>
+                      </Label>
+                      <Field
+                        as="textarea"
+                        className="form-control"
+                        name="remarks"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="remarks"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}

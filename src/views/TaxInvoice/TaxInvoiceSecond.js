@@ -216,7 +216,7 @@ const TaxInvoiceSecond = (props) => {
   };
   return (
     <>
-      {/* {console.log("eeeee", state.invoice)} */}
+      {console.log("eeeee", state.invoice)}
       <div style={{ padding: "25px" }}>
         <div
           style={{
@@ -320,7 +320,7 @@ const TaxInvoiceSecond = (props) => {
               <ShowDataWithTranslate
                 width={"200px"}
                 label={"Client - Bill To"}
-                value={null}
+                value={state.invoice?.client_name?.name}
               />
 
               <div className="">
@@ -365,69 +365,69 @@ const TaxInvoiceSecond = (props) => {
             </div>
             <div className="col-lg-5">
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"300px"}
                 label={"Invoice Date"}
                 value={moment(state.invoice?.created_at).format("MM/DD/YYYY")}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"300px"}
                 label={"Invoice Number"}
                 value={state?.invoice?.id}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"300px"}
                 label={"BL Number"}
                 value={state?.invoice?.bl_number}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"300px"}
                 label={"Bayan Number"}
                 value={state?.invoice?.bayan_number}
               />
               <ShowDataWithTranslate
-                width={"250px"}
-                label={"Client Ref / PO No"}
-                value={state.invoice?.client_name?.name}
+                width={"300px"}
+                label={"Client Ref / PO Number"}
+                value={state.invoice?.job?.client_ref}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"300px"}
                 label={"ETA"}
                 value={moment(state.invoice?.job?.eta).format("MM/DD/YYYY")}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"300px"}
                 label={"ETD"}
                 value={moment(state.invoice?.job?.etd).format("MM/DD/YYYY")}
               />
             </div>
-            <div className="col-lg-4 ml-2">
+            <div className="col-lg-4 ">
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"200px"}
                 label={"Consignee"}
                 value={state.invoice?.consignee_name?.name}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"200px"}
                 label={"Shipper Name"}
                 value={state.invoice?.job?.shipper_name}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"200px"}
                 label={"Notify"}
-                value={null}
+                value={state.invoice?.job?.notify?.name}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"200px"}
                 label={"POL"}
                 value={state.invoice?.job?.pol}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"200px"}
                 label={"POD"}
                 value={state.invoice?.job?.pod}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"200px"}
                 label={"POA"}
                 value={state.invoice?.job?.poa}
               />
@@ -533,12 +533,12 @@ const TaxInvoiceSecond = (props) => {
                 <ShowDataWithTranslate
                   width={"150px"}
                   label={"Volume"}
-                  value={null}
+                  value={state?.invoice?.job?.quantity_text}
                 />
                 <ShowDataWithTranslate
                   width={"150px"}
                   label={"Commodity"}
-                  value={null}
+                  value={state?.invoice?.job?.commodity}
                 />
               </div>
               <div

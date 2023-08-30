@@ -326,7 +326,7 @@ const AddOrganization = (props) => {
                   state_code: Yup.string()
                     .ensure()
                     .required("State is Required"),
-                  city: Yup.string().ensure().required("City is Required"),
+                  // city: Yup.string().ensure().required("City is Required"),
                   // building_name: Yup.string().required(
                   //   "Building Name is Required"
                   // ),
@@ -686,7 +686,7 @@ const AddOrganization = (props) => {
                         <div className="mb-3">
                           <label htmlFor="city" className="form-label">
                             City
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             placeholder="Select"
