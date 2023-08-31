@@ -36,7 +36,7 @@ const ShowDataWithTranslate = ({ label, value, width }) => {
 const ShowTableHeadWithTranslate = ({ label }) => {
   return (
     <>
-      <th className="border-0">
+      <th className="border-0 text-center">
         {label}
         <br />
         <span>
@@ -298,8 +298,8 @@ const TaxInvoiceSecond = (props) => {
                 justifyContent: "center",
                 alignItems: "center",
                 width: "100%",
-                marginBottom: "10px",
-                textDecoration: "underline",
+                marginBottom: "20px",
+                // textDecoration: "underline",
               }}
             >
               <h3>
@@ -369,79 +369,79 @@ const TaxInvoiceSecond = (props) => {
             </div>
             <div className="col-lg-4">
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"220px"}
                 label={"Invoice Date"}
                 value={moment(state.invoice?.created_at).format("MM/DD/YYYY")}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"220px"}
                 label={"Invoice Number"}
                 value={state?.invoice?.id}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"220px"}
                 label={"BL Number"}
                 value={state?.invoice?.bl_number}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"220px"}
                 label={"Bayan Number"}
                 value={state?.invoice?.bayan_number}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"220px"}
                 label={"Client Ref / PO Number"}
                 value={state.invoice?.job?.client_ref}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"220px"}
                 label={"ETA"}
                 value={moment(state.invoice?.job?.eta).format("MM/DD/YYYY")}
               />
               <ShowDataWithTranslate
-                width={"250px"}
+                width={"220px"}
                 label={"ETD"}
                 value={moment(state.invoice?.job?.etd).format("MM/DD/YYYY")}
               />
             </div>
             <div className="col-lg-4 ">
               <ShowDataWithTranslate
-                width={"200px"}
+                width={"180px"}
                 label={"Consignee"}
                 value={state.invoice?.consignee_name?.name}
               />
               <ShowDataWithTranslate
-                width={"200px"}
+                width={"180px"}
                 label={"Shipper Name"}
                 value={state.invoice?.job?.shipper_name}
               />
               <ShowDataWithTranslate
-                width={"200px"}
+                width={"180px"}
                 label={"Notify"}
                 value={state.invoice?.job?.notify?.name}
               />
               <ShowDataWithTranslate
-                width={"200px"}
+                width={"180px"}
                 label={"POL"}
                 value={state.invoice?.job?.pol}
               />
               <ShowDataWithTranslate
-                width={"200px"}
+                width={"180px"}
                 label={"POD"}
                 value={state.invoice?.job?.pod}
               />
               <ShowDataWithTranslate
-                width={"200px"}
+                width={"180px"}
                 label={"POA"}
                 value={state.invoice?.job?.poa}
               />
               <ShowDataWithTranslate
-                width={"200px"}
+                width={"180px"}
                 label={"Currency Amount"}
                 value={state.invoice?.currency_sar}
               />
               <ShowDataWithTranslate
-                width={"200px"}
+                width={"180px"}
                 label={"Exchange Rate"}
                 value={state.invoice?.ex_rate}
               />
@@ -466,9 +466,11 @@ const TaxInvoiceSecond = (props) => {
                       padding: "10px 0px",
                     }}
                   >
-                    #
+                    S.No
                   </th>
                   <ShowTableHeadWithTranslate label={"Description"} />
+                  <ShowTableHeadWithTranslate label={"Currency Rate"} />
+                  <ShowTableHeadWithTranslate label={"Currency Amount"} />
                   <ShowTableHeadWithTranslate label={"Currency"} />
                   <ShowTableHeadWithTranslate label={"Amount"} />
                   <ShowTableHeadWithTranslate label={"VAT%"} />
@@ -485,7 +487,7 @@ const TaxInvoiceSecond = (props) => {
                         key={index}
                       >
                         <td
-                          className="border-0"
+                          className="border-0 text-center"
                           style={{
                             padding: "10px 0px",
                           }}
@@ -493,26 +495,42 @@ const TaxInvoiceSecond = (props) => {
                           {index + 1}
                         </td>
                         <td className="border-0">
-                          {cost.charge?.name} /{" "}
-                          <Translate text={cost.charge?.name} />
+                          <div
+                            className="text-left"
+                            style={{ marginLeft: "5px" }}
+                          >
+                            {cost.charge?.name} /{" "}
+                            <Translate text={cost.charge?.name} />
+                          </div>
                         </td>
-                        <td className="border-0">{cost.currency}</td>
+                        <td className="border-0 text-center">{cost.ex_rate}</td>
+                        <td className="border-0 text-center">
+                          {cost.fcy_amount}
+                        </td>
+                        <td className="border-0 text-center">
+                          {cost.currency}
+                        </td>
                         {/* <td className="border-0">1</td>
                       <td className="border-0">1,161.50</td> */}
-                        <td className="border-0">
+                        <td
+                          className="border-0 text-center"
+                          style={{ textAlign: "center" }}
+                        >
                           {Number(cost.amount)?.toLocaleString("en-US", {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                           })}
                         </td>
-                        <td className="border-0">{cost.tax_group_code}</td>
-                        <td className="border-0">
+                        <td className="border-0 text-center">
+                          {cost.tax_group_code}
+                        </td>
+                        <td className="border-0 text-center">
                           {Number(cost.vat_amount)?.toLocaleString("en-US", {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                           })}
                         </td>
-                        <td className="border-0">
+                        <td className="border-0 text-center">
                           {Number(cost.total_amount)?.toLocaleString("en-US", {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
