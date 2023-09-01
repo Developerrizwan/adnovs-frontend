@@ -150,8 +150,9 @@ const Jobs = (props) => {
                       jobPagination={{ ...jobPagination }}
                       handlePagination={(data) => {
                         setJobPagination(data);
-                        getJobs(data);
+                        getJobs(data, searchValue, selectedValue);
                       }}
+                      userPagination={{ ...jobPagination }}
                       selectedValue={selectedValue}
                       getJobs={() => {
                         setAllJobs([]);
