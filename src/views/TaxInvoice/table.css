@@ -12,3 +12,17 @@ td {
   font-weight: 600;
   font-size: 15px;
 }
+
+.bw{
+  font-weight: 600;
+  font-size: 15px;
+  border-bottom: "1px solid #000";
+  border-left: 0;
+  border-top: 0;
+  border-right: 0;
+}
+
+.border-table{
+  border-spacing: 30px;
+  border-collapse: separate;
+}
