@@ -71,6 +71,7 @@ import Organization from "../views/Organization";
 import AddOrganization from "../views/Organization/AddOrganization";
 import Company from "../views/Company";
 import AddEnquiry from "../views/Jobs/AddEnquiry";
+import PurchaseInvoice from "../views/TaxInvoice/PurchaseInvoice";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -105,6 +106,10 @@ const authProtectedRoutes = [
   { path: "/report/:reportId", component: Report },
   { path: "/admin", component: Admin },
   { path: "/profile", component: UserProfile },
+  { path: "/taxinvoice", component: TaxInvoice },
+  { path: "/taxinvoice-second", component: TaxInvoiceSecond },
+  { path: "/purchase-invoice", component: PurchaseInvoice },
+
   {
     path: "*",
     exact: true,

@@ -7,3 +7,8 @@ td {
 /* .html-table-borderless th, td {
   border: none;
 } */
+
+.fw{
+  font-weight: 600;
+  font-size: 15px;
+}
