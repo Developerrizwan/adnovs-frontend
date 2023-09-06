@@ -216,7 +216,6 @@ const TaxInvoiceSecond = (props) => {
   };
   return (
     <>
-      {console.log("eeeee", state.invoice)}
       <div style={{ padding: "25px" }}>
         <div
           style={{
