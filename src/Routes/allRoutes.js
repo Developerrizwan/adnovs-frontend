@@ -152,7 +152,8 @@ const publicRoutes = [
   { path: "/auth-offline", component: Offlinepage },
 
   { path: "/tax-invoice/:invoiceId", component: TaxInvoice },
-  { path: "/tax-invoice-second/:invoiceId", component: TaxInvoiceSecond },
+  // { path: "/tax-invoice-second/:invoiceId", component: TaxInvoiceSecond },
+  { path: "/tax-invoice-second/:invoiceId", component: PurchaseInvoice },
 ];
 
 export { authProtectedRoutes, publicRoutes };

@@ -351,15 +351,20 @@ const PurchaseInvoice = (props) => {
             <table>
               <tr>
                 <td className="border-0 fw">PIN No.:</td>
-                <td className="border-0"></td>
+                <td className="border-0">{state?.invoice?.id}</td>
               </tr>
               <tr>
                 <td className="border-0 fw">A/C Name:</td>
-                <td className="border-0"></td>
+                <td className="border-0">
+                  {state?.invoice?.company?.account_name.toUpperCase()}
+                </td>
               </tr>
               <tr>
                 <td className="border-0 fw">Narration:</td>
-                <td className="border-0"></td>
+                <td className="border-0">
+                  {" "}
+                  {state?.invoice?.narration.toUpperCase()}
+                </td>
               </tr>
               <tr>
                 <td className="border-0 fw">HBL No.:</td>
@@ -367,15 +372,19 @@ const PurchaseInvoice = (props) => {
               </tr>
               <tr>
                 <td className="border-0 fw">Ref No.:</td>
-                <td className="border-0"></td>
+                <td className="border-0">{state?.invoice?.job?.client_ref}</td>
               </tr>
               <tr>
                 <td className="border-0 fw">Currency:</td>
-                <td className="border-0"></td>
+                <td className="border-0">
+                  {state?.invoice?.currency_sar.toUpperCase()}
+                </td>
               </tr>
               <tr>
                 <td className="border-0 fw">ETA:</td>
-                <td className="border-0"></td>
+                <td className="border-0">
+                  {moment(state.invoice?.job?.eta).format("MM/DD/YYYY")}
+                </td>
               </tr>
             </table>
           </div>
@@ -383,7 +392,9 @@ const PurchaseInvoice = (props) => {
             <table>
               <tr>
                 <td className="border-0 fw">Date:</td>
-                <td className="border-0"></td>
+                <td className="border-0">
+                  {moment(state.invoice?.created_at).format("MM/DD/YYYY")}
+                </td>
               </tr>
               <tr>
                 <td className="border-0 fw">GL Date:</td>
@@ -391,19 +402,25 @@ const PurchaseInvoice = (props) => {
               </tr>
               <tr>
                 <td className="border-0 fw">Client:</td>
-                <td className="border-0"></td>
+                <td className="border-0">
+                  {state?.invoice?.client_name?.name}
+                </td>
               </tr>
               <tr>
                 <td className="border-0 fw">MBL No.:</td>
-                <td className="border-0"></td>
+                <td className="border-0">
+                  {state?.invoice?.client_name?.mobile}
+                </td>
               </tr>
               <tr>
                 <td className="border-0 fw">Job No.:</td>
-                <td className="border-0"></td>
+                <td className="border-0">{state?.invoice?.job?.job_number}</td>
               </tr>
               <tr>
                 <td className="border-0 fw">ETD:</td>
-                <td className="border-0"></td>
+                <td className="border-0">
+                  {moment(state.invoice?.job?.etd).format("MM/DD/YYYY")}
+                </td>
               </tr>
             </table>
           </div>
@@ -420,8 +437,11 @@ const PurchaseInvoice = (props) => {
               <th className="text-center">Volume Weight</th>
             </tr>
             <tr>
+              {console.log("sss", state)}
               <td className="text-end"></td>
-              <td className="text-end"></td>
+              <td className="text-end">
+                {state?.invoice?.party_account?.type[0]}
+              </td>
               <td className="text-end">2 PIECES</td>
               <td className="text-end">405.00 KGS</td>
               <td className="text-end"></td>
@@ -444,15 +464,33 @@ const PurchaseInvoice = (props) => {
               <th className="text-center">Total Amount (SAR)</th>
             </tr>
             <tr>
-              <td className="text-end">AIR IMPORT COST</td>
-              <td className="text-end">CUSTOM CLEARANCE</td>
-              <td className="text-end">ADN/7326487</td>
-              <td className="text-end"></td>
-              <td className="text-end">1</td>
-              <td className="text-end">SAR</td>
-              <td className="text-end">250.00</td>
-              <td className="text-end">250.00</td>
-              <td className="text-end">287.50</td>
+              <td className="text-end">
+                {state?.invoice?.company?.account_name.toUpperCase()}
+              </td>
+              <td className="text-end">
+                {" "}
+                {state?.invoice?.narration.toUpperCase()}
+                {state?.invoice?.narration ? (
+                  <>
+                    {"/"}
+                    <Translate text={state?.invoice?.narration.toUpperCase()} />
+                  </>
+                ) : (
+                  ""
+                )}
+              </td>
+              <td className="text-end">
+                {state?.invoice?.job?.job_number.toUpperCase()}
+              </td>
+              <td className="text-end">{state?.invoice?.job?.shipper_name}</td>
+              <td className="text-end">{state?.invoice?.ex_rate}</td>
+              <td className="text-end">
+                {" "}
+                {state?.invoice?.currency_sar.toUpperCase()}
+              </td>
+              <td className="text-end">{state?.invoice?.bill_amount}</td>
+              <td className="text-end">{state?.invoice?.fc_amount}</td>
+              <td className="text-end">{state?.invoice?.amount_sar}</td>
             </tr>
           </table>
         </div>
