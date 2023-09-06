@@ -1093,8 +1093,7 @@ const Sales = (props) => {
                         ) : (
                           <></>
                         )}
-
-                        {state.invoice_generated ? (
+                        {!props?.isEdit && state.invoice_generated ? (
                           <Link to={`/tax-invoice-second/${state.invoice_id}`}>
                             <Button className="btn btn-warning float-right">
                               {" "}
@@ -1155,7 +1154,7 @@ const Sales = (props) => {
                 });
               }
             }}
-            invoice={state.invoice_id}
+            invoice={props.data?.id}
           />
         </ModalBody>
       </Modal>
