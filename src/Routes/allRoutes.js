@@ -100,8 +100,8 @@ const authProtectedRoutes = [
   { path: "/charge/add", component: AddCharge },
   { path: "/charge", component: Charge },
   { path: "/voucher/:voucherId", component: Voucher },
-  { path: "/voucher/payment-voucher/:id", component: PaymentReport },
-  { path: "/voucher/receipt-voucher/:id", component: ReceiptReport },
+  // { path: "/voucher/payment-voucher/:id", component: PaymentReport },
+  // { path: "/voucher/receipt-voucher/:id", component: ReceiptReport },
   { path: "/vouchers", component: Vouchers },
   { path: "/user-management/add", component: AddUser },
   { path: "/user-management/edit/:userId", component: EditUser },
@@ -119,8 +119,8 @@ const authProtectedRoutes = [
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
   { path: "/account-statement", component: AccountStatement },
-  { path: "/journal", component: Journal },
-  { path: "/tax-credit", component: TaxCredit },
+  // { path: "/journal/:id", component: Journal },
+  // { path: "/tax-credit/:id", component: TaxCredit },
   {
     path: "*",
     exact: true,
@@ -165,6 +165,10 @@ const publicRoutes = [
   { path: "/tax-invoice/:invoiceId", component: TaxInvoice },
   { path: "/tax-invoice-second/:invoiceId", component: TaxInvoiceSecond },
   { path: "/purchase-invoice/:invoiceId", component: PurchaseInvoice },
+  { path: "/journal/:id", component: Journal },
+  { path: "/tax-credit/:id", component: TaxCredit },
+  { path: "/voucher/payment-voucher/:id", component: PaymentReport },
+  { path: "/voucher/receipt-voucher/:id", component: ReceiptReport },
 ];
 
 export { authProtectedRoutes, publicRoutes };

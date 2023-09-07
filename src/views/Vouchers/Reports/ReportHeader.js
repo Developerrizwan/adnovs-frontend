@@ -16,7 +16,7 @@ const ReportHeader = () => {
         </div>
 
         {/* Company Details */}
-        <div className="col-lg-9 d-flex flex-column align-items-end pr-4">
+        <div className="col-lg-9 d-flex flex-column align-items-end p-4">
           <h4 style={{ fontFamily: "sans-serif" }}>
             ADNOV SHIPPING & LOGISTICS
           </h4>

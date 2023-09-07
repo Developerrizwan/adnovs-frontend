@@ -111,7 +111,7 @@ const Vouchers = (props) => {
             options={voucherOptions}
             handleTypeChange={(data) => {
               setSelectedVoucher(data);
-              // changeRoute(data);
+              localStorage.setItem("voucher-type", data.value);
               getSelVoucherData(pagination, searchValue, data.value);
             }}
           />

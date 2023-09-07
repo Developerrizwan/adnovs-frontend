@@ -19,7 +19,6 @@ const VoucherTable = (props) => {
   const [editModal, setEditModal] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState([]);
   const [deletId, setDeletId] = useState();
-  const type = props?.curVoucher;
 
   const [cols, setCols] = useState([
     {
@@ -120,13 +119,21 @@ const VoucherTable = (props) => {
       name: <span className="font-weight-bold fs-13">View</span>,
       selector: (row) => row.remarks,
       cell: (value) => {
+        const type = localStorage.getItem("voucher-type");
         return (
           <div>
+            {/* {console.log("typee", type)} */}
             <Link
               to={
                 type === "Payment"
                   ? `/voucher/payment-voucher/${value.id}`
-                  : `/voucher/receipt-voucher/${value.id}`
+                  : type === "Receipt"
+                  ? `/voucher/receipt-voucher/${value.id}`
+                  : type === "Journal"
+                  ? `/journal/${value.id}`
+                  : type.includes("Note")
+                  ? `/tax-credit/${value.id}`
+                  : ""
               }
               className="btn btn-primary"
             >

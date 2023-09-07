@@ -154,29 +154,38 @@ const PaymentReport = (props) => {
   return (
     <div
       style={{
-        marginTop: "75px",
-        marginBottom: "75px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
-      {/* Download */}
-      <DownloadReport />
-
-      {/* Page for downloading pdf */}
       <div
-        className="card reportdownproject"
         style={{
-          border: "1px solid black",
-          //   padding: "10px",
+          marginTop: "15px",
+          marginBottom: "15px",
+          width: "1200px",
         }}
       >
-        {/* Header */}
-        <ReportHeader />
+        {/* Download */}
+        <DownloadReport />
 
-        {/* Content */}
-        <Content />
+        {/* Page for downloading pdf */}
+        <div
+          className="card reportdownproject"
+          style={{
+            border: "1px solid black",
+            //   padding: "10px",
+          }}
+        >
+          {/* Header */}
+          <ReportHeader />
 
-        {/* Footer */}
-        <ReportFooter />
+          {/* Content */}
+          <Content />
+
+          {/* Footer */}
+          <ReportFooter />
+        </div>
       </div>
     </div>
   );
