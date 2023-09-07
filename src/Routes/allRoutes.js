@@ -74,6 +74,9 @@ import AddEnquiry from "../views/Jobs/AddEnquiry";
 import PurchaseInvoice from "../views/TaxInvoice/PurchaseInvoice";
 import PaymentVoucher from "../views/TaxInvoice/PaymentVoucher";
 import ReceiptVoucher from "../views/TaxInvoice/ReceiptVoucher";
+import AccountStatement from "../views/TaxInvoice/AccountStatement";
+import Journal from "../views/TaxInvoice/Journal";
+import TaxCredit from "../views/TaxInvoice/TaxCredit";
 import PaymentReport from "../views/Vouchers/Reports/PaymentReport";
 import ReceiptReport from "../views/Vouchers/Reports/ReceiptReport";
 
@@ -112,12 +115,12 @@ const authProtectedRoutes = [
   { path: "/report/:reportId", component: Report },
   { path: "/admin", component: Admin },
   { path: "/profile", component: UserProfile },
-  { path: "/taxinvoice", component: TaxInvoice },
-  { path: "/taxinvoice-second", component: TaxInvoiceSecond },
   { path: "/purchase-invoice", component: PurchaseInvoice },
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
-
+  { path: "/account-statement", component: AccountStatement },
+  { path: "/journal", component: Journal },
+  { path: "/tax-credit", component: TaxCredit },
   {
     path: "*",
     exact: true,
