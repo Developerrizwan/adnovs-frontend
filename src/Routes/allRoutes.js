@@ -75,6 +75,7 @@ import PurchaseInvoice from "../views/TaxInvoice/PurchaseInvoice";
 import PaymentVoucher from "../views/TaxInvoice/PaymentVoucher";
 import ReceiptVoucher from "../views/TaxInvoice/ReceiptVoucher";
 import AccountStatement from "../views/TaxInvoice/AccountStatement";
+import Journal from "../views/TaxInvoice/Journal";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -115,6 +116,7 @@ const authProtectedRoutes = [
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
   { path: "/account-statement", component: AccountStatement },
+  { path: "/journal", component: Journal },
   {
     path: "*",
     exact: true,
