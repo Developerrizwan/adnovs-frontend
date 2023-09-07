@@ -126,7 +126,7 @@ const Vouchers = (props) => {
                   {" "}
                   <Card>
                     <VoucherTable
-                      curVoucher={selectedVoucher.value}
+                      curVoucher={selectedVoucher?.value}
                       users={users}
                       deleteUser={deleteUser}
                       pagination={{ ...pagination }}

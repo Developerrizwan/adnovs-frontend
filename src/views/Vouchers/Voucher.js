@@ -24,16 +24,10 @@ const Voucher = (props) => {
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [organizationOptions, setOrganizationOptions] = useState(null);
-  const [voucherFromOptions, setVoucherFromOptions] = useState([]);
-  console.log(
-    "voucherFromOptions",
-    voucherFromOptions.map((item) => {
-      return {
-        label: item.label,
-        value: item.value,
-      };
-    })
-  );
+  const [fromAndToOptions, setFromAndToOptions] = useState([]);
+  const [selectedVoucherFrom, setSelectedVoucherFrom] = useState(null);
+  const [selectedVoucherTo, setSelectedVoucherTo] = useState(null);
+
   // const [date, setDate] = useState(new Date());
   // const [period, setPeriod] = useState(``);
   // const [period, setPeriod] = useState(`${date.getMonth()} ${date.getFullYear()}`)
@@ -90,8 +84,6 @@ const Voucher = (props) => {
     getJobOptions();
     getPartyOptions();
     getAllCurrencyCodes();
-    getOrganizationOptions();
-    // getCategoryOptions();
 
     if (props?.isEdit) {
       const selectedStatus =
@@ -155,6 +147,7 @@ const Voucher = (props) => {
           return {
             label: `${rr.code}-${rr.name}`,
             value: rr.id,
+            type: "coa",
           };
         });
         const selParty = data.find(
@@ -162,7 +155,7 @@ const Voucher = (props) => {
         );
         setSelectedParty(selParty);
         setPartyOptions(data);
-        setVoucherFromOptions(data);
+        getOrganizationOptions(data);
       })
       .catch((err) => console.log(err));
   };
@@ -189,29 +182,27 @@ const Voucher = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const getOrganizationOptions = (val) => {
+  const getOrganizationOptions = (opts) => {
     setLoading(true);
     apiAuth
-      .get(
-        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
-      )
+      .get(`/api/get-organization/`)
       .then((response) => {
         let data = response.data;
 
-        const ConsOpts = data.map((dd) => {
+        const consOpts = data.map((dd) => {
           return {
             label: dd?.name,
             value: dd?.id,
+            type: "organization",
           };
         });
-        setOrganizationOptions(ConsOpts);
-        setVoucherFromOptions([...voucherFromOptions, ...ConsOpts]);
 
+        const finalOpts = consOpts.concat(opts);
+        setFromAndToOptions(finalOpts);
         setLoading(false);
       })
       .catch((error) => {
         console.log(error);
-
         setLoading(false);
       });
   };
@@ -273,10 +264,10 @@ const Voucher = (props) => {
                     : new Date(),
                   voucher_type:
                     props.voucherData?.voucher_type || selectedVoucher.value,
-                  voucher_to:
-                    props.voucherData?.voucher_to || selectedVoucher.value,
-                  voucher_from:
-                    props.voucherData?.voucher_from || selectedVoucher.value,
+                  voucher_from: props.voucherData?.voucher_from || "",
+                  voucher_from_type: props.voucherData?.voucher_from_type || "",
+                  voucher_to: props.voucherData?.voucher_to || "",
+                  voucher_to_type: props.voucherData?.voucher_to_type || "",
                   branch: props.voucherData?.branch || "",
                   period: props.voucherData?.period
                     ? new Date(props.voucherData?.period)
@@ -777,22 +768,18 @@ const Voucher = (props) => {
                           <Select
                             name="voucher_from"
                             styles={customStyles}
-                            // value={selectedVoucher}
-                            options={voucherFromOptions.map((item) => {
-                              return {
-                                label: item.label,
-                                value: item.value,
-                              };
-                            })}
+                            value={selectedVoucherFrom}
+                            options={fromAndToOptions}
                             onChange={(event) => {
                               console.log(event, "event");
-                              setSelectedVoucher(event);
+                              setSelectedVoucherFrom(event);
                               setFieldValue("voucher_from", event.value);
+                              setFieldValue("voucher_from_type", event.type);
                             }}
                           />
-                          {errors.voucher_type && touched.voucher_type && (
+                          {errors.voucher_from && touched.voucher_from && (
                             <div className="invalid-feedback d-block">
-                              {errors.voucher_type}
+                              {errors.voucher_from}
                             </div>
                           )}
                         </div>
@@ -806,22 +793,18 @@ const Voucher = (props) => {
                           <Select
                             name="voucher_to"
                             styles={customStyles}
-                            // value={selectedVoucher}
-                            options={voucherFromOptions.map((item) => {
-                              return {
-                                label: item.label,
-                                value: item.value,
-                              };
-                            })}
+                            value={selectedVoucherTo}
+                            options={fromAndToOptions}
                             onChange={(event) => {
-                              console.log(event, "event");
-                              setSelectedVoucher(event);
+                              // console.log(event, "event");
+                              setSelectedVoucherTo(event);
                               setFieldValue("voucher_to", event.value);
+                              setFieldValue("voucher_to_type", event.type);
                             }}
                           />
-                          {errors.voucher_type && touched.voucher_type && (
+                          {errors.voucher_to && touched.voucher_to && (
                             <div className="invalid-feedback d-block">
-                              {errors.voucher_type}
+                              {errors.voucher_to}
                             </div>
                           )}
                         </div>

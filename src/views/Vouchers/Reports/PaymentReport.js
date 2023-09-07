@@ -140,7 +140,7 @@ const PaymentReport = (props) => {
 
   const getVoucherData = (id) => {
     apiAuth
-      .get(`/api/payment-voucher/${id}`)
+      .get(`/api/master/voucher/${id}`)
       .then((response) => {
         let data = response.data;
         setState({ ...state, invoice: data });

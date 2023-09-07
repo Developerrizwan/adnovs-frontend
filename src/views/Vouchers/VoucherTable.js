@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import {
@@ -15,11 +15,11 @@ import { customStyles } from "../../assets/CustomTableStyles";
 import Voucher from "./Voucher";
 
 const VoucherTable = (props) => {
-  // console.log("props", props);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState([]);
   const [deletId, setDeletId] = useState();
+  const type = props?.curVoucher;
 
   const [cols, setCols] = useState([
     {
@@ -122,10 +122,9 @@ const VoucherTable = (props) => {
       cell: (value) => {
         return (
           <div>
-            {/* {console.log("ddddddddd", props?.curVoucher)} */}
             <Link
               to={
-                props?.curVoucher === "Payment"
+                type === "Payment"
                   ? `/voucher/payment-voucher/${value.id}`
                   : `/voucher/receipt-voucher/${value.id}`
               }

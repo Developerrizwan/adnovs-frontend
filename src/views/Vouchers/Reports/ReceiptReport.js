@@ -116,7 +116,7 @@ const ReceiptReport = (props) => {
 
   const getVoucherData = (id) => {
     apiAuth
-      .get(`/api/receipt-voucher/${id}`)
+      .get(`/api/master/voucher/${id}`)
       .then((response) => {
         let data = response.data;
         setState({ ...state, invoice: data });
