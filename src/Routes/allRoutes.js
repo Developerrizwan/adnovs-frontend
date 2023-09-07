@@ -74,6 +74,7 @@ import AddEnquiry from "../views/Jobs/AddEnquiry";
 import PurchaseInvoice from "../views/TaxInvoice/PurchaseInvoice";
 import PaymentVoucher from "../views/TaxInvoice/PaymentVoucher";
 import ReceiptVoucher from "../views/TaxInvoice/ReceiptVoucher";
+import AccountStatement from "../views/TaxInvoice/AccountStatement";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -113,7 +114,7 @@ const authProtectedRoutes = [
   { path: "/purchase-invoice", component: PurchaseInvoice },
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
-
+  { path: "/account-statement", component: AccountStatement },
   {
     path: "*",
     exact: true,
