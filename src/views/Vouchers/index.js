@@ -32,18 +32,12 @@ const Vouchers = (props) => {
     { value: "Credit Note", label: "Credit Note" },
   ];
 
-  const changeRoute = (event) => {
-    if (event.value === "Journal") {
-      setUrl("/journal-voucher");
-    } else if (event.value === "Payment") {
-      setUrl("/payment-voucher");
-    } else if (event.value === "Receipt") {
-      setUrl("/receipt-voucher");
-    } else if (event.value === "Debit Note") {
-      setUrl("/debit-voucher");
-    } else if (event.value === "Credit Note") {
-      setUrl("/credit-voucher");
-    }
+  const voucherMap = {
+    Journal: "",
+    Payment: "payment-voucher",
+    Receipt: "receipt-voucher",
+    "Credit Note": "",
+    "Debit Note": "",
   };
 
   useEffect(() => {
@@ -104,7 +98,7 @@ const Vouchers = (props) => {
             createNew={() => {
               setCreateModal(true);
             }}
-            add_new_url={`/voucher/${selectedVoucher.value}`}
+            add_new_url={`/voucher/${selectedVoucher?.value}`}
             search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
@@ -132,6 +126,7 @@ const Vouchers = (props) => {
                   {" "}
                   <Card>
                     <VoucherTable
+                      curVoucher={selectedVoucher.value}
                       users={users}
                       deleteUser={deleteUser}
                       pagination={{ ...pagination }}

@@ -47,7 +47,7 @@ import ViewProject from "../views/Project/ViewProject";
 import Report from "../views/Project/Report";
 import Jobs from "../views/Jobs";
 import Vouchers from "../views/Vouchers";
-import JournalVoucher from "../views/Vouchers/journalVoucher";
+import Voucher from "../views/Vouchers/Voucher";
 import Invoices from "../views/Invoices";
 import Purchase from "../views/Invoices/Purchase";
 import Sales from "../views/Invoices/Sales";
@@ -74,6 +74,8 @@ import AddEnquiry from "../views/Jobs/AddEnquiry";
 import PurchaseInvoice from "../views/TaxInvoice/PurchaseInvoice";
 import PaymentVoucher from "../views/TaxInvoice/PaymentVoucher";
 import ReceiptVoucher from "../views/TaxInvoice/ReceiptVoucher";
+import PaymentReport from "../views/Vouchers/Reports/PaymentReport";
+import ReceiptReport from "../views/Vouchers/Reports/ReceiptReport";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -94,7 +96,9 @@ const authProtectedRoutes = [
   { path: "/cost-entry", component: CostEntry },
   { path: "/charge/add", component: AddCharge },
   { path: "/charge", component: Charge },
-  { path: "/voucher/:voucherId", component: JournalVoucher },
+  { path: "/voucher/:voucherId", component: Voucher },
+  { path: "/voucher/payment-voucher/:id", component: PaymentReport },
+  { path: "/voucher/receipt-voucher/:id", component: ReceiptReport },
   { path: "/vouchers", component: Vouchers },
   { path: "/user-management/add", component: AddUser },
   { path: "/user-management/edit/:userId", component: EditUser },

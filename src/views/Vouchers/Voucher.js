@@ -12,7 +12,7 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import { getAllISOCodes } from "iso-country-currency";
 import { useParams } from "react-router";
 
-const JournalVoucher = (props) => {
+const Voucher = (props) => {
   const history = useHistory();
   const { voucherId } = useParams();
 
@@ -71,6 +71,11 @@ const JournalVoucher = (props) => {
   ];
 
   useEffect(() => {
+    console.log("voucherType", voucherId);
+    setSelectedVoucher({
+      label: voucherId,
+      value: voucherId,
+    });
     getJobOptions();
     getPartyOptions();
     getAllCurrencyCodes();
@@ -980,4 +985,4 @@ const JournalVoucher = (props) => {
   );
 };
 
-export default JournalVoucher;
+export default Voucher;

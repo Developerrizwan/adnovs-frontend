@@ -12,9 +12,10 @@ import {
 } from "reactstrap";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
-import JournalVoucher from "./journalVoucher";
+import Voucher from "./Voucher";
 
 const VoucherTable = (props) => {
+  // console.log("props", props);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState([]);
@@ -116,6 +117,28 @@ const VoucherTable = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">View</span>,
+      selector: (row) => row.remarks,
+      cell: (value) => {
+        return (
+          <div>
+            {/* {console.log("ddddddddd", props?.curVoucher)} */}
+            <Link
+              to={
+                props?.curVoucher === "Payment"
+                  ? `/voucher/payment-voucher/${value.id}`
+                  : `/voucher/receipt-voucher/${value.id}`
+              }
+              className="btn btn-primary"
+            >
+              View
+            </Link>
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Actions</span>,
       selector: (row) => row,
       cell: (value) => {
@@ -198,7 +221,7 @@ const VoucherTable = (props) => {
           Edit Voucher
         </ModalHeader>
         <ModalBody>
-          <JournalVoucher
+          <Voucher
             closeAddPopup={() => {
               setEditModal(false);
               setSelectedVoucher(null);
