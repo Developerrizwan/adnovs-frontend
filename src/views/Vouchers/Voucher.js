@@ -23,6 +23,17 @@ const Voucher = (props) => {
 
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [organizationOptions, setOrganizationOptions] = useState(null);
+  const [voucherFromOptions, setVoucherFromOptions] = useState([]);
+  console.log(
+    "voucherFromOptions",
+    voucherFromOptions.map((item) => {
+      return {
+        label: item.label,
+        value: item.value,
+      };
+    })
+  );
   // const [date, setDate] = useState(new Date());
   // const [period, setPeriod] = useState(``);
   // const [period, setPeriod] = useState(`${date.getMonth()} ${date.getFullYear()}`)
@@ -79,6 +90,7 @@ const Voucher = (props) => {
     getJobOptions();
     getPartyOptions();
     getAllCurrencyCodes();
+    getOrganizationOptions();
     // getCategoryOptions();
 
     if (props?.isEdit) {
@@ -150,13 +162,14 @@ const Voucher = (props) => {
         );
         setSelectedParty(selParty);
         setPartyOptions(data);
+        setVoucherFromOptions(data);
       })
       .catch((err) => console.log(err));
   };
 
   const getJobOptions = (val) => {
     apiAuth
-      .get(`/api/get-jobs/?&page=${1}&search=${val || ""}&type=Job`)
+      .get(`/api/get-jobs/?page=${1}&search=${val || ""}&type=Job`)
       .then((res) => {
         const { data } = res;
         let jobOpts = data.results.map((opt) => {
@@ -174,6 +187,33 @@ const Voucher = (props) => {
         setJobOptions(jobOpts);
       })
       .catch((err) => console.log(err));
+  };
+
+  const getOrganizationOptions = (val) => {
+    setLoading(true);
+    apiAuth
+      .get(
+        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
+      )
+      .then((response) => {
+        let data = response.data;
+
+        const ConsOpts = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        setOrganizationOptions(ConsOpts);
+        setVoucherFromOptions([...voucherFromOptions, ...ConsOpts]);
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+
+        setLoading(false);
+      });
   };
 
   const customStyles = {
@@ -233,6 +273,10 @@ const Voucher = (props) => {
                     : new Date(),
                   voucher_type:
                     props.voucherData?.voucher_type || selectedVoucher.value,
+                  voucher_to:
+                    props.voucherData?.voucher_to || selectedVoucher.value,
+                  voucher_from:
+                    props.voucherData?.voucher_from || selectedVoucher.value,
                   branch: props.voucherData?.branch || "",
                   period: props.voucherData?.period
                     ? new Date(props.voucherData?.period)
@@ -254,17 +298,17 @@ const Voucher = (props) => {
                   remarks: props.voucherData?.remarks || "",
                 }}
                 validationSchema={Yup.object({
-                  branch: Yup.string().required("Required!"),
-                  period: Yup.string().required("Required!"),
-                  job: Yup.string().ensure().required("Required!"),
-                  address: Yup.string().required("Required!"),
-                  naration: Yup.string().required("Required!"),
-                  division: Yup.string().required("Required!"),
-                  remarks: Yup.string().required("Required!"),
-                  amount_sar: Yup.string().required("Required!"),
-                  ref_no: Yup.string().required("Required!"),
+                  // branch: Yup.string().required("Required!"),
+                  // period: Yup.string().required("Required!"),
+                  // job: Yup.string().ensure().required("Required!"),
+                  // address: Yup.string().required("Required!"),
+                  // naration: Yup.string().required("Required!"),
+                  // division: Yup.string().required("Required!"),
+                  // remarks: Yup.string().required("Required!"),
+                  // amount_sar: Yup.string().required("Required!"),
+                  // ref_no: Yup.string().required("Required!"),
                   party_account: Yup.string().ensure().required("Required!"),
-                  currency: Yup.string().ensure().required("Required!"),
+                  // currency: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
                   setLoading(true);
@@ -333,7 +377,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="voucher_type" className="form-label">
                             Voucher Type
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             name="voucher_type"
@@ -466,7 +510,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="branch" className="form-label">
                             Branch
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             name="type"
@@ -495,7 +539,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="period" className="form-label">
                             Period
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <div
                             style={{
@@ -547,7 +591,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="status" className="form-label">
                             Status
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             options={statusOptions}
@@ -572,7 +616,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="currency" className="form-label">
                             Currency
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             name="currency"
@@ -619,7 +663,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="job" className="form-label">
                             Job Type
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             name="job"
@@ -648,7 +692,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="ex_rate" className="form-label">
                             Ex Rate
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Field
                             placeholder="1"
@@ -706,7 +750,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="amount_sar" className="form-label">
                             Amount (SAR)
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Field
                             placeholder="Amount (SAR)"
@@ -724,21 +768,60 @@ const Voucher = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={8} xs={12}>
+                      <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="address" className="form-label">
-                            Address
-                            <span className="text-danger">*</span>
+                          <label htmlFor="voucher_from" className="form-label">
+                            From
+                            {/* <span className="text-danger">*</span> */}
                           </label>
-                          <Field
-                            placeholder="Address"
-                            className="form-control"
-                            name="address"
-                            style={{ background: "#EDEDED" }}
+                          <Select
+                            name="voucher_from"
+                            styles={customStyles}
+                            // value={selectedVoucher}
+                            options={voucherFromOptions.map((item) => {
+                              return {
+                                label: item.label,
+                                value: item.value,
+                              };
+                            })}
+                            onChange={(event) => {
+                              console.log(event, "event");
+                              setSelectedVoucher(event);
+                              setFieldValue("voucher_from", event.value);
+                            }}
                           />
-                          {errors.address && touched.address && (
+                          {errors.voucher_type && touched.voucher_type && (
                             <div className="invalid-feedback d-block">
-                              {errors.address}
+                              {errors.voucher_type}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="voucher_to" className="form-label">
+                            To
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <Select
+                            name="voucher_to"
+                            styles={customStyles}
+                            // value={selectedVoucher}
+                            options={voucherFromOptions.map((item) => {
+                              return {
+                                label: item.label,
+                                value: item.value,
+                              };
+                            })}
+                            onChange={(event) => {
+                              console.log(event, "event");
+                              setSelectedVoucher(event);
+                              setFieldValue("voucher_to", event.value);
+                            }}
+                          />
+                          {errors.voucher_type && touched.voucher_type && (
+                            <div className="invalid-feedback d-block">
+                              {errors.voucher_type}
                             </div>
                           )}
                         </div>
@@ -747,7 +830,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="ref_date" className="form-label">
                             Ref Date
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <div
                             style={{
@@ -803,7 +886,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="ref_no" className="form-label">
                             Ref No
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Field
                             placeholder="Ref No"
@@ -822,7 +905,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="naration" className="form-label">
                             Naration
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Field
                             className="form-control"
@@ -842,7 +925,7 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="division" className="form-label">
                             Division
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Field
                             name="division"
@@ -858,6 +941,27 @@ const Voucher = (props) => {
                         </div>
                       </Grid>
                     </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item lg={8} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="address" className="form-label">
+                            Address
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <Field
+                            placeholder="Address"
+                            className="form-control"
+                            name="address"
+                            style={{ background: "#EDEDED" }}
+                          />
+                          {errors.address && touched.address && (
+                            <div className="invalid-feedback d-block">
+                              {errors.address}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
 
                     {(selectedVoucher.value === "Payment" ||
                       selectedVoucher.value === "Receipt") && (
@@ -867,7 +971,7 @@ const Voucher = (props) => {
                             <div className="mb-3">
                               <label htmlFor="pay_to" className="form-label">
                                 Pay To
-                                <span className="text-danger">*</span>
+                                {/* <span className="text-danger">*</span> */}
                               </label>
                               <Field
                                 className="form-control"
@@ -891,7 +995,7 @@ const Voucher = (props) => {
                                 className="form-label"
                               >
                                 Recieved from
-                                <span className="text-danger">*</span>
+                                {/* <span className="text-danger">*</span> */}
                               </label>
                               <Field
                                 className="form-control"
@@ -915,7 +1019,7 @@ const Voucher = (props) => {
                               className="form-label"
                             >
                               Instrument Type
-                              <span className="text-danger">*</span>
+                              {/* <span className="text-danger">*</span> */}
                             </label>
 
                             <Select
@@ -942,7 +1046,7 @@ const Voucher = (props) => {
                     <div className="mb-3">
                       <label htmlFor="remarks" className="form-label">
                         Remarks
-                        <span className="text-danger">*</span>
+                        {/* <span className="text-danger">*</span> */}
                       </label>
                       <Field
                         as="textarea"
