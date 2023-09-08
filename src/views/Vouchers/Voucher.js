@@ -71,16 +71,14 @@ const Voucher = (props) => {
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
-    { value: "Debit Note", label: "Debit Note" },
-    { value: "Credit Note", label: "Credit Note" },
+    { value: "DebitNote", label: "Debit Note" },
+    { value: "CreditNote", label: "Credit Note" },
   ];
 
   useEffect(() => {
     console.log("voucherType", voucherId);
-    setSelectedVoucher({
-      label: voucherId,
-      value: voucherId,
-    });
+    const sel = voucherOptions.find((dd) => dd.value === voucherId);
+    setSelectedVoucher(sel);
     getJobOptions();
     getPartyOptions();
     getAllCurrencyCodes();
@@ -243,7 +241,7 @@ const Voucher = (props) => {
               className="mb-3"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h2 className="mx-5">{selectedVoucher.value} Voucher</h2>
+              <h2 className="mx-5">{selectedVoucher.label} Voucher</h2>
               <button className="btn btn-danger" onClick={goBack}>
                 Back
               </button>
@@ -263,6 +261,7 @@ const Voucher = (props) => {
                     ? new Date(props.voucherData?.gl_date)
                     : new Date(),
                   voucher_type: "",
+                  company: localStorage.getItem("company_id"),
                   voucher_from: props.voucherData?.voucher_from || "",
                   voucher_from_type: props.voucherData?.voucher_from_type || "",
                   voucher_to: props.voucherData?.voucher_to || "",

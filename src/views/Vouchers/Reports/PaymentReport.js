@@ -5,8 +5,11 @@ import NotificationManager from "../../../components/Common/NotificationManager"
 import ReportHeader from "./helpers/ReportHeader";
 import ReportFooter from "./helpers/ReportFooter";
 import DownloadReport from "./helpers/DownloadReport";
+import moment from "moment";
+import RupeesToWordsConverter from "./helpers/RupeesToWordsConverter";
 
-const Content = () => {
+const Content = ({ voucher }) => {
+  // console.log("payment", voucher);
   return (
     <div id="content" className="mt-5 mx-2">
       {/* VOUCHER Title */}
@@ -23,25 +26,28 @@ const Content = () => {
         className="d-flex justify-content-around align-items-center"
       >
         <div id="left-side-items">
-          <DisplayItem label={"Paid To"} value={""} />
-          <DisplayItem label={"Date"} value={"03-AUG-23"} />
-          <DisplayItem label={"Paid From"} value={"SNB BANK "} />
-          <DisplayItem label={"Job No"} value={""} />
-          <DisplayItem label={"Reference No./ Date"} value={""} />
+          <DisplayItem label={"Paid To"} value={voucher?.pay_to} />
           <DisplayItem
-            label={"Remarks"}
-            value={"QAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)"}
+            label={"Date"}
+            value={moment(voucher?.date).format("DD/MM/YYYY")}
           />
+          <DisplayItem label={"Paid From"} value={"SNB BANK "} />
+          <DisplayItem label={"Job No"} value={voucher?.job?.job_number} />
+          <DisplayItem
+            label={"Reference No./ Date"}
+            value={voucher?.job?.ref_date}
+          />
+          <DisplayItem label={"Remarks"} value={voucher?.job?.remarks} />
         </div>
         <div id="right-side-items">
-          <DisplayItem label={"Payment No"} value={"DN/PV/23/0364 (POSTED)"} />
-          <DisplayItem label={"GL Date"} value={"03-AUG-23"} />
-          <DisplayItem label={"Type"} value={"CASH"} />
-          <DisplayItem label={"Client"} value={""} />
+          <DisplayItem label={"Payment No"} value={""} />
           <DisplayItem
-            label={"Narration"}
-            value={"QAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)"}
+            label={"GL Date"}
+            value={moment(voucher?.gl_date).format("DD/MM/YYYY")}
           />
+          <DisplayItem label={"Type"} value={voucher?.instrument_type || ""} />
+          <DisplayItem label={"Client"} value={""} />
+          <DisplayItem label={"Narration"} value={voucher?.naration} />
         </div>
       </div>
 
@@ -56,21 +62,20 @@ const Content = () => {
           <tr>
             <td className=" w-50">
               <div className=" ">
-                <span className="p-2">
-                  IQAMA EXPENSES IQAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)
-                </span>
+                <span className="p-2"></span>
               </div>
             </td>
+            <td className="text-center w-25">{voucher?.job?.job_number}</td>
             <td className="text-center w-25"></td>
-            <td className="text-center w-25">200.00</td>
           </tr>
         </table>
       </div>
 
       {/* Amount in words */}
       <h5 className="text-end" style={{ fontFamily: "sans-serif" }}>
-        Two Hundred Only
-        <span style={{ marginLeft: "30px" }}>200.00</span>
+        {console.log("ssssssss", voucher?.amount_sar)}
+        {/* <RupeesToWordsConverter amount={voucher?.amount_sar} /> */}
+        <span style={{ marginLeft: "30px" }}>{voucher?.amount_sar}</span>
       </h5>
 
       {/* Second Table */}
@@ -80,24 +85,26 @@ const Content = () => {
             <th className="text-center">Against V.No </th>
             <th className="text-center">Date </th>
             <th className="text-center">Ref. No.</th>
-            <th className="text-center">Ref. No.</th>
             <th className="text-center">Description</th>
             <th className="text-center">Dr/Cr </th>
-            <th className="text-center">Curr </th>
+            <th className="text-center">Currency </th>
             <th className="text-center">FCY Amount</th>
             <th className="text-center">Amount</th>
           </tr>
-          {/* <tr>
-            <td className=" w-50">
-              <div className=" ">
-                <span className="p-2">
-                  IQAMA EXPENSES IQAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)
-                </span>
-              </div>
+          <tr>
+            <td className="text-center"></td>
+            <td className="text-center">
+              {moment(voucher?.ref_date).format("DD/MM/YYYY")}
             </td>
-            <td className="text-center w-25"></td>
-            <td className="text-center w-25">200.00</td>
-          </tr> */}
+            <td className="text-center">{voucher?.ref_no}</td>
+            <td className="text-center"></td>
+            <td className="text-center">{voucher?.party_account?.dr_cr}</td>
+            <td className="text-center">
+              {voucher?.party_account?.currency.split(" - ")[0]}
+            </td>
+            <td className="text-center">{voucher?.fc_amount}</td>
+            <td className="text-center">{voucher?.amount_sar}</td>
+          </tr>
         </table>
       </div>
 
@@ -116,21 +123,20 @@ const Content = () => {
 const DisplayItem = ({ label, value }) => {
   return (
     <>
-      <span>
+      <div className="my-1">
         <span
-          style={{ fontWeight: 600, width: "120px", display: "inline-block" }}
+          style={{ fontWeight: 600, width: "130px", display: "inline-block" }}
         >
           {label}
         </span>
         : {value}
-      </span>
-      <br />
+      </div>
     </>
   );
 };
 
 const PaymentReport = (props) => {
-  const [state, setState] = useState({ costs: [] });
+  const [state, setState] = useState({});
 
   useEffect(() => {
     let id = Number(props.match.params.id);
@@ -142,11 +148,11 @@ const PaymentReport = (props) => {
       .get(`/api/master/voucher/${id}`)
       .then((response) => {
         let data = response.data;
-        setState({ ...state, invoice: data });
+        setState({ ...state, voucher: data });
       })
       .catch((err) => {
         console.log(err);
-        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+        NotificationManager.error("", "Invalid Voucher.", 3000, null, null, "");
       });
   };
 
@@ -180,7 +186,7 @@ const PaymentReport = (props) => {
           <ReportHeader />
 
           {/* Content */}
-          <Content />
+          <Content voucher={state?.voucher} />
 
           {/* Footer */}
           <ReportFooter />

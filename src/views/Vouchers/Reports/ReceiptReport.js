@@ -5,8 +5,11 @@ import NotificationManager from "../../../components/Common/NotificationManager"
 import ReportFooter from "./helpers/ReportFooter";
 import ReportHeader from "./helpers/ReportHeader";
 import DownloadReport from "./helpers/DownloadReport";
+import moment from "moment";
+import RupeesToWordsConverter from "./helpers/RupeesToWordsConverter";
 
-const Content = () => {
+const Content = ({ voucher }) => {
+  // console.log("receipt", voucher);
   return (
     <div id="content" className="mt-5 mx-2">
       {/* VOUCHER Title */}
@@ -25,21 +28,19 @@ const Content = () => {
         <div id="left-side-items">
           <DisplayItem
             label={"Received From"}
-            value={
-              "QC CLOUD - TAQNIYYAT AL-SAHAB FOR INF ORMATION TECHNOLOGY EST"
-            }
+            value={voucher?.received_from || ""}
           />
-          <DisplayItem label={"A/C Name"} value={"SNB BANK"} />
-          <DisplayItem label={"Type"} value={"CASH"} />
-          <DisplayItem
-            label={"Narration"}
-            value={"AYMENT RECEIVED FROM QC CLOUD TO SNB"}
-          />
+          <DisplayItem label={"A/C Name"} value={""} />
+          <DisplayItem label={"Type"} value={voucher?.instrument_type || ""} />
+          <DisplayItem label={"Narration"} value={voucher?.job?.naration} />
         </div>
         <div id="right-side-items">
-          <DisplayItem label={"Receipt No"} value={"ADN/RV/23/0057"} />
-          <DisplayItem label={"Date"} value={"02-AUG-23 ( POSTED )"} />
-          <DisplayItem label={"Cheque/Ref.No"} value={"CHECK123"} />
+          <DisplayItem label={"Receipt No"} value={""} />
+          <DisplayItem
+            label={"Date"}
+            value={moment(voucher?.date).format("DD/MM/YYYY")}
+          />
+          <DisplayItem label={"Cheque/Ref.No"} value={voucher?.ref_no || ""} />
         </div>
       </div>
 
@@ -53,28 +54,29 @@ const Content = () => {
           <tr>
             <td className=" w-25">
               <div className=" ">
-                <span className="p-2">
-                  QC CLOUD - TAQNIYYAT AL-SAHAB FOR INFORMATION TECHNOLOGY EST
-                  157-21003054 / UK-DMM
-                </span>
+                <span className="p-2">{voucher?.party_account?.name}</span>
                 <br />
                 <div className="d-flex justify-content-between align-items-center p-2">
                   <span>ADN/INV/23/0096 </span>
-                  <span>10-JUL-23 </span>
-                  <span>157-21003054 / UK-DMM</span>
-                  <span>29,233.40</span>
+                  <span>{moment(voucher?.date).format("DD/MM/YYYY")} </span>
+                  <span></span>
+                  <span>{voucher?.amount_sar}</span>
                 </div>
               </div>
             </td>
-            <td className="text-center w-25">29,233.40</td>
+            <td className="text-center w-25">{voucher?.amount_sar}</td>
           </tr>
         </table>
       </div>
 
       {/* Amount in words */}
       <h5 className="text-end" style={{ fontFamily: "sans-serif" }}>
-        Twenty-Nine thousand Two Hundred Thirty-Three and forty Only
-        <span style={{ marginLeft: "30px" }}>29,233.40</span>
+        {/* Twenty-Nine thousand Two Hundred Thirty-Three and forty Only */}
+        {/* <RupeesToWordsConverter amount={voucher?.amount_sar} /> */}
+
+        <span style={{ marginLeft: "30px" }}>
+          {Number(voucher?.amount_sar)}
+        </span>
       </h5>
 
       {/* Computer generated Text */}
@@ -106,8 +108,7 @@ const DisplayItem = ({ label, value }) => {
 };
 
 const ReceiptReport = (props) => {
-  const [state, setState] = useState({ costs: [] });
-  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState({});
 
   useEffect(() => {
     let id = Number(props.match.params.id);
@@ -119,11 +120,11 @@ const ReceiptReport = (props) => {
       .get(`/api/master/voucher/${id}`)
       .then((response) => {
         let data = response.data;
-        setState({ ...state, invoice: data });
+        setState({ ...state, voucher: data });
       })
       .catch((err) => {
         console.log(err);
-        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+        NotificationManager.error("", "Invalid Voucher.", 3000, null, null, "");
       });
   };
 
@@ -159,7 +160,7 @@ const ReceiptReport = (props) => {
           <ReportHeader />
 
           {/* Content */}
-          <Content />
+          <Content voucher={state?.voucher} />
 
           {/* Footer */}
           <ReportFooter />

@@ -5,8 +5,10 @@ import NotificationManager from "../../../components/Common/NotificationManager"
 import ReportHeader from "./helpers/ReportHeader";
 import ReportFooter from "./helpers/ReportFooter";
 import DownloadReport from "./helpers/DownloadReport";
+import moment from "moment";
 
-const Content = () => {
+const Content = ({ voucher }) => {
+  // console.log("voucher", voucher);
   return (
     <div id="content" className="mt-5 mx-2">
       {/* VOUCHER Title */}
@@ -23,13 +25,16 @@ const Content = () => {
         className="d-flex justify-content-around align-items-center"
       >
         <div id="left-side-items">
-          <DisplayItem label={"Journal No."} value={""} />
-          <DisplayItem label={"Branch"} value={"03-AUG-23"} />
-          <DisplayItem label={"Narration"} value={"SNB BANK "} />
+          <DisplayItem label={"Journal No."} value={voucher?.id} />
+          <DisplayItem label={"Branch"} value={voucher?.branch} />
+          <DisplayItem label={"Narration"} value={voucher?.narration} />
         </div>
         <div id="right-side-items">
-          <DisplayItem label={"GL Date"} value={""} />
-          <DisplayItem label={"Account"} value={""} />
+          <DisplayItem
+            label={"GL Date"}
+            value={moment(voucher?.gl_date).format("MM/DD/YYYY")}
+          />
+          <DisplayItem label={"Account"} value={voucher?.party_account?.name} />
         </div>
       </div>
 
@@ -45,18 +50,20 @@ const Content = () => {
             <th className="text-center">Dr Amount</th>
             <th className="text-center">Cr Amount</th>
           </tr>
-          {[1, 2].map((dd) => (
+          {[1].map((dd) => (
             <>
               <tr>
-                <td className="text-center">50741-CAR RENTAL CHARGES (IBIS)</td>
+                <td className="text-center">{voucher?.party_account?.name}</td>
                 <td className="text-center">
-                  CAR RENTAL CHARGES (IBIS) -- G/L
+                  {voucher?.party_account?.remarks}
                 </td>
-                <td className="text-center">SAR</td>
-                <td className="text-center">3,405.00</td>
-                <td className="text-center">1.00000</td>
-                <td className="text-center">3,500.00</td>
-                <td className="text-center">700</td>
+                <td className="text-center">
+                  {voucher?.party_account?.currency.split(" - ")[0]}
+                </td>
+                <td className="text-center">{voucher?.fc_amount}</td>
+                <td className="text-center">{voucher?.ex_rate}</td>
+                <td className="text-center"></td>
+                <td className="text-center"></td>
               </tr>
             </>
           ))}
@@ -66,15 +73,15 @@ const Content = () => {
             <td className="text-center"></td>
             <td className="text-center"></td>
             <td className="text-center">Total:</td>
-            <td className="text-center">3,920.24</td>
-            <td className="text-center">3,920.24</td>
+            <td className="text-center"></td>
+            <td className="text-center"></td>
           </tr>
         </table>
       </div>
 
       {/* Remarks */}
       <div className="p-2 ">
-        <p className="fw ml-3">Remarks :</p>
+        <p className="fw ml-3">Remarks : {voucher?.remarks}</p>
       </div>
 
       {/* Computer generated Text */}
@@ -92,21 +99,20 @@ const Content = () => {
 const DisplayItem = ({ label, value }) => {
   return (
     <>
-      <span>
+      <div className="my-1">
         <span
           style={{ fontWeight: 600, width: "120px", display: "inline-block" }}
         >
           {label}
         </span>
         : {value}
-      </span>
-      <br />
+      </div>
     </>
   );
 };
 
 const JournalReport = (props) => {
-  const [state, setState] = useState({ costs: [] });
+  const [state, setState] = useState({});
 
   useEffect(() => {
     let id = Number(props.match.params.id);
@@ -118,11 +124,11 @@ const JournalReport = (props) => {
       .get(`/api/master/voucher/${id}`)
       .then((response) => {
         let data = response.data;
-        setState({ ...state, invoice: data });
+        setState({ ...state, voucher: data });
       })
       .catch((err) => {
         console.log(err);
-        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+        NotificationManager.error("", "Invalid Voucher.", 3000, null, null, "");
       });
   };
 
@@ -156,7 +162,7 @@ const JournalReport = (props) => {
           <ReportHeader />
 
           {/* Content */}
-          <Content />
+          <Content voucher={state?.voucher || null} />
 
           {/* Footer */}
           <ReportFooter />

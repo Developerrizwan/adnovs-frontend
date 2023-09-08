@@ -417,7 +417,7 @@ const TaxCredit = (props) => {
 
         <div className="p-2" style={{ overflowX: "auto" }}>
           <table className="w-100">
-            <tr style={{background: "#B6D0E2"}}>
+            <tr style={{ background: "#B6D0E2" }}>
               <td className="fw">Line Items:</td>
               <td></td>
               <td></td>
@@ -427,7 +427,7 @@ const TaxCredit = (props) => {
               <td></td>
               <td></td>
             </tr>
-            <tr style={{background: "#d3d3d3"}}>
+            <tr style={{ background: "#d3d3d3" }}>
               <td className="text-center fw">Nature of goods or service</td>
               <td className="text-center fw">Unit Price</td>
               <td className="text-center fw">Quantity</td>
@@ -450,32 +450,37 @@ const TaxCredit = (props) => {
           </table>
         </div>
 
-        <div className="mb-5" style={{display: "flex", justifyContent: "flex-end"}}>
-              <div className="p-2" style={{ overflowX: "auto" }}>
-                <table className="htmlTable mt-2">
-                  <tr>
-                    <td className="p-1 fw border-0">Total (Excluding VAT)</td>
-                    <td className="p-1 border-0">250.00 SAR</td>
-                  </tr>
-                  <tr>
-                    <td className="p-1 fw border-0">Discount</td>
-                    <td className="p-1 border-0">0.00 SAR</td>
-                  </tr>
-                  <tr>
-                    <td className="p-1 fw border-0">Total Taxable Amount (Excluding VAT)</td>
-                    <td className="p-1 border-0">250.00 SAR</td>
-                  </tr>
-                  <tr>
-                    <td className="p-1 fw border-0">Total VAT</td>
-                    <td className="p-1 border-0">37.50 SAR</td>
-                  </tr>
-                  <tr>
-                    <td className="p-1 fw border-0">Total Amount Due</td>
-                    <td className="p-1 border-0">287.50 SAR</td>
-                  </tr>
-                </table>
-              </div>
-            </div>
+        <div
+          className="mb-5"
+          style={{ display: "flex", justifyContent: "flex-end" }}
+        >
+          <div className="p-2" style={{ overflowX: "auto" }}>
+            <table className="htmlTable mt-2">
+              <tr>
+                <td className="p-1 fw border-0">Total (Excluding VAT)</td>
+                <td className="p-1 border-0">250.00 SAR</td>
+              </tr>
+              <tr>
+                <td className="p-1 fw border-0">Discount</td>
+                <td className="p-1 border-0">0.00 SAR</td>
+              </tr>
+              <tr>
+                <td className="p-1 fw border-0">
+                  Total Taxable Amount (Excluding VAT)
+                </td>
+                <td className="p-1 border-0">250.00 SAR</td>
+              </tr>
+              <tr>
+                <td className="p-1 fw border-0">Total VAT</td>
+                <td className="p-1 border-0">37.50 SAR</td>
+              </tr>
+              <tr>
+                <td className="p-1 fw border-0">Total Amount Due</td>
+                <td className="p-1 border-0">287.50 SAR</td>
+              </tr>
+            </table>
+          </div>
+        </div>
 
         <div
           className="row mt-5 mb-0"
