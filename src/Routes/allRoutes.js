@@ -81,6 +81,9 @@ import PaymentReport from "../views/Vouchers/Reports/PaymentReport";
 import ReceiptReport from "../views/Vouchers/Reports/ReceiptReport";
 import JournalReport from "../views/Vouchers/Reports/JournalReport";
 import DebitReport from "../views/Vouchers/Reports/DebitReport";
+import Reports from "../views/Reports";
+import ProfitAndLoss from "../views/Reports/ProfitAndLoss";
+import Trail from "../views/Reports/Trail";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -121,7 +124,9 @@ const authProtectedRoutes = [
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
   { path: "/account-statement", component: AccountStatement },
-  // { path: "/journal/:id", component: Journal },
+  { path: "/reports", component: Reports },
+  { path: "/profit-loss", component: ProfitAndLoss },
+  { path: "/trail", component: Trail },
   // { path: "/tax-credit/:id", component: TaxCredit },
   {
     path: "*",

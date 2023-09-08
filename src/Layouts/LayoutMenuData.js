@@ -13,6 +13,7 @@ const Navdata = () => {
   const [isPlans, setIsPlans] = useState(false);
   const [isMyAccount, setisMyAccount] = useState(false);
   const [isCompany, setIsCompany] = useState(false);
+  const [isReports, setIsReports] = useState(false);
   const [isCoa, setIsCoa] = useState(false);
   const [isCoag, setIsCoag] = useState(false);
   const [isCostEntry, setIsCostEntry] = useState(false);
@@ -95,6 +96,9 @@ const Navdata = () => {
     }
     if (iscurrentState !== "charge") {
       setIsCharge(false);
+    }
+    if (iscurrentState !== "reports") {
+      setIsReports(false);
     }
 
     if (iscurrentState === "Widgets") {
@@ -201,15 +205,15 @@ const Navdata = () => {
       roles: ["superadmin", "admin", "user"],
     },
 
-    // {
-    //   id: "profile",
-    //   label: "Users",
-    //   icon: "ri-account-circle-line",
-    //   link: "/profile",
-    //   src: "/account.png",
-    //   stateVariables: isMyAccount,
-    //   roles: ["superadmin", "admin", "user"],
-    // },
+    {
+      id: "reports",
+      label: "Reports",
+      icon: "ri-folders-line",
+      link: "/reports",
+      src: "/account.png",
+      stateVariables: isReports,
+      roles: ["superadmin", "admin", "user"],
+    },
     {
       id: "Organization",
       label: "Organization",
