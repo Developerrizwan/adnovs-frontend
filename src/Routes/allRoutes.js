@@ -169,6 +169,7 @@ const publicRoutes = [
   { path: "/tax-credit/:id", component: TaxCredit },
   { path: "/voucher/payment-voucher/:id", component: PaymentReport },
   { path: "/voucher/receipt-voucher/:id", component: ReceiptReport },
+  { path: "/account-statement/:jobId", component: AccountStatement },
 ];
 
 export { authProtectedRoutes, publicRoutes };

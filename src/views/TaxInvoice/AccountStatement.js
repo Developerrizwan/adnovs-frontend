@@ -12,40 +12,7 @@ import jsPDF from "jspdf";
 import * as htmlToImage from "html-to-image";
 import { Buffer } from "buffer";
 import numberToWords from "number-to-words";
-import Translate from "./Translate";
-
-const ShowDataWithTranslate = ({ label, value, width }) => {
-  return (
-    <p>
-      <div
-        style={{
-          display: "inline-block",
-          width: width,
-        }}
-      >
-        {label}
-        <Translate text={label} />
-      </div>
-      <div style={{ display: "inline-block", marginLeft: "5px" }}>
-        : {value ? value : ""}
-      </div>
-    </p>
-  );
-};
-
-const ShowTableHeadWithTranslate = ({ label }) => {
-  return (
-    <>
-      <th className="border-0 text-center">
-        {label}
-        <br />
-        <span>
-          <Translate text={label} />
-        </span>
-      </th>
-    </>
-  );
-};
+import Translate from "./StatementTranslate";
 
 const AccountStatement = (props) => {
   const [state, setState] = useState({ costs: [] });
@@ -104,22 +71,22 @@ const AccountStatement = (props) => {
   }
 
   useEffect(() => {
-    let invoiceid = Number(props.match.params.invoiceId);
-    getInvoice(invoiceid);
+    let jobId = Number(props.match.params.jobId);
+    getJob(jobId);
   }, []);
 
-  const getInvoice = (id) => {
+  const getJob = (id) => {
     apiAuth
-      .get(`/api/master/invoice/${id}`)
+      .get(`/api/master/job/${id}`)
       .then((response) => {
         let data = response.data;
-        setState({ ...state, invoice: data });
+        setState({ ...state, job: data });
         getCosts(data.id);
         setObjData(data);
       })
       .catch((err) => {
         console.log(err);
-        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+        NotificationManager.error("", "Invalid Job.", 3000, null, null, "");
       });
   };
   const getCosts = (id) => {
@@ -164,7 +131,7 @@ const AccountStatement = (props) => {
             let sellarNameBuf = getTLVForValue("1", "Adnovs");
             let registrationBuf = getTLVForValue(
               "2",
-              String(state?.invoice?.client_name?.vat_trn_number)
+              String(state?.invoice?.consignee_name?.vat_trn_number)
             );
             let timestampBuf = getTLVForValue(
               "3",
@@ -203,7 +170,7 @@ const AccountStatement = (props) => {
       })
       .catch((err) => {
         console.log(err);
-        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+        NotificationManager.error("", "Invalid Job.", 3000, null, null, "");
       });
   };
 
@@ -235,12 +202,71 @@ const AccountStatement = (props) => {
         <div className="card reportdownproject" style={{ padding: "20px" }}>
           <div className="row">
             <div className="col-lg-4">
-              <h4 className="mb-2">Adnov</h4>
-              <p className="mb-1 fw">Tel : </p>
-              <p className="mb-1 fw">Fax : </p>
-              <p className="mb-1 fw">CR No : </p>
-              <p className="mb-1 fw">Email : </p>
-              <p className="mb-1 fw">VAT# : </p>
+              <h4 className="mb-2" style={{ fontWeight: "bold" }}>
+                {state?.job?.company?.name}
+              </h4>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  alignItems: "center",
+                }}
+              >
+                <p className="mb-1 fw">Tel :</p>
+                <p className="mb-1 ms-1">
+                  {state?.job?.consignee_name?.mobile}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  alignItems: "center",
+                }}
+              >
+                <p className="mb-1 fw x">Fax :</p>
+                <p className="mb-1 ms-1">
+                  {/* {state?.job?.consignee_name?.mobile} */}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  alignItems: "center",
+                }}
+              >
+                <p className="mb-1 fw x">CR No :</p>
+                <p className="mb-1 ms-1">
+                  {/* {state?.job?.consignee_name?.mobile} */}
+                </p>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  alignItems: "center",
+                }}
+              >
+                <p className="mb-1 fw x">Email :</p>
+                <p className="mb-1 ms-1">{state?.job?.company?.email}</p>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                  alignItems: "center",
+                }}
+              >
+                <p className="mb-1 fw x">VAT# :</p>
+                <p className="mb-1 ms-1">
+                  {state?.job?.consignee_name?.vat_trn_number}
+                </p>
+              </div>
             </div>
             <div className="col-lg-4 mb-4 d-flex">
               <img
@@ -251,38 +277,32 @@ const AccountStatement = (props) => {
               />
             </div>
             <div className="col-lg-4 d-flex flex-column align-items-end">
-              <h3 style={{ color: "#000" }}>
-                <Translate
-                  text={String(state?.invoice?.company?.company_name_lang)}
-                />
-              </h3>
-              <p style={{ fontWeight: 400 }}>
-                {/* <Translate
-                  text={
-                    state?.invoice?.company?.address.length
-                      ? state?.invoice?.company?.address
-                      : ""
-                  }
-                /> */}
-                {state?.invoice?.company?.language_address?.length
-                  ? state?.invoice?.company?.language_address
-                  : ""}
+              <h4 className="mb-2" style={{ color: "#000" }}>
+                <Translate text={state?.job?.company?.name} />
+              </h4>
+              <p>
+                <Translate text={state?.job?.consignee_name?.mobile} />
               </p>
-              {/* <p>
-                <Translate text={state?.invoice?.company?.state} />
-                <Translate text={state?.invoice?.company?.country} />
-              </p> */}
-              <p style={{ fontWeight: 600 }}>
-                <span style={{ marginRight: "5px" }}>
-                  {/* <Translate text={"VAT NUMBER"} /> */}
-                  الرقم الضريبي
-                </span>
-                :
-                <span style={{ marginLeft: "5px" }}>
-                  {state?.invoice?.company?.vat_number}
-                </span>
+              <p>
+                {/* <Translate text={state?.job?.consignee_name?.mobile} /> */}
+                {/* fax */}
               </p>
-              {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
+              <p>
+                {/* <Translate text={state?.job?.consignee_name?.mobile} /> */}
+                {/* cr no */}
+              </p>
+              <p>
+                <Translate text={state?.job?.company?.email} />
+              </p>
+              <p>
+                {state?.invoice?.narration ? (
+                  <Translate
+                    text={state?.job?.consignee_name?.vat_trn_number}
+                  />
+                ) : (
+                  ""
+                )}
+              </p>
             </div>
           </div>
           <hr style={{ border: "1px solid #000" }} />
@@ -305,20 +325,22 @@ const AccountStatement = (props) => {
               <table className="htmlTable mt-2 w-100">
                 <tr>
                   <td className="fw">Account Code</td>
-                  <td>232556788</td>
+                  <td>{state?.job?.company?.account_number}</td>
                   <td className="fw">From Date</td>
-                  <td>01/01/2006</td>
-                  <td>10/11/2023</td>
+                  <td>{moment(state.job?.created_at).format("MM/DD/YYYY")}</td>
+                  <td>{moment(state.job?.created_at).format("MM/DD/YYYY")}</td>
                 </tr>
                 <tr>
                   <td className="fw">Account Name</td>
-                  <td>Abco Trading East</td>
+                  <td>{state?.job?.company?.account_name}</td>
                   <td className="fw">To Date</td>
                   <td>30/12/2020</td>
                   <td>14/08/2018</td>
                 </tr>
                 <tr>
-                  <td className="fw">CURRENCY IN: RIYAL</td>
+                  <td className="fw">
+                    CURRENCY IN: {state?.job?.consignee_name?.currency}
+                  </td>
                   <td></td>
                   <td></td>
                   <td></td>
@@ -362,24 +384,28 @@ const AccountStatement = (props) => {
             </div>
           </div>
 
-            <div className="mb-5" style={{display: "flex", justifyContent: "flex-end"}}>
-              <div className="p-2" style={{ overflowX: "auto" }}>
-                <table className="htmlTable mt-2">
-                  <tr style={{ background: "#d3d3d3" }}>
-                    <td className="p-1 fw">Period Total: </td>
-                    <td className="p-1">5,042.42</td>
-                    <td className="p-1">5,042.42</td>
-                    <td rowSpan="2" className="p-1">5,042.42</td>
-                  </tr>
-                  <tr style={{ background: "#d3d3d3" }}>
-                    <td className="p-1 fw">Total: </td>
-                    <td className="p-1">5,042.42</td>
-                    <td className="p-1">5,042.42</td>
-                  </tr>
-                </table>
-              </div>
+          <div
+            className="mb-5"
+            style={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            <div className="p-2" style={{ overflowX: "auto" }}>
+              <table className="htmlTable mt-2">
+                <tr style={{ background: "#d3d3d3" }}>
+                  <td className="p-1 fw">Period Total: </td>
+                  <td className="p-1">5,042.42</td>
+                  <td className="p-1">5,042.42</td>
+                  <td rowSpan="2" className="p-1">
+                    5,042.42
+                  </td>
+                </tr>
+                <tr style={{ background: "#d3d3d3" }}>
+                  <td className="p-1 fw">Total: </td>
+                  <td className="p-1">5,042.42</td>
+                  <td className="p-1">5,042.42</td>
+                </tr>
+              </table>
             </div>
-       
+          </div>
         </div>
       </div>
     </>
