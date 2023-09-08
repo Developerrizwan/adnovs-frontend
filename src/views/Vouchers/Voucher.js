@@ -261,7 +261,7 @@ const Voucher = (props) => {
                     ? new Date(props.voucherData?.gl_date)
                     : new Date(),
                   voucher_type: "",
-                  company: localStorage.getItem("company_id"),
+                  company: "",
                   voucher_from: props.voucherData?.voucher_from || "",
                   voucher_from_type: props.voucherData?.voucher_from_type || "",
                   voucher_to: props.voucherData?.voucher_to || "",
@@ -301,6 +301,9 @@ const Voucher = (props) => {
                 })}
                 onSubmit={(values) => {
                   values["voucher_type"] = selectedVoucher.value;
+                  values["company"] = JSON.parse(
+                    localStorage.getItem("authUser")
+                  ).company_id;
                   setLoading(true);
                   if (props.isEdit && props.voucherData) {
                     apiAuth
