@@ -5,6 +5,7 @@ import NotificationManager from "../../../components/Common/NotificationManager"
 import ReportHeader from "./helpers/ReportHeader";
 import ReportFooter from "./helpers/ReportFooter";
 import DownloadReport from "./helpers/DownloadReport";
+import QRCode from "react-qr-code";
 
 const Content = () => {
   return (
@@ -17,88 +18,171 @@ const Content = () => {
         TAX CREDIT VOUCHER - ADN/RV/23/0057
       </h4>
 
+      <div className="row" style={{ placeItems: "center" }}>
+        <div className="col-lg-8">
+          <div className="p-2" style={{ overflowX: "auto" }}>
+            <table className="w-100">
+              <tr>
+                <td className="fw">Invoice Number:</td>
+                <td>ADN/CN/23/009</td>
+                <td>ADN/CN/23/009</td>
+                {/* <td></td> */}
+              </tr>
+            </table>
+          </div>
+
+          <div className="p-2" style={{ overflowX: "auto" }}>
+            <table className="w-100">
+              <tr>
+                <td className="fw">Invoice Issue Date:</td>
+                <td>08/05/2022</td>
+                <td>10/09/2022</td>
+                {/* <td></td> */}
+              </tr>
+              <tr>
+                <td className="fw">Date Of Supply:</td>
+                <td>01/02/2023</td>
+                <td>12/03/2023</td>
+                {/* <td></td> */}
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div className="col-lg-4 text-center">
+          <QRCode size={150} value={String("voucher")} />
+        </div>
+      </div>
+
       {/* Display Items */}
       <div
         id="display-items"
-        className="d-flex justify-content-around align-items-center"
+        className="mt-4 mb-2 d-flex justify-content-around align-items-center"
       >
         <div id="left-side-items">
-          <DisplayItem label={"Paid To"} value={""} />
-          <DisplayItem label={"Date"} value={"03-AUG-23"} />
-          <DisplayItem label={"Paid From"} value={"SNB BANK "} />
-          <DisplayItem label={"Job No"} value={""} />
-          <DisplayItem label={"Reference No./ Date"} value={""} />
-          <DisplayItem
-            label={"Remarks"}
-            value={"QAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)"}
-          />
+          <h5
+            style={{
+              background: "#d3d3d3",
+              fontFamily: "sans-serif",
+              textAlign: "center",
+            }}
+          >
+            Seller
+          </h5>
+          <>
+            <DisplayItem label={"Name"} value={"Adnov Shipping & Logistics"} />
+            <DisplayItem
+              label={"Building No"}
+              value={"AL MALIK KHALID ROAD - HAYY"}
+            />
+            <DisplayItem
+              label={"Street Name"}
+              value={"JEDDAH KINGDOM OF SAUDI ARABIA"}
+            />
+            <DisplayItem label={"District"} value={""} />
+            <DisplayItem label={"City"} value={""} />
+            <DisplayItem label={"Country"} value={"Saudi Arabia"} />
+            <DisplayItem label={"Postal Code"} value={""} />
+            <DisplayItem label={"Additional No"} value={""} />
+            <DisplayItem label={"VAT Number"} value={""} />
+            <DisplayItem label={"Other Seller ID"} value={""} />
+          </>
         </div>
         <div id="right-side-items">
-          <DisplayItem label={"Payment No"} value={"DN/PV/23/0364 (POSTED)"} />
-          <DisplayItem label={"GL Date"} value={"03-AUG-23"} />
-          <DisplayItem label={"Type"} value={"CASH"} />
-          <DisplayItem label={"Client"} value={""} />
-          <DisplayItem
-            label={"Narration"}
-            value={"QAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)"}
-          />
+          <h5
+            style={{
+              background: "#d3d3d3",
+              fontFamily: "sans-serif",
+              textAlign: "center",
+            }}
+          >
+            Buyer
+          </h5>
+          <>
+            <DisplayItem label={"Name"} value={"Adnov Shipping & Logistics"} />
+            <DisplayItem
+              label={"Building No"}
+              value={"AL MALIK KHALID ROAD - HAYY"}
+            />
+            <DisplayItem
+              label={"Street Name"}
+              value={"JEDDAH KINGDOM OF SAUDI ARABIA"}
+            />
+            <DisplayItem label={"District"} value={""} />
+            <DisplayItem label={"City"} value={""} />
+            <DisplayItem label={"Country"} value={"Saudi Arabia"} />
+            <DisplayItem label={"Postal Code"} value={""} />
+            <DisplayItem label={"Additional No"} value={""} />
+            <DisplayItem label={"VAT Number"} value={""} />
+            <DisplayItem label={"Other Seller ID"} value={""} />
+          </>
         </div>
       </div>
 
-      {/* Table */}
-      <div id="table" className="my-4">
-        <table className="htmlTable mt-2 w-100">
-          <tr>
-            <th className="text-center w-50">Description</th>
-            <th className="text-center w-25">Shipment/Job No </th>
-            <th className="text-center w-25">Amount</th>
+      <div className="p-2" style={{ overflowX: "auto" }}>
+        <table className="w-100">
+          <tr style={{ background: "#B6D0E2" }}>
+            <td className="fw">Line Items:</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr style={{ background: "#d3d3d3" }}>
+            <td className="text-center fw">Nature of goods or service</td>
+            <td className="text-center fw">Unit Price</td>
+            <td className="text-center fw">Quantity</td>
+            <td className="text-center fw">Taxable Amount</td>
+            <td className="text-center fw">Discount</td>
+            <td className="text-center fw">Tax Rate</td>
+            <td className="text-center fw">Tax Amount</td>
+            <td className="text-center fw">Item Subtotal(Including VAT)</td>
           </tr>
           <tr>
-            <td className=" w-50">
-              <div className=" ">
-                <span className="p-2">
-                  IQAMA EXPENSES IQAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)
-                </span>
-              </div>
-            </td>
-            <td className="text-center w-25"></td>
-            <td className="text-center w-25">200.00</td>
+            <td>TRANSPORTATION CHARGES</td>
+            <td className="text-end">250.00</td>
+            <td className="text-end">1</td>
+            <td className="text-end">250.00</td>
+            <td className="text-end">0.00</td>
+            <td className="text-end">15%</td>
+            <td className="text-end">37.50</td>
+            <td className="text-end">287.50 SAR</td>
           </tr>
         </table>
       </div>
 
-      {/* Amount in words */}
-      <h5 className="text-end" style={{ fontFamily: "sans-serif" }}>
-        Two Hundred Only
-        <span style={{ marginLeft: "30px" }}>200.00</span>
-      </h5>
-
-      {/* Second Table */}
-      <div id="table" className="my-4">
-        <table className="htmlTable mt-2 w-100">
-          <tr>
-            <th className="text-center">Against V.No </th>
-            <th className="text-center">Date </th>
-            <th className="text-center">Ref. No.</th>
-            <th className="text-center">Ref. No.</th>
-            <th className="text-center">Description</th>
-            <th className="text-center">Dr/Cr </th>
-            <th className="text-center">Curr </th>
-            <th className="text-center">FCY Amount</th>
-            <th className="text-center">Amount</th>
-          </tr>
-          {/* <tr>
-            <td className=" w-50">
-              <div className=" ">
-                <span className="p-2">
-                  IQAMA EXPENSES IQAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)
-                </span>
-              </div>
-            </td>
-            <td className="text-center w-25"></td>
-            <td className="text-center w-25">200.00</td>
-          </tr> */}
-        </table>
+      <div
+        className="mb-5"
+        style={{ display: "flex", justifyContent: "flex-end" }}
+      >
+        <div className="p-2" style={{ overflowX: "auto" }}>
+          <table className="htmlTable mt-2">
+            <tr>
+              <td className="p-1 fw border-0">Total (Excluding VAT)</td>
+              <td className="p-1 border-0">250.00 SAR</td>
+            </tr>
+            <tr>
+              <td className="p-1 fw border-0">Discount</td>
+              <td className="p-1 border-0">0.00 SAR</td>
+            </tr>
+            <tr>
+              <td className="p-1 fw border-0">
+                Total Taxable Amount (Excluding VAT)
+              </td>
+              <td className="p-1 border-0">250.00 SAR</td>
+            </tr>
+            <tr>
+              <td className="p-1 fw border-0">Total VAT</td>
+              <td className="p-1 border-0">37.50 SAR</td>
+            </tr>
+            <tr>
+              <td className="p-1 fw border-0">Total Amount Due</td>
+              <td className="p-1 border-0">287.50 SAR</td>
+            </tr>
+          </table>
+        </div>
       </div>
 
       {/* Computer generated Text */}
@@ -116,15 +200,14 @@ const Content = () => {
 const DisplayItem = ({ label, value }) => {
   return (
     <>
-      <span>
+      <div className="my-1">
         <span
           style={{ fontWeight: 600, width: "120px", display: "inline-block" }}
         >
           {label}
         </span>
         : {value}
-      </span>
-      <br />
+      </div>
     </>
   );
 };
@@ -146,7 +229,7 @@ const DebitReport = (props) => {
       })
       .catch((err) => {
         console.log(err);
-        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+        NotificationManager.error("", "Invalid Voucher.", 3000, null, null, "");
       });
   };
 

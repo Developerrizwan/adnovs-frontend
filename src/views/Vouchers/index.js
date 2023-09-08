@@ -28,17 +28,9 @@ const Vouchers = (props) => {
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
-    { value: "Debit Note", label: "Debit Note" },
-    { value: "Credit Note", label: "Credit Note" },
+    { value: "DebitNote", label: "Debit Note" },
+    { value: "CreditNote", label: "Credit Note" },
   ];
-
-  const voucherMap = {
-    Journal: "",
-    Payment: "payment-voucher",
-    Receipt: "receipt-voucher",
-    "Credit Note": "",
-    "Debit Note": "",
-  };
 
   useEffect(() => {
     if (!localStorage.getItem("voucher-type")) {

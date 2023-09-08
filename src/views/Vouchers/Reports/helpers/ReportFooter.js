@@ -18,9 +18,7 @@ const FooterItem = ({ label }) => {
           textAlign: "center",
           borderBottom: "1px solid black",
         }}
-      >
-        ddddddddddd
-      </span>
+      ></span>
       <span
         style={{
           display: "block",
