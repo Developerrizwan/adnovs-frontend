@@ -262,8 +262,7 @@ const Voucher = (props) => {
                   gl_date: props.voucherData?.gl_date
                     ? new Date(props.voucherData?.gl_date)
                     : new Date(),
-                  voucher_type:
-                    props.voucherData?.voucher_type || selectedVoucher.value,
+                  voucher_type: "",
                   voucher_from: props.voucherData?.voucher_from || "",
                   voucher_from_type: props.voucherData?.voucher_from_type || "",
                   voucher_to: props.voucherData?.voucher_to || "",
@@ -302,6 +301,7 @@ const Voucher = (props) => {
                   // currency: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
+                  values["voucher_type"] = selectedVoucher.value;
                   setLoading(true);
                   if (props.isEdit && props.voucherData) {
                     apiAuth

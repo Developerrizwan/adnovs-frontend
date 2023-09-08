@@ -1,5 +1,5 @@
 import React from "react";
-import shipLogo from "../../../assets/images/ship-logo.png";
+import shipLogo from "../../../../assets/images/ship-logo.png";
 
 const ReportHeader = () => {
   return (

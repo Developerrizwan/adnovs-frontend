@@ -41,6 +41,9 @@ const Vouchers = (props) => {
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("voucher-type")) {
+      localStorage.setItem("voucher-type", selectedVoucher.value);
+    }
     getSelVoucherData(pagination, searchValue, selectedVoucher.value);
   }, []);
 

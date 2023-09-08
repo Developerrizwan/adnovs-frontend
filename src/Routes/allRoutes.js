@@ -79,6 +79,8 @@ import Journal from "../views/TaxInvoice/Journal";
 import TaxCredit from "../views/TaxInvoice/TaxCredit";
 import PaymentReport from "../views/Vouchers/Reports/PaymentReport";
 import ReceiptReport from "../views/Vouchers/Reports/ReceiptReport";
+import JournalReport from "../views/Vouchers/Reports/JournalReport";
+import DebitReport from "../views/Vouchers/Reports/DebitReport";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -165,10 +167,10 @@ const publicRoutes = [
   { path: "/tax-invoice/:invoiceId", component: TaxInvoice },
   { path: "/tax-invoice-second/:invoiceId", component: TaxInvoiceSecond },
   { path: "/purchase-invoice/:invoiceId", component: PurchaseInvoice },
-  { path: "/journal/:id", component: Journal },
-  { path: "/tax-credit/:id", component: TaxCredit },
-  { path: "/voucher/payment-voucher/:id", component: PaymentReport },
-  { path: "/voucher/receipt-voucher/:id", component: ReceiptReport },
+  { path: "/voucher/journal/:id", component: JournalReport },
+  { path: "/voucher/tax-credit/:id", component: DebitReport },
+  { path: "/voucher/payment/:id", component: PaymentReport },
+  { path: "/voucher/receipt/:id", component: ReceiptReport },
 ];
 
 export { authProtectedRoutes, publicRoutes };

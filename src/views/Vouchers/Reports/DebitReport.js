@@ -14,7 +14,7 @@ const Content = () => {
         className="text-center mb-4"
         style={{ fontFamily: "sans-serif", color: "gray" }}
       >
-        PAYMENT VOUCHER - ADN/RV/23/0057
+        TAX CREDIT VOUCHER - ADN/RV/23/0057
       </h4>
 
       {/* Display Items */}
@@ -129,7 +129,7 @@ const DisplayItem = ({ label, value }) => {
   );
 };
 
-const PaymentReport = (props) => {
+const DebitReport = (props) => {
   const [state, setState] = useState({ costs: [] });
 
   useEffect(() => {
@@ -190,4 +190,4 @@ const PaymentReport = (props) => {
   );
 };
 
-export default PaymentReport;
+export default DebitReport;

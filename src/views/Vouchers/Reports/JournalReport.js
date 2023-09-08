@@ -14,7 +14,7 @@ const Content = () => {
         className="text-center mb-4"
         style={{ fontFamily: "sans-serif", color: "gray" }}
       >
-        PAYMENT VOUCHER - ADN/RV/23/0057
+        JOURNAL VOUCHER - ADN/RV/23/0057
       </h4>
 
       {/* Display Items */}
@@ -23,25 +23,13 @@ const Content = () => {
         className="d-flex justify-content-around align-items-center"
       >
         <div id="left-side-items">
-          <DisplayItem label={"Paid To"} value={""} />
-          <DisplayItem label={"Date"} value={"03-AUG-23"} />
-          <DisplayItem label={"Paid From"} value={"SNB BANK "} />
-          <DisplayItem label={"Job No"} value={""} />
-          <DisplayItem label={"Reference No./ Date"} value={""} />
-          <DisplayItem
-            label={"Remarks"}
-            value={"QAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)"}
-          />
+          <DisplayItem label={"Journal No."} value={""} />
+          <DisplayItem label={"Branch"} value={"03-AUG-23"} />
+          <DisplayItem label={"Narration"} value={"SNB BANK "} />
         </div>
         <div id="right-side-items">
-          <DisplayItem label={"Payment No"} value={"DN/PV/23/0364 (POSTED)"} />
-          <DisplayItem label={"GL Date"} value={"03-AUG-23"} />
-          <DisplayItem label={"Type"} value={"CASH"} />
-          <DisplayItem label={"Client"} value={""} />
-          <DisplayItem
-            label={"Narration"}
-            value={"QAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)"}
-          />
+          <DisplayItem label={"GL Date"} value={""} />
+          <DisplayItem label={"Account"} value={""} />
         </div>
       </div>
 
@@ -49,56 +37,44 @@ const Content = () => {
       <div id="table" className="my-4">
         <table className="htmlTable mt-2 w-100">
           <tr>
-            <th className="text-center w-50">Description</th>
-            <th className="text-center w-25">Shipment/Job No </th>
-            <th className="text-center w-25">Amount</th>
+            <th className="text-center ">A/C Name</th>
+            <th className="text-center">Narration </th>
+            <th className="text-center">Currency</th>
+            <th className="text-center">FCY Amount</th>
+            <th className="text-center">Ex. Rate</th>
+            <th className="text-center">Dr Amount</th>
+            <th className="text-center">Cr Amount</th>
           </tr>
+          {[1, 2].map((dd) => (
+            <>
+              <tr>
+                <td className="text-center">50741-CAR RENTAL CHARGES (IBIS)</td>
+                <td className="text-center">
+                  CAR RENTAL CHARGES (IBIS) -- G/L
+                </td>
+                <td className="text-center">SAR</td>
+                <td className="text-center">3,405.00</td>
+                <td className="text-center">1.00000</td>
+                <td className="text-center">3,500.00</td>
+                <td className="text-center">700</td>
+              </tr>
+            </>
+          ))}
           <tr>
-            <td className=" w-50">
-              <div className=" ">
-                <span className="p-2">
-                  IQAMA EXPENSES IQAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)
-                </span>
-              </div>
-            </td>
-            <td className="text-center w-25"></td>
-            <td className="text-center w-25">200.00</td>
+            <td className="text-center"></td>
+            <td className="text-center"></td>
+            <td className="text-center"></td>
+            <td className="text-center"></td>
+            <td className="text-center">Total:</td>
+            <td className="text-center">3,920.24</td>
+            <td className="text-center">3,920.24</td>
           </tr>
         </table>
       </div>
 
-      {/* Amount in words */}
-      <h5 className="text-end" style={{ fontFamily: "sans-serif" }}>
-        Two Hundred Only
-        <span style={{ marginLeft: "30px" }}>200.00</span>
-      </h5>
-
-      {/* Second Table */}
-      <div id="table" className="my-4">
-        <table className="htmlTable mt-2 w-100">
-          <tr>
-            <th className="text-center">Against V.No </th>
-            <th className="text-center">Date </th>
-            <th className="text-center">Ref. No.</th>
-            <th className="text-center">Ref. No.</th>
-            <th className="text-center">Description</th>
-            <th className="text-center">Dr/Cr </th>
-            <th className="text-center">Curr </th>
-            <th className="text-center">FCY Amount</th>
-            <th className="text-center">Amount</th>
-          </tr>
-          {/* <tr>
-            <td className=" w-50">
-              <div className=" ">
-                <span className="p-2">
-                  IQAMA EXPENSES IQAMA EXPENSE PAID BY SNB(RE ENTRY FOR AFSAL)
-                </span>
-              </div>
-            </td>
-            <td className="text-center w-25"></td>
-            <td className="text-center w-25">200.00</td>
-          </tr> */}
-        </table>
+      {/* Remarks */}
+      <div className="p-2 ">
+        <p className="fw ml-3">Remarks :</p>
       </div>
 
       {/* Computer generated Text */}
@@ -129,7 +105,7 @@ const DisplayItem = ({ label, value }) => {
   );
 };
 
-const PaymentReport = (props) => {
+const JournalReport = (props) => {
   const [state, setState] = useState({ costs: [] });
 
   useEffect(() => {
@@ -190,4 +166,4 @@ const PaymentReport = (props) => {
   );
 };
 
-export default PaymentReport;
+export default JournalReport;

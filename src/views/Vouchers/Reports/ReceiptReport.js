@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 
 import apiAuth from "../../../helpers/ApiAuth";
 import NotificationManager from "../../../components/Common/NotificationManager";
-import ReportFooter from "./ReportFooter";
-import ReportHeader from "./ReportHeader";
-import DownloadReport from "./DownloadReport";
+import ReportFooter from "./helpers/ReportFooter";
+import ReportHeader from "./helpers/ReportHeader";
+import DownloadReport from "./helpers/DownloadReport";
 
 const Content = () => {
   return (

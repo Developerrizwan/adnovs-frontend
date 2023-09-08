@@ -126,13 +126,13 @@ const VoucherTable = (props) => {
             <Link
               to={
                 type === "Payment"
-                  ? `/voucher/payment-voucher/${value.id}`
+                  ? `/voucher/payment/${value.id}`
                   : type === "Receipt"
-                  ? `/voucher/receipt-voucher/${value.id}`
+                  ? `/voucher/receipt/${value.id}`
                   : type === "Journal"
-                  ? `/journal/${value.id}`
+                  ? `/voucher/journal/${value.id}`
                   : type.includes("Note")
-                  ? `/tax-credit/${value.id}`
+                  ? `/voucher/tax-credit/${value.id}`
                   : ""
               }
               className="btn btn-primary"

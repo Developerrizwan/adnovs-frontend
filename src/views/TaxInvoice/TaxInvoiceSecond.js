@@ -216,6 +216,7 @@ const TaxInvoiceSecond = (props) => {
   };
   return (
     <>
+      {/* {console.log("sssssss", state?.invoice)} */}
       <div style={{ padding: "25px" }}>
         <div
           style={{
@@ -375,7 +376,7 @@ const TaxInvoiceSecond = (props) => {
               <ShowDataWithTranslate
                 width={"220px"}
                 label={"Invoice Number"}
-                value={state?.invoice?.id}
+                value={state?.invoice?.invoice_number}
               />
               <ShowDataWithTranslate
                 width={"220px"}
@@ -412,7 +413,7 @@ const TaxInvoiceSecond = (props) => {
               <ShowDataWithTranslate
                 width={"180px"}
                 label={"Shipper Name"}
-                value={state.invoice?.job?.shipper_name}
+                value={state.invoice?.shipper_name}
               />
               <ShowDataWithTranslate
                 width={"180px"}
@@ -427,12 +428,12 @@ const TaxInvoiceSecond = (props) => {
               <ShowDataWithTranslate
                 width={"180px"}
                 label={"POD"}
-                value={state.invoice?.job?.pod}
+                value={state.invoice?.pod}
               />
               <ShowDataWithTranslate
                 width={"180px"}
                 label={"POA"}
-                value={state.invoice?.job?.poa}
+                value={state.invoice?.poa}
               />
               <ShowDataWithTranslate
                 width={"180px"}
