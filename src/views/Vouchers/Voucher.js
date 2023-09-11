@@ -11,8 +11,8 @@ import moment from "moment";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { getAllISOCodes } from "iso-country-currency";
 import { useParams } from "react-router";
-import { Modal, ModalBody } from "reactstrap";
-
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import AccountDetails from "./AddAccountDetails";
 const Voucher = (props) => {
   const history = useHistory();
   const { voucherId } = useParams();
@@ -28,6 +28,8 @@ const Voucher = (props) => {
   const [fromAndToOptions, setFromAndToOptions] = useState([]);
   const [selectedVoucherFrom, setSelectedVoucherFrom] = useState(null);
   const [selectedVoucherTo, setSelectedVoucherTo] = useState(null);
+  const [vocherState, setVocherState] = useState({});
+  const [accountDetailsModal, setAccountDetailsModal] = useState(false);
 
   // const [date, setDate] = useState(new Date());
   // const [period, setPeriod] = useState(``);
@@ -348,7 +350,13 @@ const Voucher = (props) => {
                           null,
                           ""
                         );
-                        history.push("/vouchers");
+                        setVocherState((prev) => {
+                          return {
+                            ...vocherState,
+                            voucher_id: res.data.id,
+                          };
+                        });
+                        // history.push("/vouchers");
                       })
                       .catch((err) => {
                         setLoading(false);
@@ -1055,20 +1063,30 @@ const Voucher = (props) => {
                         <span className="sr-only">Loading...</span>
                       </div>
                     ) : (
-                      <div style={{}}>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
                         <div className="mt-4 mb-3">
                           <button className="btn btn-success" type="submit">
                             {props.isEdit ? "Update" : "Submit"}
                           </button>
-                          <button
-                            className="btn btn-info ms-3"
-                            onClick={() => {
-                              history.push("/account_detail");
-                            }}
-                          >
-                            Add Account
-                          </button>
+                          {vocherState.voucher_id ? (
+                            <button
+                              className="btn btn-info float-right ms-3"
+                              onClick={() => setAccountDetailsModal(true)}
+                            >
+                              {" "}
+                              Add Account
+                            </button>
+                          ) : (
+                            <></>
+                          )}
                         </div>
+
                         <button
                           className="btn btn-success mx-5"
                           type="button"
@@ -1090,6 +1108,31 @@ const Voucher = (props) => {
       </div>
       <Modal isOpen={modal} centered={modal} toggle={toggle}>
         <ModalBody>Modal</ModalBody>
+      </Modal>
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={accountDetailsModal}
+        toggle={() => {
+          setAccountDetailsModal((prev) => !prev);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setAccountDetailsModal((prev) => !prev);
+          }}
+        >
+          Add Account Details
+        </ModalHeader>
+        <ModalBody>
+          <AccountDetails
+            closeAddPopup={(val) => {
+              setAccountDetailsModal(false);
+            }}
+          />
+        </ModalBody>
       </Modal>
     </React.Fragment>
   );

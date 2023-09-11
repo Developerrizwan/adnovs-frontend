@@ -644,14 +644,6 @@ const AccountDetail = (props) => {
                         <button className="btn btn-success" type="submit">
                           {props.isEdit ? "Update" : "Submit"}
                         </button>
-                        <button
-                          className="btn btn-info ms-3"
-                          onClick={() => {
-                            history.push("/account_detail");
-                          }}
-                        >
-                          Add Account
-                        </button>
                       </div>
                     )}
                   </Form>
