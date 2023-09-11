@@ -11,6 +11,7 @@ import moment from "moment";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { getAllISOCodes } from "iso-country-currency";
 import { useParams } from "react-router";
+import { Modal, ModalBody } from "reactstrap";
 
 const Voucher = (props) => {
   const history = useHistory();
@@ -56,6 +57,9 @@ const Voucher = (props) => {
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [partyOptions, setPartyOptions] = useState([]);
   // const [coaOptions, setCoaOptions] = useState([]);
+  const [modal, setModal] = React.useState(false);
+
+  const toggle = () => setModal(!modal);
 
   const instTypeOptions = [
     { value: "Cash", label: "Cash" },
@@ -1055,6 +1059,13 @@ const Voucher = (props) => {
                         <button className="btn btn-success" type="submit">
                           {props.isEdit ? "Update" : "Submit"}
                         </button>
+                        <button
+                          className="btn btn-success mx-5"
+                          type="button"
+                          onClick={toggle}
+                        >
+                          Open Modal
+                        </button>
                       </div>
                     )}
                   </Form>
@@ -1067,6 +1078,9 @@ const Voucher = (props) => {
           </Grid> */}
         </Grid>
       </div>
+      <Modal isOpen={modal} centered={modal} toggle={toggle}>
+        <ModalBody>Modal</ModalBody>
+      </Modal>
     </React.Fragment>
   );
 };
