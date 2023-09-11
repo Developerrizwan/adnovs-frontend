@@ -80,6 +80,13 @@ import TaxCredit from "../views/TaxInvoice/TaxCredit";
 import PaymentReport from "../views/Vouchers/Reports/PaymentReport";
 import ReceiptReport from "../views/Vouchers/Reports/ReceiptReport";
 import OrganizationStatement from "../views/TaxInvoice/OrganizationStatement";
+import JournalReport from "../views/Vouchers/Reports/JournalReport";
+import DebitReport from "../views/Vouchers/Reports/DebitReport";
+import Reports from "../views/Reports";
+import ProfitAndLoss from "../views/Reports/ProfitAndLoss";
+import Trail from "../views/Reports/Trail";
+import AccountDetail from "../views/AccountDetails/AccountDetail";
+import AccountDetails from "../views/AccountDetails";
 import ProfitLoss from "../views/Vouchers/Reports/ProfitLoss";
 
 const authProtectedRoutes = [
@@ -121,6 +128,12 @@ const authProtectedRoutes = [
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
   { path: "/account-statement", component: AccountStatement },
+  { path: "/reports", component: Reports },
+  { path: "/profit-loss", component: ProfitAndLoss },
+  { path: "/trail", component: Trail },
+  { path: "/account-details", component: AccountDetails },
+  { path: "/account_detail", component: AccountDetail },
+
   // { path: "/journal/:id", component: Journal },
   // { path: "/tax-credit/:id", component: TaxCredit },
   {
@@ -167,6 +180,10 @@ const publicRoutes = [
   { path: "/tax-invoice/:invoiceId", component: TaxInvoice },
   { path: "/tax-invoice-second/:invoiceId", component: TaxInvoiceSecond },
   { path: "/purchase-invoice/:invoiceId", component: PurchaseInvoice },
+  { path: "/voucher/journal/:id", component: JournalReport },
+  { path: "/voucher/tax-credit/:id", component: DebitReport },
+  { path: "/voucher/payment/:id", component: PaymentReport },
+  { path: "/voucher/receipt/:id", component: ReceiptReport },
   { path: "/journal/:id", component: Journal },
   { path: "/tax-credit/:id", component: TaxCredit },
   { path: "/voucher/payment-voucher/:id", component: PaymentReport },

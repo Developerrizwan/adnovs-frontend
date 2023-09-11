@@ -18,7 +18,7 @@ const OrganizationStatement = (props) => {
   const [state, setState] = useState({ costs: [] });
   const [objData, setObjData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [invoices, setInvoices] = useState([]);
 
   const [translatedObject, setTranslatedObject] = useState({});
   const targetLanguage = "ar"; // Language code for Arabic
@@ -81,7 +81,7 @@ const OrganizationStatement = (props) => {
       .then((response) => {
         let data = response.data;
         setState({ ...state, organization: data });
-        getCosts(data.id);
+        getInvoices(id);
         setObjData(data);
       })
       .catch((err) => {
@@ -96,105 +96,33 @@ const OrganizationStatement = (props) => {
         );
       });
   };
-  const getCosts = (id) => {
+
+  const getInvoices = (id) => {
+    setLoading(true);
     apiAuth
-      .get(`/api/get-costentry/?invoice_id=${id}`)
+      .get("/api/get-invoices/")
       .then((response) => {
-        let total_amount = 0;
-        let vat_amount = 0;
-        let exd_vat_total_amount = 0;
-        let word_amount = "Zero";
-        let qrcodeString = "";
-        let data = response.data.map((ct) => {
-          ct.vat_amount = Number(
-            (Number(ct.amount) * Number(ct.tax_group_code)) / 100
-          ).toFixed(2);
-          ct.total_amount = Number(
-            Number(ct.amount) + Number(ct.vat_amount)
-          ).toFixed(2);
-
-          exd_vat_total_amount = Number(
-            Number(exd_vat_total_amount) + Number(ct.amount)
-          ).toFixed(2);
-
-          total_amount = Number(
-            Number(total_amount) + Number(ct.total_amount)
-          ).toFixed(2);
-
-          vat_amount = Number(
-            Number(vat_amount) + Number(ct.vat_amount)
-          ).toFixed(2);
-
-          word_amount = Number.isFinite(Number(total_amount))
-            ? numberToWords.toWords(Number(total_amount))
-            : String(total_amount);
-          word_amount = String(
-            word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
-          );
-
-          // genrating qrcode string using TLV format
-
-          try {
-            let sellarNameBuf = getTLVForValue("1", "Adnovs");
-            let registrationBuf = getTLVForValue(
-              "2",
-              String(state?.invoice?.consignee_name?.vat_trn_number)
-            );
-            let timestampBuf = getTLVForValue(
-              "3",
-              String(state.invoice?.created_at)
-            );
-            let inoiceAmountBuf = getTLVForValue("4", String(total_amount));
-            let vatamountBuf = getTLVForValue("5", String(vat_amount));
-
-            let tagsBufsArray = [
-              sellarNameBuf,
-              registrationBuf,
-              timestampBuf,
-              inoiceAmountBuf,
-              vatamountBuf,
-            ];
-
-            let qrCodeBuf = Buffer.concat(tagsBufsArray);
-            qrcodeString = qrCodeBuf.toString("base64");
-          } catch (error) {
-            console.log(error);
-          }
-
-          return ct;
-        });
-        setState((prev) => {
-          return {
-            ...prev,
-            costs: data,
-            total_amount,
-            vat_amount,
-            exd_vat_total_amount,
-            word_amount,
-            qrcodeString,
-          };
-        });
+        let {
+          data: { results },
+        } = response;
+        results = results.filter((dd) => dd.party_account?.id === id);
+        setInvoices(results);
+        setLoading(false);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.log(error);
         NotificationManager.error(
           "",
-          "Invalid Organization.",
+          `${error.response?.data?.Error || `Invoice Get Error`}`,
           3000,
           null,
           null,
           ""
         );
+        setLoading(false);
       });
   };
 
-  const getTLVForValue = (tag, value) => {
-    var tagBuf = Buffer.from([tag], "utf8");
-    var tagValueLenBuf = Buffer.from([String(value).length], "utf8");
-    var tagValueBuf = Buffer.from(String(value), "utf8");
-    var bufsArray = [tagBuf, tagValueLenBuf, tagValueBuf];
-    return Buffer.concat(bufsArray);
-  };
   return (
     <>
       <div style={{ padding: "25px" }}>
@@ -280,7 +208,7 @@ const OrganizationStatement = (props) => {
               >
                 <p className="mb-1 fw x">VAT# :</p>
                 <p className="mb-1 ms-1">
-                  {state?.organization?.consignee_name?.vat_trn_number}
+                  {state?.organization?.company?.vat_number}
                 </p>
               </div>
             </div>
@@ -386,23 +314,64 @@ const OrganizationStatement = (props) => {
                   <th className="p-1 fw">CREDIT</th>
                   <th className="p-1 fw">BALANCE</th>
                 </tr>
+                {/* {console.log("sssssssss", invoices)} */}
+                {invoices.map((dd) => (
+                  <>
+                    <tr>
+                      <td className="fw">
+                        {moment(dd?.date).format("DD/MM/YYYY")}
+                      </td>
+                      <td>Invoice for afg737873</td>
+                      <td className="fw">Invoice</td>
+                      <td>60</td>
+                      <td>
+                        {dd?.invoice_type === "Purchase"
+                          ? dd?.amount_sar
+                          : "0.00"}
+                      </td>
+                      <td>
+                        {dd?.invoice_type === "Sales" ? dd?.amount_sar : "0.00"}
+                      </td>
+                      <td>{dd?.amount_sar}</td>
+                    </tr>
+                  </>
+                ))}
                 <tr>
-                  <td className="fw">08/09/2009</td>
-                  <td>Invoice for afg737873</td>
-                  <td className="fw">Invoice</td>
-                  <td>60</td>
-                  <td>5,042.42</td>
-                  <td>0.00</td>
-                  <td>5,042.42</td>
+                  <td className="p-1 fw"> </td>
+                  <td className="p-1 fw"> </td>
+                  <td className="p-1 fw"> </td>
+                  <td className="p-1 fw" style={{ background: "#d3d3d3" }}>
+                    {" "}
+                    Period Total:{" "}
+                  </td>
+                  <td className="p-1" style={{ background: "#d3d3d3" }}>
+                    5,042.42
+                  </td>
+                  <td className="p-1" style={{ background: "#d3d3d3" }}>
+                    0.00
+                  </td>
+                  <td
+                    rowSpan="2"
+                    className="p-1"
+                    style={{ background: "#d3d3d3" }}
+                  >
+                    5,042.42
+                  </td>
                 </tr>
                 <tr>
-                  <td className="fw">08/09/2009</td>
-                  <td>Invoice for afg737873</td>
-                  <td className="fw">Invoice</td>
-                  <td>60</td>
-                  <td>5,042.42</td>
-                  <td>0.00</td>
-                  <td>5,042.42</td>
+                  <td className="p-1 fw"> </td>
+                  <td className="p-1 fw"> </td>
+                  <td className="p-1 fw"> </td>
+                  <td className="p-1 fw" style={{ background: "#d3d3d3" }}>
+                    {" "}
+                    Total:{" "}
+                  </td>
+                  <td className="p-1" style={{ background: "#d3d3d3" }}>
+                    5,042.42
+                  </td>
+                  <td className="p-1" style={{ background: "#d3d3d3" }}>
+                    0.00
+                  </td>
                 </tr>
               </table>
             </div>
@@ -413,7 +382,7 @@ const OrganizationStatement = (props) => {
             style={{ display: "flex", justifyContent: "flex-end" }}
           >
             <div className="p-2" style={{ overflowX: "auto" }}>
-              <table className="htmlTable mt-2">
+              {/* <table className="htmlTable mt-2">
                 <tr style={{ background: "#d3d3d3" }}>
                   <td className="p-1 fw">Period Total: </td>
                   <td className="p-1">5,042.42</td>
@@ -427,7 +396,7 @@ const OrganizationStatement = (props) => {
                   <td className="p-1">5,042.42</td>
                   <td className="p-1">5,042.42</td>
                 </tr>
-              </table>
+              </table> */}
             </div>
           </div>
         </div>

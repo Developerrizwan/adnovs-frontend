@@ -11,7 +11,8 @@ import moment from "moment";
 import NotificationManager from "../../components/Common/NotificationManager";
 import { getAllISOCodes } from "iso-country-currency";
 import { useParams } from "react-router";
-import { Modal, ModalBody } from "reactstrap";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import AccountDetail from "../AccountDetails/AccountDetail";
 
 const Voucher = (props) => {
   const history = useHistory();
@@ -28,6 +29,8 @@ const Voucher = (props) => {
   const [fromAndToOptions, setFromAndToOptions] = useState([]);
   const [selectedVoucherFrom, setSelectedVoucherFrom] = useState(null);
   const [selectedVoucherTo, setSelectedVoucherTo] = useState(null);
+  const [vocherState, setVocherState] = useState({});
+  const [accountDetailsModal, setAccountDetailsModal] = useState(false);
 
   // const [date, setDate] = useState(new Date());
   // const [period, setPeriod] = useState(``);
@@ -39,6 +42,7 @@ const Voucher = (props) => {
   // const [selCategory, setSelCategory] = useState(null);
   const [selCurrency, setSelCurrency] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [vouchId, setVouchId] = useState("");
 
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Journal",
@@ -265,7 +269,7 @@ const Voucher = (props) => {
                     ? new Date(props.voucherData?.gl_date)
                     : new Date(),
                   voucher_type: "",
-                  company: localStorage.getItem("company_id"),
+                  company: "",
                   voucher_from: props.voucherData?.voucher_from || "",
                   voucher_from_type: props.voucherData?.voucher_from_type || "",
                   voucher_to: props.voucherData?.voucher_to || "",
@@ -305,6 +309,9 @@ const Voucher = (props) => {
                 })}
                 onSubmit={(values) => {
                   values["voucher_type"] = selectedVoucher.value;
+                  values["company"] = JSON.parse(
+                    localStorage.getItem("authUser")
+                  ).company_id;
                   setLoading(true);
                   if (props.isEdit && props.voucherData) {
                     apiAuth
@@ -339,6 +346,8 @@ const Voucher = (props) => {
                     apiAuth
                       .post("/api/master/voucher/", values)
                       .then((res) => {
+                        const { data } = res;
+                        setVouchId(data?.id);
                         setLoading(false);
                         NotificationManager.success(
                           "Journal Voucher",
@@ -348,7 +357,13 @@ const Voucher = (props) => {
                           null,
                           ""
                         );
-                        history.push("/vouchers");
+                        setVocherState((prev) => {
+                          return {
+                            ...vocherState,
+                            voucher_id: res.data.id,
+                          };
+                        });
+                        // history.push("/vouchers");
                       })
                       .catch((err) => {
                         setLoading(false);
@@ -1055,10 +1070,29 @@ const Voucher = (props) => {
                         <span className="sr-only">Loading...</span>
                       </div>
                     ) : (
-                      <div className="mt-4 mb-3">
-                        <button className="btn btn-success" type="submit">
-                          {props.isEdit ? "Update" : "Submit"}
-                        </button>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div className="mt-4 mb-3">
+                          <button className="btn btn-success" type="submit">
+                            {props.isEdit ? "Update" : "Submit"}
+                          </button>
+                          {vocherState.voucher_id ? (
+                            <div
+                              className="btn btn-info float-right ms-3"
+                              onClick={() => setAccountDetailsModal(true)}
+                            >
+                              Add Account
+                            </div>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+
                         <button
                           className="btn btn-success mx-5"
                           type="button"
@@ -1080,6 +1114,33 @@ const Voucher = (props) => {
       </div>
       <Modal isOpen={modal} centered={modal} toggle={toggle}>
         <ModalBody>Modal</ModalBody>
+      </Modal>
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={accountDetailsModal}
+        toggle={() => {
+          setAccountDetailsModal(false);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setAccountDetailsModal(false);
+          }}
+        >
+          Add Account Details
+        </ModalHeader>
+        <ModalBody>
+          <AccountDetail
+            fromVoucher={true}
+            voucherId={vouchId}
+            closeAddPopup={() => {
+              setAccountDetailsModal(false);
+            }}
+          />
+        </ModalBody>
       </Modal>
     </React.Fragment>
   );

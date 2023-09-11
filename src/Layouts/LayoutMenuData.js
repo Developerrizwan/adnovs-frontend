@@ -13,6 +13,8 @@ const Navdata = () => {
   const [isPlans, setIsPlans] = useState(false);
   const [isMyAccount, setisMyAccount] = useState(false);
   const [isCompany, setIsCompany] = useState(false);
+  const [isReports, setIsReports] = useState(false);
+  const [isAccountDetails, setIsAccountDetails] = useState(false);
   const [isCoa, setIsCoa] = useState(false);
   const [isCoag, setIsCoag] = useState(false);
   const [isCostEntry, setIsCostEntry] = useState(false);
@@ -75,6 +77,9 @@ const Navdata = () => {
     if (iscurrentState !== "Company") {
       setIsCompany(false);
     }
+    if (iscurrentState !== "Account Details") {
+      setIsAccountDetails(false);
+    }
     if (iscurrentState !== "CouponManagement") {
       setisCouponManagement(false);
     }
@@ -96,6 +101,9 @@ const Navdata = () => {
     if (iscurrentState !== "charge") {
       setIsCharge(false);
     }
+    if (iscurrentState !== "reports") {
+      setIsReports(false);
+    }
 
     if (iscurrentState === "Widgets") {
       history.push("/widgets");
@@ -112,6 +120,7 @@ const Navdata = () => {
     isPlans,
     isMyAccount,
     isCompany,
+    isAccountDetails,
     isUserManagement,
     isCouponManagement,
     isPaymentManagement,
@@ -201,15 +210,15 @@ const Navdata = () => {
       roles: ["superadmin", "admin", "user"],
     },
 
-    // {
-    //   id: "profile",
-    //   label: "Users",
-    //   icon: "ri-account-circle-line",
-    //   link: "/profile",
-    //   src: "/account.png",
-    //   stateVariables: isMyAccount,
-    //   roles: ["superadmin", "admin", "user"],
-    // },
+    {
+      id: "reports",
+      label: "Reports",
+      icon: "ri-folders-line",
+      link: "/reports",
+      src: "/account.png",
+      stateVariables: isReports,
+      roles: ["superadmin", "admin", "user"],
+    },
     {
       id: "Organization",
       label: "Organization",
@@ -236,6 +245,15 @@ const Navdata = () => {
       src: "/account.png",
 
       stateVariables: isCompany,
+      roles: ["admin"],
+    },
+    {
+      id: "Account Details",
+      label: "Account Details",
+      icon: "ri-secure-payment-line",
+      link: "/account-details",
+      src: "/account.png",
+      stateVariables: isAccountDetails,
       roles: ["admin"],
     },
 

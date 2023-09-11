@@ -120,10 +120,12 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
-        const sel = ConsOpts.find(
-          (item) => item.value === props?.data?.consignee_name?.id
-        );
-        setConsigneeNameValue(sel);
+        if (props?.isEdit) {
+          const sel = ConsOpts.find(
+            (item) => item.value === props?.data?.consignee_name?.id
+          );
+          setConsigneeNameValue(sel);
+        }
         setConsigneeOptions(ConsOpts);
 
         setLoading(false);
@@ -155,10 +157,12 @@ const Sales = (props) => {
             value: dd?.id,
           };
         });
-        const clOptions = ClientOpts.find(
-          (item) => item.value === props.data?.client_name?.id
-        );
-        setClientNameValue(clOptions);
+        if (props?.isEdit) {
+          const clOptions = ClientOpts.find(
+            (item) => item.value === props.data?.client_name?.id
+          );
+          setClientNameValue(clOptions);
+        }
         setClientOptions(ClientOpts);
         setLoading(false);
       })
@@ -198,7 +202,7 @@ const Sales = (props) => {
       });
   };
 
-  const getPartiesOptions = (data) => {
+  const getPartiesOptions = (data, party) => {
     setLoading(true);
 
     apiAuth
@@ -216,6 +220,9 @@ const Sales = (props) => {
             (dd) => dd.id === props?.data?.party_account
           );
           setSelectedParties(sel);
+        } else if (party) {
+          const selPar = ConsOpts.find((dd) => dd.value === party);
+          setSelectedParties(selPar);
         }
         setPartiesOptions(ConsOpts);
         setLoading(false);
@@ -316,6 +323,7 @@ const Sales = (props) => {
           return {
             label: dd.job_number,
             value: dd?.id,
+            job: dd,
           };
         });
 
@@ -383,7 +391,9 @@ const Sales = (props) => {
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
                   narration: props.isEdit ? props.data?.narration : "",
                   job: props.isEdit ? props.data?.job?.bl_number : "",
-                  party_account: props.isEdit ? props.data?.party_account?.id : "",
+                  party_account: props.isEdit
+                    ? props.data?.party_account?.id
+                    : "",
                 }}
                 validationSchema={Yup.object({
                   job: Yup.string().ensure().required("Job is Required"),
@@ -484,6 +494,113 @@ const Sales = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
+                          <label htmlFor="job" className="form-label">
+                            Job No
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="job"
+                            options={jobOptions}
+                            value={selectedJob}
+                            onInputChange={(val) => {
+                              getJobs(val);
+                            }}
+                            onChange={(data) => {
+                              setSelectedJob(data);
+                              setFieldValue("job", data.label);
+                              // console.log("ffffffff", data);
+
+                              /* Autofill values based on selected Job Number */
+
+                              /* consignee_name */
+                              setFieldValue(
+                                "consignee_name",
+                                data?.job?.consignee_name?.id
+                              );
+                              const selConsg = consigneeOptions.find(
+                                (dd) =>
+                                  dd.value === data?.job?.consignee_name?.id
+                              );
+                              setConsigneeNameValue(selConsg);
+
+                              /* client_name */
+                              setFieldValue(
+                                "client_name",
+                                data?.job?.client_name?.id
+                              );
+                              const selCl = clientOptions.find(
+                                (dd) => dd.value === data?.job?.client_name?.id
+                              );
+                              setClientNameValue(selCl);
+
+                              /* branch */
+                              setFieldValue("branch", data?.job?.branch);
+                              setBranchValue({
+                                label: data?.job?.branch,
+                                value: data?.job?.branch,
+                              });
+
+                              /* organization_type */
+                              setFieldValue(
+                                "organization_type",
+                                data?.job?.organization_type[0]
+                              );
+                              const selOrg = OrganizationTypeOptions.find(
+                                (dd) =>
+                                  dd.value === data?.job?.organization_type[0]
+                              );
+                              setOrganization_type(selOrg);
+                              getPartiesOptions(selOrg, data?.job?.parties[0]);
+
+                              /* party_account */
+                              setFieldValue(
+                                "party_account",
+                                data?.job?.parties[0]
+                              );
+
+                              /* pod */
+                              setFieldValue("pod", data?.job?.pod);
+                              const selPod = podOptions.find(
+                                (dd) => dd.value === data?.job?.pod
+                              );
+                              setPodValue(selPod);
+
+                              /* poa */
+                              setFieldValue("poa", data?.job?.poa);
+                              const selPoa = poaOptions.find(
+                                (dd) => dd.value === data?.job?.poa
+                              );
+                              setPoaValue(selPoa);
+
+                              /* bayan_number */
+                              setFieldValue(
+                                "bayan_number",
+                                data.job?.bayan_number
+                              );
+
+                              /* bl_number  */
+                              setFieldValue("bl_number", data.job?.bl_number);
+
+                              /* shipper_name */
+                              setFieldValue(
+                                "shipper_name",
+                                data?.job?.shipper_name
+                              );
+
+                              /* remarks */
+                              setFieldValue("remarks", data?.job?.remarks);
+                            }}
+                            styles={customStyles}
+                          />
+                          {errors.job && touched.job && (
+                            <div className="invalid-feedback d-block">
+                              {errors.job}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
                           <Label
                             htmlFor="consignee_name"
                             className="form-label"
@@ -539,32 +656,6 @@ const Sales = (props) => {
                               <div className="text-danger">{msg}</div>
                             )}
                           />
-                        </div>
-                      </Grid>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="job" className="form-label">
-                            Job No
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            name="job"
-                            options={jobOptions}
-                            value={selectedJob}
-                            onInputChange={(val) => {
-                              getJobs(val);
-                            }}
-                            onChange={(data) => {
-                              setSelectedJob(data);
-                              setFieldValue("job", data.label);
-                            }}
-                            styles={customStyles}
-                          />
-                          {errors.job && touched.job && (
-                            <div className="invalid-feedback d-block">
-                              {errors.job}
-                            </div>
-                          )}
                         </div>
                       </Grid>
                     </Grid>

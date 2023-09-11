@@ -6,9 +6,9 @@ import apiAuth from "../../helpers/ApiAuth";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
-import VoucherTable from "./VoucherTable";
+import AccountDetailsTable from "./AccountDetailsTable";
 
-const Vouchers = (props) => {
+const AccountDetails = (props) => {
   const [createModal, setCreateModal] = useState(false);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,22 +28,28 @@ const Vouchers = (props) => {
     { value: "Journal", label: "Journal" },
     { value: "Payment", label: "Payment" },
     { value: "Receipt", label: "Receipt" },
-    { value: "DebitNote", label: "Debit Note" },
-    { value: "CreditNote", label: "Credit Note" },
+    { value: "Debit Note", label: "Debit Note" },
+    { value: "Credit Note", label: "Credit Note" },
   ];
 
+  const voucherMap = {
+    Journal: "",
+    Payment: "payment-voucher",
+    Receipt: "receipt-voucher",
+    "Credit Note": "",
+    "Debit Note": "",
+  };
+
   useEffect(() => {
+    getAccountData(pagination, searchValue, selectedVoucher.value);
     if (!localStorage.getItem("voucher-type")) {
       localStorage.setItem("voucher-type", selectedVoucher.value);
     }
-    getSelVoucherData(pagination, searchValue, selectedVoucher.value);
   }, []);
 
-  const getSelVoucherData = (pgdata, val, type) => {
+  const getAccountData = (pgdata, val, type) => {
     apiAuth
-      .get(
-        `/api/get-voucher/?type=${type}&page=${pgdata?.currentPage}&search=${val}`
-      )
+      .get(`/api/master/accountdetails/`)
       .then((response) => {
         let data = response.data;
         console.log("xswjhjwx", response);
@@ -58,21 +64,21 @@ const Vouchers = (props) => {
       .catch((err) => console.log(err));
   };
 
-  const deleteUser = (id) => {
-    let url = `/api/master/voucher/${id}/`;
+  const deleteAccount = (id) => {
+    let url = `/api/master/accountdetails/${id}/`;
     apiAuth
       .delete(url)
       .then((response) => {
         const newdata = response.data;
         NotificationManager.success(
           "",
-          "Voucher Deleted Successfully",
+          "Account Deleted Successfully",
           3000,
           null,
           null,
           ""
         );
-        getSelVoucherData(pagination, searchValue, selectedVoucher.value);
+        getAccountData(pagination, searchValue, selectedVoucher.value);
       })
       .catch(function (error) {
         console.log(error);
@@ -87,27 +93,27 @@ const Vouchers = (props) => {
       <div className="page-content">
         <Container fluid>
           <BreadCrumb
-            title="Vouchers"
+            title="Account Details"
             pageTitle="Settings"
             add_new={true}
             createNew={() => {
               setCreateModal(true);
             }}
-            add_new_url={`/voucher/${selectedVoucher?.value}`}
-            search_functionality={true}
+            add_new_url={`/account_detail`}
+            // search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getSelVoucherData(pagination, val, selectedVoucher.value);
+              getAccountData(pagination, val, selectedVoucher.value);
             }}
             add_type={true}
-            add_type_select={true}
+            // add_type_select={true}
             selectedValue={selectedVoucher}
             options={voucherOptions}
             handleTypeChange={(data) => {
               setSelectedVoucher(data);
-              localStorage.setItem("voucher-type", data.value);
-              getSelVoucherData(pagination, searchValue, data.value);
+              // localStorage.setItem("voucher-type", data.value);
+              getAccountData(pagination, searchValue, data.value);
             }}
           />
         </Container>
@@ -120,21 +126,21 @@ const Vouchers = (props) => {
                 <>
                   {" "}
                   <Card>
-                    <VoucherTable
+                    <AccountDetailsTable
                       curVoucher={selectedVoucher?.value}
                       users={users}
-                      deleteUser={deleteUser}
+                      deleteAccount={deleteAccount}
                       pagination={{ ...pagination }}
                       handlePagination={(data) => {
                         setPagination(data);
-                        getSelVoucherData(
+                        getAccountData(
                           data,
                           searchValue,
                           selectedVoucher.value
                         );
                       }}
                       getVouchers={() => {
-                        getSelVoucherData(
+                        getAccountData(
                           pagination,
                           searchValue,
                           selectedVoucher.value
@@ -179,4 +185,4 @@ const Vouchers = (props) => {
   );
 };
 
-export default Vouchers;
+export default AccountDetails;
