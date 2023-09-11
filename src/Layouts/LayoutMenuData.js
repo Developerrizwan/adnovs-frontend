@@ -14,6 +14,7 @@ const Navdata = () => {
   const [isMyAccount, setisMyAccount] = useState(false);
   const [isCompany, setIsCompany] = useState(false);
   const [isReports, setIsReports] = useState(false);
+  const [isAccountDetails, setIsAccountDetails] = useState(false);
   const [isCoa, setIsCoa] = useState(false);
   const [isCoag, setIsCoag] = useState(false);
   const [isCostEntry, setIsCostEntry] = useState(false);
@@ -76,6 +77,9 @@ const Navdata = () => {
     if (iscurrentState !== "Company") {
       setIsCompany(false);
     }
+    if (iscurrentState !== "Account Details") {
+      setIsAccountDetails(false);
+    }
     if (iscurrentState !== "CouponManagement") {
       setisCouponManagement(false);
     }
@@ -116,6 +120,7 @@ const Navdata = () => {
     isPlans,
     isMyAccount,
     isCompany,
+    isAccountDetails,
     isUserManagement,
     isCouponManagement,
     isPaymentManagement,
@@ -240,6 +245,15 @@ const Navdata = () => {
       src: "/account.png",
 
       stateVariables: isCompany,
+      roles: ["admin"],
+    },
+    {
+      id: "Account Details",
+      label: "Account Details",
+      icon: "ri-secure-payment-line",
+      link: "/account-details",
+      src: "/account.png",
+      stateVariables: isAccountDetails,
       roles: ["admin"],
     },
 

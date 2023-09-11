@@ -85,6 +85,9 @@ import DebitReport from "../views/Vouchers/Reports/DebitReport";
 import Reports from "../views/Reports";
 import ProfitAndLoss from "../views/Reports/ProfitAndLoss";
 import Trail from "../views/Reports/Trail";
+import AccountDetail from "../views/AccountDetails/AccountDetail";
+import AccountDetails from "../views/AccountDetails";
+import ProfitLoss from "../views/Vouchers/Reports/ProfitLoss";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -128,6 +131,10 @@ const authProtectedRoutes = [
   { path: "/reports", component: Reports },
   { path: "/profit-loss", component: ProfitAndLoss },
   { path: "/trail", component: Trail },
+  { path: "/account-details", component: AccountDetails },
+  { path: "/account_detail", component: AccountDetail },
+
+  // { path: "/journal/:id", component: Journal },
   // { path: "/tax-credit/:id", component: TaxCredit },
   {
     path: "*",
@@ -177,6 +184,11 @@ const publicRoutes = [
   { path: "/voucher/tax-credit/:id", component: DebitReport },
   { path: "/voucher/payment/:id", component: PaymentReport },
   { path: "/voucher/receipt/:id", component: ReceiptReport },
+  { path: "/journal/:id", component: Journal },
+  { path: "/tax-credit/:id", component: TaxCredit },
+  { path: "/voucher/payment-voucher/:id", component: PaymentReport },
+  { path: "/voucher/profit-loss", component: ProfitLoss },
+  { path: "/voucher/receipt-voucher/:id", component: ReceiptReport },
   { path: "/account-statement/:jobId", component: AccountStatement },
   {
     path: "/account-organizationstatement/:jobId",
