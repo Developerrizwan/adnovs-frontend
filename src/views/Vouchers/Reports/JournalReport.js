@@ -7,8 +7,8 @@ import ReportFooter from "./helpers/ReportFooter";
 import DownloadReport from "./helpers/DownloadReport";
 import moment from "moment";
 
-const Content = ({ voucher }) => {
-  // console.log("voucher", voucher);
+const Content = ({ data }) => {
+  // console.log("data.voucher", data.voucher);
   return (
     <div id="content" className="mt-5 mx-2">
       {/* VOUCHER Title */}
@@ -25,16 +25,19 @@ const Content = ({ voucher }) => {
         className="d-flex justify-content-around align-items-center"
       >
         <div id="left-side-items">
-          <DisplayItem label={"Journal No."} value={voucher?.id} />
-          <DisplayItem label={"Branch"} value={voucher?.branch} />
-          <DisplayItem label={"Narration"} value={voucher?.narration} />
+          <DisplayItem label={"Journal No."} value={data.voucher?.id} />
+          <DisplayItem label={"Branch"} value={data.voucher?.branch} />
+          <DisplayItem label={"Narration"} value={data.voucher?.narration} />
         </div>
         <div id="right-side-items">
           <DisplayItem
             label={"GL Date"}
-            value={moment(voucher?.gl_date).format("MM/DD/YYYY")}
+            value={moment(data.voucher?.gl_date).format("MM/DD/YYYY")}
           />
-          <DisplayItem label={"Account"} value={voucher?.party_account?.name} />
+          <DisplayItem
+            label={"Account"}
+            value={data.voucher?.party_account?.name}
+          />
         </div>
       </div>
 
@@ -50,23 +53,22 @@ const Content = ({ voucher }) => {
             <th className="text-center">Dr Amount</th>
             <th className="text-center">Cr Amount</th>
           </tr>
-          {[1].map((dd) => (
-            <>
-              <tr>
-                <td className="text-center">{voucher?.party_account?.name}</td>
-                <td className="text-center">
-                  {voucher?.party_account?.remarks}
-                </td>
-                <td className="text-center">
-                  {voucher?.party_account?.currency.split(" - ")[0]}
-                </td>
-                <td className="text-center">{voucher?.fc_amount}</td>
-                <td className="text-center">{voucher?.ex_rate}</td>
-                <td className="text-center"></td>
-                <td className="text-center"></td>
-              </tr>
-            </>
-          ))}
+          {data?.accounts.length &&
+            data?.accounts.map((dd) => (
+              <>
+                <tr>
+                  <td className="text-center">{dd?.ac_name}</td>
+                  <td className="text-center">{dd?.remarks}</td>
+                  <td className="text-center">
+                    {dd?.party_account?.currency.split(" - ")[0]}
+                  </td>
+                  <td className="text-center">{dd?.fc_amount}</td>
+                  <td className="text-center">{dd?.ex_rate}</td>
+                  <td className="text-center"></td>
+                  <td className="text-center"></td>
+                </tr>
+              </>
+            ))}
           <tr>
             <td className="text-center"></td>
             <td className="text-center"></td>
@@ -81,7 +83,7 @@ const Content = ({ voucher }) => {
 
       {/* Remarks */}
       <div className="p-2 ">
-        <p className="fw ml-3">Remarks : {voucher?.remarks}</p>
+        <p className="fw ml-3">Remarks : {data.voucher?.remarks}</p>
       </div>
 
       {/* Computer generated Text */}
@@ -176,7 +178,7 @@ const JournalReport = (props) => {
           <ReportHeader />
 
           {/* Content */}
-          <Content voucher={state?.voucher || null} />
+          <Content data={state || null} />
 
           {/* Footer */}
           <ReportFooter />
