@@ -14,7 +14,7 @@ import { Buffer } from "buffer";
 import numberToWords from "number-to-words";
 import Translate from "./StatementTranslate";
 
-const AccountStatement = (props) => {
+const OrganizationStatement = (props) => {
   const [state, setState] = useState({ costs: [] });
   const [objData, setObjData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -72,21 +72,28 @@ const AccountStatement = (props) => {
 
   useEffect(() => {
     let jobId = Number(props.match.params.jobId);
-    getJob(jobId);
+    getOrganization(jobId);
   }, []);
 
-  const getJob = (id) => {
+  const getOrganization = (id) => {
     apiAuth
-      .get(`/api/master/job/${id}`)
+      .get(`/api/master/organization/${id}`)
       .then((response) => {
         let data = response.data;
-        setState({ ...state, job: data });
+        setState({ ...state, organization: data });
         getCosts(data.id);
         setObjData(data);
       })
       .catch((err) => {
         console.log(err);
-        NotificationManager.error("", "Invalid Job.", 3000, null, null, "");
+        NotificationManager.error(
+          "",
+          "Invalid Organization.",
+          3000,
+          null,
+          null,
+          ""
+        );
       });
   };
   const getCosts = (id) => {
@@ -170,7 +177,14 @@ const AccountStatement = (props) => {
       })
       .catch((err) => {
         console.log(err);
-        NotificationManager.error("", "Invalid Job.", 3000, null, null, "");
+        NotificationManager.error(
+          "",
+          "Invalid Organization.",
+          3000,
+          null,
+          null,
+          ""
+        );
       });
   };
 
@@ -203,7 +217,7 @@ const AccountStatement = (props) => {
           <div className="row">
             <div className="col-lg-4">
               <h4 className="mb-2" style={{ fontWeight: "bold" }}>
-                {state?.job?.company?.name}
+                {state?.organization?.company?.name}
               </h4>
               <div
                 style={{
@@ -214,7 +228,7 @@ const AccountStatement = (props) => {
               >
                 <p className="mb-1 fw">Tel :</p>
                 <p className="mb-1 ms-1">
-                  {state?.job?.consignee_name?.mobile}
+                  {state?.organization?.consignee_name?.mobile}
                 </p>
               </div>
 
@@ -227,7 +241,7 @@ const AccountStatement = (props) => {
               >
                 <p className="mb-1 fw x">Fax :</p>
                 <p className="mb-1 ms-1">
-                  {/* {state?.job?.consignee_name?.mobile} */}
+                  {/* {state?.organization?.consignee_name?.mobile} */}
                 </p>
               </div>
 
@@ -240,7 +254,7 @@ const AccountStatement = (props) => {
               >
                 <p className="mb-1 fw x">CR No :</p>
                 <p className="mb-1 ms-1">
-                  {/* {state?.job?.consignee_name?.mobile} */}
+                  {/* {state?.organization?.consignee_name?.mobile} */}
                 </p>
               </div>
 
@@ -252,7 +266,9 @@ const AccountStatement = (props) => {
                 }}
               >
                 <p className="mb-1 fw x">Email :</p>
-                <p className="mb-1 ms-1">{state?.job?.company?.email}</p>
+                <p className="mb-1 ms-1">
+                  {state?.organization?.company?.email}
+                </p>
               </div>
 
               <div
@@ -264,7 +280,7 @@ const AccountStatement = (props) => {
               >
                 <p className="mb-1 fw x">VAT# :</p>
                 <p className="mb-1 ms-1">
-                  {state?.job?.consignee_name?.vat_trn_number}
+                  {state?.organization?.consignee_name?.vat_trn_number}
                 </p>
               </div>
             </div>
@@ -278,26 +294,26 @@ const AccountStatement = (props) => {
             </div>
             <div className="col-lg-4 d-flex flex-column align-items-end">
               <h4 className="mb-2" style={{ color: "#000" }}>
-                <Translate text={state?.job?.company?.name} />
+                <Translate text={state?.organization?.company?.name} />
               </h4>
               <p>
-                <Translate text={state?.job?.consignee_name?.mobile} />
+                <Translate text={state?.organization?.consignee_name?.mobile} />
               </p>
               <p>
-                {/* <Translate text={state?.job?.consignee_name?.mobile} /> */}
+                {/* <Translate text={state?.organization?.consignee_name?.mobile} /> */}
                 {/* fax */}
               </p>
               <p>
-                {/* <Translate text={state?.job?.consignee_name?.mobile} /> */}
+                {/* <Translate text={state?.organization?.consignee_name?.mobile} /> */}
                 {/* cr no */}
               </p>
               <p>
-                <Translate text={state?.job?.company?.email} />
+                <Translate text={state?.organization?.company?.email} />
               </p>
               <p>
                 {state?.invoice?.narration ? (
                   <Translate
-                    text={state?.job?.consignee_name?.vat_trn_number}
+                    text={state?.organization?.consignee_name?.vat_trn_number}
                   />
                 ) : (
                   ""
@@ -325,21 +341,29 @@ const AccountStatement = (props) => {
               <table className="htmlTable mt-2 w-100">
                 <tr>
                   <td className="fw">Account Code</td>
-                  <td>{state?.job?.company?.account_number}</td>
+                  <td>{state?.organization?.company?.account_number}</td>
                   <td className="fw">From Date</td>
-                  <td>{moment(state.job?.created_at).format("MM/DD/YYYY")}</td>
-                  <td>{moment(state.job?.created_at).format("MM/DD/YYYY")}</td>
+                  <td>
+                    {moment(state.organization?.created_at).format(
+                      "MM/DD/YYYY"
+                    )}
+                  </td>
+                  <td>
+                    {moment(state.organization?.created_at).format(
+                      "MM/DD/YYYY"
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <td className="fw">Account Name</td>
-                  <td>{state?.job?.company?.account_name}</td>
+                  <td>{state?.organization?.company?.account_name}</td>
                   <td className="fw">To Date</td>
                   <td>30/12/2020</td>
                   <td>14/08/2018</td>
                 </tr>
                 <tr>
                   <td className="fw">
-                    CURRENCY IN: {state?.job?.consignee_name?.currency}
+                    CURRENCY IN: {state?.organization?.consignee_name?.currency}
                   </td>
                   <td></td>
                   <td></td>
@@ -412,4 +436,4 @@ const AccountStatement = (props) => {
   );
 };
 
-export default AccountStatement;
+export default OrganizationStatement;

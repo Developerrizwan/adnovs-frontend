@@ -102,26 +102,27 @@ const CompanyEdit = (props) => {
             validationSchema={Yup.object({
               name: Yup.string().required("Company Name is Required"),
               email: Yup.string().email().required("Email is Required"),
-              address: Yup.string().required("Address Name is Required"),
-              country: Yup.string().ensure().required("Country is Required"),
-              state: Yup.string().ensure().required("State is Required"),
-              account_name: Yup.string().required("Account Name is Required"),
-              account_number: Yup.string()
-                .matches(
-                  /^\d{9,18}$/,
-                  "Account number must be between 9 to 18 digits"
-                )
-                .required("Account number is required"),
-              bank_name: Yup.string().required("Bank Name is Required"),
-              swift_code: Yup.string().required("Swift Code Name is Required"),
-              iban_code: Yup.string().required("IBAN Code Name is Required"),
-              language_address: Yup.string().required(
-                "Language Address is Required"
-              ),
               company_name_lang: Yup.string().required(
                 "Comapany Name in selected Language is Required"
               ),
-              vat_number: Yup.string().required("VAT number is Required"),
+              address: Yup.string().required("Address Name is Required"),
+              country: Yup.string().ensure().required("Country is Required"),
+              state: Yup.string().ensure().required("State is Required"),
+              // account_name: Yup.string().required("Account Name is Required"),
+              // account_number: Yup.string()
+              //   .matches(
+              //     /^\d{9,18}$/,
+              //     "Account number must be between 9 to 18 digits"
+              //   )
+              //   .required("Account number is required"),
+              // bank_name: Yup.string().required("Bank Name is Required"),
+              // swift_code: Yup.string().required("Swift Code Name is Required"),
+              // iban_code: Yup.string().required("IBAN Code Name is Required"),
+              // language_address: Yup.string().required(
+              //   "Language Address is Required"
+              // ),
+
+              // vat_number: Yup.string().required("VAT number is Required"),
             })}
             onSubmit={(values, { reset }) => {
               const company = JSON.parse(
@@ -256,116 +257,6 @@ const CompanyEdit = (props) => {
                 <Grid container spacing={2}>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="account_name" className="form-label">
-                        Account Name
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="account_name"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="account_name"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="bank_name" className="form-label">
-                        Bank Name
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="bank_name"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="bank_name"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-
-                <Grid spacing={2} container>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="account_number" className="form-label">
-                        Account No
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        name="account_number"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="account_number"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="vat_number" className="form-label">
-                        VAT Number
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        placeholder="VAT Number"
-                        name="vat_number"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="vat_number"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-                </Grid>
-
-                <Grid spacing={2} container>
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
-                      <Label htmlFor="language_address" className="form-label">
-                        Language Address
-                        <span className="text-danger">*</span>
-                      </Label>
-                      <Field
-                        className="form-control"
-                        placeholder="Language Address"
-                        name="language_address"
-                        style={{ background: "#EDEDED" }}
-                      />
-
-                      <ErrorMessage
-                        name="language_address"
-                        render={(msg) => (
-                          <div className="text-danger">{msg}</div>
-                        )}
-                      />
-                    </div>
-                  </Grid>
-
-                  <Grid item lg={6} xs={12}>
-                    <div className="mb-3">
                       <Label htmlFor="company_name_lang" className="form-label">
                         {`Company Name (in ${values.language_address})`}
                         <span className="text-danger">*</span>
@@ -385,6 +276,116 @@ const CompanyEdit = (props) => {
                       />
                     </div>
                   </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="account_name" className="form-label">
+                        Account Name
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="account_name"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="account_name"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid spacing={2} container>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="bank_name" className="form-label">
+                        Bank Name
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="bank_name"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="bank_name"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="account_number" className="form-label">
+                        Account No
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="account_number"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="account_number"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid spacing={2} container>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="language_address" className="form-label">
+                        Language Address
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Language Address"
+                        name="language_address"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="language_address"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="vat_number" className="form-label">
+                        VAT Number
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="VAT Number"
+                        name="vat_number"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="vat_number"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
                 </Grid>
 
                 <Grid spacing={2} container>
@@ -392,7 +393,7 @@ const CompanyEdit = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="iban_code" className="form-label">
                         IBAN Code
-                        <span className="text-danger">*</span>
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <Field
                         className="form-control"
@@ -400,19 +401,19 @@ const CompanyEdit = (props) => {
                         style={{ background: "#EDEDED" }}
                       />
 
-                      <ErrorMessage
+                      {/* <ErrorMessage
                         name="iban_code"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
-                      />
+                      /> */}
                     </div>
                   </Grid>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
                       <Label htmlFor="swift_code" className="form-label">
                         Swift Code
-                        <span className="text-danger">*</span>
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <Field
                         className="form-control"
@@ -420,12 +421,12 @@ const CompanyEdit = (props) => {
                         style={{ background: "#EDEDED" }}
                       />
 
-                      <ErrorMessage
+                      {/* <ErrorMessage
                         name="swift_code"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
-                      />
+                      /> */}
                     </div>
                   </Grid>
                 </Grid>
@@ -435,7 +436,7 @@ const CompanyEdit = (props) => {
                     <div className="mb-3">
                       <Label htmlFor="address" className="form-label">
                         Address
-                        <span className="text-danger">*</span>
+                        {/* <span className="text-danger">*</span> */}
                       </Label>
                       <Field
                         as="textarea"

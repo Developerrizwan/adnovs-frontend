@@ -79,6 +79,7 @@ import Journal from "../views/TaxInvoice/Journal";
 import TaxCredit from "../views/TaxInvoice/TaxCredit";
 import PaymentReport from "../views/Vouchers/Reports/PaymentReport";
 import ReceiptReport from "../views/Vouchers/Reports/ReceiptReport";
+import OrganizationStatement from "../views/TaxInvoice/OrganizationStatement";
 import JournalReport from "../views/Vouchers/Reports/JournalReport";
 import DebitReport from "../views/Vouchers/Reports/DebitReport";
 import Reports from "../views/Reports";
@@ -176,6 +177,11 @@ const publicRoutes = [
   { path: "/voucher/tax-credit/:id", component: DebitReport },
   { path: "/voucher/payment/:id", component: PaymentReport },
   { path: "/voucher/receipt/:id", component: ReceiptReport },
+  { path: "/account-statement/:jobId", component: AccountStatement },
+  {
+    path: "/account-organizationstatement/:jobId",
+    component: OrganizationStatement,
+  },
 ];
 
 export { authProtectedRoutes, publicRoutes };
