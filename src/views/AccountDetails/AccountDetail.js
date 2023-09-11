@@ -212,8 +212,8 @@ const AccountDetail = (props) => {
 
   return (
     <React.Fragment>
-      <div className={props.isEdit ? "" : "page-content"}>
-        {props.isEdit ? (
+      <div className={props.isEdit || props?.fromVoucher ? "" : "page-content"}>
+        {props.isEdit || props?.fromVoucher ? (
           <></>
         ) : (
           <>
@@ -229,7 +229,7 @@ const AccountDetail = (props) => {
           </>
         )}
         <Grid container spacing={2}>
-          <Grid item lg={11} style={{ placeItems: "center", margin: "auto" }}>
+          <Grid item lg={11} style={{ margin: "auto" }}>
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
@@ -306,7 +306,10 @@ const AccountDetail = (props) => {
                           null,
                           ""
                         );
-                        history.push("/account-details");
+                        console.log("ddddddd", props?.fromVoucher);
+                        props?.fromVoucher
+                          ? props.closeAddPopup()
+                          : history.push("/account-details");
                       })
                       .catch((err) => {
                         setLoading(false);
@@ -325,29 +328,6 @@ const AccountDetail = (props) => {
                 {({ values, errors, touched, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
-                      {/* <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="line_no" className="form-label">
-                            Line No
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Field
-                            placeholder="1"
-                            className="form-control"
-                            name="line_no"
-                            style={{ background: "#EDEDED" }}
-                            onChange={(e) => {
-                              setFieldValue("line_no", e.target.value);
-                            }}
-                          />
-                          {errors.line_no && touched.line_no && (
-                            <div className="invalid-feedback d-block">
-                              {errors.line_no}
-                            </div>
-                          )}
-                        </div>
-                      </Grid> */}
-
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="ac_name" className="form-label">
@@ -391,18 +371,21 @@ const AccountDetail = (props) => {
                       </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="ex_rate" className="form-label">
-                            Ex Rate
+                          <label htmlFor="amount_qty" className="form-label">
+                            Amount / Qty
+                            <span className="text-danger">*</span>
                           </label>
                           <Field
-                            placeholder="1"
                             className="form-control"
-                            name="ex_rate"
+                            name="amount_qty"
+                            placeholder="Amount Qty"
                             style={{ background: "#EDEDED" }}
-                            onChange={(e) => {
-                              setFieldValue("ex_rate", e.target.value);
-                            }}
                           />
+                          {errors.amount_qty && touched.amount_qty && (
+                            <div className="invalid-feedback d-block">
+                              {errors.amount_qty}
+                            </div>
+                          )}
                         </div>
                       </Grid>
                     </Grid>
@@ -465,29 +448,31 @@ const AccountDetail = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="amount_qty" className="form-label">
-                            Amount / Qty
-                            <span className="text-danger">*</span>
+                          <label htmlFor="ex_rate" className="form-label">
+                            Ex Rate
                           </label>
                           <Field
+                            placeholder="1"
                             className="form-control"
-                            name="amount_qty"
-                            placeholder="Amount Qty"
+                            name="ex_rate"
                             style={{ background: "#EDEDED" }}
+                            onChange={(e) => {
+                              setFieldValue("ex_rate", e.target.value);
+                              if (values["fcy_amount"].length) {
+                                setFieldValue(
+                                  "amount_sar",
+                                  Number(e.target.value) *
+                                    Number(values["fcy_amount"])
+                                );
+                              }
+                            }}
                           />
-                          {errors.amount_qty && touched.amount_qty && (
-                            <div className="invalid-feedback d-block">
-                              {errors.amount_qty}
-                            </div>
-                          )}
                         </div>
                       </Grid>
-
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="fcy_amount" className="form-label">
                             FCY Amount
-                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Field
                             placeholder="FCY Amount"
@@ -496,6 +481,13 @@ const AccountDetail = (props) => {
                             style={{ background: "#EDEDED" }}
                             onChange={(e) => {
                               setFieldValue("fcy_amount", e.target.value);
+                              if (values["ex_rate"] > 0) {
+                                setFieldValue(
+                                  "amount_sar",
+                                  Number(e.target.value) *
+                                    Number(values["ex_rate"])
+                                );
+                              }
                             }}
                           />
                         </div>
@@ -504,7 +496,6 @@ const AccountDetail = (props) => {
                         <div className="mb-3">
                           <label htmlFor="amount_sar" className="form-label">
                             Amount (SAR)
-                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Field
                             placeholder="Amount (SAR)"
@@ -512,11 +503,6 @@ const AccountDetail = (props) => {
                             name="amount_sar"
                             style={{ background: "#EDEDED" }}
                           />
-                          {errors.amount_sar && touched.amount_sar && (
-                            <div className="invalid-feedback d-block">
-                              {errors.amount_sar}
-                            </div>
-                          )}
                         </div>
                       </Grid>
                     </Grid>

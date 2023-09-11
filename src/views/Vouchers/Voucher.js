@@ -12,7 +12,8 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import { getAllISOCodes } from "iso-country-currency";
 import { useParams } from "react-router";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
-import AccountDetails from "./AddAccountDetails";
+import AccountDetail from "../AccountDetails/AccountDetail";
+
 const Voucher = (props) => {
   const history = useHistory();
   const { voucherId } = useParams();
@@ -1078,13 +1079,12 @@ const Voucher = (props) => {
                             {props.isEdit ? "Update" : "Submit"}
                           </button>
                           {vocherState.voucher_id ? (
-                            <button
+                            <div
                               className="btn btn-info float-right ms-3"
                               onClick={() => setAccountDetailsModal(true)}
                             >
-                              {" "}
                               Add Account
-                            </button>
+                            </div>
                           ) : (
                             <></>
                           )}
@@ -1118,20 +1118,21 @@ const Voucher = (props) => {
         className="modal-lg"
         isOpen={accountDetailsModal}
         toggle={() => {
-          setAccountDetailsModal((prev) => !prev);
+          setAccountDetailsModal(false);
         }}
       >
         <ModalHeader
           className="p-3"
           toggle={() => {
-            setAccountDetailsModal((prev) => !prev);
+            setAccountDetailsModal(false);
           }}
         >
           Add Account Details
         </ModalHeader>
         <ModalBody>
-          <AccountDetails
-            closeAddPopup={(val) => {
+          <AccountDetail
+            fromVoucher={true}
+            closeAddPopup={() => {
               setAccountDetailsModal(false);
             }}
           />
