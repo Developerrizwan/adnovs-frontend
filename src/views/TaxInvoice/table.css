@@ -26,3 +26,8 @@ td {
   border-spacing: 30px;
   border-collapse: separate;
 }
+
+.custom-font{
+  font-size: 17px;
+  font-weight: 500;
+}

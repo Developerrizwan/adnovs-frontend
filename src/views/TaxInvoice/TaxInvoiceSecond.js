@@ -16,7 +16,7 @@ import Translate from "./Translate";
 
 const ShowDataWithTranslate = ({ label, value, width }) => {
   return (
-    <p>
+    <p style={{fontSize: "17px"}}>
       <div
         style={{
           display: "inline-block",
@@ -237,12 +237,12 @@ const TaxInvoiceSecond = (props) => {
           <div className="row">
             <div className="col-lg-4">
               <h3 style={{ color: "#000" }}>{state?.invoice?.company?.name}</h3>
-              <p>{state?.invoice?.company?.address}</p>
-              <p>
+              <p className="custom-font">{state?.invoice?.company?.address}</p>
+              <p className="custom-font">
                 {state?.invoice?.company?.state} ,
                 {state?.invoice?.company?.country}
               </p>
-              <p style={{ fontWeight: 600 }}>
+              <p className="custom-font" style={{ fontWeight: 600 }}>
                 VAT NO : {state?.invoice?.company?.vat_number}
               </p>
               {/* <p style={{ fontWeight: 600 }}>CR NO : </p> */}
@@ -261,7 +261,7 @@ const TaxInvoiceSecond = (props) => {
                   text={String(state?.invoice?.company?.company_name_lang)}
                 />
               </h3>
-              <p style={{ fontWeight: 400 }}>
+              <p className="custom-font" style={{ fontWeight: 500 }}>
                 {/* <Translate
                   text={
                     state?.invoice?.company?.address.length
@@ -277,7 +277,7 @@ const TaxInvoiceSecond = (props) => {
                 <Translate text={state?.invoice?.company?.state} />
                 <Translate text={state?.invoice?.company?.country} />
               </p> */}
-              <p style={{ fontWeight: 600 }}>
+              <p className="custom-font" style={{ fontWeight: 600 }}>
                 <span style={{ marginRight: "5px" }}>
                   {/* <Translate text={"VAT NUMBER"} /> */}
                   الرقم الضريبي
@@ -302,12 +302,12 @@ const TaxInvoiceSecond = (props) => {
                 // textDecoration: "underline",
               }}
             >
-              <h3>
+              <h1>
                 TAX INVOICE / <Translate text={"TAX INVOICE"} />
-              </h3>
+              </h1>
             </div>
-            <div className="col-lg-4">
-              <ShowDataWithTranslate
+            <div className="col-lg-4 custom-font">
+              <ShowDataWithTranslate            
                 width={"200px"}
                 label={"Job Number"}
                 value={state.invoice?.job?.job_number}
@@ -367,7 +367,7 @@ const TaxInvoiceSecond = (props) => {
                 </span>
               </div>
             </div>
-            <div className="col-lg-4">
+            <div className="col-lg-4 custom-font">
               <ShowDataWithTranslate
                 width={"220px"}
                 label={"Invoice Date"}
@@ -404,7 +404,7 @@ const TaxInvoiceSecond = (props) => {
                 value={moment(state.invoice?.job?.etd).format("MM/DD/YYYY")}
               />
             </div>
-            <div className="col-lg-4 ">
+            <div className="col-lg-4 custom-font">
               <ShowDataWithTranslate
                 width={"180px"}
                 label={"Consignee"}
@@ -457,7 +457,7 @@ const TaxInvoiceSecond = (props) => {
               marginBottom: "20px",
             }}
           >
-            <table className="htmlTable mt-2 w-100">
+            <table className="htmlTable mt-2 w-100 custom-font">
               <tbody>
                 <tr style={{ borderBottom: "1px solid #d3d3d3" }}>
                   <th
@@ -552,7 +552,7 @@ const TaxInvoiceSecond = (props) => {
             style={{ border: "1px solid #000", padding: "20px 10px" }}
           >
             <div className="row">
-              <div className="col-lg-5 col-xs-12">
+              <div className="col-lg-5 col-xs-12 custom-font">
                 <ShowDataWithTranslate
                   width={"150px"}
                   label={"Type"}
@@ -578,7 +578,7 @@ const TaxInvoiceSecond = (props) => {
                 style={{
                   borderLeft: "1px solid black",
                 }}
-                className="col-lg-7 col-xs-12"
+                className="col-lg-7 col-xs-12 custom-font"
               >
                 <div className="row">
                   <div
@@ -692,19 +692,19 @@ const TaxInvoiceSecond = (props) => {
             style={{ border: "1px solid #000", padding: "20px 10px" }}
           >
             <div className="row mt-2">
-              <div className="col-lg-8 col-xs-12">
-                <h5>
+              <div className="col-lg-8 col-xs-12 custom-font">
+                <h4>
                   <Translate text={"Payment Method"} />
-                </h5>
-                <h5>Payment Method</h5>
+                </h4>
+                <h4>Payment Method</h4>
 
-                <h6 className="mt-3 mb-4">
+                <h4 className="mt-3 mb-4">
                   Account Details
                   <span style={{ marginRight: "5px" }}>
                     <Translate text={"Account Details"} />
                   </span>
                   :
-                </h6>
+                </h4>
                 <ShowDataWithTranslate
                   width={"250px"}
                   label={"Account Name"}
@@ -743,11 +743,11 @@ const TaxInvoiceSecond = (props) => {
           <div className="mt-2">
             <div className="row">
               <div className="col-lg-9 col-xs-12">
-                <p>
+                <p className="custom-font">
                   This is a computer generated invoice doesn't require signature
                   or stamp
                 </p>
-                <p>
+                <p className="custom-font">
                   Any discrepancy must be notified within 7 days from the date
                   of invoice. Otherwise it shall be considered as confirmation
                   of correctness
@@ -757,11 +757,11 @@ const TaxInvoiceSecond = (props) => {
                 11:00 am
               </p> */}
               </div>
-              <div className="col-lg-1 col-xs-12">
+              <div className="col-lg-1 col-xs-12 custom-font">
                 <p>Email:</p>
                 {/* <p>Phone:</p> */}
               </div>
-              <div className="col-lg-2 col-xs-12">
+              <div className="col-lg-2 col-xs-12 custom-font">
                 <p>info@adnovs.com</p>
                 {/* <p>9999999999</p> */}
               </div>
