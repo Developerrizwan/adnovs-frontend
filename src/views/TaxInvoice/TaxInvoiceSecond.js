@@ -500,7 +500,8 @@ const TaxInvoiceSecond = (props) => {
                             style={{ marginLeft: "5px" }}
                           >
                             {cost.charge?.name} /{" "}
-                            <Translate text={cost.charge?.name} />
+                            {/* <Translate text={cost.charge?.name} /> */}
+                            {cost.charge?.language_name}
                           </div>
                         </td>
                         <td className="border-0 text-center">{cost.ex_rate}</td>
