@@ -383,7 +383,7 @@ const Sales = (props) => {
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
                   narration: props.isEdit ? props.data?.narration : "",
                   job: props.isEdit ? props.data?.job?.bl_number : "",
-                  party_account: props.isEdit ? props.data?.party_account : "",
+                  party_account: props.isEdit ? props.data?.party_account?.id : "",
                 }}
                 validationSchema={Yup.object({
                   job: Yup.string().ensure().required("Job is Required"),
@@ -1154,7 +1154,7 @@ const Sales = (props) => {
                 });
               }
             }}
-            invoice={props.data?.id}
+            invoice={props.isEdit ? props.data?.id : state.invoice_id}
           />
         </ModalBody>
       </Modal>

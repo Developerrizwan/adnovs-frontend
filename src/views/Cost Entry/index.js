@@ -25,7 +25,7 @@ const CostEntry = (props) => {
 
   const getAccounts = (pgdata, val) => {
     apiAuth
-      .get(`/api/get-costentry/`)
+      .get(`/api/get-costentry/?is_included=false`)
       .then((response) => {
         let data = response.data;
         // console.log("xswjhjwx", response);

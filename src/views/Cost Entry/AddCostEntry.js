@@ -107,10 +107,10 @@ const AddCostEntry = (props) => {
 
   const getJobOptions = (val) => {
     apiAuth
-      .get(`/api/get-jobs/?&page=${1}&search=${val || ""}&type=Job`)
+      .get(`/api/master/job/?&type=Job`)
       .then((res) => {
         const { data } = res;
-        let jobOpts = data.results.map((opt) => {
+        let jobOpts = data.map((opt) => {
           return {
             label: opt?.job_number,
             value: opt?.id,
@@ -385,9 +385,9 @@ const AddCostEntry = (props) => {
                             styles={customStyles}
                             value={selJob}
                             options={jobOptions}
-                            onInputChange={(val) => {
-                              getJobOptions(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getJobOptions(val);
+                            // }}
                             onChange={(data) => {
                               setFieldValue("job_no", data.value);
                               setSelJob(data);

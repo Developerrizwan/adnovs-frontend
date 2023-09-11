@@ -355,7 +355,7 @@ const PurchaseInvoice = (props) => {
               <table>
                 <tr>
                   <td className="border-0 fw">PIN No.:</td>
-                  <td className="border-0">{state?.invoice?.id}</td>
+                  <td className="border-0">{state?.invoice?.invoice_number}</td>
                 </tr>
                 <tr>
                   <td className="border-0 fw">A/C Name:</td>

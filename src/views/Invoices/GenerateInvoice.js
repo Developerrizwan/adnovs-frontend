@@ -118,14 +118,7 @@ const GenerateInvoice = (props) => {
       );
     }
   };
-  const filterData = (job) => {
-    const data = invoiceData.filter(
-      (item) => item?.job_no?.job_number === job.label
-    );
-    setFilteredInvoices(data);
 
-    console.log("sss", invoiceData);
-  };
   return (
     <>
       <div
