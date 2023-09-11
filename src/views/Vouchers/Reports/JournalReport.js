@@ -54,8 +54,8 @@ const Content = ({ data }) => {
             <th className="text-center">Dr Amount</th>
             <th className="text-center">Cr Amount</th>
           </tr>
-          {data?.accounts.length &&
-            data?.accounts.map((dd) => {
+          {data?.accounts?.length &&
+            data?.accounts?.map((dd) => {
               totalDr += dd.dr_cr === "Dr" ? Number(dd?.amount_sar) : 0.0;
               totalCr += dd.dr_cr === "Cr" ? Number(dd?.amount_sar) : 0.0;
               return (
@@ -92,7 +92,7 @@ const Content = ({ data }) => {
 
       {/* Remarks */}
       <div className="p-2 ">
-        <p className="fw ml-3">Remarks : {data.voucher?.remarks}</p>
+        <p className="fw ml-3">Remarks : {data?.voucher?.remarks}</p>
       </div>
 
       {/* Computer generated Text */}
@@ -116,7 +116,7 @@ const DisplayItem = ({ label, value }) => {
         >
           {label}
         </span>
-        : {value}
+        : {value || ""}
       </div>
     </>
   );
@@ -182,7 +182,7 @@ const JournalReport = (props) => {
 
           {/* Content */}
           {/* {console.log("sssssss", state)} */}
-          {state?.accounts?.length && state.voucher && <Content data={state} />}
+          <Content data={state} />
 
           {/* Footer */}
           <ReportFooter />
