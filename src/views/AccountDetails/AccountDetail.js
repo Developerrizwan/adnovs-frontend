@@ -94,8 +94,8 @@ const AccountDetail = (props) => {
 
     if (props?.isEdit) {
       setSelBranch({
-        label: props.accountDetails?.branch,
-        value: props.accountDetails?.branch,
+        label: props.accountDetails?.inter_branch,
+        value: props.accountDetails?.inter_branch,
       });
     }
 
@@ -107,7 +107,7 @@ const AccountDetail = (props) => {
     }
 
     const selectedTax = taxGroupCodeOptions.find(
-      (cur) => cur.value === Number(props.tax_group_code)
+      (cur) => cur.value === Number(props?.accountDetails?.tax_group_code)
     );
     setTax(selectedTax);
   }, []);
@@ -124,7 +124,7 @@ const AccountDetail = (props) => {
       const selCurr = allCurrencies.find(
         (cur) => cur.value === props.accountDetails?.currency
       );
-
+      console.log("curr", selCurrency);
       setSelCurrency(selCurr);
     }
     setCurrencyOptions(allCurrencies);
