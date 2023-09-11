@@ -8,7 +8,8 @@ import DownloadReport from "./helpers/DownloadReport";
 import moment from "moment";
 
 const Content = ({ data }) => {
-  // console.log("data.voucher", data.voucher);
+  var totalDr = 0;
+  var totalCr = 0;
   return (
     <div id="content" className="mt-5 mx-2">
       {/* VOUCHER Title */}
@@ -25,18 +26,18 @@ const Content = ({ data }) => {
         className="d-flex justify-content-around align-items-center"
       >
         <div id="left-side-items">
-          <DisplayItem label={"Journal No."} value={data.voucher?.id} />
-          <DisplayItem label={"Branch"} value={data.voucher?.branch} />
-          <DisplayItem label={"Narration"} value={data.voucher?.narration} />
+          <DisplayItem label={"Journal No."} value={data?.voucher?.id} />
+          <DisplayItem label={"Branch"} value={data?.voucher?.branch} />
+          <DisplayItem label={"Narration"} value={data?.voucher?.narration} />
         </div>
         <div id="right-side-items">
           <DisplayItem
             label={"GL Date"}
-            value={moment(data.voucher?.gl_date).format("MM/DD/YYYY")}
+            value={moment(data?.voucher?.gl_date).format("MM/DD/YYYY")}
           />
           <DisplayItem
             label={"Account"}
-            value={data.voucher?.party_account?.name}
+            value={data?.voucher?.party_account?.name}
           />
         </div>
       </div>
@@ -54,29 +55,37 @@ const Content = ({ data }) => {
             <th className="text-center">Cr Amount</th>
           </tr>
           {data?.accounts.length &&
-            data?.accounts.map((dd) => (
-              <>
-                <tr>
-                  <td className="text-center">{dd?.ac_name}</td>
-                  <td className="text-center">{dd?.remarks}</td>
-                  <td className="text-center">
-                    {dd?.party_account?.currency.split(" - ")[0]}
-                  </td>
-                  <td className="text-center">{dd?.fc_amount}</td>
-                  <td className="text-center">{dd?.ex_rate}</td>
-                  <td className="text-center"></td>
-                  <td className="text-center"></td>
-                </tr>
-              </>
-            ))}
+            data?.accounts.map((dd) => {
+              totalDr += dd.dr_cr === "Dr" ? Number(dd?.amount_sar) : 0.0;
+              totalCr += dd.dr_cr === "Cr" ? Number(dd?.amount_sar) : 0.0;
+              return (
+                <>
+                  <tr>
+                    <td className="text-center">{dd?.ac_name?.name}</td>
+                    <td className="text-center">{dd?.remarks}</td>
+                    <td className="text-center">
+                      {dd?.ac_name?.currency.split(" - ")[0]}
+                    </td>
+                    <td className="text-center">{dd?.fcy_amount}</td>
+                    <td className="text-center">{dd?.ex_rate}</td>
+                    <td className="text-center">
+                      {dd.dr_cr === "Dr" ? dd?.amount_sar : "0.00"}
+                    </td>
+                    <td className="text-center">
+                      {dd.dr_cr === "Cr" ? dd?.amount_sar : "0.00"}
+                    </td>
+                  </tr>
+                </>
+              );
+            })}
           <tr>
             <td className="text-center"></td>
             <td className="text-center"></td>
             <td className="text-center"></td>
             <td className="text-center"></td>
             <td className="text-center">Total:</td>
-            <td className="text-center"></td>
-            <td className="text-center"></td>
+            <td className="text-center">{totalDr}</td>
+            <td className="text-center">{totalCr}</td>
           </tr>
         </table>
       </div>
@@ -114,7 +123,7 @@ const DisplayItem = ({ label, value }) => {
 };
 
 const JournalReport = (props) => {
-  const [state, setState] = useState({});
+  const [state, setState] = useState(null);
 
   useEffect(() => {
     let id = Number(props.match.params.id);
@@ -125,9 +134,9 @@ const JournalReport = (props) => {
     apiAuth
       .get(`/api/master/voucher/${id}`)
       .then((response) => {
-        let data = response.data;
+        let data = response?.data;
+        setState((prev) => ({ ...prev, voucher: data }));
         getTableData(id);
-        setState({ ...state, voucher: data });
       })
       .catch((err) => {
         console.log(err);
@@ -139,8 +148,8 @@ const JournalReport = (props) => {
     apiAuth
       .get(`/api/master/accountdetails/?voucher=${id}`)
       .then((response) => {
-        let data = response.data;
-        setState({ ...state, accounts: data });
+        let data = response.data?.results;
+        setState((prev) => ({ ...prev, accounts: data }));
       })
       .catch((err) => {
         console.log(err);
@@ -167,18 +176,13 @@ const JournalReport = (props) => {
         <DownloadReport />
 
         {/* Page for downloading pdf */}
-        <div
-          className="card reportdownproject"
-          style={{
-            border: "1px solid black",
-            //   padding: "10px",
-          }}
-        >
+        <div className="card reportdownproject">
           {/* Header */}
           <ReportHeader />
 
           {/* Content */}
-          <Content data={state || null} />
+          {/* {console.log("sssssss", state)} */}
+          {state?.accounts?.length && state.voucher && <Content data={state} />}
 
           {/* Footer */}
           <ReportFooter />
