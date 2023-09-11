@@ -80,6 +80,8 @@ import TaxCredit from "../views/TaxInvoice/TaxCredit";
 import PaymentReport from "../views/Vouchers/Reports/PaymentReport";
 import ReceiptReport from "../views/Vouchers/Reports/ReceiptReport";
 import OrganizationStatement from "../views/TaxInvoice/OrganizationStatement";
+import AccountDetail from "../views/AccountDetails/AccountDetail";
+import AccountDetails from "../views/AccountDetails";
 import ProfitLoss from "../views/Vouchers/Reports/ProfitLoss";
 
 const authProtectedRoutes = [
@@ -121,6 +123,9 @@ const authProtectedRoutes = [
   { path: "/payment-voucher", component: PaymentVoucher },
   { path: "/receipt-voucher", component: ReceiptVoucher },
   { path: "/account-statement", component: AccountStatement },
+  { path: "/account-details", component: AccountDetails },
+  { path: "/account_detail", component: AccountDetail },
+
   // { path: "/journal/:id", component: Journal },
   // { path: "/tax-credit/:id", component: TaxCredit },
   {

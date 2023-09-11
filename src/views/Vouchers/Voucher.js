@@ -1055,10 +1055,20 @@ const Voucher = (props) => {
                         <span className="sr-only">Loading...</span>
                       </div>
                     ) : (
-                      <div className="mt-4 mb-3">
-                        <button className="btn btn-success" type="submit">
-                          {props.isEdit ? "Update" : "Submit"}
-                        </button>
+                      <div style={{}}>
+                        <div className="mt-4 mb-3">
+                          <button className="btn btn-success" type="submit">
+                            {props.isEdit ? "Update" : "Submit"}
+                          </button>
+                          <button
+                            className="btn btn-info ms-3"
+                            onClick={() => {
+                              history.push("/account_detail");
+                            }}
+                          >
+                            Add Account
+                          </button>
+                        </div>
                         <button
                           className="btn btn-success mx-5"
                           type="button"
