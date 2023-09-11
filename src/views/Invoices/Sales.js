@@ -316,7 +316,7 @@ const Sales = (props) => {
 
   const getJobs = (val) => {
     apiAuth
-      .get(`/api/get-jobs/?&page=${1}&search=${val || ""}&type=Job`)
+      .get(`/api/master/job/?&type=Job`)
       .then((res) => {
         const { data } = res;
         let opts = data.results.map((dd) => {
@@ -502,9 +502,9 @@ const Sales = (props) => {
                             name="job"
                             options={jobOptions}
                             value={selectedJob}
-                            onInputChange={(val) => {
-                              getJobs(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getJobs(val);
+                            // }}
                             onChange={(data) => {
                               setSelectedJob(data);
                               setFieldValue("job", data.label);

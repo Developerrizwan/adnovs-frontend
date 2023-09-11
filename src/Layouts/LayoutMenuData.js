@@ -250,7 +250,7 @@ const Navdata = () => {
     {
       id: "Account Details",
       label: "Account Details",
-      icon: "ri-secure-payment-line",
+      icon: "ri-coupon-5-line",
       link: "/account-details",
       src: "/account.png",
       stateVariables: isAccountDetails,

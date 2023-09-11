@@ -26,7 +26,7 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">A/C Name</span>,
       selector: (row) => row,
       cell: (value) => {
-        return <div>{value?.ac_name}</div>;
+        return <div>{value?.ac_name?.name}</div>;
       },
       sortable: true,
     },
@@ -36,6 +36,14 @@ const AccountDetailsTable = (props) => {
       selector: (row) => row.fcy_amount,
       cell: (value) => {
         return <div>{value.fcy_amount}</div>;
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Voucher Type</span>,
+      selector: (row) => row.voucher_type,
+      cell: (value) => {
+        return <div>{value.vouchers?.voucher_type}</div>;
       },
       sortable: true,
     },

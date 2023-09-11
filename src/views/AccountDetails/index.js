@@ -95,18 +95,18 @@ const AccountDetails = (props) => {
           <BreadCrumb
             title="Account Details"
             pageTitle="Settings"
-            add_new={true}
-            createNew={() => {
-              setCreateModal(true);
-            }}
+            // add_new={true}
+            // createNew={() => {
+            //   setCreateModal(true);
+            // }}
             add_new_url={`/account_detail`}
-            // search_functionality={true}
+            search_functionality={true}
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
               getAccountData(pagination, val, selectedVoucher.value);
             }}
-            add_type={true}
+            // add_type={true}
             // add_type_select={true}
             selectedValue={selectedVoucher}
             options={voucherOptions}

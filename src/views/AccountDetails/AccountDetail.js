@@ -28,8 +28,6 @@ const AccountDetail = (props) => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [organizationOptions, setOrganizationOptions] = useState(null);
   const [fromAndToOptions, setFromAndToOptions] = useState([]);
-  const [selectedVoucherFrom, setSelectedVoucherFrom] = useState(null);
-  const [selectedVoucherTo, setSelectedVoucherTo] = useState(null);
   const [tax, setTax] = useState(null);
 
   const [selectedParty, setSelectedParty] = useState(null);
@@ -39,10 +37,7 @@ const AccountDetail = (props) => {
   const [selCurrency, setSelCurrency] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const [selectedVoucher, setSelectedVoucher] = useState({
-    value: "Journal",
-    label: "Journal",
-  });
+  const [selectedVoucher, setSelectedVoucher] = useState({});
 
   const [selInstType, setSelInstType] = useState({
     value: "Cash",
@@ -83,18 +78,15 @@ const AccountDetail = (props) => {
   console.log("propsss-------------------", props);
 
   useEffect(() => {
-    setSelectedVoucher({
-      label: voucherId,
-      value: voucherId,
-    });
+    const sel = voucherOptions.find((dd) => dd.value === voucherId);
     getJobOptions();
     getPartyOptions();
     getAllCurrencyCodes();
 
     if (props?.isEdit) {
       setSelBranch({
-        label: props.accountDetails?.branch,
-        value: props.accountDetails?.branch,
+        label: props.accountDetails?.inter_branch,
+        value: props.accountDetails?.inter_branch,
       });
     }
 
@@ -106,9 +98,13 @@ const AccountDetail = (props) => {
     }
 
     const selectedTax = taxGroupCodeOptions.find(
-      (cur) => cur.value === Number(props.tax_group_code)
+      (cur) => cur.value === Number(props?.accountDetails?.tax_group_code)
     );
     setTax(selectedTax);
+    const selvoucher = voucherOptions.find(
+      (dd) => dd.value === props.accountDetails?.vouchers?.voucher_type
+    );
+    setSelectedVoucher(selvoucher);
   }, []);
 
   const getAllCurrencyCodes = () => {
@@ -123,7 +119,7 @@ const AccountDetail = (props) => {
       const selCurr = allCurrencies.find(
         (cur) => cur.value === props.accountDetails?.currency
       );
-
+      console.log("curr", selCurrency);
       setSelCurrency(selCurr);
     }
     setCurrencyOptions(allCurrencies);
@@ -220,7 +216,7 @@ const AccountDetail = (props) => {
               className="mb-3"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h2 className="mx-5">ACCOUNT DETAILS</h2>
+              <h2 className="mx-5">Add Account</h2>
               <button className="btn btn-danger" onClick={goBack}>
                 Back
               </button>
@@ -330,6 +326,30 @@ const AccountDetail = (props) => {
                 {({ values, errors, touched, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="voucher_type" className="form-label">
+                            Voucher Type
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <Select
+                            name="voucher_type"
+                            styles={customStyles}
+                            value={selectedVoucher}
+                            options={voucherOptions}
+                            onChange={(event) => {
+                              console.log(event, "event");
+                              setSelectedVoucher(event);
+                              setFieldValue("voucher_type", event.value);
+                            }}
+                          />
+                          {errors.voucher_type && touched.voucher_type && (
+                            <div className="invalid-feedback d-block">
+                              {errors.voucher_type}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="ac_name" className="form-label">
