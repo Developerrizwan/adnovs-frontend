@@ -302,9 +302,9 @@ const TaxInvoiceSecond = (props) => {
                 // textDecoration: "underline",
               }}
             >
-              <h1>
+              <h2 style={{color: "#000"}}>
                 TAX INVOICE / <Translate text={"TAX INVOICE"} />
-              </h1>
+              </h2>
             </div>
             <div className="col-lg-4 custom-font">
               <ShowDataWithTranslate            
@@ -583,9 +583,8 @@ const TaxInvoiceSecond = (props) => {
                 <div className="row">
                   <div
                     className="col-lg-8 col-md-6"
-                    style={{ fontSize: "16px" }}
                   >
-                    <p>
+                    <p className="custom-font">
                       Total excl VAT
                       <span
                         style={{
@@ -601,7 +600,7 @@ const TaxInvoiceSecond = (props) => {
                         <Translate text={"Total excl VAT"} />
                       </span>
                     </p>
-                    <p>
+                    <p className="custom-font">
                       Value Added Tax
                       <span
                         style={{
@@ -617,7 +616,7 @@ const TaxInvoiceSecond = (props) => {
                         <Translate text={"Value Added Tax"} />
                       </span>
                     </p>
-                    <p>
+                    <p className="custom-font">
                       Total With VAT
                       <span
                         style={{
@@ -636,7 +635,7 @@ const TaxInvoiceSecond = (props) => {
                   </div>
                   <div
                     className="col-lg-4 col-md-6"
-                    style={{ fontWeight: 900, fontSize: "18px" }}
+                    style={{ fontWeight: 900, fontSize: "20px" }}
                   >
                     <p>
                       {Number(state.exd_vat_total_amount)?.toLocaleString(
@@ -693,12 +692,12 @@ const TaxInvoiceSecond = (props) => {
           >
             <div className="row mt-2">
               <div className="col-lg-8 col-xs-12 custom-font">
-                <h4>
+                <h4 style={{color: "#000"}}>
                   <Translate text={"Payment Method"} />
                 </h4>
-                <h4>Payment Method</h4>
+                <h4 style={{color: "#000"}}>Payment Method</h4>
 
-                <h4 className="mt-3 mb-4">
+                <h4 className="mt-3 mb-4" style={{color: "#000"}}>
                   Account Details
                   <span style={{ marginRight: "5px" }}>
                     <Translate text={"Account Details"} />
