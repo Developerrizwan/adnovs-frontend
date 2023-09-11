@@ -42,6 +42,7 @@ const Voucher = (props) => {
   // const [selCategory, setSelCategory] = useState(null);
   const [selCurrency, setSelCurrency] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [vouchId, setVouchId] = useState("");
 
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Journal",
@@ -345,6 +346,8 @@ const Voucher = (props) => {
                     apiAuth
                       .post("/api/master/voucher/", values)
                       .then((res) => {
+                        const { data } = res;
+                        setVouchId(data?.id);
                         setLoading(false);
                         NotificationManager.success(
                           "Journal Voucher",
@@ -1132,6 +1135,7 @@ const Voucher = (props) => {
         <ModalBody>
           <AccountDetail
             fromVoucher={true}
+            voucherId={vouchId}
             closeAddPopup={() => {
               setAccountDetailsModal(false);
             }}

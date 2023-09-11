@@ -34,7 +34,6 @@ const AccountDetail = (props) => {
 
   const [selectedParty, setSelectedParty] = useState(null);
   const [selBranch, setSelBranch] = useState(null);
-  const [selDivision, setSelDivision] = useState(null);
   const [selAsset, setSelAsset] = useState(null);
   const [selOption, setSelOption] = useState(null);
   const [selCurrency, setSelCurrency] = useState(null);
@@ -233,6 +232,8 @@ const AccountDetail = (props) => {
             <Card className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
+                  vouchers:
+                    props.accountDetails?.vouchers || props?.voucherId || "",
                   line_no: props.accountDetails?.line_no || 1,
                   ac_name: props.accountDetails?.ac_name || "",
                   dr_cr: props.accountDetails?.dr_cr || "",
@@ -297,6 +298,7 @@ const AccountDetail = (props) => {
                     apiAuth
                       .post("/api/master/accountdetails/", values)
                       .then((res) => {
+                        const { data } = res;
                         setLoading(false);
                         NotificationManager.success(
                           "Account Details",

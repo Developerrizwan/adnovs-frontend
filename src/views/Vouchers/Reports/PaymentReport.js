@@ -148,7 +148,21 @@ const PaymentReport = (props) => {
       .get(`/api/master/voucher/${id}`)
       .then((response) => {
         let data = response.data;
+        getTableData(id);
         setState({ ...state, voucher: data });
+      })
+      .catch((err) => {
+        console.log(err);
+        NotificationManager.error("", "Invalid Voucher.", 3000, null, null, "");
+      });
+  };
+
+  const getTableData = (id) => {
+    apiAuth
+      .get(`/api/master/accountdetails/?voucher=${id}`)
+      .then((response) => {
+        let data = response.data;
+        setState({ ...state, accounts: data });
       })
       .catch((err) => {
         console.log(err);
