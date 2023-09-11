@@ -16,7 +16,7 @@ import Translate from "./Translate";
 
 const ShowDataWithTranslate = ({ label, value, width }) => {
   return (
-    <p style={{fontSize: "17px"}}>
+    <p style={{ fontSize: "17px" }}>
       <div
         style={{
           display: "inline-block",
@@ -302,12 +302,12 @@ const TaxInvoiceSecond = (props) => {
                 // textDecoration: "underline",
               }}
             >
-              <h2 style={{color: "#000"}}>
+              <h2 style={{ color: "#000" }}>
                 TAX INVOICE / <Translate text={"TAX INVOICE"} />
               </h2>
             </div>
             <div className="col-lg-4 custom-font">
-              <ShowDataWithTranslate            
+              <ShowDataWithTranslate
                 width={"200px"}
                 label={"Job Number"}
                 value={state.invoice?.job?.job_number}
@@ -371,7 +371,7 @@ const TaxInvoiceSecond = (props) => {
               <ShowDataWithTranslate
                 width={"220px"}
                 label={"Invoice Date"}
-                value={moment(state.invoice?.created_at).format("MM/DD/YYYY")}
+                value={moment(state.invoice?.created_at).format("DD/MM/YYYY")}
               />
               <ShowDataWithTranslate
                 width={"220px"}
@@ -396,12 +396,12 @@ const TaxInvoiceSecond = (props) => {
               <ShowDataWithTranslate
                 width={"220px"}
                 label={"ETA"}
-                value={moment(state.invoice?.job?.eta).format("MM/DD/YYYY")}
+                value={moment(state.invoice?.job?.eta).format("DD/MM/YYYY")}
               />
               <ShowDataWithTranslate
                 width={"220px"}
                 label={"ETD"}
-                value={moment(state.invoice?.job?.etd).format("MM/DD/YYYY")}
+                value={moment(state.invoice?.job?.etd).format("DD/MM/YYYY")}
               />
             </div>
             <div className="col-lg-4 custom-font">
@@ -581,9 +581,7 @@ const TaxInvoiceSecond = (props) => {
                 className="col-lg-7 col-xs-12 custom-font"
               >
                 <div className="row">
-                  <div
-                    className="col-lg-8 col-md-6"
-                  >
+                  <div className="col-lg-8 col-md-6">
                     <p className="custom-font">
                       Total excl VAT
                       <span
@@ -692,12 +690,12 @@ const TaxInvoiceSecond = (props) => {
           >
             <div className="row mt-2">
               <div className="col-lg-8 col-xs-12 custom-font">
-                <h4 style={{color: "#000"}}>
+                <h4 style={{ color: "#000" }}>
                   <Translate text={"Payment Method"} />
                 </h4>
-                <h4 style={{color: "#000"}}>Payment Method</h4>
+                <h4 style={{ color: "#000" }}>Payment Method</h4>
 
-                <h4 className="mt-3 mb-4" style={{color: "#000"}}>
+                <h4 className="mt-3 mb-4" style={{ color: "#000" }}>
                   Account Details
                   <span style={{ marginRight: "5px" }}>
                     <Translate text={"Account Details"} />
