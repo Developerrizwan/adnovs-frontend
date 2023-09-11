@@ -80,6 +80,7 @@ import TaxCredit from "../views/TaxInvoice/TaxCredit";
 import PaymentReport from "../views/Vouchers/Reports/PaymentReport";
 import ReceiptReport from "../views/Vouchers/Reports/ReceiptReport";
 import OrganizationStatement from "../views/TaxInvoice/OrganizationStatement";
+import ProfitLoss from "../views/Vouchers/Reports/ProfitLoss";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -169,6 +170,7 @@ const publicRoutes = [
   { path: "/journal/:id", component: Journal },
   { path: "/tax-credit/:id", component: TaxCredit },
   { path: "/voucher/payment-voucher/:id", component: PaymentReport },
+  { path: "/voucher/profit-loss", component: ProfitLoss },
   { path: "/voucher/receipt-voucher/:id", component: ReceiptReport },
   { path: "/account-statement/:jobId", component: AccountStatement },
   {
