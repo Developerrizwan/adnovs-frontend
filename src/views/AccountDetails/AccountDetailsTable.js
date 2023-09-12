@@ -229,7 +229,7 @@ const AccountDetailsTable = (props) => {
             setEditModal((prev) => !prev);
           }}
         >
-          Edit Voucher
+          Edit Account
         </ModalHeader>
         <ModalBody>
           <AccountDetail
