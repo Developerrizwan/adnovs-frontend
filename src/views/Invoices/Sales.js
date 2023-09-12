@@ -746,7 +746,7 @@ const Sales = (props) => {
                             // name="type"
                             placeholder={"Select"}
                             styles={customStyles}
-                            options={podOptions}
+                            options={poaOptions}
                             value={podValue}
                             // onInputChange={(val) => {
                             //   getPodOptions(val);
@@ -1183,15 +1183,37 @@ const Sales = (props) => {
                         ) : (
                           <></>
                         )}
-                        {!props?.isEdit && state.invoice_generated ? (
-                          <Link to={`/tax-invoice-second/${state.invoice_id}`}>
-                            <Button className="btn btn-warning float-right">
-                              {" "}
-                              View Invoice
-                            </Button>
-                          </Link>
+
+                        {selectedInvoice?.value === "Sales" ? (
+                          <>
+                            {!props?.isEdit && state.invoice_generated ? (
+                              <Link
+                                to={`/tax-invoice-second/${state.invoice_id}`}
+                              >
+                                <Button className="btn btn-warning float-right">
+                                  {" "}
+                                  View Invoice
+                                </Button>
+                              </Link>
+                            ) : (
+                              <></>
+                            )}
+                          </>
                         ) : (
-                          <></>
+                          <>
+                            {!props?.isEdit && state.invoice_generated ? (
+                              <Link
+                                to={`/purchase-invoice/${state.invoice_id}`}
+                              >
+                                <Button className="btn btn-warning float-right">
+                                  {" "}
+                                  View Invoice
+                                </Button>
+                              </Link>
+                            ) : (
+                              <></>
+                            )}
+                          </>
                         )}
 
                         {props?.data?.invoice_type === "Sales" ? (

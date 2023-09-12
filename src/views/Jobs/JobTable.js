@@ -54,6 +54,14 @@ const JobTable = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">Enquiry Number</span>,
+      selector: (row) => row.enquiry_number,
+      cell: (value) => {
+        return <div>{value.enquiry_number}</div>;
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Shipper Name</span>,
       selector: (row) => row.shipper_name,
       cell: (value) => {
