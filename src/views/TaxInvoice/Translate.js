@@ -14,7 +14,7 @@ const translateText = async (text) => {
   }
 };
 
-const Translate = ({ text, fontWeight }) => {
+const Translate = ({ text, fontWeight, fontsize = "18px" }) => {
   const [translatedText, setTranslatedText] = useState("");
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Translate = ({ text, fontWeight }) => {
       <span
         style={{
           marginLeft: "5px",
-          fontSize: "18px",
+          fontSize: fontsize,
           fontWeight: fontWeight,
         }}
       >
