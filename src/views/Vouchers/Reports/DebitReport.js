@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
+import numberToWords from "number-to-words";
+import QRCode from "react-qr-code";
 
 import apiAuth from "../../../helpers/ApiAuth";
-import NotificationManager from "../../../components/Common/NotificationManager";
 import ReportHeader from "./helpers/ReportHeader";
 import ReportFooter from "./helpers/ReportFooter";
 import DownloadReport from "./helpers/DownloadReport";
-import QRCode from "react-qr-code";
+import NotificationManager from "../../../components/Common/NotificationManager";
 
-const Content = () => {
+const Content = ({ data }) => {
+  const [state, setState] = useState({});
+  var curCurrency = data?.voucher?.currency.split(" ")[0];
+  var totalExcludeVat = 0;
+  var totalTaxableAmt = 0;
+  var totalVatAmt = 0;
+
+  // console.log("tax", data);
   return (
     <div id="content" className="mt-5 mx-2">
       {/* VOUCHER Title */}
@@ -49,7 +57,7 @@ const Content = () => {
           </div>
         </div>
         <div className="col-lg-4 text-center">
-          <QRCode size={150} value={String("voucher")} />
+          <QRCode size={150} value={String(state?.qrcodeString)} />
         </div>
       </div>
 
@@ -87,6 +95,7 @@ const Content = () => {
             <DisplayItem label={"Other Seller ID"} value={""} />
           </>
         </div>
+
         <div id="right-side-items">
           <h5
             style={{
@@ -120,7 +129,7 @@ const Content = () => {
 
       <div className="p-2" style={{ overflowX: "auto" }}>
         <table className="w-100">
-          <tr style={{ background: "#B6D0E2" }}>
+          {/* <tr style={{ background: "#B6D0E2" }}>
             <td className="fw">Line Items:</td>
             <td></td>
             <td></td>
@@ -129,7 +138,7 @@ const Content = () => {
             <td></td>
             <td></td>
             <td></td>
-          </tr>
+          </tr> */}
           <tr style={{ background: "#d3d3d3" }}>
             <td className="text-center fw">Nature of goods or service</td>
             <td className="text-center fw">Unit Price</td>
@@ -140,16 +149,39 @@ const Content = () => {
             <td className="text-center fw">Tax Amount</td>
             <td className="text-center fw">Item Subtotal(Including VAT)</td>
           </tr>
-          <tr>
-            <td>TRANSPORTATION CHARGES</td>
-            <td className="text-end">250.00</td>
-            <td className="text-end">1</td>
-            <td className="text-end">250.00</td>
-            <td className="text-end">0.00</td>
-            <td className="text-end">15%</td>
-            <td className="text-end">37.50</td>
-            <td className="text-end">287.50 SAR</td>
-          </tr>
+          {data?.accounts?.length &&
+            data?.accounts.map((dd) => {
+              totalExcludeVat += Number(dd?.qty) * Number(dd?.fcy_amount);
+              totalTaxableAmt += Number(dd?.taxable_amount);
+              totalVatAmt += Number(dd?.tax_amount);
+              return (
+                <>
+                  <tr>
+                    <td className="text-center">{dd?.ac_name?.type}</td>
+                    <td className="text-center">
+                      {Number(dd?.fcy_amount).toFixed(2)}
+                    </td>
+                    <td className="text-center">{dd?.qty}</td>
+                    <td className="text-center">
+                      {Number(dd?.taxable_amount).toFixed(2)}
+                    </td>
+                    <td className="text-center">
+                      {Number(dd?.discount || 0).toFixed(2)}
+                    </td>
+                    <td className="text-center">{dd?.tax_group_code + "%"}</td>
+                    <td className="text-center">
+                      {Number(dd?.tax_amount).toFixed(2)}
+                    </td>
+                    <td className="text-center">
+                      {(
+                        Number(dd?.fcy_amount) * Number(dd?.qty) +
+                        Number(dd?.taxable_amount)
+                      ).toFixed(2)}
+                    </td>
+                  </tr>
+                </>
+              );
+            })}
         </table>
       </div>
 
@@ -161,37 +193,37 @@ const Content = () => {
           <table className="htmlTable mt-2">
             <tr>
               <td className="p-1 fw border-0">Total (Excluding VAT)</td>
-              <td className="p-1 border-0">250.00 SAR</td>
+              <td className="p-1 border-0">
+                {totalExcludeVat.toFixed(2)} {curCurrency}
+              </td>
             </tr>
             <tr>
               <td className="p-1 fw border-0">Discount</td>
-              <td className="p-1 border-0">0.00 SAR</td>
+              <td className="p-1 border-0">0.00 {curCurrency}</td>
             </tr>
             <tr>
               <td className="p-1 fw border-0">
                 Total Taxable Amount (Excluding VAT)
               </td>
-              <td className="p-1 border-0">250.00 SAR</td>
+              <td className="p-1 border-0">
+                {totalTaxableAmt.toFixed(2)} {curCurrency}
+              </td>
             </tr>
             <tr>
               <td className="p-1 fw border-0">Total VAT</td>
-              <td className="p-1 border-0">37.50 SAR</td>
+              <td className="p-1 border-0">
+                {totalVatAmt.toFixed(2)} {curCurrency}
+              </td>
             </tr>
             <tr>
               <td className="p-1 fw border-0">Total Amount Due</td>
-              <td className="p-1 border-0">287.50 SAR</td>
+              <td className="p-1 border-0">
+                {(totalExcludeVat + totalTaxableAmt + totalVatAmt).toFixed(2)}{" "}
+                {curCurrency}
+              </td>
             </tr>
           </table>
         </div>
-      </div>
-
-      {/* Computer generated Text */}
-      <div className="d-flex justify-content-center align-items-center my-5">
-        <p style={{ width: "45%", fontWeight: 600 }}>
-          This is a computer generated document and does not require a signature
-          Receipt issued for cheque payments will be subject to realization of
-          the cheque
-        </p>
       </div>
     </div>
   );
@@ -213,7 +245,7 @@ const DisplayItem = ({ label, value }) => {
 };
 
 const DebitReport = (props) => {
-  const [state, setState] = useState({ costs: [] });
+  const [state, setState] = useState({});
 
   useEffect(() => {
     let id = Number(props.match.params.id);
@@ -225,12 +257,107 @@ const DebitReport = (props) => {
       .get(`/api/master/voucher/${id}`)
       .then((response) => {
         let data = response.data;
-        setState({ ...state, invoice: data });
+        getTableData(id);
+        setState((prev) => ({ ...prev, voucher: data }));
       })
       .catch((err) => {
         console.log(err);
         NotificationManager.error("", "Invalid Voucher.", 3000, null, null, "");
       });
+  };
+
+  const getTableData = (id) => {
+    apiAuth
+      .get(`/api/master/accountdetails/?voucher=${id}`)
+      .then((response) => {
+        let total_amount = 0;
+        let vat_amount = 0;
+        let exd_vat_total_amount = 0;
+        let word_amount = "Zero";
+        let qrcodeString = "";
+        let data = response.data.results.map((ct) => {
+          // console.log("ccccccccc", ct);
+          ct.vat_amount = Number(
+            (Number(ct.amount_sar) * Number(ct.tax_group_code)) / 100
+          ).toFixed(2);
+          ct.total_amount = Number(
+            Number(ct.amount_sar) + Number(ct.tax_amount)
+          ).toFixed(2);
+
+          exd_vat_total_amount = Number(
+            Number(exd_vat_total_amount) + Number(ct.amount_sar)
+          ).toFixed(2);
+
+          total_amount = Number(
+            Number(total_amount) + Number(ct.total_amount)
+          ).toFixed(2);
+
+          vat_amount = Number(
+            Number(vat_amount) + Number(ct.vat_amount)
+          ).toFixed(2);
+
+          word_amount = Number.isFinite(Number(total_amount))
+            ? numberToWords.toWords(Number(total_amount))
+            : String(total_amount);
+          word_amount = String(
+            word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
+          );
+
+          // genrating qrcode string using TLV format
+
+          try {
+            let sellarNameBuf = getTLVForValue("1", "Adnovs");
+            let registrationBuf = getTLVForValue(
+              "2",
+              String(state?.invoice?.client_name?.vat_trn_number)
+            );
+            let timestampBuf = getTLVForValue(
+              "3",
+              String(state.invoice?.created_at)
+            );
+            let inoiceAmountBuf = getTLVForValue("4", String(total_amount));
+            let vatamountBuf = getTLVForValue("5", String(vat_amount));
+
+            let tagsBufsArray = [
+              sellarNameBuf,
+              registrationBuf,
+              timestampBuf,
+              inoiceAmountBuf,
+              vatamountBuf,
+            ];
+
+            let qrCodeBuf = Buffer.concat(tagsBufsArray);
+            qrcodeString = qrCodeBuf.toString("base64");
+          } catch (error) {
+            console.log(error);
+          }
+
+          return ct;
+        });
+        setState((prev) => {
+          return {
+            ...prev,
+            accounts: data,
+            total_amount,
+            vat_amount,
+            exd_vat_total_amount,
+            word_amount,
+            qrcodeString,
+          };
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+      });
+  };
+
+  const getTLVForValue = (tag, value) => {
+    var tagBuf = Buffer.from([tag], "utf8");
+    var tagValueLenBuf = Buffer.from([String(value).length], "utf8");
+    var tagValueBuf = Buffer.from(String(value), "utf8");
+    var bufsArray = [tagBuf, tagValueLenBuf, tagValueBuf];
+    return Buffer.concat(bufsArray);
   };
 
   return (
@@ -245,25 +372,19 @@ const DebitReport = (props) => {
         style={{
           marginTop: "15px",
           marginBottom: "15px",
-          width: "1200px",
+          width: "1000px",
         }}
       >
         {/* Download */}
         <DownloadReport />
 
         {/* Page for downloading pdf */}
-        <div
-          className="card reportdownproject"
-          style={{
-            border: "1px solid black",
-            //   padding: "10px",
-          }}
-        >
+        <div className="card reportdownproject">
           {/* Header */}
-          <ReportHeader />
+          <ReportHeader data={state?.voucher?.company} />
 
           {/* Content */}
-          <Content />
+          <Content data={state} />
 
           {/* Footer */}
           <ReportFooter />

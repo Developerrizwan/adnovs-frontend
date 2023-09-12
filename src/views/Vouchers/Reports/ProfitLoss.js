@@ -6,7 +6,6 @@ import ReportHeader from "./helpers/ReportHeader";
 import ReportFooter from "./helpers/ReportFooter";
 import DownloadReport from "./helpers/DownloadReport";
 import moment from "moment";
-import RupeesToWordsConverter from "./helpers/RupeesToWordsConverter";
 
 const Content = ({ voucher }) => {
   return (
@@ -59,19 +58,23 @@ const Content = ({ voucher }) => {
             <th className="text-center w-25">Current Amount</th>
           </tr>
           <tr>
-          <td className="text-center border-top-0 border-bottom-0">Air Export Income</td>
-          <td className="text-center border-top-0 border-bottom-0">5</td>
-          <td className="text-center border-top-0 border-bottom-0">12</td>
+            <td className="text-center border-top-0 border-bottom-0">
+              Air Export Income
+            </td>
+            <td className="text-center border-top-0 border-bottom-0">5</td>
+            <td className="text-center border-top-0 border-bottom-0">12</td>
           </tr>
           <tr>
-          <td className="text-center border-top-0 border-bottom-0">Sea Import Income</td>
-          <td className="text-center border-top-0 border-bottom-0">5</td>
-          <td className="text-center border-top-0 border-bottom-0">12</td>
+            <td className="text-center border-top-0 border-bottom-0">
+              Sea Import Income
+            </td>
+            <td className="text-center border-top-0 border-bottom-0">5</td>
+            <td className="text-center border-top-0 border-bottom-0">12</td>
           </tr>
           <tr>
-          <td className="text-center border-top-0">Profit Loss Total</td>
-          <td className="text-center border-top-0"></td>
-          <td className="text-center border-top-0"></td>
+            <td className="text-center border-top-0">Profit Loss Total</td>
+            <td className="text-center border-top-0"></td>
+            <td className="text-center border-top-0"></td>
           </tr>
         </table>
       </div>
@@ -82,7 +85,6 @@ const Content = ({ voucher }) => {
         {/* <RupeesToWordsConverter amount={voucher?.amount_sar} /> */}
         <span style={{ marginLeft: "30px" }}>{voucher?.amount_sar}</span>
       </h5>
-
     </div>
   );
 };

@@ -17,7 +17,7 @@ const Content = ({ data }) => {
         className="text-center mb-4"
         style={{ fontFamily: "sans-serif", color: "gray" }}
       >
-        JOURNAL VOUCHER - ADN/RV/23/0057
+        JOURNAL VOUCHER
       </h4>
 
       {/* Display Items */}
@@ -56,8 +56,10 @@ const Content = ({ data }) => {
           </tr>
           {data?.accounts?.length &&
             data?.accounts?.map((dd) => {
-              totalDr += dd.dr_cr === "Dr" ? Number(dd?.amount_sar) : 0.0;
-              totalCr += dd.dr_cr === "Cr" ? Number(dd?.amount_sar) : 0.0;
+              totalDr +=
+                dd.dr_cr === "Dr" ? Number(dd?.amount_sar).toFixed(2) : 0.0;
+              totalCr +=
+                dd.dr_cr === "Cr" ? Number(dd?.amount_sar).toFixed(2) : 0.0;
               return (
                 <>
                   <tr>
@@ -66,13 +68,19 @@ const Content = ({ data }) => {
                     <td className="text-center">
                       {dd?.ac_name?.currency.split(" - ")[0]}
                     </td>
-                    <td className="text-center">{dd?.fcy_amount}</td>
+                    <td className="text-center">
+                      {Number(dd?.fcy_amount).toFixed(2)}
+                    </td>
                     <td className="text-center">{dd?.ex_rate}</td>
                     <td className="text-center">
-                      {dd.dr_cr === "Dr" ? dd?.amount_sar : "0.00"}
+                      {dd.dr_cr === "Dr"
+                        ? Number(dd?.amount_sar).toFixed(2)
+                        : "0.00"}
                     </td>
                     <td className="text-center">
-                      {dd.dr_cr === "Cr" ? dd?.amount_sar : "0.00"}
+                      {dd.dr_cr === "Cr"
+                        ? Number(dd?.amount_sar).toFixed(2)
+                        : "0.00"}
                     </td>
                   </tr>
                 </>
@@ -83,9 +91,15 @@ const Content = ({ data }) => {
             <td className="text-center"></td>
             <td className="text-center"></td>
             <td className="text-center"></td>
-            <td className="text-center">Total:</td>
-            <td className="text-center">{totalDr}</td>
-            <td className="text-center">{totalCr}</td>
+            <td className="text-center" style={{ background: "#d3d3d3" }}>
+              Total:
+            </td>
+            <td className="text-center" style={{ background: "#d3d3d3" }}>
+              {Number(totalDr).toFixed(2)}
+            </td>
+            <td className="text-center" style={{ background: "#d3d3d3" }}>
+              {Number(totalCr).toFixed(2)}
+            </td>
           </tr>
         </table>
       </div>
@@ -93,15 +107,6 @@ const Content = ({ data }) => {
       {/* Remarks */}
       <div className="p-2 ">
         <p className="fw ml-3">Remarks : {data?.voucher?.remarks}</p>
-      </div>
-
-      {/* Computer generated Text */}
-      <div className="d-flex justify-content-center align-items-center my-5">
-        <p style={{ width: "45%", fontWeight: 600 }}>
-          This is a computer generated document and does not require a signature
-          Receipt issued for cheque payments will be subject to realization of
-          the cheque
-        </p>
       </div>
     </div>
   );
@@ -169,7 +174,7 @@ const JournalReport = (props) => {
         style={{
           marginTop: "15px",
           marginBottom: "15px",
-          width: "1200px",
+          width: "1000px",
         }}
       >
         {/* Download */}
@@ -178,10 +183,9 @@ const JournalReport = (props) => {
         {/* Page for downloading pdf */}
         <div className="card reportdownproject">
           {/* Header */}
-          <ReportHeader />
+          <ReportHeader data={state?.voucher?.company} />
 
           {/* Content */}
-          {/* {console.log("sssssss", state)} */}
           <Content data={state} />
 
           {/* Footer */}

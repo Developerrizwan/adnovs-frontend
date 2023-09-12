@@ -34,6 +34,14 @@ const FooterItem = ({ label }) => {
 const ReportFooter = () => {
   return (
     <>
+      {/* Computer generated Text */}
+      <div className="d-flex justify-content-center align-items-center my-5">
+        <p style={{ width: "50%", fontWeight: 600 }}>
+          This is a computer generated document and does not require a signature
+          Receipt issued for cheque payments will be subject to realization of
+          the cheque
+        </p>
+      </div>
       <div
         style={{
           marginTop: "5%",
