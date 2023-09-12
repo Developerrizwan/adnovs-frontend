@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
+import numberToWords from "number-to-words";
 
 import apiAuth from "../../../helpers/ApiAuth";
-import NotificationManager from "../../../components/Common/NotificationManager";
-import ReportFooter from "./helpers/ReportFooter";
 import ReportHeader from "./helpers/ReportHeader";
+import ReportFooter from "./helpers/ReportFooter";
 import DownloadReport from "./helpers/DownloadReport";
-import moment from "moment";
-import RupeesToWordsConverter from "./helpers/RupeesToWordsConverter";
+import NotificationManager from "../../../components/Common/NotificationManager";
 
-const Content = ({ voucher }) => {
-  // console.log("receipt", voucher);
+const Content = ({ data }) => {
+  // console.log("receipt", data);
+
+  var word_amount = Number.isFinite(Number(data?.voucher?.amount_sar))
+    ? numberToWords.toWords(Number(data?.voucher?.amount_sar))
+    : String(data?.voucher?.amount_sar);
+  word_amount = String(
+    word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
+  );
+
   return (
-    <div id="content" className="mt-5 mx-2">
+    <div id="content" className="mt-5 mx-4">
       {/* VOUCHER Title */}
       <h4
         className="text-center mb-4"
         style={{ fontFamily: "sans-serif", color: "gray" }}
       >
-        RECEIPT VOUCHER - ADN/RV/23/0057
+        RECEIPT VOUCHER
       </h4>
 
       {/* Display Items */}
@@ -28,19 +36,28 @@ const Content = ({ voucher }) => {
         <div id="left-side-items">
           <DisplayItem
             label={"Received From"}
-            value={voucher?.received_from || ""}
+            value={data?.voucher?.received_from || ""}
           />
-          <DisplayItem label={"A/C Name"} value={""} />
-          <DisplayItem label={"Type"} value={voucher?.instrument_type || ""} />
-          <DisplayItem label={"Narration"} value={voucher?.job?.naration} />
+          <DisplayItem
+            label={"A/C Name"}
+            value={data?.voucher?.party_account?.name || ""}
+          />
+          <DisplayItem
+            label={"Type"}
+            value={data?.voucher?.instrument_type || ""}
+          />
+          <DisplayItem label={"Narration"} value={data?.voucher?.naration} />
         </div>
         <div id="right-side-items">
           <DisplayItem label={"Receipt No"} value={""} />
           <DisplayItem
             label={"Date"}
-            value={moment(voucher?.date).format("DD/MM/YYYY")}
+            value={moment(data?.voucher?.date).format("DD/MM/YYYY")}
           />
-          <DisplayItem label={"Cheque/Ref.No"} value={voucher?.ref_no || ""} />
+          <DisplayItem
+            label={"Cheque/Ref.No"}
+            value={data?.voucher?.ref_no || ""}
+          />
         </div>
       </div>
 
@@ -54,39 +71,32 @@ const Content = ({ voucher }) => {
           <tr>
             <td className=" w-25">
               <div className=" ">
-                <span className="p-2">{voucher?.party_account?.name}</span>
+                <span className="p-2">{data?.voucher?.received_from}</span>
                 <br />
                 <div className="d-flex justify-content-between align-items-center p-2">
                   <span>ADN/INV/23/0096 </span>
-                  <span>{moment(voucher?.date).format("DD/MM/YYYY")} </span>
-                  <span></span>
-                  <span>{voucher?.amount_sar}</span>
+                  <span>
+                    {moment(data?.voucher?.date).format("DD/MM/YYYY")}{" "}
+                  </span>
+                  <span>{data?.voucher?.ref_no}</span>
+                  <span>{Number(data?.voucher?.amount_sar).toFixed(2)}</span>
                 </div>
               </div>
             </td>
-            <td className="text-center w-25">{voucher?.amount_sar}</td>
+            <td className="text-center w-25">
+              {Number(data?.voucher?.amount_sar).toFixed(2)}
+            </td>
           </tr>
         </table>
       </div>
 
       {/* Amount in words */}
       <h5 className="text-end" style={{ fontFamily: "sans-serif" }}>
-        {/* Twenty-Nine thousand Two Hundred Thirty-Three and forty Only */}
-        {/* <RupeesToWordsConverter amount={voucher?.amount_sar} /> */}
-
-        <span style={{ marginLeft: "30px" }}>
-          {Number(voucher?.amount_sar)}
+        <span>{word_amount} Only </span>
+        <span style={{ marginLeft: "30px", marginRight: "10px" }}>
+          {Number(data?.voucher?.amount_sar).toFixed(2)}
         </span>
       </h5>
-
-      {/* Computer generated Text */}
-      <div className="d-flex justify-content-center align-items-center my-5">
-        <p style={{ width: "45%", fontWeight: 600 }}>
-          This is a computer generated document and does not require a signature
-          Receipt issued for cheque payments will be subject to realization of
-          the cheque
-        </p>
-      </div>
     </div>
   );
 };
@@ -94,15 +104,14 @@ const Content = ({ voucher }) => {
 const DisplayItem = ({ label, value }) => {
   return (
     <>
-      <span>
+      <div className="my-1">
         <span
-          style={{ fontWeight: 600, width: "120px", display: "inline-block" }}
+          style={{ fontWeight: 600, width: "130px", display: "inline-block" }}
         >
           {label}
         </span>
         : {value}
-      </span>
-      <br />
+      </div>
     </>
   );
 };
@@ -120,7 +129,21 @@ const ReceiptReport = (props) => {
       .get(`/api/master/voucher/${id}`)
       .then((response) => {
         let data = response.data;
-        setState({ ...state, voucher: data });
+        getTableData(id);
+        setState((prev) => ({ ...prev, voucher: data }));
+      })
+      .catch((err) => {
+        console.log(err);
+        NotificationManager.error("", "Invalid Voucher.", 3000, null, null, "");
+      });
+  };
+
+  const getTableData = (id) => {
+    apiAuth
+      .get(`/api/master/accountdetails/?voucher=${id}`)
+      .then((response) => {
+        let data = response.data?.results;
+        setState((prev) => ({ ...prev, accounts: data }));
       })
       .catch((err) => {
         console.log(err);
@@ -141,7 +164,7 @@ const ReceiptReport = (props) => {
           marginTop: "15px",
           marginBottom: "15px",
 
-          width: "1200px",
+          width: "1000px",
         }}
       >
         {/* Download */}
@@ -157,10 +180,10 @@ const ReceiptReport = (props) => {
           }}
         >
           {/* Header */}
-          <ReportHeader />
+          <ReportHeader data={state?.voucher?.company} />
 
           {/* Content */}
-          <Content voucher={state?.voucher} />
+          <Content data={state} />
 
           {/* Footer */}
           <ReportFooter />

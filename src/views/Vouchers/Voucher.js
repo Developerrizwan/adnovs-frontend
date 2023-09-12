@@ -293,6 +293,8 @@ const Voucher = (props) => {
                   naration: props.voucherData?.naration || "",
                   division: props.voucherData?.division || "",
                   remarks: props.voucherData?.remarks || "",
+                  instrument_type: props.voucherData?.instrument_type || "Cash",
+                  received_from: props.voucherData?.received_from || "",
                 }}
                 validationSchema={Yup.object({
                   // branch: Yup.string().required("Required!"),
@@ -992,7 +994,7 @@ const Voucher = (props) => {
                           <Grid item lg={4} xs={12}>
                             <div className="mb-3">
                               <label
-                                htmlFor="recieved_from"
+                                htmlFor="received_from"
                                 className="form-label"
                               >
                                 Recieved from
@@ -1000,14 +1002,14 @@ const Voucher = (props) => {
                               </label>
                               <Field
                                 className="form-control"
-                                name="recieved_from"
+                                name="received_from"
                                 placeholder="Recieved from"
                                 style={{ background: "#EDEDED" }}
                               />
-                              {errors.recieved_from &&
-                                touched.recieved_from && (
+                              {errors.received_from &&
+                                touched.received_from && (
                                   <div className="invalid-feedback d-block">
-                                    {errors.recieved_from}
+                                    {errors.received_from}
                                   </div>
                                 )}
                             </div>
@@ -1024,12 +1026,12 @@ const Voucher = (props) => {
                             </label>
 
                             <Select
-                              name="party_account"
+                              name="instrument_type"
                               styles={customStyles}
                               value={selInstType}
                               options={instTypeOptions}
                               onChange={(data) => {
-                                setFieldValue("party_account", data.value);
+                                setFieldValue("instrument_type", data.value);
                                 setSelInstType(data);
                               }}
                             />
