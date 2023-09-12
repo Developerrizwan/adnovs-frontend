@@ -184,7 +184,10 @@ const publicRoutes = [
   { path: "/voucher/tax-credit/:id", component: DebitReport },
   { path: "/voucher/payment/:id", component: PaymentReport },
   { path: "/voucher/receipt/:id", component: ReceiptReport },
-  // { path: "/voucher/profit-loss", component: ProfitLoss },
+  {
+    path: "/report/profit-loss/:jobId/:startTime/:endTime",
+    component: ProfitLoss,
+  },
   { path: "/account-statement/:jobId", component: AccountStatement },
   {
     path: "/account-organizationstatement/:jobId",
