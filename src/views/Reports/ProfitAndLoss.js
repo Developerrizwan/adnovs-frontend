@@ -15,11 +15,11 @@ const ProfitAndLoss = (props) => {
 
   useEffect(() => {
     getJobOptions();
-  });
+  }, []);
 
   const getJobOptions = (val) => {
     apiAuth
-      .get(`/api/get-jobs/?page=${1}&search=${val || ""}&type=Job`)
+      .get(`/api/get-jobs/?type=Job`)
       .then((res) => {
         const { data } = res;
         let jobOpts = data.results.map((opt) => {
@@ -58,7 +58,7 @@ const ProfitAndLoss = (props) => {
               className="mb-5 mt-3"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h2 className="mx-3">Profit and Loss Report</h2>
+              <h2 className="mx-3">Profit and Loss</h2>
 
               <button
                 className="btn btn-danger"
@@ -84,12 +84,17 @@ const ProfitAndLoss = (props) => {
                     : new Date(),
                 }}
                 validationSchema={Yup.object({
-                  name: Yup.string()
-                    .max(50, "Must be 50 characters or less")
-                    .trim()
-                    .required("Name is Required"),
+                  job: Yup.string().ensure().required("Job is Required"),
                 })}
-                onSubmit={(values, { reset }) => {}}
+                onSubmit={(values, { reset }) => {
+                  apiAuth
+                    .get(
+                      `/api/profit/loss/?job=${values?.job}&type=Profit/Loss`,
+                      values
+                    )
+                    .then((res) => console.log(res))
+                    .catch((err) => console.log(err));
+                }}
               >
                 {({ values, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
@@ -98,14 +103,14 @@ const ProfitAndLoss = (props) => {
                         <div className="mb-3" style={{ zIndex: 200 }}>
                           <label htmlFor="job" className="form-label">
                             Job Type
-                            {/* <span className="text-danger">*</span> */}
+                            <span className="text-danger">*</span>
                           </label>
                           <Select
                             options={jobOptions}
                             value={selectedJob}
-                            onInputChange={(val) => {
-                              getJobOptions(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getJobOptions(val);
+                            // }}
                             onChange={(data) => {
                               setFieldValue("job", data.value);
                               setSelectedJob(data);
