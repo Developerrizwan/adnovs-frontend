@@ -58,7 +58,7 @@ const Trail = (props) => {
               className="mb-5 mt-3"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h2 className="mx-3">Trail Report</h2>
+              <h2 className="mx-3">Trial Report</h2>
 
               <button
                 className="btn btn-danger"
