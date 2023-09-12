@@ -49,7 +49,7 @@ const AccountDetails = (props) => {
 
   const getAccountData = (pgdata, val, type) => {
     apiAuth
-      .get(`/api/master/accountdetails/`)
+      .get("/api/master/accountdetails/?search=" + (val ? val : ""))
       .then((response) => {
         let data = response.data;
         console.log("xswjhjwx", response);

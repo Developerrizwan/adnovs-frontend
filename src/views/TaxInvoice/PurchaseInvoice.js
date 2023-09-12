@@ -389,7 +389,7 @@ const PurchaseInvoice = (props) => {
                 <tr>
                   <td className="border-0 fw">ETA:</td>
                   <td className="border-0">
-                    {moment(state.invoice?.job?.eta).format("MM/DD/YYYY")}
+                    {moment(state.invoice?.job?.eta).format("DD/MM/YYYY")}
                   </td>
                 </tr>
               </table>
@@ -427,7 +427,7 @@ const PurchaseInvoice = (props) => {
                 <tr>
                   <td className="border-0 fw">ETD:</td>
                   <td className="border-0">
-                    {moment(state.invoice?.job?.etd).format("MM/DD/YYYY")}
+                    {moment(state.invoice?.job?.etd).format("DD/MM/YYYY")}
                   </td>
                 </tr>
               </table>
@@ -471,40 +471,50 @@ const PurchaseInvoice = (props) => {
                 <th className="text-center">FCY Amount</th>
                 <th className="text-center">Total Amount (SAR)</th>
               </tr>
-              <tr>
-                <td className="text-end">
-                  {state?.invoice?.company?.account_name.toUpperCase()}
-                </td>
-                <td className="text-end">
-                  {" "}
-                  {state?.invoice?.narration.toUpperCase()}
-                  {state?.invoice?.narration ? (
-                    <>
-                      {"/"}
-                      <Translate
-                        text={state?.invoice?.narration.toUpperCase()}
-                      />
-                    </>
-                  ) : (
-                    ""
-                  )}
-                </td>
-                <td className="text-end">
-                  {state?.invoice?.job?.job_number.toUpperCase()}
-                </td>
-                <td className="text-end">
-                  {state?.invoice?.job?.shipper_name}
-                </td>
-                <td className="text-end">{state?.invoice?.ex_rate}</td>
-                <td className="text-end">
-                  {" "}
-                  {state?.invoice?.currency_sar.toUpperCase()}
-                </td>
-                <td className="text-end">{state?.invoice?.bill_amount}</td>
-                <td className="text-end">{state?.invoice?.fc_amount}</td>
-                <td className="text-end">{state?.invoice?.amount_sar}</td>
-              </tr>
+              {state?.costs?.map((cost, index) => {
+                return (
+                  <>
+                    <tr key={index}>
+                      <td className="text-end">{cost?.charge?.name}</td>
+                      <td className="text-end">
+                        {" "}
+                        {cost?.description?.toUpperCase()}
+                        {cost?.description ? (
+                          <>
+                            {"/"}
+                            <Translate text={cost?.description.toUpperCase()} />
+                          </>
+                        ) : (
+                          ""
+                        )}
+                      </td>
+                      <td className="text-end">
+                        {cost?.job_no?.job_number.toUpperCase()}
+                      </td>
+                      <td className="text-end">{cost?.shipment_no}</td>
+                      <td className="text-end">{cost?.tax_group_code}</td>
+                      <td className="text-end">
+                        {" "}
+                        {cost?.currency.toUpperCase()}
+                      </td>
+                      <td className="text-end">{cost?.amount}</td>
+                      <td className="text-end">{cost?.fc_amount}</td>
+                      <td className="text-end">{cost?.amount}</td>
+                    </tr>
+                  </>
+                );
+              })}
             </table>
+            <div
+              className="col-lg-12"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "end",
+              }}
+            >
+              <h4>{state?.total_amount}</h4>
+            </div>
           </div>
 
           {/* <div className="p-2" style={{ overflowX: "auto" }}>
