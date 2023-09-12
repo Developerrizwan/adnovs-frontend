@@ -184,11 +184,7 @@ const publicRoutes = [
   { path: "/voucher/tax-credit/:id", component: DebitReport },
   { path: "/voucher/payment/:id", component: PaymentReport },
   { path: "/voucher/receipt/:id", component: ReceiptReport },
-  { path: "/journal/:id", component: Journal },
-  { path: "/tax-credit/:id", component: TaxCredit },
-  { path: "/voucher/payment-voucher/:id", component: PaymentReport },
   { path: "/voucher/profit-loss", component: ProfitLoss },
-  { path: "/voucher/receipt-voucher/:id", component: ReceiptReport },
   { path: "/account-statement/:jobId", component: AccountStatement },
   {
     path: "/account-organizationstatement/:jobId",
