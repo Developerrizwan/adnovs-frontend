@@ -20,6 +20,14 @@ const InvoiceTable = (props) => {
   const [selectedInvoice, setSelectedInvoice] = useState([]);
   const [salesCols, setSalesCols] = useState([
     {
+      name: <span className="font-weight-bold fs-13">Invoice Number</span>,
+      selector: (row) => row.invoice_number,
+      cell: (value) => {
+        return <div>{value.invoice_number}</div>;
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">BL Number</span>,
       selector: (row) => row.bl_number,
       cell: (value) => {
@@ -211,6 +219,14 @@ const InvoiceTable = (props) => {
   ]);
 
   const [purchaseCols, setPurchaseCols] = useState([
+    {
+      name: <span className="font-weight-bold fs-13">Invoice Number</span>,
+      selector: (row) => row.invoice_number,
+      cell: (value) => {
+        return <div>{value.invoice_number}</div>;
+      },
+      sortable: true,
+    },
     {
       name: <span className="font-weight-bold fs-13">BL Number</span>,
       selector: (row) => row.bl_number,
