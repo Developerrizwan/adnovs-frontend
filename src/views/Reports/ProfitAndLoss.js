@@ -23,9 +23,9 @@ const ProfitAndLoss = (props) => {
       .get(`/api/master/job/?&type=Job`)
       .then((res) => {
         const { data } = res;
-        let jobOpts = data.results.map((opt) => {
+        let jobOpts = data.map((opt) => {
           return {
-            label: ` ${opt?.type} - ${opt?.job_number}`,
+            label: opt?.job_number,
             value: opt?.id,
           };
         });

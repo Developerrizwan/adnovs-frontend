@@ -2,18 +2,19 @@
 th,
 td {
   border: 1px solid black;
+  font-size: 20px;
 }
 
 /* .html-table-borderless th, td {
   border: none;
 } */
 
-.fw{
+.fw {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 20px;
 }
 
-.bw{
+.bw {
   font-weight: 600;
   font-size: 15px;
   border-bottom: "1px solid #000";
@@ -22,13 +23,13 @@ td {
   border-right: 0;
 }
 
-.border-table{
+.border-table {
   border-spacing: 30px;
   border-collapse: separate;
 }
 
-.custom-font{
-  font-size: 17px;
+.custom-font {
+  font-size: 20px;
   font-weight: 600;
   color: #000 !important;
 }

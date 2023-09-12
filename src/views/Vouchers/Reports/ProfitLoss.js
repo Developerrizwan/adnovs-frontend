@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import apiAuth from "../../../helpers/ApiAuth";
 import NotificationManager from "../../../components/Common/NotificationManager";
-import ReportHeader from "./helpers/ReportHeader";
+// import ReportHeader from "./helpers/ReportHeader";
 import ReportFooter from "./helpers/ReportFooter";
 import DownloadReport from "./helpers/DownloadReport";
 import moment from "moment";
+import shipLogo from "../../../assets/images/ship-logo.png";
+import Translate from "../../TaxInvoice/Translate";
 
 const Content = ({ data }) => {
   // console.log("profit", data);
@@ -36,7 +38,9 @@ const Content = ({ data }) => {
             </tr>
             <tr>
               <td className="border-0 fw">Currency:</td>
-              <td className="border-0">{data[0]?.currency.split(" - ")[0]}</td>
+              <td className="border-0">
+                {data?.length > 0 ? data[0]?.currency.split(" - ")[0] : ""}
+              </td>
             </tr>
           </table>
         </div>
@@ -129,7 +133,7 @@ const Content = ({ data }) => {
                 <p className="my-0 py-0"></p>
                 {data?.length &&
                   data?.map((dd) => {
-                    incomeTotal += Number(dd?.expenses_amount);
+                    incomeTotal += Number(dd?.income_amount);
                     return (
                       <>
                         <div className="my-1 text-center">
@@ -141,7 +145,7 @@ const Content = ({ data }) => {
                 <p
                   className="my-0 py-0"
                   style={{
-                    fontSize: "14px",
+                    fontSize: "20px",
                     fontWeight: 700,
                     textAlign: "center",
                     // marginLeft: "50px",
@@ -223,7 +227,7 @@ const Content = ({ data }) => {
                 <p
                   className="my-0 py-0"
                   style={{
-                    fontSize: "14px",
+                    fontSize: "20px",
 
                     fontWeight: 700,
                     textAlign: "center",
@@ -243,20 +247,51 @@ const Content = ({ data }) => {
   );
 };
 
-const DisplayItem = ({ label, value }) => {
+const ReportHeader = ({ data }) => {
+  // console.log("headerrr", data);
   return (
     <>
-      <div className="my-1">
-        <span
-          style={{ fontWeight: 600, width: "130px", display: "inline-block" }}
-        >
-          {label}
-        </span>
-        : {value}
+      <div className="row" style={{ placeItems: "center" }}>
+        {/* Logo */}
+        <div className="col-lg-3 mb-1">
+          <img
+            src={shipLogo}
+            alt=""
+            width={200}
+            style={{ margin: "auto", display: "block" }}
+          />
+        </div>
+
+        {/* Company Details */}
+        <div className="col-lg-9 d-flex flex-column align-items-end p-4">
+          <h3 style={{ fontFamily: "sans-serif", margin: 0, padding: 0 }}>
+            {data?.name}
+          </h3>
+          <span>
+            <Translate
+              fontsize={"24px"}
+              fontWeight={600}
+              text={data?.name || ""}
+            />
+          </span>
+
+          <div className="d-flex flex-column align-items-end">
+            <span>{data?.address}</span>
+            <br />
+            <span>
+              {data?.state} , {data?.country}
+            </span>
+            <br />
+            {/* <span>CR : 4030471839</span>
+            <br /> */}
+            <span>VAT : {data?.vat_number}</span>
+          </div>
+        </div>
       </div>
     </>
   );
 };
+
 
 const ProfitLoss = (props) => {
   const [state, setState] = useState({});
@@ -311,7 +346,9 @@ const ProfitLoss = (props) => {
           }}
         >
           {/* Header */}
-          <ReportHeader data={state?.data[0]?.company} />
+          <ReportHeader
+            data={state?.data?.length > 0 ? state?.data[0]?.company : {}}
+          />
 
           {/* Content */}
           <Content data={state?.data} />

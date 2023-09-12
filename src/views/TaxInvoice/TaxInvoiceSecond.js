@@ -16,17 +16,17 @@ import Translate from "./Translate";
 
 const ShowDataWithTranslate = ({ label, value, width }) => {
   return (
-    <p style={{ fontSize: "17px" }}>
+    <p style={{ fontSize: "20px", display: "flex" }}>
       <div
         style={{
-          display: "inline-block",
-          width: width,
+          display: "ruby",
+          // width: width,
         }}
       >
         {label}
         <Translate text={label} />
       </div>
-      <div style={{ display: "inline-block", marginLeft: "5px" }}>
+      <div style={{ display: "inline-block", marginLeft: "15px" }}>
         : {value ? value : ""}
       </div>
     </p>
@@ -256,7 +256,7 @@ const TaxInvoiceSecond = (props) => {
               />
             </div>
             <div className="col-lg-4 d-flex flex-column align-items-end">
-              <h3 style={{ color: "#000" }}>
+              <h3 style={{ color: "#000", fontSize: "20px" }}>
                 <Translate
                   text={String(state?.invoice?.company?.company_name_lang)}
                 />
@@ -306,6 +306,8 @@ const TaxInvoiceSecond = (props) => {
                 TAX INVOICE / <Translate text={"TAX INVOICE"} />
               </h2>
             </div>
+          </div>
+          <div className="row" style={{ marginBottom: "20px" }}>
             <div className="col-lg-4 custom-font">
               <ShowDataWithTranslate
                 width={"200px"}

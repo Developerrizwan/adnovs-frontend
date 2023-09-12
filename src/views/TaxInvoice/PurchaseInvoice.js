@@ -155,6 +155,7 @@ const PurchaseInvoice = (props) => {
         let exd_vat_total_amount = 0;
         let word_amount = "Zero";
         let qrcodeString = "";
+        let final_amount = 0;
         let data = response.data.map((ct) => {
           ct.vat_amount = Number(
             (Number(ct.amount) * Number(ct.tax_group_code)) / 100
@@ -175,12 +176,7 @@ const PurchaseInvoice = (props) => {
             Number(vat_amount) + Number(ct.vat_amount)
           ).toFixed(2);
 
-          word_amount = Number.isFinite(Number(total_amount))
-            ? numberToWords.toWords(Number(total_amount))
-            : String(total_amount);
-          word_amount = String(
-            word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
-          );
+          final_amount = final_amount + Number(total_amount);
 
           // genrating qrcode string using TLV format
 
@@ -210,6 +206,14 @@ const PurchaseInvoice = (props) => {
 
           return ct;
         });
+
+        word_amount = Number.isFinite(Number(final_amount))
+          ? numberToWords.toWords(Number(final_amount))
+          : String(final_amount);
+        word_amount = String(
+          word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
+        );
+
         setState((prev) => {
           return {
             ...prev,
@@ -218,6 +222,7 @@ const PurchaseInvoice = (props) => {
             vat_amount,
             exd_vat_total_amount,
             word_amount,
+            final_amount,
             qrcodeString,
           };
         });
@@ -288,9 +293,8 @@ const PurchaseInvoice = (props) => {
           </div>
 
           <div className="p-3 mt-2">
-            <p style={{ fontWeight: 500, fontSize: "16px" }}>
-              765, AIMALIKKHALIDSTREET, 7748 AI BAGHDADIYAH GHARBIYA PO BOX
-              22234, JEDDAH, KINGDOM OF SAUDI ARABIA
+            <p style={{ fontWeight: 500, fontSize: "20px" }}>
+              {state?.invoice?.company?.address}
             </p>
           </div>
 
@@ -407,14 +411,13 @@ const PurchaseInvoice = (props) => {
               <tr>
                 <th className="text-center">A/C Name</th>
                 <th className="text-center">Narration</th>
-                <th className="text-center">Job No.</th>
                 <th className="text-center">Shipment No.</th>
                 {/* <th className="text-center">Qty</th> */}
                 <th className="text-center">Currency</th>
-                {/* <th className="text-center">Amount / Qty</th> */}
-                <th className="text-center">FCY Amount</th>
+                <th className="text-center">Amount</th>
                 <th className="text-center">VAT%</th>
-                <th className="text-center">VAT</th>
+                <th className="text-center">FCY Amount</th>
+                <th className="text-center">VAT Amount</th>
                 <th className="text-center">Total Amount </th>
               </tr>
               {state?.costs?.map((cost, index) => {
@@ -428,22 +431,22 @@ const PurchaseInvoice = (props) => {
                         {cost?.description ? (
                           <>
                             {"/"}
-                            <Translate text={cost?.description.toUpperCase()} />
+                            <Translate
+                              text={cost?.description?.toUpperCase()}
+                            />
                           </>
                         ) : (
                           ""
                         )}
                       </td>
-                      <td className="text-end">
-                        {cost?.job_no?.job_number.toUpperCase()}
-                      </td>
                       <td className="text-end">{cost?.shipment_no}</td>
-                      {/* <td className="text-end">{cost?.tax_group_code}</td> */}
+
                       <td className="text-end">
                         {" "}
-                        {cost?.currency.toUpperCase()}
+                        {cost?.currency?.toUpperCase()}
                       </td>
-                      {/* <td className="text-end">{cost?.amount}</td> */}
+                      <td className="text-end">{cost?.amount}</td>
+                      <td className="text-end">{cost?.tax_group_code}</td>
                       <td className="text-end">{cost?.fcy_amount}</td>
                       <td className=" text-center">
                         {Number(cost.vat_amount)?.toLocaleString("en-US", {
@@ -457,7 +460,6 @@ const PurchaseInvoice = (props) => {
                           maximumFractionDigits: 2,
                         })}
                       </td>
-                      <td className="text-end">{cost?.amount}</td>
                     </tr>
                   </>
                 );
@@ -480,7 +482,7 @@ const PurchaseInvoice = (props) => {
                   marginLeft: "12px",
                 }}
               >
-                {Number(state?.total_amount)?.toLocaleString("en-US", {
+                {Number(state?.final_amount)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
