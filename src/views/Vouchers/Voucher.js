@@ -1093,13 +1093,13 @@ const Voucher = (props) => {
                           )}
                         </div>
 
-                        <button
+                        {/* <button
                           className="btn btn-success mx-5"
                           type="button"
                           onClick={toggle}
                         >
                           Open Modal
-                        </button>
+                        </button> */}
                       </div>
                     )}
                   </Form>
@@ -1112,9 +1112,9 @@ const Voucher = (props) => {
           </Grid> */}
         </Grid>
       </div>
-      <Modal isOpen={modal} centered={modal} toggle={toggle}>
+      {/* <Modal isOpen={modal} centered={modal} toggle={toggle}>
         <ModalBody>Modal</ModalBody>
-      </Modal>
+      </Modal> */}
       <Modal
         id="signupModals"
         tabIndex="-1"
@@ -1130,7 +1130,7 @@ const Voucher = (props) => {
             setAccountDetailsModal(false);
           }}
         >
-          Add Account Details
+          Add Account
         </ModalHeader>
         <ModalBody>
           <AccountDetail

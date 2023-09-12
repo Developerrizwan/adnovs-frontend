@@ -231,11 +231,11 @@ const AccountDetail = (props) => {
               <Formik
                 initialValues={{
                   vouchers:
-                    props.accountDetails?.vouchers?.voucher_type ||
+                    props.accountDetails?.vouchers?.id ||
                     props?.voucherId ||
                     "",
                   line_no: props.accountDetails?.line_no || 1,
-                  ac_name: props.accountDetails?.ac_name || "",
+                  ac_name: props.accountDetails?.ac_name?.id || "",
                   dr_cr: props.accountDetails?.dr_cr || "",
                   narration: props.accountDetails?.narration || "",
                   qty: props.accountDetails?.qty || "",
@@ -365,7 +365,7 @@ const AccountDetail = (props) => {
                             value={selectedParty}
                             options={partyOptions}
                             onChange={(data) => {
-                              setFieldValue("ac_name", data.value);
+                              setFieldValue("ac_name", data);
                               setSelectedParty(data);
                             }}
                           />
