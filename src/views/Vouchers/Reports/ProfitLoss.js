@@ -7,7 +7,12 @@ import ReportFooter from "./helpers/ReportFooter";
 import DownloadReport from "./helpers/DownloadReport";
 import moment from "moment";
 
-const Content = ({ voucher }) => {
+const Content = ({ data }) => {
+  // console.log("profit", data);
+
+  var incomeTotal = 0;
+  var expenseTotal = 0;
+
   return (
     <div id="content" className="mt-5 mx-2">
       {/* VOUCHER Title */}
@@ -31,7 +36,7 @@ const Content = ({ voucher }) => {
             </tr>
             <tr>
               <td className="border-0 fw">Currency:</td>
-              <td className="border-0"></td>
+              <td className="border-0">{data[0]?.currency.split(" - ")[0]}</td>
             </tr>
           </table>
         </div>
@@ -51,40 +56,189 @@ const Content = ({ voucher }) => {
 
       {/* Table */}
       <div id="table" className="my-4">
-        <table className="htmlTable mt-2 w-100">
+        <table className="htmlTable mt-2 w-100 ">
           <tr>
             <th className="text-center w-50">Group Name</th>
             <th className="text-center w-25">Previous Amount</th>
             <th className="text-center w-25">Current Amount</th>
           </tr>
           <tr>
-            <td className="text-center border-top-0 border-bottom-0">
-              Air Export Income
+            <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
+              <p
+                className="my-1 py-0"
+                style={{
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  marginLeft: "30px",
+                  fontFamily: "sans-serif",
+                  color: "black",
+                }}
+              >
+                PROFIT AND LOSS
+              </p>
             </td>
-            <td className="text-center border-top-0 border-bottom-0">5</td>
-            <td className="text-center border-top-0 border-bottom-0">12</td>
+            <td className="text-center border-top-0 border-bottom-0"></td>
+            <td className="text-center border-top-0 border-bottom-0"></td>
           </tr>
           <tr>
-            <td className="text-center border-top-0 border-bottom-0">
-              Sea Import Income
+            <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
+              <>
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "14px",
+
+                    fontWeight: 700,
+                    marginLeft: "70px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  INCOME
+                </p>
+                {data?.length &&
+                  data?.map((dd) => {
+                    return (
+                      <>
+                        <div
+                          className="my-1 "
+                          style={{ marginLeft: "100px" }}
+                        >{`${dd?.name}-${dd?.code}`}</div>
+                      </>
+                    );
+                  })}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "14px",
+
+                    fontWeight: 700,
+                    marginLeft: "90px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  INCOME TOTAL
+                </p>
+              </>
             </td>
-            <td className="text-center border-top-0 border-bottom-0">5</td>
-            <td className="text-center border-top-0 border-bottom-0">12</td>
+            <td className="text-center border-top-0 border-bottom-0"></td>
+            <td className="text-center border-top-0 border-bottom-0">
+              {/* Income - Current Amount details */}
+              <>
+                <p className="my-0 py-0"></p>
+                {data?.length &&
+                  data?.map((dd) => {
+                    incomeTotal += Number(dd?.expenses_amount);
+                    return (
+                      <>
+                        <div className="my-1 text-center">
+                          <span>{Number(dd?.income_amount).toFixed(2)}</span>
+                        </div>
+                      </>
+                    );
+                  })}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    textAlign: "center",
+                    // marginLeft: "50px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  {incomeTotal.toFixed(2) || "0.00"}
+                </p>
+              </>
+            </td>
           </tr>
           <tr>
-            <td className="text-center border-top-0">Profit Loss Total</td>
+            <td className="text-left border-top-0">
+              <>
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontWeight: 700,
+                    fontSize: "14px",
+
+                    marginLeft: "70px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  EXPENSES
+                </p>
+                {data?.length &&
+                  data?.map((dd) => {
+                    return (
+                      <>
+                        <div
+                          className="my-1"
+                          style={{ marginLeft: "100px" }}
+                        >{`${dd?.name}-${dd?.code}`}</div>
+                      </>
+                    );
+                  })}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    marginLeft: "80px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  EXPENSE TOTAL
+                </p>
+              </>
+            </td>
             <td className="text-center border-top-0"></td>
-            <td className="text-center border-top-0"></td>
+            <td className="text-center border-top-0">
+              <>
+                {/* Expense current Amount details */}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    marginLeft: "50px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                ></p>
+                {data?.length &&
+                  data?.map((dd) => {
+                    expenseTotal += Number(dd?.expenses_amount);
+                    return (
+                      <>
+                        <div className="my-1" style={{ textAlign: "center" }}>
+                          <span>{Number(dd?.expenses_amount).toFixed(2)}</span>
+                        </div>
+                      </>
+                    );
+                  })}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "14px",
+
+                    fontWeight: 700,
+                    textAlign: "center",
+                    // marginLeft: "50px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  {expenseTotal.toFixed(2) || "0.00"}
+                </p>
+              </>
+            </td>
           </tr>
         </table>
       </div>
-
-      {/* Amount in words */}
-      <h5 className="text-end" style={{ fontFamily: "sans-serif" }}>
-        {console.log("ssssssss", voucher?.amount_sar)}
-        {/* <RupeesToWordsConverter amount={voucher?.amount_sar} /> */}
-        <span style={{ marginLeft: "30px" }}>{voucher?.amount_sar}</span>
-      </h5>
     </div>
   );
 };
@@ -108,16 +262,21 @@ const ProfitLoss = (props) => {
   const [state, setState] = useState({});
 
   useEffect(() => {
-    let id = Number(props.match.params.id);
-    getVoucherData(id);
+    const id = Number(props.match.params.jobId);
+    let startTime = props.match.params.startTime;
+    let endTime = props.match.params.endTime;
+
+    getVoucherData(id, startTime, endTime);
   }, []);
 
-  const getVoucherData = (id) => {
+  const getVoucherData = (id, st, et) => {
     apiAuth
-      .get(`/api/master/voucher/${id}`)
+      .get(
+        `/api/profit/loss/?job=${id}&type=Profit/Loss&start_time=${st}&end_time=${et}`
+      )
       .then((response) => {
         let data = response.data;
-        setState({ ...state, voucher: data });
+        setState({ ...state, data });
       })
       .catch((err) => {
         console.log(err);
@@ -137,7 +296,7 @@ const ProfitLoss = (props) => {
         style={{
           marginTop: "15px",
           marginBottom: "15px",
-          width: "1200px",
+          width: "1000px",
         }}
       >
         {/* Download */}
@@ -152,10 +311,10 @@ const ProfitLoss = (props) => {
           }}
         >
           {/* Header */}
-          <ReportHeader />
+          <ReportHeader data={state?.data[0]?.company} />
 
           {/* Content */}
-          <Content voucher={state?.voucher} />
+          <Content data={state?.data} />
 
           {/* Footer */}
           {/* <ReportFooter /> */}

@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
+import moment from "moment";
 
 const ProfitAndLoss = (props) => {
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,7 @@ const ProfitAndLoss = (props) => {
 
   const getJobOptions = (val) => {
     apiAuth
-      .get(`/api/get-jobs/?type=Job`)
+      .get(`/api/master/job/?&type=Job`)
       .then((res) => {
         const { data } = res;
         let jobOpts = data.results.map((opt) => {
@@ -37,6 +38,12 @@ const ProfitAndLoss = (props) => {
         setJobOptions(jobOpts);
       })
       .catch((err) => console.log(err));
+  };
+
+  const changeDateFormat = (time) => {
+    const parsedDate = moment(time, "ddd MMM DD YYYY HH:mm:ss [GMT] ZZ (z)");
+    const formattedDate = parsedDate.utc().format("YYYY-MM-DDTHH:mm:ss[Z]");
+    return formattedDate;
   };
 
   const customStyles = {
@@ -87,13 +94,9 @@ const ProfitAndLoss = (props) => {
                   job: Yup.string().ensure().required("Job is Required"),
                 })}
                 onSubmit={(values, { reset }) => {
-                  apiAuth
-                    .get(
-                      `/api/profit/loss/?job=${values?.job}&type=Profit/Loss`,
-                      values
-                    )
-                    .then((res) => console.log(res))
-                    .catch((err) => console.log(err));
+                  const st = changeDateFormat(values.start_time);
+                  const et = changeDateFormat(values.end_time);
+                  history.push(`/report/profit-loss/${values.job}/${st}/${et}`);
                 }}
               >
                 {({ values, setFieldValue }) => (
