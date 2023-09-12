@@ -248,7 +248,7 @@ const Sales = (props) => {
     getOrganization(searchValue);
     getClientOrganization(searchValue);
     getPoaOptions();
-    getPodOptions();
+    // getPodOptions();
     getAllCurrencyCodes();
     getJobOptions();
     setSelectedInvoice({

@@ -249,7 +249,7 @@ const AddEnquiry = (props) => {
 
   useEffect(() => {
     getPoaOptions();
-    getPodOptions();
+    // getPodOptions();
     getOrganization();
     getClientOrganization();
   }, []);

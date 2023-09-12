@@ -58,7 +58,7 @@ const EditEnquiry = (props) => {
 
   useEffect(() => {
     getPoaOptions();
-    getPodOptions();
+    // getPodOptions();
   }, []);
 
   const getOrganization = (val) => {
