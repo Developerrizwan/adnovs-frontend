@@ -547,7 +547,7 @@ const EditJob = (props) => {
                       <Select
                         placeholder={"Select"}
                         styles={customStyles}
-                        options={podOptions}
+                        options={poaOptions}
                         value={podValue}
                         onChange={(data) => {
                           setPodValue(data);

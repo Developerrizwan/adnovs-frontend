@@ -435,7 +435,7 @@ const CreateNewJob = (props) => {
                             name="type"
                             placeholder={"Select"}
                             styles={customStyles}
-                            options={podOptions?.map((item) => {
+                            options={poaOptions?.map((item) => {
                               return {
                                 label: `${item.code}-${item.name}-${item.country}`,
                                 value: item.name,
