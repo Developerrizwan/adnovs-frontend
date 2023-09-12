@@ -105,7 +105,7 @@ const AccountDetailsTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">narration</span>,
+      name: <span className="font-weight-bold fs-13">Narration</span>,
       selector: (row) => row.narration,
       cell: (value) => {
         return <div>{value.narration}</div>;

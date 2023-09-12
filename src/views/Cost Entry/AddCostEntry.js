@@ -224,9 +224,9 @@ const AddCostEntry = (props) => {
               <Formik
                 initialValues={{
                   // voucher_type: props.entry?.voucher_type || "Journal",
-                  charge: props.entry?.charge?.id || 0,
+                  charge: props.entry?.charge?.id || "",
                   description: props.entry?.description || "",
-                  job_no: props.entry?.job_no?.id || 0,
+                  job_no: props.entry?.job_no?.id || "",
                   shipment_no: props.entry?.shipment_no || "",
                   currency: props.entry?.currency || "",
                   ex_rate: props.entry?.ex_rate || "",
@@ -240,7 +240,7 @@ const AddCostEntry = (props) => {
                 validationSchema={Yup.object({
                   charge: Yup.string().ensure().required("Required!"),
                   description: Yup.string().required("Required!"),
-                  // job_no: Yup.string().ensure().required("Required!"),
+                  job_no: Yup.string().ensure().required("Required!"),
                   shipment_no: Yup.string().required("Required!"),
                   currency: Yup.string().ensure().required("Required!"),
                   tax_group_code: Yup.string().ensure().required("Required!"),
@@ -378,7 +378,7 @@ const AddCostEntry = (props) => {
                         <div className="mb-3">
                           <label htmlFor="job_no" className="form-label">
                             Job No
-                            {/* <span className="text-danger">*</span> */}
+                            <span className="text-danger">*</span>
                           </label>
                           <Select
                             name="job_no"

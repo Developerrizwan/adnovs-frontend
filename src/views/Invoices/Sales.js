@@ -250,7 +250,7 @@ const Sales = (props) => {
     getPoaOptions();
     getPodOptions();
     getAllCurrencyCodes();
-    getJobs();
+    getJobOptions();
     setSelectedInvoice({
       label: invoicesId,
       value: invoicesId,
@@ -314,26 +314,18 @@ const Sales = (props) => {
     }),
   };
 
-  const getJobs = (val) => {
+  const getJobOptions = (val) => {
     apiAuth
       .get(`/api/master/job/?&type=Job`)
       .then((res) => {
         const { data } = res;
-        let opts = data.results.map((dd) => {
+        let jobOpts = data.map((opt) => {
           return {
-            label: dd.job_number,
-            value: dd?.id,
-            job: dd,
+            label: opt?.job_number,
+            value: opt?.id,
           };
         });
-
-        if (props?.isEdit) {
-          const selJob = opts.find(
-            (opt) => opt?.label === props.data?.job?.job_number
-          );
-          setSelectedJob(selJob);
-        }
-        setJobOptions(opts);
+        setJobOptions(jobOpts);
       })
       .catch((err) => console.log(err));
   };
@@ -503,7 +495,7 @@ const Sales = (props) => {
                             options={jobOptions}
                             value={selectedJob}
                             // onInputChange={(val) => {
-                            //   getJobs(val);
+                            //   getJobOptions(val);
                             // }}
                             onChange={(data) => {
                               setSelectedJob(data);
@@ -1162,6 +1154,7 @@ const Sales = (props) => {
                         className={`btn btn-success me-3 ${
                           props.loading ? "show-spinner" : ""
                         }`}
+                        disabled={state.invoice_id && !props?.isEdit}
                       >
                         <span className="spinner d-inline-block">
                           <span className="bounce1" />
