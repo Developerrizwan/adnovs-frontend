@@ -156,25 +156,24 @@ const PurchaseInvoice = (props) => {
         let word_amount = "Zero";
         let qrcodeString = "";
         let data = response.data.map((ct) => {
-          total_amount = total_amount + Number(ct.amount);
-          // ct.vat_amount = Number(
-          //   (Number(ct.amount) * Number(ct.tax_group_code)) / 100
-          // ).toFixed(2);
-          // ct.total_amount = Number(
-          //   Number(ct.amount) + Number(ct.vat_amount)
-          // ).toFixed(2);
+          ct.vat_amount = Number(
+            (Number(ct.amount) * Number(ct.tax_group_code)) / 100
+          ).toFixed(2);
+          ct.total_amount = Number(
+            Number(ct.amount) + Number(ct.vat_amount)
+          ).toFixed(2);
 
-          // exd_vat_total_amount = Number(
-          //   Number(exd_vat_total_amount) + Number(ct.amount)
-          // ).toFixed(2);
+          exd_vat_total_amount = Number(
+            Number(exd_vat_total_amount) + Number(ct.amount)
+          ).toFixed(2);
 
-          // total_amount = Number(
-          //   Number(total_amount) + Number(ct.total_amount)
-          // ).toFixed(2);
+          total_amount = Number(
+            Number(total_amount) + Number(ct.total_amount)
+          ).toFixed(2);
 
-          // vat_amount = Number(
-          //   Number(vat_amount) + Number(ct.vat_amount)
-          // ).toFixed(2);
+          vat_amount = Number(
+            Number(vat_amount) + Number(ct.vat_amount)
+          ).toFixed(2);
 
           word_amount = Number.isFinite(Number(total_amount))
             ? numberToWords.toWords(Number(total_amount))
@@ -414,7 +413,9 @@ const PurchaseInvoice = (props) => {
                 <th className="text-center">Currency</th>
                 {/* <th className="text-center">Amount / Qty</th> */}
                 <th className="text-center">FCY Amount</th>
-                <th className="text-center">Total Amount (SAR)</th>
+                <th className="text-center">VAT%</th>
+                <th className="text-center">VAT</th>
+                <th className="text-center">Total Amount </th>
               </tr>
               {state?.costs?.map((cost, index) => {
                 return (
@@ -443,7 +444,19 @@ const PurchaseInvoice = (props) => {
                         {cost?.currency.toUpperCase()}
                       </td>
                       {/* <td className="text-end">{cost?.amount}</td> */}
-                      <td className="text-end">{cost?.fc_amount}</td>
+                      <td className="text-end">{cost?.fcy_amount}</td>
+                      <td className=" text-center">
+                        {Number(cost.vat_amount)?.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
+                      <td className=" text-center">
+                        {Number(cost.total_amount)?.toLocaleString("en-US", {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2,
+                        })}
+                      </td>
                       <td className="text-end">{cost?.amount}</td>
                     </tr>
                   </>
