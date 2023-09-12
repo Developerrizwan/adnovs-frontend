@@ -325,6 +325,12 @@ const Sales = (props) => {
             value: opt?.id,
           };
         });
+        if (props?.isEdit) {
+          const selJob = jobOpts.find(
+            (opt) => opt?.label === props.data?.job?.job_number
+          );
+          setSelectedJob(selJob);
+        }
         setJobOptions(jobOpts);
       })
       .catch((err) => console.log(err));
@@ -1188,15 +1194,36 @@ const Sales = (props) => {
                           <></>
                         )}
 
-                        {props?.isEdit ? (
-                          <Link to={`/tax-invoice-second/${props?.data?.id}`}>
-                            <Button className="btn btn-warning float-right">
-                              {" "}
-                              View Invoice
-                            </Button>
-                          </Link>
+                        {props?.data?.invoice_type === "Sales" ? (
+                          <>
+                            {" "}
+                            {props?.isEdit ? (
+                              <Link
+                                to={`/tax-invoice-second/${props?.data?.id}`}
+                              >
+                                <Button className="btn btn-warning float-right">
+                                  {" "}
+                                  View Invoice
+                                </Button>
+                              </Link>
+                            ) : (
+                              <></>
+                            )}
+                          </>
                         ) : (
-                          <></>
+                          <>
+                            {" "}
+                            {props?.isEdit ? (
+                              <Link to={`/purchase-invoice/${props?.data?.id}`}>
+                                <Button className="btn btn-warning float-right">
+                                  {" "}
+                                  View Invoice
+                                </Button>
+                              </Link>
+                            ) : (
+                              <></>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>

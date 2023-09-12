@@ -77,7 +77,7 @@ const EditEnquiry = (props) => {
           };
         });
         const consignee_name = ConsOpts.find(
-          (item) => item.value === Number(props.allJobs?.consignee_name)
+          (item) => item.value === Number(props.allJobs?.consignee_name?.id)
         );
         setConsigneeNameValue(consignee_name);
         setConsigneeOptions(ConsOpts);
@@ -111,7 +111,7 @@ const EditEnquiry = (props) => {
           };
         });
         const client_name = ClientOpts.find(
-          (item) => item.value === Number(props.allJobs?.client_name)
+          (item) => item.value === Number(props.allJobs?.client_name?.id)
         );
         setClientNameValue(client_name);
         setClientOptions(ClientOpts);
@@ -324,13 +324,13 @@ const EditEnquiry = (props) => {
               poa: props?.allJobs?.poa ? props?.allJobs?.poa : "",
               pol: props?.allJobs?.pol ? props?.allJobs?.pol : "",
               consignee_name: props?.allJobs?.consignee_name
-                ? props?.allJobs?.consignee_name
+                ? props?.allJobs?.consignee_name?.id
                 : "",
               shipper_name: props?.allJobs?.shipper_name
                 ? props?.allJobs?.shipper_name
                 : "",
               client_name: props?.allJobs?.client_name
-                ? props?.allJobs?.client_name
+                ? props?.allJobs?.client_name?.id
                 : "",
               remarks: props?.allJobs?.remarks ? props?.allJobs?.remarks : "",
               job_type: props?.allJobs?.job_type
@@ -377,8 +377,8 @@ const EditEnquiry = (props) => {
               const company = JSON.parse(
                 localStorage.getItem("authUser")
               )?.company_id;
-              values["client_name"] = clientNameValue.value;
-              values["consignee_name"] = consigneeNameValue.value;
+              // values["client_name"] = clientNameValue.value;
+              // values["consignee_name"] = consigneeNameValue.value;
               values["company"] = company;
               if (eta) values["eta"] = eta;
               if (etd) values["etd"] = etd;

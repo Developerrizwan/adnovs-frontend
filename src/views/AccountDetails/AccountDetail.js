@@ -234,7 +234,7 @@ const AccountDetail = (props) => {
                     props.accountDetails?.vouchers?.id ||
                     props?.voucherId ||
                     "",
-                  line_no: props.accountDetails?.line_no || 1,
+                  // line_no: props.accountDetails?.line_no || 1,
                   ac_name: props.accountDetails?.ac_name?.id || "",
                   dr_cr: props.accountDetails?.dr_cr || "",
                   narration: props.accountDetails?.narration || "",
@@ -257,7 +257,7 @@ const AccountDetail = (props) => {
                   remarks: props.accountDetails?.remarks || "",
                 }}
                 validationSchema={Yup.object({
-                  line_no: Yup.string().ensure().required("Required!"),
+                  // line_no: Yup.string().ensure().required("Required!"),
                   ac_name: Yup.string().ensure().required("Required!"),
                   qty: Yup.string().required("Required!"),
                   amount_qty: Yup.string().required("Required!"),
@@ -365,7 +365,7 @@ const AccountDetail = (props) => {
                             value={selectedParty}
                             options={partyOptions}
                             onChange={(data) => {
-                              setFieldValue("ac_name", data);
+                              setFieldValue("ac_name", data?.value);
                               setSelectedParty(data);
                             }}
                           />
