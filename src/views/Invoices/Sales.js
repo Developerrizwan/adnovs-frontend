@@ -1154,6 +1154,7 @@ const Sales = (props) => {
                         className={`btn btn-success me-3 ${
                           props.loading ? "show-spinner" : ""
                         }`}
+                        disabled={state.invoice_id && !props?.isEdit}
                       >
                         <span className="spinner d-inline-block">
                           <span className="bounce1" />

@@ -137,10 +137,12 @@ const AccountDetail = (props) => {
             type: "coa",
           };
         });
-        const selParty = data.find(
-          (cur) => cur.value === props.accountDetails?.ac_name
-        );
-        setSelectedParty(selParty);
+        if (props?.isEdit) {
+          const selParty = data.find(
+            (cur) => cur.value === props.accountDetails?.ac_name?.id
+          );
+          setSelectedParty(selParty);
+        }
         setPartyOptions(data);
         getOrganizationOptions(data);
       })
@@ -229,7 +231,9 @@ const AccountDetail = (props) => {
               <Formik
                 initialValues={{
                   vouchers:
-                    props.accountDetails?.vouchers || props?.voucherId || "",
+                    props.accountDetails?.vouchers?.voucher_type ||
+                    props?.voucherId ||
+                    "",
                   line_no: props.accountDetails?.line_no || 1,
                   ac_name: props.accountDetails?.ac_name || "",
                   dr_cr: props.accountDetails?.dr_cr || "",
@@ -326,11 +330,10 @@ const AccountDetail = (props) => {
                 {({ values, errors, touched, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
+                      {/* <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="voucher_type" className="form-label">
                             Voucher Type
-                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             name="voucher_type"
@@ -349,7 +352,7 @@ const AccountDetail = (props) => {
                             </div>
                           )}
                         </div>
-                      </Grid>
+                      </Grid> */}
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="ac_name" className="form-label">
