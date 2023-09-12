@@ -282,7 +282,7 @@ const EditJob = (props) => {
     });
 
     getPoaOptions();
-    getPodOptions();
+    // getPodOptions();
     getOrganization();
     getClientOrganization();
     getPartiesOptions(orgsOpts);

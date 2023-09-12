@@ -182,7 +182,7 @@ const CreateNewJob = (props) => {
 
   useEffect(() => {
     getPoaOptions();
-    getPodOptions();
+    // getPodOptions();
     getOrganization();
     getClientOrganization();
     getAllParties();
