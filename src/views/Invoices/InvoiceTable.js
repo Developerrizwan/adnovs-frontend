@@ -236,6 +236,14 @@ const InvoiceTable = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">Supplier</span>,
+      selector: (row) => row.party_account?.name,
+      cell: (value) => {
+        return <div>{value.party_account?.name}</div>;
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Consignee Name</span>,
       selector: (row) => row.consignee_name?.name,
       cell: (value) => {
@@ -464,7 +472,7 @@ const InvoiceTable = (props) => {
         paginationServer
         paginationDefaultPage={props.invoicePagination?.currentPage}
         paginationTotalRows={props.invoicePagination?.totalRows}
-        pagination={props.invoices.length > 10 ? true : false}
+        pagination={true}
       />
       <Modal
         id="signupModals"

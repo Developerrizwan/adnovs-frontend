@@ -156,24 +156,25 @@ const PurchaseInvoice = (props) => {
         let word_amount = "Zero";
         let qrcodeString = "";
         let data = response.data.map((ct) => {
-          ct.vat_amount = Number(
-            (Number(ct.amount) * Number(ct.tax_group_code)) / 100
-          ).toFixed(2);
-          ct.total_amount = Number(
-            Number(ct.amount) + Number(ct.vat_amount)
-          ).toFixed(2);
+          total_amount = total_amount + Number(ct.amount);
+          // ct.vat_amount = Number(
+          //   (Number(ct.amount) * Number(ct.tax_group_code)) / 100
+          // ).toFixed(2);
+          // ct.total_amount = Number(
+          //   Number(ct.amount) + Number(ct.vat_amount)
+          // ).toFixed(2);
 
-          exd_vat_total_amount = Number(
-            Number(exd_vat_total_amount) + Number(ct.amount)
-          ).toFixed(2);
+          // exd_vat_total_amount = Number(
+          //   Number(exd_vat_total_amount) + Number(ct.amount)
+          // ).toFixed(2);
 
-          total_amount = Number(
-            Number(total_amount) + Number(ct.total_amount)
-          ).toFixed(2);
+          // total_amount = Number(
+          //   Number(total_amount) + Number(ct.total_amount)
+          // ).toFixed(2);
 
-          vat_amount = Number(
-            Number(vat_amount) + Number(ct.vat_amount)
-          ).toFixed(2);
+          // vat_amount = Number(
+          //   Number(vat_amount) + Number(ct.vat_amount)
+          // ).toFixed(2);
 
           word_amount = Number.isFinite(Number(total_amount))
             ? numberToWords.toWords(Number(total_amount))
@@ -184,29 +185,29 @@ const PurchaseInvoice = (props) => {
 
           // genrating qrcode string using TLV format
 
-          try {
-            let sellarNameBuf = getTLVForValue("1", "Seller Name");
-            let registrationBuf = getTLVForValue("2", "VAT No");
-            let timestampBuf = getTLVForValue(
-              "3",
-              String(state.invoice?.created_at)
-            );
-            let inoiceAmountBuf = getTLVForValue("4", String(total_amount));
-            let vatamountBuf = getTLVForValue("5", String(vat_amount));
+          // try {
+          //   let sellarNameBuf = getTLVForValue("1", "Seller Name");
+          //   let registrationBuf = getTLVForValue("2", "VAT No");
+          //   let timestampBuf = getTLVForValue(
+          //     "3",
+          //     String(state.invoice?.created_at)
+          //   );
+          //   let inoiceAmountBuf = getTLVForValue("4", String(total_amount));
+          //   let vatamountBuf = getTLVForValue("5", String(vat_amount));
 
-            let tagsBufsArray = [
-              sellarNameBuf,
-              registrationBuf,
-              timestampBuf,
-              inoiceAmountBuf,
-              vatamountBuf,
-            ];
+          //   let tagsBufsArray = [
+          //     sellarNameBuf,
+          //     registrationBuf,
+          //     timestampBuf,
+          //     inoiceAmountBuf,
+          //     vatamountBuf,
+          //   ];
 
-            let qrCodeBuf = Buffer.concat(tagsBufsArray);
-            qrcodeString = qrCodeBuf.toString("base64");
-          } catch (error) {
-            console.log(error);
-          }
+          //   let qrCodeBuf = Buffer.concat(tagsBufsArray);
+          //   qrcodeString = qrCodeBuf.toString("base64");
+          // } catch (error) {
+          //   console.log(error);
+          // }
 
           return ct;
         });
@@ -294,62 +295,6 @@ const PurchaseInvoice = (props) => {
             </p>
           </div>
 
-          {/* <div className="row mt-2 p-2">
-          <div className="col-lg-6">
-            <h5 className="mb-4" style={{ fontWeight: 700, color: "#000" }}>
-              INVOICE TO
-              <Translate text={"INVOICE TO"} />{" "}
-              <span
-                style={{
-                  marginLeft: "3px",
-                }}
-              >
-                :
-              </span>
-            </h5>
-            <p>{state.invoice?.client_name?.name}</p>
-            <p>{state.invoice?.client_name?.address}</p>
-            <p>
-              VAT Number الرقم الضريبي
-              <div style={{ display: "inline-block", marginLeft: "5px" }}>
-                : {state.invoice?.client_name?.vat_trn_number}
-              </div>
-            </p>
-          </div>
-          <div className="col-lg-6" style={{ borderLeft: "1px solid #000" }}>
-            <ShowDataWithTranslate2
-              width={"400px"}
-              fontWeight={"600"}
-              textTransform={"uppercase"}
-              label={"Customer VAT Number"}
-              value={state.invoice?.client_name?.vat_trn_number}
-            />
-            <ShowDataWithTranslate2
-              width={"400px"}
-              fontWeight={"600"}
-              textTransform={"uppercase"}
-              label={"Invoice No"}
-              value={state?.invoice?.id}
-            />
-            <ShowDataWithTranslate2
-              width={"400px"}
-              fontWeight={"600"}
-              textTransform={"uppercase"}
-              label={"Invoice Date"}
-              value={moment(state?.invoice?.date).format("MM/DD/YYYY")}
-            />
-            <ShowDataWithTranslate2
-              width={"400px"}
-              fontWeight={"600"}
-              textTransform={"uppercase"}
-              label={"Payment Due Date"}
-              value={moment(state?.invoice?.due_date).format("MM/DD/YYYY")}
-            />
-          </div>
-        </div> */}
-
-          {/* <hr style={{ border: "1px solid #000" }} /> */}
-
           <div className="row p-2">
             <div className="col-lg-6 col-xs-12">
               <table>
@@ -360,14 +305,14 @@ const PurchaseInvoice = (props) => {
                 <tr>
                   <td className="border-0 fw">A/C Name:</td>
                   <td className="border-0">
-                    {state?.invoice?.company?.account_name.toUpperCase()}
+                    {state?.invoice?.party_account?.name?.toUpperCase()}
                   </td>
                 </tr>
                 <tr>
                   <td className="border-0 fw">Narration:</td>
                   <td className="border-0">
                     {" "}
-                    {state?.invoice?.narration.toUpperCase()}
+                    {state?.invoice?.narration?.toUpperCase()}
                   </td>
                 </tr>
                 <tr>
@@ -465,9 +410,9 @@ const PurchaseInvoice = (props) => {
                 <th className="text-center">Narration</th>
                 <th className="text-center">Job No.</th>
                 <th className="text-center">Shipment No.</th>
-                <th className="text-center">Qty</th>
+                {/* <th className="text-center">Qty</th> */}
                 <th className="text-center">Currency</th>
-                <th className="text-center">Amount / Qty</th>
+                {/* <th className="text-center">Amount / Qty</th> */}
                 <th className="text-center">FCY Amount</th>
                 <th className="text-center">Total Amount (SAR)</th>
               </tr>
@@ -492,12 +437,12 @@ const PurchaseInvoice = (props) => {
                         {cost?.job_no?.job_number.toUpperCase()}
                       </td>
                       <td className="text-end">{cost?.shipment_no}</td>
-                      <td className="text-end">{cost?.tax_group_code}</td>
+                      {/* <td className="text-end">{cost?.tax_group_code}</td> */}
                       <td className="text-end">
                         {" "}
                         {cost?.currency.toUpperCase()}
                       </td>
-                      <td className="text-end">{cost?.amount}</td>
+                      {/* <td className="text-end">{cost?.amount}</td> */}
                       <td className="text-end">{cost?.fc_amount}</td>
                       <td className="text-end">{cost?.amount}</td>
                     </tr>
@@ -511,9 +456,22 @@ const PurchaseInvoice = (props) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "end",
+                marginTop: "10px",
+                fontWeight: "bold",
+                color: "#000",
               }}
             >
-              <h4>{state?.total_amount}</h4>
+              <h4>{state?.word_amount} Only</h4>
+              <h4
+                style={{
+                  marginLeft: "12px",
+                }}
+              >
+                {Number(state?.total_amount)?.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </h4>
             </div>
           </div>
 

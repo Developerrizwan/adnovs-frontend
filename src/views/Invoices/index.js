@@ -158,7 +158,7 @@ const Invoices = (props) => {
                     invoicePagination={{ ...invoicePagination }}
                     handlePagination={(data) => {
                       setInvoicePagination(data);
-                      getInvoices(data);
+                      getInvoices(data, searchValue, selectedValue?.value);
                     }}
                     selectedValue={selectedValue.value}
                     getInvoices={() => {
