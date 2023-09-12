@@ -323,6 +323,7 @@ const Sales = (props) => {
           return {
             label: opt?.job_number,
             value: opt?.id,
+            job: opt,
           };
         });
         if (props?.isEdit) {
@@ -513,21 +514,21 @@ const Sales = (props) => {
                               /* consignee_name */
                               setFieldValue(
                                 "consignee_name",
-                                data?.job?.consignee_name?.id
+                                data?.job?.consignee_name
                               );
                               const selConsg = consigneeOptions.find(
                                 (dd) =>
-                                  dd.value === data?.job?.consignee_name?.id
+                                  dd.value === data?.job?.consignee_name
                               );
                               setConsigneeNameValue(selConsg);
 
                               /* client_name */
                               setFieldValue(
                                 "client_name",
-                                data?.job?.client_name?.id
+                                data?.job?.client_name
                               );
                               const selCl = clientOptions.find(
-                                (dd) => dd.value === data?.job?.client_name?.id
+                                (dd) => dd.value === data?.job?.client_name
                               );
                               setClientNameValue(selCl);
 
