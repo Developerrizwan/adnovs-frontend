@@ -92,6 +92,7 @@ const Voucher = (props) => {
     const sel = voucherOptions.find((dd) => dd.value === voucherId);
     setSelectedVoucher(sel);
     getJobOptions();
+    getInvoices(selectedVoucher);
     getPartyOptions();
     getAllCurrencyCodes();
 
@@ -130,6 +131,10 @@ const Voucher = (props) => {
             value: dd?.id,
           };
         });
+        const selInvoice = invoiceOpts.find(
+          (item) => item.value === props.voucherData?.invoice?.id
+        );
+        setSelectedInvoice(selInvoice);
         setInvoiceOptions(invoiceOpts);
         setLoading(false);
       })
