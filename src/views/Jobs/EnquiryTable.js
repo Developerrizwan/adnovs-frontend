@@ -30,6 +30,14 @@ const EnquiryTable = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13"> Job Number</span>,
+      selector: (row) => row.job_number,
+      cell: (value) => {
+        return <div>{value.job_number}</div>;
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13"> Consigee Name</span>,
       selector: (row) => row.consignee_name?.name,
       cell: (value) => {
@@ -175,6 +183,7 @@ const EnquiryTable = (props) => {
       },
     },
   ]);
+  console.log("alljobs", props.allJobs);
   return (
     <>
       <DataTable
