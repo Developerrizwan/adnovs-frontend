@@ -13,16 +13,19 @@ import {
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Voucher from "./Voucher";
+import AccountDetail from "../AccountDetails/AccountDetail";
 
 const VoucherTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState([]);
   const [deletId, setDeletId] = useState();
+  const [accountDetailsModal, setAccountDetailsModal] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState(null);
 
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Voucher Type</span>,
+      name: <span className="font-weight-bold fs-13">Voucher Type</span>,
       selector: (row) => row.voucher_type,
       cell: (value) => {
         return <div>{value.voucher_type}</div>;
@@ -30,7 +33,7 @@ const VoucherTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13"> Branch</span>,
+      name: <span className="font-weight-bold fs-13">Branch</span>,
       selector: (row) => row.branch,
       cell: (value) => {
         return <div>{value.branch}</div>;
@@ -38,7 +41,7 @@ const VoucherTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13"> Job ID</span>,
+      name: <span className="font-weight-bold fs-13">Job ID</span>,
       selector: (row) => row,
       cell: (value) => {
         return <div>{value.job?.job_number}</div>;
@@ -89,13 +92,22 @@ const VoucherTable = (props) => {
       },
       sortable: true,
     },
+    {
+      name: <span className="font-weight-bold fs-13">Invoice</span>,
+      selector: (row) => row,
+      cell: (value) => {
+        return <div>{value.invoice?.invoice_number}</div>;
+      },
+      sortable: true,
+      checkHide: true,
+    },
     // {
     //   name: <span className="font-weight-bold fs-13">Against Concern</span>,
     //   selector: (row) => row.groups,
     //   sortable: true,
     // },
     {
-      name: <span className="font-weight-bold fs-13">naration</span>,
+      name: <span className="font-weight-bold fs-13">Naration</span>,
       selector: (row) => row.naration,
       cell: (value) => {
         return <div>{value.naration}</div>;
@@ -162,8 +174,17 @@ const VoucherTable = (props) => {
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
+                  setSelectedAccount(value);
+                  setAccountDetailsModal(true);
+                }}
+              >
+                <i className="ri-file-add-fill align-bottom me-2 text-muted"></i>
+                Add Account
+              </DropdownItem>
+              <DropdownItem
+                className="edit-item-btn"
+                onClick={() => {
                   setSelectedVoucher(value);
-                  console.log("wwwwwwwww", value);
                   setEditModal(true);
                 }}
               >
@@ -190,7 +211,18 @@ const VoucherTable = (props) => {
     <>
       <DataTable
         customStyles={customStyles}
-        columns={cols}
+        columns={[...cols].filter((col) => {
+          if (col.checkHide) {
+            if (
+              props.curVoucher === "DebitNote" ||
+              props.curVoucher === "CreditNote"
+            )
+              return true;
+            else return false;
+          }
+
+          return true;
+        })}
         data={props.users}
         paginationPerPage={props.pagination?.rowsPerPage}
         onChangePage={(p, t) => {
@@ -238,6 +270,33 @@ const VoucherTable = (props) => {
             voucherData={selectedVoucher}
             history={props.history}
             isEdit={true}
+          />
+        </ModalBody>
+      </Modal>
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={accountDetailsModal}
+        toggle={() => {
+          setAccountDetailsModal(false);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setAccountDetailsModal(false);
+          }}
+        >
+          Add Account
+        </ModalHeader>
+        <ModalBody>
+          <AccountDetail
+            fromVoucher={true}
+            voucherId={selectedAccount?.id}
+            closeAddPopup={() => {
+              setAccountDetailsModal(false);
+            }}
           />
         </ModalBody>
       </Modal>
