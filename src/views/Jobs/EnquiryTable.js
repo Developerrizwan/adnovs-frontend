@@ -146,7 +146,7 @@ const EnquiryTable = (props) => {
                   setJobTypeModal(true);
                 }}
               >
-                <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>
+                <i className="ri-file-add-fill align-bottom me-2 text-muted"></i>
                 Create Job
               </DropdownItem>
               <DropdownItem
