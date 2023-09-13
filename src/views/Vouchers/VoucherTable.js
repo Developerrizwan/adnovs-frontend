@@ -73,7 +73,7 @@ const VoucherTable = (props) => {
             title={value?.job?.job_number}
             style={{
               whiteSpace: "nowrap",
-              overflow: "hidden",
+              // overflow: "hidden",
               textOverflow: "ellipsis",
               maxWidth: "200px",
             }}

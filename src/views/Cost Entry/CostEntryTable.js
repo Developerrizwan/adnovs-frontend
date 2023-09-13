@@ -54,7 +54,7 @@ const CostEntryTable = (props) => {
             title={value.job_no?.job_number}
             style={{
               whiteSpace: "nowrap",
-              overflow: "hidden",
+              // overflow: "hidden",
               textOverflow: "ellipsis",
               maxWidth: "200px",
             }}
