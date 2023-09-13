@@ -23,15 +23,39 @@ const CompanyTable = (props) => {
       name: <span className="font-weight-bold fs-13">Company Name</span>,
       selector: (row) => row.name,
       cell: (value) => {
-        return <div>{value.name}</div>;
+        return (
+          <div
+            title={value.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.name}
+          </div>
+        );
       },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13"> Email</span>,
+      name: <span className="font-weight-bold fs-13">Email</span>,
       selector: (row) => row.email,
       cell: (value) => {
-        return <div>{value.email}</div>;
+        return (
+          <div
+            title={value.email}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.email}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -39,7 +63,19 @@ const CompanyTable = (props) => {
       name: <span className="font-weight-bold fs-13">Country</span>,
       selector: (row) => row.country,
       cell: (value) => {
-        return <div>{value.country}</div>;
+        return (
+          <div
+            title={value.country}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.country}
+          </div>
+        );
       },
 
       sortable: true,
@@ -48,7 +84,19 @@ const CompanyTable = (props) => {
       name: <span className="font-weight-bold fs-13">State</span>,
       selector: (row) => row.state,
       cell: (value) => {
-        return <div>{value.state}</div>;
+        return (
+          <div
+            title={value.state}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.state}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -56,7 +104,19 @@ const CompanyTable = (props) => {
       name: <span className="font-weight-bold fs-13">Address</span>,
       selector: (row) => row.address,
       cell: (value) => {
-        return <div>{value.address}</div>;
+        return (
+          <div
+            title={value.address}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.address}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -72,7 +132,19 @@ const CompanyTable = (props) => {
       name: <span className="font-weight-bold fs-13">Language Address</span>,
       selector: (row) => row.address,
       cell: (value) => {
-        return <div>{value?.language_address}</div>;
+        return (
+          <div
+            title={value?.language_address}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.language_address}
+          </div>
+        );
       },
       sortable: true,
     },

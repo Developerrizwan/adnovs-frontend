@@ -24,7 +24,19 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Charge</span>,
       selector: (row) => row.charge,
       cell: (value) => {
-        return <div>{value.charge?.code}</div>;
+        return (
+          <div
+            title={value.charge?.code}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.charge?.code}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -37,7 +49,19 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Job No</span>,
       selector: (row) => row.job_no,
       cell: (value) => {
-        return <div>{value.job_no?.job_number}</div>;
+        return (
+          <div
+            title={value.job_no?.job_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.job_no?.job_number}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -45,7 +69,19 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Amount</span>,
       selector: (row) => row.amount,
       cell: (value) => {
-        return <div>{value.amount}</div>;
+        return (
+          <div
+            title={value.amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.amount}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -54,7 +90,19 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Shipment No</span>,
       selector: (row) => row.shipment_no,
       cell: (value) => {
-        return <div>{value.shipment_no}</div>;
+        return (
+          <div
+            title={value.shipment_no}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.shipment_no}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -62,7 +110,19 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Currency</span>,
       selector: (row) => row.currency,
       cell: (value) => {
-        return <div>{value.currency}</div>;
+        return (
+          <div
+            title={value.currency}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.currency}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -70,21 +130,59 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Ex Rate</span>,
       selector: (row) => row.ex_rate,
       cell: (value) => {
-        return <div>{value.ex_rate}</div>;
+        return (
+          <div
+            title={value.ex_rate}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.ex_rate}
+          </div>
+        );
       },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Is Invoiced</span>,
       selector: (row) => row.ex_rate,
-      cell: (value) => <span>{value?.is_included ? "Yes" : "No"}</span>,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.is_included ? "Yes" : "No"}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.is_included ? "Yes" : "No"}
+          </div>
+        );
+      },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">FCY Amount</span>,
       selector: (row) => row.fcy_amount,
       cell: (value) => {
-        return <div>{value.fcy_amount}</div>;
+        return (
+          <div
+            title={value?.fcy_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.fcy_amount}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -92,7 +190,19 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Description</span>,
       selector: (row) => row.description,
       cell: (value) => {
-        return <div>{value.description}</div>;
+        return (
+          <div
+            title={value?.description}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.description}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -100,7 +210,19 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Amount</span>,
       selector: (row) => row.amount,
       cell: (value) => {
-        return <div>{value.amount}</div>;
+        return (
+          <div
+            title={value?.amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.amount}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -109,7 +231,19 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Sale/Cost</span>,
       selector: (row) => row.sale_cost,
       cell: (value) => {
-        return <div>{value.sale_cost}</div>;
+        return (
+          <div
+            title={value?.sale_cost}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.sale_cost}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -117,7 +251,19 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Dr/Cr</span>,
       selector: (row) => row.dr_cr,
       cell: (value) => {
-        return <div>{value.dr_cr}</div>;
+        return (
+          <div
+            title={value?.dr_cr}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.dr_cr}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -133,7 +279,19 @@ const CostEntryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Tax Method</span>,
       selector: (row) => row.tax_group_code,
       cell: (value) => {
-        return <div>{value.tax_group_code}</div>;
+        return (
+          <div
+            title={value?.tax_group_code}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.tax_group_code}
+          </div>
+        );
       },
       sortable: true,
     },

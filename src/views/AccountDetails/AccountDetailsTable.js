@@ -26,7 +26,19 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">A/C Name</span>,
       selector: (row) => row,
       cell: (value) => {
-        return <div>{value?.ac_name?.name}</div>;
+        return (
+          <div
+            title={value?.ac_name?.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.ac_name?.name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -35,7 +47,19 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">FCY Amount</span>,
       selector: (row) => row.fcy_amount,
       cell: (value) => {
-        return <div>{value.fcy_amount}</div>;
+        return (
+          <div
+            title={value.fcy_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.fcy_amount}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -43,7 +67,19 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">Voucher Type</span>,
       selector: (row) => row.voucher_type,
       cell: (value) => {
-        return <div>{value.vouchers?.voucher_type}</div>;
+        return (
+          <div
+            title={value.vouchers?.voucher_type}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.vouchers?.voucher_type}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -51,7 +87,19 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">Amount(SAR)</span>,
       selector: (row) => row.amount_sar,
       cell: (value) => {
-        return <div>{value.amount_sar}</div>;
+        return (
+          <div
+            title={value.amount_sar}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.amount_sar}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -59,7 +107,19 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">DR/CR(SAR)</span>,
       selector: (row) => row.dr_cr,
       cell: (value) => {
-        return <div>{value.dr_cr}</div>;
+        return (
+          <div
+            title={value.dr_cr}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.dr_cr}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -67,7 +127,19 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">Inter Branch</span>,
       selector: (row) => row.inter_branch,
       cell: (value) => {
-        return <div>{value.inter_branch}</div>;
+        return (
+          <div
+            title={value.inter_branch}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.inter_branch}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -75,7 +147,19 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">Tax Amount</span>,
       selector: (row) => row.tax_amount,
       cell: (value) => {
-        return <div>{value.tax_amount}</div>;
+        return (
+          <div
+            title={value.tax_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.tax_amount}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -84,23 +168,40 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">Tax Group Code</span>,
       selector: (row) => row.tax_group_code,
       cell: (value) => {
-        return <div>{value.tax_group_code}</div>;
+        return (
+          <div
+            title={value.tax_group_code}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.tax_group_code}
+          </div>
+        );
       },
       sortable: true,
     },
+
     {
       name: <span className="font-weight-bold fs-13">Taxable Amount</span>,
       selector: (row) => row.taxable_amount,
       cell: (value) => {
-        return <div>{value.taxable_amount}</div>;
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Taxable Amount</span>,
-      selector: (row) => row.taxable_amount,
-      cell: (value) => {
-        return <div>{value.taxable_amount}</div>;
+        return (
+          <div
+            title={value.taxable_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.taxable_amount}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -108,7 +209,19 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">Narration</span>,
       selector: (row) => row.narration,
       cell: (value) => {
-        return <div>{value.narration}</div>;
+        return (
+          <div
+            title={value.narration}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.narration}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -116,7 +229,19 @@ const AccountDetailsTable = (props) => {
       name: <span className="font-weight-bold fs-13">Remarks</span>,
       selector: (row) => row.remarks,
       cell: (value) => {
-        return <div>{value.remarks}</div>;
+        return (
+          <div
+            title={value.remarks}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.remarks}
+          </div>
+        );
       },
       sortable: true,
     },

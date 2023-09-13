@@ -21,10 +21,22 @@ const CaoTable = (props) => {
 
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Code</span>,
+      name: <span className="font-weight-bold fs-13">Code</span>,
       selector: (row) => row.code,
       cell: (value) => {
-        return <div>{value.code}</div>;
+        return (
+          <div
+            title={value.code}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.code}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -32,7 +44,19 @@ const CaoTable = (props) => {
       name: <span className="font-weight-bold fs-13">Name</span>,
       selector: (row) => row.name,
       cell: (value) => {
-        return <div>{value.name}</div>;
+        return (
+          <div
+            title={value?.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -40,13 +64,37 @@ const CaoTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">Status</span>,
       selector: (row) => row.status,
-      cell: (value) => <span>{value?.status ? "Active" : "Inactive"}</span>,
+      cell: (value) => (
+        <div
+          title={value?.status ? "Active" : "Inactive"}
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: "200px",
+          }}
+        >
+          {value?.status ? "Active" : "Inactive"}
+        </div>
+      ),
     },
     {
       name: <span className="font-weight-bold fs-13">COA Type</span>,
       selector: (row) => row.coa_type,
       cell: (value) => {
-        return <div>{value.coa_type}</div>;
+        return (
+          <div
+            title={value?.coa_type}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.coa_type}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -54,7 +102,19 @@ const CaoTable = (props) => {
       name: <span className="font-weight-bold fs-13">Category</span>,
       selector: (row) => row.category,
       cell: (value) => {
-        return <div>{value.category}</div>;
+        return (
+          <div
+            title={value.category}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.category}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -62,7 +122,19 @@ const CaoTable = (props) => {
       name: <span className="font-weight-bold fs-13">Type</span>,
       selector: (row) => row.type,
       cell: (value) => {
-        return <div>{value.type}</div>;
+        return (
+          <div
+            title={value?.type}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.type}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -70,7 +142,19 @@ const CaoTable = (props) => {
       name: <span className="font-weight-bold fs-13">Currency</span>,
       selector: (row) => row.currency,
       cell: (value) => {
-        return <div>{value.currency}</div>;
+        return (
+          <div
+            title={value.currency}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.currency}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -80,10 +164,16 @@ const CaoTable = (props) => {
       selector: (row) => row.additional_reference_code,
       cell: (value) => {
         return (
-          <div>
-            {value.additional_reference_code
-              ? value.additional_reference_code
-              : "-"}
+          <div
+            title={value.additional_reference_code}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.additional_reference_code}
           </div>
         );
       },

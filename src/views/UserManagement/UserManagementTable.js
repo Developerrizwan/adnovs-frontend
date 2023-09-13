@@ -21,10 +21,22 @@ const UserManagementTable = (props) => {
   const [selectedUser, setSelectedUser] = useState([]);
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Name</span>,
+      name: <span className="font-weight-bold fs-13">Name</span>,
       selector: (row) => row.first_name + " " + row.last_name,
       cell: (value) => {
-        return <div>{value.first_name + " " + value.last_name}</div>;
+        return (
+          <div
+            title={value.first_name + " " + value.last_name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.first_name + " " + value.last_name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -32,7 +44,19 @@ const UserManagementTable = (props) => {
       name: <span className="font-weight-bold fs-13">Email</span>,
       selector: (row) => row.email,
       cell: (value) => {
-        return <div>{value.email}</div>;
+        return (
+          <div
+            title={value.email}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.email}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -40,7 +64,19 @@ const UserManagementTable = (props) => {
       name: <span className="font-weight-bold fs-13">Mobile</span>,
       selector: (row) => row.mobile,
       cell: (value) => {
-        return <div>{value.mobile}</div>;
+        return (
+          <div
+            title={value.mobile}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.mobile}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -48,7 +84,19 @@ const UserManagementTable = (props) => {
       name: <span className="font-weight-bold fs-13">Role</span>,
       selector: (row) => row.groups,
       cell: (value) => {
-        return <div>{value.groups}</div>;
+        return (
+          <div
+            title={value.groups}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.groups}
+          </div>
+        );
       },
       sortable: true,
     },

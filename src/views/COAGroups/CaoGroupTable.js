@@ -24,7 +24,19 @@ const CaoGroupTable = (props) => {
       name: <span className="font-weight-bold fs-13"> Code</span>,
       selector: (row) => row.code,
       cell: (value) => {
-        return <div>{value.code}</div>;
+        return (
+          <div
+            title={value?.code}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.code}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -32,7 +44,19 @@ const CaoGroupTable = (props) => {
       name: <span className="font-weight-bold fs-13">Name</span>,
       selector: (row) => row.name,
       cell: (value) => {
-        return <div>{value.name}</div>;
+        return (
+          <div
+            title={value?.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -41,7 +65,19 @@ const CaoGroupTable = (props) => {
       name: <span className="font-weight-bold fs-13">Type</span>,
       selector: (row) => row.type,
       cell: (value) => {
-        return <div>{value.type}</div>;
+        return (
+          <div
+            title={value?.type}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.type}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -50,7 +86,19 @@ const CaoGroupTable = (props) => {
       name: <span className="font-weight-bold fs-13">Is Dr/Cr?</span>,
       selector: (row) => row.dr_cr,
       cell: (value) => {
-        return <div>{value.dr_cr}</div>;
+        return (
+          <div
+            title={value?.dr_cr}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.dr_cr}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -59,7 +107,19 @@ const CaoGroupTable = (props) => {
       name: <span className="font-weight-bold fs-13">Language Name</span>,
       selector: (row) => row.language_name,
       cell: (value) => {
-        return <div>{value.language_name}</div>;
+        return (
+          <div
+            title={value?.language_name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.language_name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -68,7 +128,19 @@ const CaoGroupTable = (props) => {
       name: <span className="font-weight-bold fs-13">Remarks</span>,
       selector: (row) => row.remarks,
       cell: (value) => {
-        return <div>{value.remarks}</div>;
+        return (
+          <div
+            title={value.remarks}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.remarks}
+          </div>
+        );
       },
       sortable: true,
     },
