@@ -150,7 +150,12 @@ const Invoices = (props) => {
           <Colxx lg="12">
             {invoices.length > 0 ? (
               <>
-                <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
+                <Card
+                  style={{
+                    boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)",
+                    marginBottom: "12px",
+                  }}
+                >
                   <InvoiceTable
                     invoices={invoices}
                     history={props.history}

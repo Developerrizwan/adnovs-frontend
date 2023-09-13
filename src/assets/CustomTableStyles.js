@@ -1,8 +1,8 @@
 export const customStyles = {
   table: {
     style: {
-      minHeight: "170px",
-      maxHeight: "60vh",
+      // minHeight: "170px",
+      // maxHeight: "100%",
       backgroundColor: "#f3f3f9",
       overflowY: "scroll",   
     },
