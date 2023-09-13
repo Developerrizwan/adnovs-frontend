@@ -17,7 +17,9 @@ const Reports = () => {
                 alt=""
                 width={100}
               />
-              <h4 className="text-center" style={{ fontFamily: "sans-serif" }}>PROFIT & LOSS</h4>
+              <h4 className="text-center" style={{ fontFamily: "sans-serif" }}>
+                PROFIT & LOSS
+              </h4>
             </div>
           </Link>
         </div>
@@ -26,13 +28,15 @@ const Reports = () => {
           <Link to="/trail">
             <div className="card p-5 rounded-5">
               <img className="m-auto mb-4" src={trial} alt="" width={100} />
-              <h4 className="text-center" style={{ fontFamily: "sans-serif" }}>TRIAL BALANCE</h4>
+              <h4 className="text-center" style={{ fontFamily: "sans-serif" }}>
+                TRIAL BALANCE
+              </h4>
             </div>
           </Link>
         </div>
 
         <div className="col-lg-3">
-          <Link to="">
+          <Link to="/balance">
             <div className="card p-5 rounded-5">
               <img
                 className="m-auto mb-4"
@@ -40,11 +44,12 @@ const Reports = () => {
                 alt=""
                 width={100}
               />
-              <h4 className="text-center" style={{ fontFamily: "sans-serif" }}>BALANCE SHEET</h4>
+              <h4 className="text-center" style={{ fontFamily: "sans-serif" }}>
+                BALANCE SHEET
+              </h4>
             </div>
           </Link>
         </div>
-    
       </div>
     </div>
   );

@@ -50,7 +50,7 @@ const AddCOA = (props) => {
   const coaTypeOptions = [
     {
       label: "Balance Sheet",
-      value: "Balance Sheet",
+      value: "BalanceSheet",
     },
     { label: "Profit/Loss", value: "Profit/Loss" },
   ];
@@ -232,7 +232,7 @@ const AddCOA = (props) => {
                   charge_required: props.account?.charge_required || false,
                   job_required: props.account?.job_required || false,
                   asset_required: props.account?.asset_required || false,
-                  coa_type: props.account?.coa_type || "Balance Sheet",
+                  coa_type: props.account?.coa_type || "BalanceSheet",
                   is_direct_indirect:
                     props.account?.is_direct_indirect || "Yes",
                   dr_cr: props.account?.dr_cr || "Dr",
@@ -410,7 +410,7 @@ const AddCOA = (props) => {
                             value={isCoaBsorPL}
                             options={coaTypeOptions}
                             onChange={(data) => {
-                              setFieldValue("coa_type", data.label);
+                              setFieldValue("coa_type", data.value);
                               setIsCoaBsorPL(data);
                             }}
                           />

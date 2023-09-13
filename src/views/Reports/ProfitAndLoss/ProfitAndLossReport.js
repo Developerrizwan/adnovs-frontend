@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import apiAuth from "../../../helpers/ApiAuth";
-import NotificationManager from "../../../components/Common/NotificationManager";
-// import ReportHeader from "./helpers/ReportHeader";
-import ReportFooter from "./helpers/ReportFooter";
-import DownloadReport from "./helpers/DownloadReport";
-import moment from "moment";
 import shipLogo from "../../../assets/images/ship-logo.png";
 import Translate from "../../TaxInvoice/Translate";
+import NotificationManager from "../../../components/Common/NotificationManager";
+import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 
 const Content = ({ data }) => {
   // console.log("profit", data);
@@ -130,7 +127,7 @@ const Content = ({ data }) => {
             <td className="text-center border-top-0 border-bottom-0">
               {/* Income - Current Amount details */}
               <>
-                <p className="my-0 py-0"></p>
+                <p className="my-0 py-0">----------------</p>
                 {data?.length &&
                   data?.map((dd) => {
                     incomeTotal += Number(dd?.income_amount);
@@ -145,8 +142,8 @@ const Content = ({ data }) => {
                 <p
                   className="my-0 py-0"
                   style={{
-                    fontSize: "20px",
-                    fontWeight: 700,
+                    fontSize: "16px",
+                    fontWeight: 900,
                     textAlign: "center",
                     // marginLeft: "50px",
                     fontFamily: "sans-serif",
@@ -203,16 +200,7 @@ const Content = ({ data }) => {
             <td className="text-center border-top-0">
               <>
                 {/* Expense current Amount details */}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    marginLeft: "50px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                ></p>
+                <p className="my-0 py-0">----------------</p>
                 {data?.length &&
                   data?.map((dd) => {
                     expenseTotal += Number(dd?.expenses_amount);
@@ -227,9 +215,9 @@ const Content = ({ data }) => {
                 <p
                   className="my-0 py-0"
                   style={{
-                    fontSize: "20px",
+                    fontSize: "16px",
 
-                    fontWeight: 700,
+                    fontWeight: 900,
                     textAlign: "center",
                     // marginLeft: "50px",
                     fontFamily: "sans-serif",
@@ -292,8 +280,7 @@ const ReportHeader = ({ data }) => {
   );
 };
 
-
-const ProfitLoss = (props) => {
+const ProfitAndLossReport = (props) => {
   const [state, setState] = useState({});
 
   useEffect(() => {
@@ -361,4 +348,4 @@ const ProfitLoss = (props) => {
   );
 };
 
-export default ProfitLoss;
+export default ProfitAndLossReport;

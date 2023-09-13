@@ -81,13 +81,16 @@ import PaymentReport from "../views/Vouchers/Reports/PaymentReport";
 import ReceiptReport from "../views/Vouchers/Reports/ReceiptReport";
 import OrganizationStatement from "../views/TaxInvoice/OrganizationStatement";
 import JournalReport from "../views/Vouchers/Reports/JournalReport";
-import DebitReport from "../views/Vouchers/Reports/DebitReport";
 import Reports from "../views/Reports";
 import ProfitAndLoss from "../views/Reports/ProfitAndLoss";
 import Trail from "../views/Reports/Trail";
 import AccountDetail from "../views/AccountDetails/AccountDetail";
 import AccountDetails from "../views/AccountDetails";
-import ProfitLoss from "../views/Vouchers/Reports/ProfitLoss";
+import ProfitAndLossReport from "../views/Reports/ProfitAndLoss/ProfitAndLossReport";
+import BalanceReport from "../views/Reports/BalanceSheet/BalanceReport";
+import TrailReport from "../views/Reports/Trail/TrailReport";
+import BalanceSheet from "../views/Reports/BalanceSheet";
+import DrOrCrReport from "../views/Vouchers/Reports/DrOrCrReport";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -130,6 +133,7 @@ const authProtectedRoutes = [
   { path: "/account-statement", component: AccountStatement },
   { path: "/reports", component: Reports },
   { path: "/profit-loss", component: ProfitAndLoss },
+  { path: "/balance", component: BalanceSheet },
   { path: "/trail", component: Trail },
   { path: "/account-details", component: AccountDetails },
   { path: "/account_detail", component: AccountDetail },
@@ -181,12 +185,21 @@ const publicRoutes = [
   { path: "/tax-invoice-second/:invoiceId", component: TaxInvoiceSecond },
   { path: "/purchase-invoice/:invoiceId", component: PurchaseInvoice },
   { path: "/voucher/journal/:id", component: JournalReport },
-  { path: "/voucher/tax-credit/:id", component: DebitReport },
+  { path: "/voucher/credit/:id", component: DrOrCrReport },
+  { path: "/voucher/debit/:id", component: DrOrCrReport },
   { path: "/voucher/payment/:id", component: PaymentReport },
   { path: "/voucher/receipt/:id", component: ReceiptReport },
   {
     path: "/report/profit-loss/:jobId/:startTime/:endTime",
-    component: ProfitLoss,
+    component: ProfitAndLossReport,
+  },
+  {
+    path: "/report/balance/:jobId/:startTime/:endTime",
+    component: BalanceReport,
+  },
+  {
+    path: "/report/trail/:jobId/:startTime/:endTime",
+    component: TrailReport,
   },
   { path: "/account-statement/:jobId", component: AccountStatement },
   {

@@ -5,10 +5,10 @@ import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
-import apiAuth from "../../helpers/ApiAuth";
+import apiAuth from "../../../helpers/ApiAuth";
 import moment from "moment";
 
-const ProfitAndLoss = (props) => {
+const Trail = (props) => {
   const [loading, setLoading] = useState(false);
   const [selectedJob, setSelectedJob] = useState(false);
   const [jobOptions, setJobOptions] = useState([]);
@@ -65,7 +65,7 @@ const ProfitAndLoss = (props) => {
               className="mb-5 mt-3"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h2 className="mx-3">Profit and Loss</h2>
+              <h2 className="mx-3">Trail Balance</h2>
 
               <button
                 className="btn btn-danger"
@@ -96,7 +96,7 @@ const ProfitAndLoss = (props) => {
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
                   const et = changeDateFormat(values.end_time);
-                  history.push(`/report/profit-loss/${values.job}/${st}/${et}`);
+                  history.push(`/report/trail/${values.job}/${st}/${et}`);
                 }}
               >
                 {({ values, setFieldValue }) => (
@@ -253,4 +253,4 @@ const ProfitAndLoss = (props) => {
   );
 };
 
-export default ProfitAndLoss;
+export default Trail;

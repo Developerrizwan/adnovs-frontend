@@ -5,9 +5,10 @@ import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
-import apiAuth from "../../helpers/ApiAuth";
+import apiAuth from "../../../helpers/ApiAuth";
+import moment from "moment";
 
-const Trail = (props) => {
+const ProfitAndLoss = (props) => {
   const [loading, setLoading] = useState(false);
   const [selectedJob, setSelectedJob] = useState(false);
   const [jobOptions, setJobOptions] = useState([]);
@@ -15,16 +16,16 @@ const Trail = (props) => {
 
   useEffect(() => {
     getJobOptions();
-  });
+  }, []);
 
   const getJobOptions = (val) => {
     apiAuth
-      .get(`/api/get-jobs/?page=${1}&search=${val || ""}&type=Job`)
+      .get(`/api/master/job/?&type=Job`)
       .then((res) => {
         const { data } = res;
-        let jobOpts = data.results.map((opt) => {
+        let jobOpts = data.map((opt) => {
           return {
-            label: ` ${opt?.type} - ${opt?.job_number}`,
+            label: opt?.job_number,
             value: opt?.id,
           };
         });
@@ -37,6 +38,12 @@ const Trail = (props) => {
         setJobOptions(jobOpts);
       })
       .catch((err) => console.log(err));
+  };
+
+  const changeDateFormat = (time) => {
+    const parsedDate = moment(time, "ddd MMM DD YYYY HH:mm:ss [GMT] ZZ (z)");
+    const formattedDate = parsedDate.utc().format("YYYY-MM-DDTHH:mm:ss[Z]");
+    return formattedDate;
   };
 
   const customStyles = {
@@ -58,7 +65,7 @@ const Trail = (props) => {
               className="mb-5 mt-3"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h2 className="mx-3">Trial Report</h2>
+              <h2 className="mx-3">Profit and Loss</h2>
 
               <button
                 className="btn btn-danger"
@@ -84,12 +91,13 @@ const Trail = (props) => {
                     : new Date(),
                 }}
                 validationSchema={Yup.object({
-                  name: Yup.string()
-                    .max(50, "Must be 50 characters or less")
-                    .trim()
-                    .required("Name is Required"),
+                  job: Yup.string().ensure().required("Job is Required"),
                 })}
-                onSubmit={(values, { reset }) => {}}
+                onSubmit={(values, { reset }) => {
+                  const st = changeDateFormat(values.start_time);
+                  const et = changeDateFormat(values.end_time);
+                  history.push(`/report/profit-loss/${values.job}/${st}/${et}`);
+                }}
               >
                 {({ values, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
@@ -98,14 +106,14 @@ const Trail = (props) => {
                         <div className="mb-3" style={{ zIndex: 200 }}>
                           <label htmlFor="job" className="form-label">
                             Job Type
-                            {/* <span className="text-danger">*</span> */}
+                            <span className="text-danger">*</span>
                           </label>
                           <Select
                             options={jobOptions}
                             value={selectedJob}
-                            onInputChange={(val) => {
-                              getJobOptions(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getJobOptions(val);
+                            // }}
                             onChange={(data) => {
                               setFieldValue("job", data.value);
                               setSelectedJob(data);
@@ -245,4 +253,4 @@ const Trail = (props) => {
   );
 };
 
-export default Trail;
+export default ProfitAndLoss;
