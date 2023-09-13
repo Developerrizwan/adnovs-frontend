@@ -92,7 +92,7 @@ const Voucher = (props) => {
     const sel = voucherOptions.find((dd) => dd.value === voucherId);
     setSelectedVoucher(sel);
     getJobOptions();
-    getInvoices(selectedVoucher);
+    getInvoices(voucherId);
     getPartyOptions();
     getAllCurrencyCodes();
 
@@ -120,12 +120,10 @@ const Voucher = (props) => {
       e === "DebitNote" ? "Purchase" : e === "CreditNote" ? "Sales" : "";
     setLoading(true);
     apiAuth
-      .get(`/api/get-invoices/?type=${type1}`)
+      .get(`/api/master/invoice/?type=${type1}`)
       .then((response) => {
         let data = response.data;
-        console.log("data", data);
-
-        const invoiceOpts = data?.results?.map((dd) => {
+        const invoiceOpts = data?.map((dd) => {
           return {
             label: dd?.invoice_number,
             value: dd?.id,
