@@ -213,7 +213,7 @@ const Content = ({ data, curReport }) => {
                 : <span style={{ marginLeft: "10px" }}>0.00 {curCurrency}</span>
               </td>
             </tr>
-            <tr>
+            {/* <tr>
               <td className="p-1 fw border-0">
                 <span>Total Taxable Amount (Excluding VAT)</span>
               </td>
@@ -223,7 +223,7 @@ const Content = ({ data, curReport }) => {
                   {totalTaxableAmt.toFixed(2)} {curCurrency}
                 </span>
               </td>
-            </tr>
+            </tr> */}
             <tr>
               <td className="p-1 fw border-0">Total VAT</td>
               <td className="p-1 border-0">
@@ -238,7 +238,7 @@ const Content = ({ data, curReport }) => {
               <td className="p-1 border-0">
                 :
                 <span style={{ marginLeft: "10px" }}>
-                  {(totalExcludeVat + totalTaxableAmt + totalVatAmt).toFixed(2)}
+                  {(totalExcludeVat + totalVatAmt).toFixed(2)}
                   {curCurrency}
                 </span>
               </td>
