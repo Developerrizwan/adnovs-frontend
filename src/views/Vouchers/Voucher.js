@@ -48,6 +48,10 @@ const Voucher = (props) => {
     value: "Journal",
     label: "Journal",
   });
+
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [invoiceOptions, setInvoiceOptions] = useState(null);
+
   const [selStatus, setSelStatus] = useState({
     value: "Created",
     label: "Created",
@@ -109,6 +113,41 @@ const Voucher = (props) => {
       setSelectedVoucher(selvoucher);
     }
   }, []);
+
+  const getInvoices = (e) => {
+    const type1 =
+      e === "DebitNote" ? "Purchase" : e === "CreditNote" ? "Sales" : "";
+    setLoading(true);
+    apiAuth
+      .get(`/api/get-invoices/?type=${type1}`)
+      .then((response) => {
+        let data = response.data;
+        console.log("data", data);
+
+        const invoiceOpts = data?.results?.map((dd) => {
+          return {
+            label: dd?.invoice_number,
+            value: dd?.id,
+          };
+        });
+        setInvoiceOptions(invoiceOpts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${
+            error.response?.data?.Error || `${selectedInvoice.value} Get Error`
+          }`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
 
   const getAllCurrencyCodes = () => {
     let allCurrencies = getAllISOCodes();
@@ -269,6 +308,7 @@ const Voucher = (props) => {
                     ? new Date(props.voucherData?.gl_date)
                     : new Date(),
                   voucher_type: "",
+                  invoice: "",
                   company: "",
                   voucher_from: props.voucherData?.voucher_from || "",
                   voucher_from_type: props.voucherData?.voucher_from_type || "",
@@ -399,6 +439,7 @@ const Voucher = (props) => {
                               console.log(event, "event");
                               setSelectedVoucher(event);
                               setFieldValue("voucher_type", event.value);
+                              getInvoices(event.value);
                             }}
                           />
                           {errors.voucher_type && touched.voucher_type && (
@@ -945,6 +986,34 @@ const Voucher = (props) => {
                       </Grid>
                     </Grid>
                     <Grid container spacing={2}>
+                      {(selectedVoucher?.value === "DebitNote" ||
+                        selectedVoucher?.value === "CreditNote") && (
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <label htmlFor="invoice" className="form-label">
+                              Invoice
+                              {/* <span className="text-danger">*</span> */}
+                            </label>
+                            <Select
+                              name="invoice"
+                              styles={customStyles}
+                              value={selectedInvoice}
+                              options={invoiceOptions}
+                              onChange={(event) => {
+                                console.log(event, "event");
+                                setSelectedInvoice(event);
+                                setFieldValue("invoice", event.value);
+                              }}
+                            />
+                            {errors.invoice && touched.invoice && (
+                              <div className="invalid-feedback d-block">
+                                {errors.invoice}
+                              </div>
+                            )}
+                          </div>
+                        </Grid>
+                      )}
+
                       <Grid item lg={8} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="address" className="form-label">
