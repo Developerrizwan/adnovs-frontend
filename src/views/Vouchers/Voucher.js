@@ -92,7 +92,11 @@ const Voucher = (props) => {
     const sel = voucherOptions.find((dd) => dd.value === voucherId);
     setSelectedVoucher(sel);
     getJobOptions();
-    getInvoices(voucherId);
+    if (props?.isEdit) {
+      getInvoices(props?.voucherData?.voucher_type);
+    } else {
+      getInvoices(voucherId);
+    }
     getPartyOptions();
     getAllCurrencyCodes();
 

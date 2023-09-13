@@ -22,18 +22,42 @@ const EnquiryTable = (props) => {
   const [selectedJob, setSelectedJob] = useState([]);
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Enquiry Number</span>,
+      name: <span className="font-weight-bold fs-13">Enquiry Number</span>,
       selector: (row) => row.enquiry_number,
       cell: (value) => {
-        return <div>{value.enquiry_number}</div>;
+        return (
+          <div
+            title={value.enquiry_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.enquiry_number}
+          </div>
+        );
       },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13"> Consigee Name</span>,
+      name: <span className="font-weight-bold fs-13">Consigee Name</span>,
       selector: (row) => row.consignee_name?.name,
       cell: (value) => {
-        return <div>{value.consignee_name?.name}</div>;
+        return (
+          <div
+            title={value.consignee_name?.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.consignee_name?.name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -41,7 +65,19 @@ const EnquiryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Shipper Name</span>,
       selector: (row) => row.shipper_name,
       cell: (value) => {
-        return <div>{value.shipper_name}</div>;
+        return (
+          <div
+            title={value.shipper_name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.shipper_name}
+          </div>
+        );
       },
 
       sortable: true,
@@ -50,7 +86,19 @@ const EnquiryTable = (props) => {
       name: <span className="font-weight-bold fs-13">POD</span>,
       selector: (row) => row.pod,
       cell: (value) => {
-        return <div>{value.pod}</div>;
+        return (
+          <div
+            title={value.pod}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.pod}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -58,7 +106,19 @@ const EnquiryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
       selector: (row) => row.client_name?.name,
       cell: (value) => {
-        return <div>{value.client_name?.name}</div>;
+        return (
+          <div
+            title={value.client_name?.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.client_name?.name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -66,7 +126,19 @@ const EnquiryTable = (props) => {
       name: <span className="font-weight-bold fs-13">ETA </span>,
       selector: (row) => moment(row.eta).format("YYYY-MM-DD HH:mm:ss"),
       cell: (value) => {
-        return <div>{moment(value.eta).format("YYYY-MM-DD HH:mm:ss")}</div>;
+        return (
+          <div
+            title={moment(value.eta).format("YYYY-MM-DD HH:mm:ss")}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {moment(value.eta).format("YYYY-MM-DD HH:mm:ss")}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -74,7 +146,19 @@ const EnquiryTable = (props) => {
       name: <span className="font-weight-bold fs-13">ETD </span>,
       selector: (row) => moment(row.etd).format("YYYY-MM-DD HH:mm:ss"),
       cell: (value) => {
-        return <div>{moment(value.etd).format("YYYY-MM-DD HH:mm:ss")}</div>;
+        return (
+          <div
+            title={moment(value.etd).format("YYYY-MM-DD HH:mm:ss")}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {moment(value.etd).format("YYYY-MM-DD HH:mm:ss")}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -82,7 +166,19 @@ const EnquiryTable = (props) => {
       name: <span className="font-weight-bold fs-13">POA</span>,
       selector: (row) => row.poa,
       cell: (value) => {
-        return <div>{value.poa}</div>;
+        return (
+          <div
+            title={value.poa}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.poa}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -90,7 +186,19 @@ const EnquiryTable = (props) => {
       name: <span className="font-weight-bold fs-13">POL</span>,
       selector: (row) => row.pol,
       cell: (value) => {
-        return <div>{value.pol}</div>;
+        return (
+          <div
+            title={value.pol}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.pol}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -98,7 +206,19 @@ const EnquiryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Scope Of Work</span>,
       selector: (row) => row.scope_of_work,
       cell: (value) => {
-        return <div>{value.scope_of_work}</div>;
+        return (
+          <div
+            title={value.scope_of_work}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.scope_of_work}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -106,7 +226,19 @@ const EnquiryTable = (props) => {
       name: <span className="font-weight-bold fs-13">Remarks</span>,
       selector: (row) => row.remarks,
       cell: (value) => {
-        return <div>{value.remarks}</div>;
+        return (
+          <div
+            title={value.remarks}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.remarks}
+          </div>
+        );
       },
       sortable: true,
     },

@@ -28,7 +28,19 @@ const VoucherTable = (props) => {
       name: <span className="font-weight-bold fs-13">Voucher Type</span>,
       selector: (row) => row.voucher_type,
       cell: (value) => {
-        return <div>{value.voucher_type}</div>;
+        return (
+          <div
+            title={value?.voucher_type}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.voucher_type}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -36,7 +48,19 @@ const VoucherTable = (props) => {
       name: <span className="font-weight-bold fs-13">Branch</span>,
       selector: (row) => row.branch,
       cell: (value) => {
-        return <div>{value.branch}</div>;
+        return (
+          <div
+            title={value?.branch}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.branch}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -44,7 +68,19 @@ const VoucherTable = (props) => {
       name: <span className="font-weight-bold fs-13">Job ID</span>,
       selector: (row) => row,
       cell: (value) => {
-        return <div>{value.job?.job_number}</div>;
+        return (
+          <div
+            title={value?.job?.job_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.job?.job_number}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -59,20 +95,58 @@ const VoucherTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">Date</span>,
       selector: (row) => row,
-      cell: (value) => <span>{moment(value?.date).format("MM/DD/YYYY")}</span>,
+      cell: (value) => {
+        return (
+          <div
+            title={moment(value?.date).format("MM/DD/YYYY")}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {moment(value?.date).format("MM/DD/YYYY")}
+          </div>
+        );
+      },
     },
     {
       name: <span className="font-weight-bold fs-13">G/L Date</span>,
       selector: (row) => row,
-      cell: (value) => (
-        <span>{moment(value?.gl_date).format("MM/DD/YYYY")}</span>
-      ),
+      cell: (value) => {
+        return (
+          <div
+            title={moment(value?.gl_date).format("MM/DD/YYYY")}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {moment(value?.gl_date).format("MM/DD/YYYY")}
+          </div>
+        );
+      },
     },
     {
       name: <span className="font-weight-bold fs-13">FC Amount</span>,
       selector: (row) => row.fc_amount,
       cell: (value) => {
-        return <div>{value.fc_amount}</div>;
+        return (
+          <div
+            title={value.fc_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.fc_amount}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -80,7 +154,19 @@ const VoucherTable = (props) => {
       name: <span className="font-weight-bold fs-13">Amount(SAR)</span>,
       selector: (row) => row.amount_sar,
       cell: (value) => {
-        return <div>{value.amount_sar}</div>;
+        return (
+          <div
+            title={value.amount_sar}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.amount_sar}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -88,7 +174,19 @@ const VoucherTable = (props) => {
       name: <span className="font-weight-bold fs-13">Party A/C</span>,
       selector: (row) => row,
       cell: (value) => {
-        return <div>{value.party_account?.code}</div>;
+        return (
+          <div
+            title={value.party_account?.code}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.party_account?.code}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -96,7 +194,19 @@ const VoucherTable = (props) => {
       name: <span className="font-weight-bold fs-13">Invoice</span>,
       selector: (row) => row,
       cell: (value) => {
-        return <div>{value.invoice?.invoice_number}</div>;
+        return (
+          <div
+            title={value?.invoice?.invoice_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.invoice?.invoice_number}
+          </div>
+        );
       },
       sortable: true,
       checkHide: true,
@@ -110,7 +220,19 @@ const VoucherTable = (props) => {
       name: <span className="font-weight-bold fs-13">Naration</span>,
       selector: (row) => row.naration,
       cell: (value) => {
-        return <div>{value.naration}</div>;
+        return (
+          <div
+            title={value?.naration}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.naration}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -123,8 +245,21 @@ const VoucherTable = (props) => {
       name: <span className="font-weight-bold fs-13">Remarks</span>,
       selector: (row) => row.remarks,
       cell: (value) => {
-        return <div>{value.remarks}</div>;
+        return (
+          <div
+            title={value.remarks}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.remarks}
+          </div>
+        );
       },
+
       sortable: true,
     },
     {
@@ -184,6 +319,7 @@ const VoucherTable = (props) => {
               <DropdownItem
                 className="edit-item-btn"
                 onClick={() => {
+                  console.log("voucherType", value);
                   setSelectedVoucher(value);
                   setEditModal(true);
                 }}

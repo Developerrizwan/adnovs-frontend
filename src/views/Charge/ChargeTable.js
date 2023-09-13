@@ -21,10 +21,22 @@ const ChargeTable = (props) => {
 
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13"> Code</span>,
+      name: <span className="font-weight-bold fs-13">Code</span>,
       selector: (row) => row.code,
       cell: (value) => {
-        return <div>{value.code}</div>;
+        return (
+          <div
+            title={value?.code}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.code}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -32,7 +44,19 @@ const ChargeTable = (props) => {
       name: <span className="font-weight-bold fs-13">Name</span>,
       selector: (row) => row.name,
       cell: (value) => {
-        return <div>{value.name}</div>;
+        return (
+          <div
+            title={value?.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -40,13 +64,39 @@ const ChargeTable = (props) => {
     {
       name: <span className="font-weight-bold fs-13">Status</span>,
       selector: (row) => row.status,
-      cell: (value) => <span>{value?.status ? "Active" : "Inactive"}</span>,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.status ? "Active" : "Inactive"}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.status ? "Active" : "Inactive"}
+          </div>
+        );
+      },
     },
     {
       name: <span className="font-weight-bold fs-13">COA</span>,
       selector: (row) => row.coa,
       cell: (value) => {
-        return <div>{value.coa?.code}</div>;
+        return (
+          <div
+            title={value.coa?.code}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.coa?.code}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -54,7 +104,19 @@ const ChargeTable = (props) => {
       name: <span className="font-weight-bold fs-13">IATA Code</span>,
       selector: (row) => row.iata_code,
       cell: (value) => {
-        return <div>{value.iata_code}</div>;
+        return (
+          <div
+            title={value.iata_code}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.iata_code}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -62,7 +124,19 @@ const ChargeTable = (props) => {
       name: <span className="font-weight-bold fs-13">Language Name</span>,
       selector: (row) => row.language_name,
       cell: (value) => {
-        return <div>{value.language_name}</div>;
+        return (
+          <div
+            title={value.language_name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.language_name}
+          </div>
+        );
       },
       sortable: true,
     },
