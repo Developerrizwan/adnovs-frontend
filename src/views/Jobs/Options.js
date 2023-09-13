@@ -111,6 +111,10 @@ export const statusOptions = [
     label: "Cancelled",
     value: "Cancelled",
   },
+  {
+    label: "RFQ",
+    value: "RFQ",
+  },
 ];
 
 export const typeOptions = [

@@ -159,6 +159,10 @@ const AddEnquiry = (props) => {
       label: "Cancelled",
       value: "Cancelled",
     },
+    {
+      label: "RFQ",
+      value: "RFQ",
+    },
   ];
 
   const getPoaOptions = (val) => {
