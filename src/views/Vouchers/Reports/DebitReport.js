@@ -232,7 +232,7 @@ const Content = ({ data }) => {
 const DisplayItem = ({ label, value }) => {
   return (
     <>
-      <div className="my-1">
+      <div className="my-1" style={{ fontSize: "20px" }}>
         <span
           style={{ fontWeight: 600, width: "120px", display: "inline-block" }}
         >
@@ -372,7 +372,7 @@ const DebitReport = (props) => {
         style={{
           marginTop: "15px",
           marginBottom: "15px",
-          width: "1000px",
+          width: "1200px",
         }}
       >
         {/* Download */}
