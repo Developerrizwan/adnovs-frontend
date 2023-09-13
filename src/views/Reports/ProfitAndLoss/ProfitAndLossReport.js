@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import apiAuth from "../../../helpers/ApiAuth";
-import NotificationManager from "../../../components/Common/NotificationManager";
-// import ReportHeader from "./helpers/ReportHeader";
-import ReportFooter from "./helpers/ReportFooter";
-import DownloadReport from "./helpers/DownloadReport";
-import moment from "moment";
 import shipLogo from "../../../assets/images/ship-logo.png";
 import Translate from "../../TaxInvoice/Translate";
+import NotificationManager from "../../../components/Common/NotificationManager";
+import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 
 const Content = ({ data }) => {
   // console.log("profit", data);
@@ -292,8 +289,7 @@ const ReportHeader = ({ data }) => {
   );
 };
 
-
-const ProfitLoss = (props) => {
+const ProfitAndLossReport = (props) => {
   const [state, setState] = useState({});
 
   useEffect(() => {
@@ -361,4 +357,4 @@ const ProfitLoss = (props) => {
   );
 };
 
-export default ProfitLoss;
+export default ProfitAndLossReport;
