@@ -30,9 +30,9 @@ const EnquiryTable = (props) => {
             title={value.enquiry_number}
             style={{
               whiteSpace: "nowrap",
-              overflow: "hidden",
+              // overflow: "hidden",
               textOverflow: "ellipsis",
-              maxWidth: "200px",
+              maxWidth: "250px",
             }}
           >
             {value.enquiry_number}

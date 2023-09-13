@@ -137,52 +137,53 @@ const Jobs = (props) => {
           />
         </Container>
 
-        <Row>
-          <Colxx lg="12">
-            {allJobs.length > 0 ? (
-              <>
-                <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
-                  {selectedValue === "Job" ? (
-                    <JobTable
-                      allJobs={allJobs}
-                      deleteJob={deleteJob}
-                      history={props.history}
-                      jobPagination={{ ...jobPagination }}
-                      handlePagination={(data) => {
-                        setJobPagination(data);
-                        getJobs(data, searchValue, selectedValue);
-                      }}
-                      userPagination={{ ...jobPagination }}
-                      selectedValue={selectedValue}
-                      getJobs={() => {
-                        setAllJobs([]);
-                        getJobs(jobPagination, searchValue, selectedValue);
-                      }}
-                    />
-                  ) : (
-                    <EnquiryTable
-                      allJobs={allJobs}
-                      deleteJob={deleteJob}
-                      history={props.history}
-                      jobPagination={{ ...jobPagination }}
-                      handlePagination={(data) => {
-                        setJobPagination(data);
-                        getJobs(data, searchValue, selectedValue);
-                      }}
-                      selectedValue={selectedValue}
-                      getJobs={() => {
-                        setAllJobs([]);
-                        getJobs(jobPagination, searchValue, selectedValue);
-                      }}
-                    />
-                  )}
-                </Card>
-              </>
-            ) : (
-              <>{loading ? <div className="loading"></div> : <></>}</>
-            )}
-          </Colxx>
-        </Row>
+        {allJobs.length > 0 ? (
+          <>
+            <Card
+              style={{
+                boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)",
+                marginBottom: "12px",
+              }}
+            >
+              {selectedValue === "Job" ? (
+                <JobTable
+                  allJobs={allJobs}
+                  deleteJob={deleteJob}
+                  history={props.history}
+                  jobPagination={{ ...jobPagination }}
+                  handlePagination={(data) => {
+                    setJobPagination(data);
+                    getJobs(data, searchValue, selectedValue);
+                  }}
+                  userPagination={{ ...jobPagination }}
+                  selectedValue={selectedValue}
+                  getJobs={() => {
+                    setAllJobs([]);
+                    getJobs(jobPagination, searchValue, selectedValue);
+                  }}
+                />
+              ) : (
+                <EnquiryTable
+                  allJobs={allJobs}
+                  deleteJob={deleteJob}
+                  history={props.history}
+                  jobPagination={{ ...jobPagination }}
+                  handlePagination={(data) => {
+                    setJobPagination(data);
+                    getJobs(data, searchValue, selectedValue);
+                  }}
+                  selectedValue={selectedValue}
+                  getJobs={() => {
+                    setAllJobs([]);
+                    getJobs(jobPagination, searchValue, selectedValue);
+                  }}
+                />
+              )}
+            </Card>
+          </>
+        ) : (
+          <>{loading ? <div className="loading"></div> : <></>}</>
+        )}
       </div>
     </>
   );

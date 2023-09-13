@@ -30,9 +30,9 @@ const JobTable = (props) => {
             title={value.job_number}
             style={{
               whiteSpace: "nowrap",
-              overflow: "hidden",
+              // overflow: "hidden",
               textOverflow: "ellipsis",
-              maxWidth: "200px",
+              maxWidth: "250px",
             }}
           >
             {value.job_number}
