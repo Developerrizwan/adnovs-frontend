@@ -175,8 +175,10 @@ const PurchaseInvoice = (props) => {
           vat_amount = Number(
             Number(vat_amount) + Number(ct.vat_amount)
           ).toFixed(2);
+          // console.log("dddddddddddd", final_amount, total_amount)
+          // final_amount = Number(final_amount) + Number(total_amount);
 
-          final_amount = final_amount + Number(total_amount);
+          
 
           // genrating qrcode string using TLV format
 
@@ -207,9 +209,9 @@ const PurchaseInvoice = (props) => {
           return ct;
         });
 
-        word_amount = Number.isFinite(Number(final_amount))
-          ? numberToWords.toWords(Number(final_amount))
-          : String(final_amount);
+        word_amount = Number.isFinite(Number(total_amount))
+          ? numberToWords.toWords(Number(total_amount))
+          : String(total_amount);
         word_amount = String(
           word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
         );
@@ -482,7 +484,7 @@ const PurchaseInvoice = (props) => {
                   marginLeft: "12px",
                 }}
               >
-                {Number(state?.final_amount)?.toLocaleString("en-US", {
+                {Number(state?.total_amount)?.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
