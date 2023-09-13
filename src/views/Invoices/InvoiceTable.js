@@ -452,7 +452,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Invoice Number</span>,
       selector: (row) => row.invoice_number,
       cell: (value) => {
-        return <div>{value.invoice_number}</div>;
+        return (
+          <div
+            title={value?.invoice_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.invoice_number}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -460,7 +472,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">BL Number</span>,
       selector: (row) => row.bl_number,
       cell: (value) => {
-        return <div>{value.bl_number}</div>;
+        return (
+          <div
+            title={value?.bl_number}
+            style={{
+              whiteSpace: "nowrap",
+              // overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.bl_number}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -468,7 +492,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Supplier</span>,
       selector: (row) => row.party_account?.name,
       cell: (value) => {
-        return <div>{value.party_account?.name}</div>;
+        return (
+          <div
+            title={value?.party_account?.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.party_account?.name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -476,21 +512,59 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Consignee Name</span>,
       selector: (row) => row.consignee_name?.name,
       cell: (value) => {
-        return <div>{value.consignee_name?.name}</div>;
+        return (
+          <div
+            title={value?.consignee_name?.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.consignee_name?.name}
+          </div>
+        );
       },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Date</span>,
       selector: (row) => row,
-      cell: (value) => <span>{moment(value?.date).format("MM/DD/YYYY")}</span>,
+      cell: (value) => {
+        return (
+          <div
+            title={moment(value?.date).format("MM/DD/YYYY")}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {moment(value?.date).format("MM/DD/YYYY")}
+          </div>
+        );
+      },
     },
 
     {
       name: <span className="font-weight-bold fs-13">Currency SAR</span>,
       selector: (row) => row.currency_sar,
       cell: (value) => {
-        return <div>{value.currency_sar}</div>;
+        return (
+          <div
+            title={value?.currency_sar}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.currency_sar}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -505,7 +579,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Bayan Number</span>,
       selector: (row) => row.bayan_number,
       cell: (value) => {
-        return <div>{value.bayan_number}</div>;
+        return (
+          <div
+            title={value?.bayan_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.bayan_number}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -513,7 +599,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Shipper Name</span>,
       selector: (row) => row.shipper_name,
       cell: (value) => {
-        return <div>{value.shipper_name}</div>;
+        return (
+          <div
+            title={value?.value?.shipper_name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.shipper_name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -527,7 +625,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Ex. Rate</span>,
       selector: (row) => row.ex_rate,
       cell: (value) => {
-        return <div>{value.ex_rate}</div>;
+        return (
+          <div
+            title={value?.ex_rate}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.ex_rate}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -535,7 +645,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">POD</span>,
       selector: (row) => row.pod,
       cell: (value) => {
-        return <div>{value.pod}</div>;
+        return (
+          <div
+            title={value?.pod}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.pod}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -543,7 +665,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Client Name</span>,
       selector: (row) => row.client_name?.name,
       cell: (value) => {
-        return <div>{value?.client_name?.name}</div>;
+        return (
+          <div
+            title={value?.client_name?.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.client_name?.name}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -551,7 +685,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">FC Amount</span>,
       selector: (row) => row.fc_amount,
       cell: (value) => {
-        return <div>{value.fc_amount}</div>;
+        return (
+          <div
+            title={value?.fc_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.fc_amount}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -559,7 +705,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Amount(SAR)</span>,
       selector: (row) => row.amount_sar,
       cell: (value) => {
-        return <div>{value.amount_sar}</div>;
+        return (
+          <div
+            title={value?.amount_sar}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.amount_sar}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -567,7 +725,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">POA</span>,
       selector: (row) => row.poa,
       cell: (value) => {
-        return <div>{value.poa}</div>;
+        return (
+          <div
+            title={value?.poa}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.poa}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -575,7 +745,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Invoice Type</span>,
       selector: (row) => row.invoice_type,
       cell: (value) => {
-        return <div>{value.invoice_type}</div>;
+        return (
+          <div
+            title={value?.invoice_type}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.invoice_type}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -591,7 +773,19 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Narration</span>,
       selector: (row) => row.narration,
       cell: (value) => {
-        return <div>{value.narration}</div>;
+        return (
+          <div
+            title={value?.narration}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.narration}
+          </div>
+        );
       },
       sortable: true,
     },
@@ -599,24 +793,74 @@ const InvoiceTable = (props) => {
       name: <span className="font-weight-bold fs-13">Bill Amount</span>,
       selector: (row) => row.bill_amount,
       cell: (value) => {
-        return <div>{value.bill_amount}</div>;
+        return (
+          <div
+            title={value?.bill?.amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.bill_amount}
+          </div>
+        );
       },
       sortable: true,
     },
     {
       name: <span className="font-weight-bold fs-13">Ref Date</span>,
       selector: (row) => row,
-      cell: (value) => <span>{moment(value?.date).format("MM/DD/YYYY")}</span>,
+      cell: (value) => {
+        return (
+          <div
+            title={moment(value?.date).format("MM/DD/YYYY")}
+            style={{
+              whiteSpace: "nowrap",
+              // overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {moment(value?.date).format("MM/DD/YYYY")}
+          </div>
+        );
+      },
     },
     {
       name: <span className="font-weight-bold fs-13">Due Date</span>,
       selector: (row) => row,
-      cell: (value) => <span>{moment(value?.date).format("MM/DD/YYYY")}</span>,
+      cell: (value) => (
+        <div
+          title={moment(value?.date).format("MM/DD/YYYY")}
+          style={{
+            whiteSpace: "nowrap",
+            // overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: "200px",
+          }}
+        >
+          {moment(value?.date).format("MM/DD/YYYY")}
+        </div>
+      ),
     },
     {
       name: <span className="font-weight-bold fs-13">Remarks</span>,
       selector: (row) => row.remarks,
-      cell: (value) => <div>{value.remarks}</div>,
+      cell: (value) => (
+        <div
+          title={value?.remarks}
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: "200px",
+          }}
+        >
+          {value.remarks}
+        </div>
+      ),
     },
     {
       name: <span className="font-weight-bold fs-13">View Invoice</span>,
