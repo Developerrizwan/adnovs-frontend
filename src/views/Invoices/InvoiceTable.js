@@ -13,11 +13,13 @@ import { Link } from "react-router-dom";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Sales from "./Sales";
+import CostEntryTable from "./CostEntryTable";
 
 const InvoiceTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState([]);
+  const [constEntryId, setConstEntryId] = useState("");
   const [salesCols, setSalesCols] = useState([
     {
       name: <span className="font-weight-bold fs-13">Invoice Number</span>,
@@ -173,6 +175,27 @@ const InvoiceTable = (props) => {
                 View
               </Button>
             </Link>
+          </div>
+        );
+      },
+    },
+    {
+      name: <span className="font-weight-bold fs-13">View Cost Entry</span>,
+      selector: (row) => row,
+      cell: (value) => {
+        return (
+          <div>
+            <Button
+              color="secondary"
+              className="btn btn-sm"
+              onClick={() => {
+                setCostEntryModal(true);
+                setConstEntryId(value.id);
+              }}
+            >
+              {" "}
+              View
+            </Button>
           </div>
         );
       },
@@ -406,6 +429,27 @@ const InvoiceTable = (props) => {
       },
     },
     {
+      name: <span className="font-weight-bold fs-13">View Cost Entry</span>,
+      selector: (row) => row,
+      cell: (value) => {
+        return (
+          <div>
+            <Button
+              color="secondary"
+              className="btn btn-sm"
+              onClick={() => {
+                setCostEntryModal(true);
+                setConstEntryId(value.id);
+              }}
+            >
+              {" "}
+              View
+            </Button>
+          </div>
+        );
+      },
+    },
+    {
       name: <span className="font-weight-bold fs-13">Actions</span>,
       selector: (row) => row,
       cell: (value) => {
@@ -445,6 +489,7 @@ const InvoiceTable = (props) => {
       },
     },
   ]);
+  const [costEntryModal, setCostEntryModal] = useState(false);
 
   return (
     <>
@@ -538,6 +583,28 @@ const InvoiceTable = (props) => {
           </Button>
           <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
         </ModalFooter>
+      </Modal>
+
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={costEntryModal}
+        toggle={() => {
+          setCostEntryModal((prev) => !prev);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setCostEntryModal((prev) => !prev);
+          }}
+        >
+          Cost Entry
+        </ModalHeader>
+        <ModalBody>
+          <CostEntryTable id={constEntryId} />
+        </ModalBody>
       </Modal>
     </>
   );
