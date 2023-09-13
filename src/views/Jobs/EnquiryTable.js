@@ -183,7 +183,7 @@ const EnquiryTable = (props) => {
       },
     },
   ]);
-  console.log("alljobs", props.allJobs);
+  // console.log("alljobs", props.allJobs);
   return (
     <>
       <DataTable
