@@ -23,6 +23,13 @@ const AccountStatement = (props) => {
   const [translatedObject, setTranslatedObject] = useState({});
   const targetLanguage = "ar"; // Language code for Arabic
 
+  const [invoices, setInvoices] = useState([]);
+  const [calculations, setCalculations] = useState({
+    credit: 0,
+    debit: 0,
+    total: 0,
+  });
+
   async function exportProjectToPdf() {
     setLoading(true);
     const doc = new jsPDF("p", "px");
@@ -73,6 +80,7 @@ const AccountStatement = (props) => {
   useEffect(() => {
     let jobId = Number(props.match.params.jobId);
     getJob(jobId);
+    getInvoice(jobId);
   }, []);
 
   const getJob = (id) => {
@@ -181,6 +189,45 @@ const AccountStatement = (props) => {
     var bufsArray = [tagBuf, tagValueLenBuf, tagValueBuf];
     return Buffer.concat(bufsArray);
   };
+
+  const getInvoice = (id) => {
+    apiAuth
+      .get(`/api/master/invoice/?job=${id}`)
+      .then((response) => {
+        console.log("ressss", response);
+        let data = response?.data;
+        setInvoices(data);
+        calculateTotal(data);
+        // data = data?.filter((dd) => dd.job === id);
+      })
+      .catch((err) => {
+        console.log(err);
+        NotificationManager.error("", "Invalid Invoice.", 3000, null, null, "");
+      });
+  };
+
+  const calculateTotal = (data) => {
+    let totalDebit = 0;
+    let totalCredit = 0;
+
+    data.forEach((invoice) => {
+      const amountSar = parseFloat(invoice.amount_sar) || 0;
+      if (invoice.invoice_type === "Purchase") {
+        totalDebit += parseFloat(amountSar);
+      } else if (invoice.invoice_type === "Sales") {
+        totalCredit += parseFloat(amountSar);
+      }
+    });
+
+    const total = totalCredit - totalDebit;
+
+    setCalculations({
+      credit: totalCredit,
+      debit: totalDebit,
+      total: total,
+    });
+  };
+
   return (
     <>
       <div style={{ padding: "25px" }}>
@@ -362,24 +409,29 @@ const AccountStatement = (props) => {
                   <th className="p-1 fw">CREDIT</th>
                   <th className="p-1 fw">BALANCE</th>
                 </tr>
-                <tr>
-                  <td className="fw">08/09/2009</td>
-                  <td>Invoice for afg737873</td>
-                  <td className="fw">Invoice</td>
-                  <td>60</td>
-                  <td>5,042.42</td>
-                  <td>0.00</td>
-                  <td>5,042.42</td>
-                </tr>
-                <tr>
-                  <td className="fw">08/09/2009</td>
-                  <td>Invoice for afg737873</td>
-                  <td className="fw">Invoice</td>
-                  <td>60</td>
-                  <td>5,042.42</td>
-                  <td>0.00</td>
-                  <td>5,042.42</td>
-                </tr>
+                <tbody>
+                  {invoices?.map((invoice, index) => (
+                    <tr key={index}>
+                      <td className="fw">
+                        {moment(invoice?.date).format("DD/MM/YYYY")}
+                      </td>
+                      <td>Invoice for {invoice?.invoice_number}</td>
+                      <td className="fw">{invoice?.voucher}</td>
+                      <td>{invoice?.voch}</td>
+                      <td>
+                        {invoice?.invoice_type === "Purchase"
+                          ? invoice?.amount_sar
+                          : 0}
+                      </td>
+                      <td>
+                        {invoice?.invoice_type === "Sales"
+                          ? invoice?.amount_sar
+                          : 0}
+                      </td>
+                      <td>{invoice?.amount_sar ? invoice?.amount_sar : 0}</td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </div>
           </div>
@@ -391,17 +443,12 @@ const AccountStatement = (props) => {
             <div className="p-2" style={{ overflowX: "auto" }}>
               <table className="htmlTable mt-2">
                 <tr style={{ background: "#d3d3d3" }}>
-                  <td className="p-1 fw">Period Total: </td>
-                  <td className="p-1">5,042.42</td>
-                  <td className="p-1">5,042.42</td>
+                  <td className="p-1 fw"> Total: </td>
+                  <td className="p-1">{calculations?.debit}</td>
+                  <td className="p-1">{calculations?.credit}</td>
                   <td rowSpan="2" className="p-1">
-                    5,042.42
+                    {calculations?.total}
                   </td>
-                </tr>
-                <tr style={{ background: "#d3d3d3" }}>
-                  <td className="p-1 fw">Total: </td>
-                  <td className="p-1">5,042.42</td>
-                  <td className="p-1">5,042.42</td>
                 </tr>
               </table>
             </div>
