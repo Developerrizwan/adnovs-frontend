@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
 import numberToWords from "number-to-words";
 import QRCode from "react-qr-code";
+import { Buffer } from "buffer";
 
 import apiAuth from "../../../helpers/ApiAuth";
 import ReportHeader from "./helpers/ReportHeader";
 import ReportFooter from "./helpers/ReportFooter";
 import DownloadReport from "./helpers/DownloadReport";
 import NotificationManager from "../../../components/Common/NotificationManager";
+import moment from "moment";
 
-const Content = ({ data }) => {
+const Content = ({ data, curReport }) => {
+  // console.log("taxx", data);
   const [state, setState] = useState({});
   var curCurrency = data?.voucher?.currency.split(" ")[0];
   var totalExcludeVat = 0;
   var totalTaxableAmt = 0;
   var totalVatAmt = 0;
+  const buyer =
+    curReport === "debit" ? data?.voucher?.company : data?.voucher?.client_name;
+  const seller =
+    curReport === "debit" ? data?.voucher?.client_name : data?.voucher?.company;
 
   // console.log("tax", data);
   return (
@@ -23,40 +30,31 @@ const Content = ({ data }) => {
         className="text-center mb-4"
         style={{ fontFamily: "sans-serif", color: "gray" }}
       >
-        TAX CREDIT VOUCHER - ADN/RV/23/0057
+        {`TAX ${curReport.toUpperCase()} VOUCHER`}
       </h4>
 
-      <div className="row" style={{ placeItems: "center" }}>
-        <div className="col-lg-8">
-          <div className="p-2" style={{ overflowX: "auto" }}>
-            <table className="w-100">
-              <tr>
-                <td className="fw">Invoice Number:</td>
-                <td>ADN/CN/23/009</td>
-                <td>ADN/CN/23/009</td>
-                {/* <td></td> */}
-              </tr>
-            </table>
-          </div>
-
-          <div className="p-2" style={{ overflowX: "auto" }}>
-            <table className="w-100">
-              <tr>
-                <td className="fw">Invoice Issue Date:</td>
-                <td>08/05/2022</td>
-                <td>10/09/2022</td>
-                {/* <td></td> */}
-              </tr>
-              <tr>
-                <td className="fw">Date Of Supply:</td>
-                <td>01/02/2023</td>
-                <td>12/03/2023</td>
-                {/* <td></td> */}
-              </tr>
-            </table>
-          </div>
+      {/* Voucher Details and QR code */}
+      <div className="d-flex justify-content-around align-items-center ">
+        <div className="">
+          <DisplayItem
+            width={"200px"}
+            label={"Invoice Number"}
+            value={data?.voucher?.invoice?.invoice_number}
+          />
+          <DisplayItem
+            width={"200px"}
+            label={"Invoice Issue Date"}
+            value={moment(data?.voucher?.invoice?.date).format("DD/MM/YYYY")}
+          />
+          <DisplayItem
+            width={"200px"}
+            label={"Date Of Supply"}
+            value={moment(data?.voucher?.invoice?.due_date).format(
+              "DD/MM/YYYY"
+            )}
+          />
         </div>
-        <div className="col-lg-4 text-center">
+        <div className="mr-4">
           <QRCode size={150} value={String(state?.qrcodeString)} />
         </div>
       </div>
@@ -66,6 +64,7 @@ const Content = ({ data }) => {
         id="display-items"
         className="mt-4 mb-2 d-flex justify-content-around align-items-center"
       >
+        {/* Seller items */}
         <div id="left-side-items">
           <h5
             style={{
@@ -76,26 +75,28 @@ const Content = ({ data }) => {
           >
             Seller
           </h5>
+          {/* {console.log("seller", seller)} */}
           <>
-            <DisplayItem label={"Name"} value={"Adnov Shipping & Logistics"} />
-            <DisplayItem
-              label={"Building No"}
-              value={"AL MALIK KHALID ROAD - HAYY"}
-            />
-            <DisplayItem
-              label={"Street Name"}
-              value={"JEDDAH KINGDOM OF SAUDI ARABIA"}
-            />
+            <DisplayItem label={"Name"} value={seller?.name} />
+            <DisplayItem label={"Building No"} value={""} />
+            <DisplayItem label={"Street Name"} value={""} />
             <DisplayItem label={"District"} value={""} />
-            <DisplayItem label={"City"} value={""} />
-            <DisplayItem label={"Country"} value={"Saudi Arabia"} />
-            <DisplayItem label={"Postal Code"} value={""} />
+            <DisplayItem label={"City"} value={seller?.state} />
+            <DisplayItem label={"Country"} value={seller?.country} />
+            <DisplayItem
+              label={"Postal Code"}
+              value={seller?.post_box_no || ""}
+            />
             <DisplayItem label={"Additional No"} value={""} />
-            <DisplayItem label={"VAT Number"} value={""} />
+            <DisplayItem
+              label={"VAT Number"}
+              value={seller?.vat_number || seller?.vat_trn_number}
+            />
             <DisplayItem label={"Other Seller ID"} value={""} />
           </>
         </div>
 
+        {/* Buyer items */}
         <div id="right-side-items">
           <h5
             style={{
@@ -106,22 +107,24 @@ const Content = ({ data }) => {
           >
             Buyer
           </h5>
+          {/* {console.log("buyer", buyer)} */}
+
           <>
-            <DisplayItem label={"Name"} value={"Adnov Shipping & Logistics"} />
-            <DisplayItem
-              label={"Building No"}
-              value={"AL MALIK KHALID ROAD - HAYY"}
-            />
-            <DisplayItem
-              label={"Street Name"}
-              value={"JEDDAH KINGDOM OF SAUDI ARABIA"}
-            />
+            <DisplayItem label={"Name"} value={buyer?.name} />
+            <DisplayItem label={"Building No"} value={""} />
+            <DisplayItem label={"Street Name"} value={""} />
             <DisplayItem label={"District"} value={""} />
-            <DisplayItem label={"City"} value={""} />
-            <DisplayItem label={"Country"} value={"Saudi Arabia"} />
-            <DisplayItem label={"Postal Code"} value={""} />
+            <DisplayItem label={"City"} value={buyer?.city} />
+            <DisplayItem label={"Country"} value={buyer?.country} />
+            <DisplayItem
+              label={"Postal Code"}
+              value={buyer?.post_box_no || ""}
+            />
             <DisplayItem label={"Additional No"} value={""} />
-            <DisplayItem label={"VAT Number"} value={""} />
+            <DisplayItem
+              label={"VAT Number"}
+              value={buyer?.vat_trn_number || buyer?.vat_number}
+            />
             <DisplayItem label={"Other Seller ID"} value={""} />
           </>
         </div>
@@ -187,39 +190,57 @@ const Content = ({ data }) => {
 
       <div
         className="mb-5"
-        style={{ display: "flex", justifyContent: "flex-end" }}
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginRight: "50px",
+        }}
       >
         <div className="p-2" style={{ overflowX: "auto" }}>
           <table className="htmlTable mt-2">
             <tr>
               <td className="p-1 fw border-0">Total (Excluding VAT)</td>
               <td className="p-1 border-0">
-                {totalExcludeVat.toFixed(2)} {curCurrency}
+                :
+                <span style={{ marginLeft: "10px" }}>
+                  {totalExcludeVat.toFixed(2)} {curCurrency}
+                </span>
               </td>
             </tr>
             <tr>
               <td className="p-1 fw border-0">Discount</td>
-              <td className="p-1 border-0">0.00 {curCurrency}</td>
+              <td className="p-1 border-0">
+                : <span style={{ marginLeft: "10px" }}>0.00 {curCurrency}</span>
+              </td>
             </tr>
             <tr>
               <td className="p-1 fw border-0">
-                Total Taxable Amount (Excluding VAT)
+                <span>Total Taxable Amount (Excluding VAT)</span>
               </td>
               <td className="p-1 border-0">
-                {totalTaxableAmt.toFixed(2)} {curCurrency}
+                :
+                <span style={{ marginLeft: "10px" }}>
+                  {totalTaxableAmt.toFixed(2)} {curCurrency}
+                </span>
               </td>
             </tr>
             <tr>
               <td className="p-1 fw border-0">Total VAT</td>
               <td className="p-1 border-0">
-                {totalVatAmt.toFixed(2)} {curCurrency}
+                :
+                <span style={{ marginLeft: "10px" }}>
+                  {totalVatAmt.toFixed(2)} {curCurrency}
+                </span>
               </td>
             </tr>
             <tr>
               <td className="p-1 fw border-0">Total Amount Due</td>
               <td className="p-1 border-0">
-                {(totalExcludeVat + totalTaxableAmt + totalVatAmt).toFixed(2)}{" "}
-                {curCurrency}
+                :
+                <span style={{ marginLeft: "10px" }}>
+                  {(totalExcludeVat + totalTaxableAmt + totalVatAmt).toFixed(2)}
+                  {curCurrency}
+                </span>
               </td>
             </tr>
           </table>
@@ -229,12 +250,12 @@ const Content = ({ data }) => {
   );
 };
 
-const DisplayItem = ({ label, value }) => {
+const DisplayItem = ({ label, value, width = "150px" }) => {
   return (
     <>
       <div className="my-1" style={{ fontSize: "20px" }}>
         <span
-          style={{ fontWeight: 600, width: "120px", display: "inline-block" }}
+          style={{ fontWeight: 600, width: width, display: "inline-block" }}
         >
           {label}
         </span>
@@ -244,11 +265,14 @@ const DisplayItem = ({ label, value }) => {
   );
 };
 
-const DebitReport = (props) => {
+const DrOrCrReport = (props) => {
   const [state, setState] = useState({});
+  const [curReport, setCurReport] = useState("");
 
   useEffect(() => {
     let id = Number(props.match.params.id);
+    const cur = props.match.path.split("/")[2];
+    setCurReport(cur);
     getVoucherData(id);
   }, []);
 
@@ -384,7 +408,7 @@ const DebitReport = (props) => {
           <ReportHeader data={state?.voucher?.company} />
 
           {/* Content */}
-          <Content data={state} />
+          <Content curReport={curReport} data={state} />
 
           {/* Footer */}
           <ReportFooter />
@@ -394,4 +418,4 @@ const DebitReport = (props) => {
   );
 };
 
-export default DebitReport;
+export default DrOrCrReport;

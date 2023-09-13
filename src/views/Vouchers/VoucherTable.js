@@ -122,7 +122,7 @@ const VoucherTable = (props) => {
         const type = localStorage.getItem("voucher-type");
         return (
           <div>
-            {/* {console.log("typee", type)} */}
+            {console.log("typee", type)}
             <Link
               to={
                 type === "Payment"
@@ -131,8 +131,10 @@ const VoucherTable = (props) => {
                   ? `/voucher/receipt/${value.id}`
                   : type === "Journal"
                   ? `/voucher/journal/${value.id}`
-                  : type.includes("Note")
-                  ? `/voucher/tax-credit/${value.id}`
+                  : type === "DebitNote"
+                  ? `/voucher/debit/${value.id}`
+                  : type === "CreditNote"
+                  ? `/voucher/credit/${value.id}`
                   : ""
               }
               className="btn btn-primary"
