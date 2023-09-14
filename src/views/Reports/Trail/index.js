@@ -82,7 +82,7 @@ const Trail = (props) => {
             <div className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  // job: props.isEdit ? props.report?.job : "",
+                  job: props.isEdit ? props.report?.job : "",
                   start_time: props.voucherData?.start_time
                     ? new Date(props.voucherData?.start_time)
                     : new Date(),
@@ -91,7 +91,7 @@ const Trail = (props) => {
                     : new Date(),
                 }}
                 validationSchema={Yup.object({
-                  job: Yup.string().ensure().required("Job is Required"),
+                  // job: Yup.string().ensure().required("Job is Required"),
                 })}
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
@@ -108,7 +108,7 @@ const Trail = (props) => {
                         <div className="mb-3" style={{ zIndex: 200 }}>
                           <label htmlFor="job" className="form-label">
                             Job Type
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             options={jobOptions}

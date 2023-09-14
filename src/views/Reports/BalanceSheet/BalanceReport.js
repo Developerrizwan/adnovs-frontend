@@ -308,7 +308,14 @@ const BalanceReport = (props) => {
       })
       .catch((err) => {
         console.log(err);
-        NotificationManager.error("", "Invalid Voucher.", 3000, null, null, "");
+        NotificationManager.error(
+          "",
+          "Invalid Balance Report.",
+          3000,
+          null,
+          null,
+          ""
+        );
       });
   };
 
