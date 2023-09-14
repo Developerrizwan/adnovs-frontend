@@ -356,6 +356,8 @@ const Voucher = (props) => {
                   status: props.voucherData?.status || "",
                   job: props.voucherData?.job?.id || "",
                   party_account: props.voucherData?.party_account?.id || "",
+                  party_account_type:
+                    props.voucherData?.party_account_type || "",
                   currency: props.voucherData?.currency || "",
                   ex_rate: props.voucherData?.ex_rate || 1,
                   address: props.voucherData?.address || "",
@@ -755,6 +757,7 @@ const Voucher = (props) => {
                             options={fromAndToOptions}
                             onChange={(data) => {
                               setFieldValue("party_account", data.value);
+                              setFieldValue("party_account_type", data.type);
                               setSelectedParty(data);
                             }}
                           />
