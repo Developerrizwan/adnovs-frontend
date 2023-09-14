@@ -4,38 +4,248 @@ import { useHistory } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
-import Select from "react-select";
 import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
+import DataTable from "react-data-table-component";
+import { customStyles } from "../../assets/CustomTableStyles";
 
 const ProfitAndLoss = (props) => {
   const [loading, setLoading] = useState(false);
-  const [selectedJob, setSelectedJob] = useState(false);
-  const [jobOptions, setJobOptions] = useState([]);
+  const [reports, setReports] = useState([]);
+  const [cols, setCols] = useState([
+    {
+      name: <span className="font-weight-bold fs-13">Account</span>,
+      selector: (row) => row.account,
+      cell: (value) => {
+        return (
+          <div
+            title={value.account}
+            style={{
+              whiteSpace: "nowrap",
+              // overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "250px",
+            }}
+          >
+            {value.account}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Date</span>,
+      selector: (row) => moment(row.date).format("DD-MM-YYYY HH:mm:ss"),
+      cell: (value) => {
+        return (
+          <div
+            title={moment(value.date).format("DD-MM-YYYY HH:mm:ss")}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "220px",
+            }}
+          >
+            {moment(value.date).format("DD-MM-YYYY HH:mm:ss")}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Currency</span>,
+      selector: (row) => row.currency,
+      cell: (value) => {
+        return (
+          <div
+            title={value.currency}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.currency}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Dr Amount</span>,
+      selector: (row) => row.dr_amount,
+      cell: (value) => {
+        return (
+          <div
+            title={value.dr_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.dr_amount}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Cr Amount</span>,
+      selector: (row) => row.cr_amount,
+      cell: (value) => {
+        return (
+          <div
+            title={value.cr_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.cr_amount}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Net Amount</span>,
+      selector: (row) => row.net_amount,
+      cell: (value) => {
+        return (
+          <div
+            title={value.net_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.net_amount}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Party Account</span>,
+      selector: (row) => row.party_account,
+      cell: (value) => {
+        return (
+          <div
+            title={value.party_account}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.party_account}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">JOB</span>,
+      selector: (row) => row.job_no,
+      cell: (value) => {
+        return (
+          <div
+            title={value.job_no}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.job_no}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Naration</span>,
+      selector: (row) => row.narrations,
+      cell: (value) => {
+        return (
+          <div
+            title={value.narrations}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.narrations}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Branch</span>,
+      selector: (row) => row.branch,
+      cell: (value) => {
+        return (
+          <div
+            title={value.branch}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.branch}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Language Name</span>,
+      selector: (row) => row.language_name,
+      cell: (value) => {
+        return (
+          <div
+            title={value.language_name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.language_name}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+  ]);
   const history = useHistory();
 
-  useEffect(() => {
-    getJobOptions();
-  }, []);
-
-  const getJobOptions = (val) => {
+  const getReport = (id, st, et) => {
     apiAuth
-      .get(`/api/master/job/?&type=Job`)
+      .get(
+        `/api/general/ledger/?coa=${
+          id ? id : ""
+        }&start_time=${st}&end_time=${et}`
+      )
       .then((res) => {
         const { data } = res;
-        let jobOpts = data.map((opt) => {
-          return {
-            label: opt?.job_number,
-            value: opt?.id,
-          };
-        });
-        if (props.isEdit) {
-          const selJob = jobOpts.find(
-            (cur) => cur.value === props.voucherData?.job?.id
-          );
-          setSelectedJob(selJob);
-        }
-        setJobOptions(jobOpts);
+        setReports(data);
       })
       .catch((err) => console.log(err));
   };
@@ -46,43 +256,25 @@ const ProfitAndLoss = (props) => {
     return formattedDate;
   };
 
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      background: "#EDEDED",
-    }),
-  };
-
   return (
     <React.Fragment>
-      {/* {console.log("wwwwww", props?.organizationData)} */}
-      <div className={props.isEdit ? "" : "page-content"}>
-        {props.isEdit ? (
-          <></>
-        ) : (
-          <>
-            <div
-              className="mb-5 mt-3"
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <h2 className="mx-3">Ledger Statement</h2>
+      <div className={"page-content"}>
+        <div
+          className="mb-5 mt-3"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <h2 className="mx-3">Ledger Statement</h2>
 
-              <button
-                className="btn btn-danger"
-                onClick={() => history.goBack()}
-              >
-                Back
-              </button>
-            </div>
-          </>
-        )}
+          <button className="btn btn-danger" onClick={() => history.goBack()}>
+            Back
+          </button>
+        </div>
 
         <Grid container spacing={2}>
           <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
             <div className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  job: props.isEdit ? props.report?.job : "",
                   start_time: props.voucherData?.start_time
                     ? new Date(props.voucherData?.start_time)
                     : new Date(),
@@ -90,44 +282,17 @@ const ProfitAndLoss = (props) => {
                     ? new Date(props.voucherData?.end_time)
                     : new Date(),
                 }}
-                validationSchema={Yup.object({
-                  job: Yup.string().ensure().required("Job is Required"),
-                })}
+                validationSchema={Yup.object({})}
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
                   const et = changeDateFormat(values.end_time);
-                  history.push(`/report/profit-loss/${values.job}/${st}/${et}`);
+                  let coa = Number(props.match.params.coaId);
+                  getReport(coa, st, et);
                 }}
               >
                 {({ values, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
-                      {/* <Grid item lg={4} xs={12}>
-                        <div className="mb-3" style={{ zIndex: 200 }}>
-                          <label htmlFor="job" className="form-label">
-                            Job Type
-                            <span className="text-danger">*</span>
-                          </label>
-                          <Select
-                            options={jobOptions}
-                            value={selectedJob}
-                            // onInputChange={(val) => {
-                            //   getJobOptions(val);
-                            // }}
-                            onChange={(data) => {
-                              setFieldValue("job", data.value);
-                              setSelectedJob(data);
-                            }}
-                          />
-                          <ErrorMessage
-                            name="job"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
-                        </div>
-                      </Grid> */}
-
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="start_time" className="form-label">
@@ -237,7 +402,7 @@ const ProfitAndLoss = (props) => {
                       ) : (
                         <div className="mt-4 mb-3">
                           <button className="btn btn-success" type="submit">
-                            {props.isEdit ? "Update" : "Generate"}
+                            {"Generate"}
                           </button>
                         </div>
                       )}
@@ -246,6 +411,24 @@ const ProfitAndLoss = (props) => {
                 )}
               </Formik>
             </div>
+          </Grid>
+        </Grid>
+
+        <Grid
+          container
+          spacing={2}
+          style={{
+            marginTop: "5px",
+          }}
+        >
+          <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
+            {" "}
+            <DataTable
+              customStyles={customStyles}
+              columns={cols}
+              data={reports}
+              pagination={true}
+            />
           </Grid>
         </Grid>
       </div>
