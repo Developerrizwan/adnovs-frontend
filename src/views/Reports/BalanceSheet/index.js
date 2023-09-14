@@ -82,7 +82,7 @@ const BalanceSheet = (props) => {
             <div className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  job: props.isEdit ? props.report?.job : "",
+                  // job: props.isEdit ? props.report?.job : "",
                   start_time: props.voucherData?.start_time
                     ? new Date(props.voucherData?.start_time)
                     : new Date(),
@@ -96,7 +96,9 @@ const BalanceSheet = (props) => {
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
                   const et = changeDateFormat(values.end_time);
-                  history.push(`/report/balance/${values.job}/${st}/${et}`);
+                  history.push(
+                    `/report/balance/?jobId=${values.job}&st=${st}&et=${et}`
+                  );
                 }}
               >
                 {({ values, setFieldValue }) => (

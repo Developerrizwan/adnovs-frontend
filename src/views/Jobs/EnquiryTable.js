@@ -139,7 +139,7 @@ const EnquiryTable = (props) => {
             title={moment(value.eta).format("YYYY-MM-DD HH:mm:ss")}
             style={{
               whiteSpace: "nowrap",
-              overflow: "hidden",
+              // overflow: "hidden",
               textOverflow: "ellipsis",
               maxWidth: "200px",
             }}
@@ -159,7 +159,7 @@ const EnquiryTable = (props) => {
             title={moment(value.etd).format("YYYY-MM-DD HH:mm:ss")}
             style={{
               whiteSpace: "nowrap",
-              overflow: "hidden",
+              // overflow: "hidden",
               textOverflow: "ellipsis",
               maxWidth: "200px",
             }}

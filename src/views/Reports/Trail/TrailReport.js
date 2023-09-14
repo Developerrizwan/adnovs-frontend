@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import apiAuth from "../../../helpers/ApiAuth";
 import shipLogo from "../../../assets/images/ship-logo.png";
@@ -290,12 +291,15 @@ const ReportHeader = ({ data }) => {
 };
 
 const TrailReport = (props) => {
+  const location = useLocation();
+
   const [state, setState] = useState({});
 
   useEffect(() => {
-    const id = Number(props.match.params.jobId);
-    let startTime = props.match.params.startTime;
-    let endTime = props.match.params.endTime;
+    const searchParams = new URLSearchParams(location.search);
+    const id = searchParams.get("jobId");
+    const startTime = searchParams.get("st");
+    const endTime = searchParams.get("et");
 
     getVoucherData(id, startTime, endTime);
   }, []);
@@ -303,7 +307,9 @@ const TrailReport = (props) => {
   const getVoucherData = (id, st, et) => {
     apiAuth
       .get(
-        `/api/profit/loss/?job=${id}&type=trail&start_time=${st}&end_time=${et}`
+        `/api/profit/loss/?job=${
+          id ? id : ""
+        }&type=trail&start_time=${st}&end_time=${et}`
       )
       .then((response) => {
         let data = response.data;

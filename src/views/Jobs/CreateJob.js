@@ -57,9 +57,7 @@ const CreateJob = (props) => {
   const getOrganization = (val) => {
     setLoading(true);
     apiAuth
-      .get(
-        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
-      )
+      .get(`/api/get-organization/?type=Consignee`)
       .then((response) => {
         let data = response.data;
 
@@ -147,7 +145,7 @@ const CreateJob = (props) => {
   const getClientOrganization = (val) => {
     setLoading(true);
     apiAuth
-      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .get(`/api/get-organization/?type=Client`)
       .then((response) => {
         let data = response.data;
 
@@ -513,9 +511,9 @@ const CreateJob = (props) => {
                         styles={customStyles}
                         value={clientNameValue}
                         options={clientOptions}
-                        onInputChange={(val) => {
-                          getClientOrganization(val);
-                        }}
+                        // onInputChange={(val) => {
+                        //   getClientOrganization(val);
+                        // }}
                         onChange={(data) => {
                           setClientNameValue(data);
                           setFieldValue("client_name", data.value);

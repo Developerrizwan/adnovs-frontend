@@ -108,9 +108,7 @@ const Sales = (props) => {
   const getOrganization = (val) => {
     setLoading(true);
     apiAuth
-      .get(
-        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
-      )
+      .get(`/api/get-organization/?type=Consignee`)
       .then((response) => {
         let data = response.data;
 
@@ -147,7 +145,7 @@ const Sales = (props) => {
   const getClientOrganization = (val) => {
     setLoading(true);
     apiAuth
-      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .get(`/api/get-organization/?type=Client`)
       .then((response) => {
         let data = response.data;
 
@@ -517,8 +515,7 @@ const Sales = (props) => {
                                 data?.job?.consignee_name
                               );
                               const selConsg = consigneeOptions.find(
-                                (dd) =>
-                                  dd.value === data?.job?.consignee_name
+                                (dd) => dd.value === data?.job?.consignee_name
                               );
                               setConsigneeNameValue(selConsg);
 
@@ -613,9 +610,9 @@ const Sales = (props) => {
                             styles={customStyles}
                             options={consigneeOptions}
                             value={consigneeNameValue}
-                            onInputChange={(val) => {
-                              getOrganization(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getOrganization(val);
+                            // }}
                             onChange={(data) => {
                               setConsigneeNameValue(data);
                               setFieldValue("consignee_name", data.value);
@@ -641,9 +638,9 @@ const Sales = (props) => {
                             styles={customStyles}
                             options={clientOptions}
                             value={clientNameValue}
-                            onInputChange={(val) => {
-                              getClientOrganization(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getClientOrganization(val);
+                            // }}
                             onChange={(data) => {
                               setClientNameValue(data);
                               setFieldValue("client_name", data.value);

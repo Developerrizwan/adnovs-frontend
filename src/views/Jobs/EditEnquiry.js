@@ -64,9 +64,7 @@ const EditEnquiry = (props) => {
   const getOrganization = (val) => {
     setLoading(true);
     apiAuth
-      .get(
-        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
-      )
+      .get(`/api/get-organization/?type=Consignee`)
       .then((response) => {
         let data = response.data;
 
@@ -100,7 +98,7 @@ const EditEnquiry = (props) => {
   const getClientOrganization = (val) => {
     setLoading(true);
     apiAuth
-      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .get(`/api/get-organization/?type=Client`)
       .then((response) => {
         let data = response.data;
 
@@ -436,9 +434,9 @@ const EditEnquiry = (props) => {
                         styles={customStyles}
                         value={consigneeNameValue}
                         options={consigneeOptions}
-                        onInputChange={(val) => {
-                          getOrganization(val);
-                        }}
+                        // onInputChange={(val) => {
+                        //   getOrganization(val);
+                        // }}
                         onChange={(data) => {
                           setConsigneeNameValue(data);
                           setFieldValue("consignee_name", data.value);
@@ -524,9 +522,9 @@ const EditEnquiry = (props) => {
                         styles={customStyles}
                         value={clientNameValue}
                         options={clientOptions}
-                        onInputChange={(val) => {
-                          getClientOrganization(val);
-                        }}
+                        // onInputChange={(val) => {
+                        //   getClientOrganization(val);
+                        // }}
                         onChange={(data) => {
                           setClientNameValue(data);
                           setFieldValue("client_name", data.value);

@@ -51,9 +51,7 @@ const CreateNewJob = (props) => {
   const getOrganization = (val) => {
     setLoading(true);
     apiAuth
-      .get(
-        `/api/get-organization/?page=${1}&search=${val || ""}&type=Consignee`
-      )
+      .get(`/api/get-organization/?type=Consignee`)
       .then((response) => {
         let data = response.data;
 
@@ -141,7 +139,7 @@ const CreateNewJob = (props) => {
   const getClientOrganization = (val) => {
     setLoading(true);
     apiAuth
-      .get(`/api/get-organization/?page=${1}&search=${val || ""}&type=Client`)
+      .get(`/api/get-organization/?type=Client`)
       .then((response) => {
         let data = response.data;
 
@@ -361,9 +359,9 @@ const CreateNewJob = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={consigneeOptions}
-                            onInputChange={(val) => {
-                              getOrganization(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getOrganization(val);
+                            // }}
                             onChange={(data) => {
                               setFieldValue("consignee_name", data.value);
                             }}
@@ -468,9 +466,9 @@ const CreateNewJob = (props) => {
                             placeholder={"Select"}
                             styles={customStyles}
                             options={clientOptions}
-                            onInputChange={(val) => {
-                              getClientOrganization(val);
-                            }}
+                            // onInputChange={(val) => {
+                            //   getClientOrganization(val);
+                            // }}
                             onChange={(data) => {
                               setFieldValue("client_name", data.value);
                             }}

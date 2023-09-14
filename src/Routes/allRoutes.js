@@ -194,11 +194,11 @@ const publicRoutes = [
     component: ProfitAndLossReport,
   },
   {
-    path: "/report/balance/:jobId/:startTime/:endTime",
+    path: "/report/balance",
     component: BalanceReport,
   },
   {
-    path: "/report/trail/:jobId/:startTime/:endTime",
+    path: "/report/trail",
     component: TrailReport,
   },
   { path: "/account-statement/:jobId", component: AccountStatement },
