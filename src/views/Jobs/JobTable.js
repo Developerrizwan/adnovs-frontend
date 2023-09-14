@@ -183,19 +183,19 @@ const JobTable = (props) => {
     },
     {
       name: <span className="font-weight-bold fs-13">ETA</span>,
-      selector: (row) => moment(row.eta).format("YYYY-MM-DD HH:mm:ss"),
+      selector: (row) => moment(row.eta).format("DD-MM-YYYY HH:mm:ss"),
       cell: (value) => {
         return (
           <div
-            title={moment(value.eta).format("YYYY-MM-DD HH:mm:ss")}
+            title={moment(value.eta).format("DD-MM-YYYY HH:mm:ss")}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              maxWidth: "200px",
+              maxWidth: "220px",
             }}
           >
-            {moment(value.eta).format("YYYY-MM-DD HH:mm:ss")}
+            {moment(value.eta).format("DD-MM-YYYY HH:mm:ss")}
           </div>
         );
       },
@@ -203,11 +203,11 @@ const JobTable = (props) => {
     },
     {
       name: <span className="font-weight-bold fs-13">ETD</span>,
-      selector: (row) => moment(row.etd).format("YYYY-MM-DD HH:mm:ss"),
+      selector: (row) => moment(row.etd).format("DD-MM-YYYY HH:mm:ss"),
       cell: (value) => {
         return (
           <div
-            title={moment(value.etd).format("YYYY-MM-DD HH:mm:ss")}
+            title={moment(value.etd).format("DD-MM-YYYY HH:mm:ss")}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -215,7 +215,7 @@ const JobTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {moment(value.etd).format("YYYY-MM-DD HH:mm:ss")}
+            {moment(value.etd).format("DD-MM-YYYY HH:mm:ss")}
           </div>
         );
       },
