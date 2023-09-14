@@ -14,7 +14,7 @@ import { Buffer } from "buffer";
 import numberToWords from "number-to-words";
 import Translate from "./StatementTranslate";
 
-const OrganizationStatement = (props) => {
+const AccountReceivableStatement = (props) => {
   const [state, setState] = useState({ costs: [] });
   const [objData, setObjData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -105,7 +105,7 @@ const OrganizationStatement = (props) => {
         let {
           data: { results },
         } = response;
-        results = results.filter((dd) => dd.party_account?.id === id);
+        results = results.filter((dd) => dd.invoice_type === "Sales");
         setInvoices(results);
         setLoading(false);
       })
@@ -262,7 +262,8 @@ const OrganizationStatement = (props) => {
               }}
             >
               <h3>
-                Account Statement / <Translate text={"Account Statement"} />
+                Accounts Receivable Statement /{" "}
+                <Translate text={"Accounts Receivable Statement"} />
               </h3>
             </div>
             <div className="p-2" style={{ overflowX: "auto" }}>
@@ -321,7 +322,7 @@ const OrganizationStatement = (props) => {
                       <td className="fw">
                         {moment(dd?.date).format("DD/MM/YYYY")}
                       </td>
-                      <td>Invoice for afg737873</td>
+                      <td>Invoice for {dd?.invoice_number}</td>
                       <td className="fw">Invoice</td>
                       <td>60</td>
                       <td>
@@ -405,4 +406,4 @@ const OrganizationStatement = (props) => {
   );
 };
 
-export default OrganizationStatement;
+export default AccountReceivableStatement;

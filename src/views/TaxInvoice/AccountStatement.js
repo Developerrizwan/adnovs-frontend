@@ -365,7 +365,7 @@ const AccountStatement = (props) => {
               }}
             >
               <h3>
-                Account Statement / <Translate text={"TAX INVOICE"} />
+                Account Statement / <Translate text={"Account Statement"} />
               </h3>
             </div>
             <div className="p-2" style={{ overflowX: "auto" }}>
@@ -416,7 +416,7 @@ const AccountStatement = (props) => {
                         {moment(invoice?.date).format("DD/MM/YYYY")}
                       </td>
                       <td>Invoice for {invoice?.invoice_number}</td>
-                      <td className="fw">{invoice?.voucher}</td>
+                      <td className="fw">Invoice</td>
                       <td>{invoice?.voch}</td>
                       <td>
                         {invoice?.invoice_type === "Purchase"

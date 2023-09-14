@@ -12,6 +12,7 @@ import {
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 import AddCOA from "./AddCOA";
+import { Link } from "react-router-dom";
 
 const CaoTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -174,6 +175,26 @@ const CaoTable = (props) => {
             }}
           >
             {value.additional_reference_code}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+
+    {
+      name: (
+        <span className="font-weight-bold fs-13">View Ledger statement</span>
+      ),
+      selector: (row) => row,
+      cell: (value) => {
+        return (
+          <div>
+            <Link to={`/ledger-statement/${value.id}`}>
+              <Button color="secondary" className="btn btn-sm">
+                {" "}
+                View
+              </Button>
+            </Link>
           </div>
         );
       },
