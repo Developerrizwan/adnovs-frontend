@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { useLocation } from "react-router-dom";
 import apiAuth from "../../../helpers/ApiAuth";
 import shipLogo from "../../../assets/images/ship-logo.png";
 import Translate from "../../TaxInvoice/Translate";
@@ -281,20 +281,24 @@ const ReportHeader = ({ data }) => {
 };
 
 const ProfitAndLossReport = (props) => {
+  const location = useLocation();
   const [state, setState] = useState({});
 
   useEffect(() => {
-    const id = Number(props.match.params.jobId);
-    let startTime = props.match.params.startTime;
-    let endTime = props.match.params.endTime;
+    const searchParams = new URLSearchParams(location.search);
+    const id = searchParams.get("jobId");
+    const startTime = searchParams.get("st");
+    const endTime = searchParams.get("et");
 
-    getVoucherData(id, startTime, endTime);
+    getProfitLossData(id, startTime, endTime);
   }, []);
 
-  const getVoucherData = (id, st, et) => {
+  const getProfitLossData = (id, st, et) => {
     apiAuth
       .get(
-        `/api/profit/loss/?job=${id}&type=Profit/Loss&start_time=${st}&end_time=${et}`
+        `/api/profit/loss/?job=${
+          id ? id : ""
+        }&type=Profit/Loss&start_time=${st}&end_time=${et}`
       )
       .then((response) => {
         let data = response.data;

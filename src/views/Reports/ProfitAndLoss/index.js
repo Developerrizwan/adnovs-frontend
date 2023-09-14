@@ -91,12 +91,14 @@ const ProfitAndLoss = (props) => {
                     : new Date(),
                 }}
                 validationSchema={Yup.object({
-                  job: Yup.string().ensure().required("Job is Required"),
+                  // job: Yup.string().ensure().required("Job is Required"),
                 })}
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
                   const et = changeDateFormat(values.end_time);
-                  history.push(`/report/profit-loss/${values.job}/${st}/${et}`);
+                  history.push(
+                    `/report/profit-loss/?jobId=${values.job}&st=${st}&et=${et}`
+                  );
                 }}
               >
                 {({ values, setFieldValue }) => (

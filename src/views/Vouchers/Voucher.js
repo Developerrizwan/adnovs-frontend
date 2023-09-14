@@ -205,7 +205,7 @@ const Voucher = (props) => {
         const selParty = data.find(
           (cur) => cur.value === props.voucherData?.party_account?.id
         );
-        setSelectedParty(selParty);
+        // setSelectedParty(selParty);
         setPartyOptions(data);
         getOrganizationOptions(data);
       })
@@ -251,6 +251,22 @@ const Voucher = (props) => {
 
         const finalOpts = consOpts.concat(opts);
         setFromAndToOptions(finalOpts);
+        const sel_party = finalOpts.find(
+          (item) => item.value === props?.voucherData?.party_account?.id
+        );
+
+        setSelectedParty(sel_party);
+
+        const sel_voucherFrom = finalOpts.find(
+          (item) => item.value === props?.voucherData?.voucher_from
+        );
+        setSelectedVoucherFrom(sel_voucherFrom);
+        const sel_voucherTo = finalOpts.find(
+          (item) => item.value === props?.voucherData?.voucher_to
+        );
+
+        setSelectedVoucherTo(sel_voucherTo);
+
         setLoading(false);
       })
       .catch((error) => {
@@ -282,6 +298,18 @@ const Voucher = (props) => {
     } else if (event.value === "Credit Note") {
       history.push("/credit-voucher");
     }
+  };
+
+  const customValidation = (formType, fieldValue) => {
+    if (
+      formType === "Journal" ||
+      formType === "Payment" ||
+      formType === "Receipt"
+    ) {
+      return "Required ";
+    }
+
+    return null;
   };
 
   return (
@@ -353,7 +381,23 @@ const Voucher = (props) => {
                   // remarks: Yup.string().required("Required!"),
                   // amount_sar: Yup.string().required("Required!"),
                   // ref_no: Yup.string().required("Required!"),
-                  party_account: Yup.string().ensure().required("Required!"),
+                  // party_account: Yup.string().ensure().required("Required!"),
+                  // party_account: Yup.string().when(["selectedVoucher"], {
+                  //   is: (selectedVoucher) =>
+                  //     selectedVoucher &&
+                  //     (selectedVoucher?.value === "DebitNote" ||
+                  //       selectedVoucher?.value === "CreditNote"),
+                  //   otherwise: Yup.string().notRequired(),
+                  // }),
+                  party_account: Yup.string().test(
+                    "customValidation",
+                    "Required",
+                    function (value) {
+                      // Access other form values if needed
+                      const formType = selectedVoucher?.value;
+                      return customValidation(formType, value);
+                    }
+                  ),
                   // currency: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
@@ -699,13 +743,16 @@ const Voucher = (props) => {
                         <div className="mb-3">
                           <label htmlFor="party_account" className="form-label">
                             Party A/C
-                            <span className="text-danger">*</span>
+                            {(selectedVoucher?.value === "DebitNote" ||
+                              selectedVoucher?.value === "CreditNote") && (
+                              <span className="text-danger">*</span>
+                            )}
                           </label>
                           <Select
                             name="party_account"
                             styles={customStyles}
                             value={selectedParty}
-                            options={partyOptions}
+                            options={fromAndToOptions}
                             onChange={(data) => {
                               setFieldValue("party_account", data.value);
                               setSelectedParty(data);

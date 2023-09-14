@@ -190,7 +190,7 @@ const publicRoutes = [
   { path: "/voucher/payment/:id", component: PaymentReport },
   { path: "/voucher/receipt/:id", component: ReceiptReport },
   {
-    path: "/report/profit-loss/:jobId/:startTime/:endTime",
+    path: "/report/profit-loss",
     component: ProfitAndLossReport,
   },
   {
