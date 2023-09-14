@@ -96,13 +96,53 @@ const OrganizationTable = (props) => {
       },
       sortable: true,
     },
+    // {
+    //   name: <span className="font-weight-bold fs-13">View Statement</span>,
+    //   selector: (row) => row,
+    //   cell: (value) => {
+    //     return (
+    //       <div>
+    //         <Link to={`/account-organizationstatement/${value.id}`}>
+    //           <Button color="secondary" className="btn btn-sm">
+    //             {" "}
+    //             View
+    //           </Button>
+    //         </Link>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
-      name: <span className="font-weight-bold fs-13">View Statement</span>,
+      name: (
+        <span className="font-weight-bold fs-13">
+          View Accounts Receivable Statement
+        </span>
+      ),
       selector: (row) => row,
       cell: (value) => {
         return (
           <div>
-            <Link to={`/account-organizationstatement/${value.id}`}>
+            <Link to={`/account-receivable-statement/${value.id}`}>
+              <Button color="secondary" className="btn btn-sm">
+                {" "}
+                View
+              </Button>
+            </Link>
+          </div>
+        );
+      },
+    },
+    {
+      name: (
+        <span className="font-weight-bold fs-13">
+          View Accounts Payable Statement
+        </span>
+      ),
+      selector: (row) => row,
+      cell: (value) => {
+        return (
+          <div>
+            <Link to={`/account-payable-statement/${value.id}`}>
               <Button color="secondary" className="btn btn-sm">
                 {" "}
                 View

@@ -91,6 +91,9 @@ import BalanceReport from "../views/Reports/BalanceSheet/BalanceReport";
 import TrailReport from "../views/Reports/Trail/TrailReport";
 import BalanceSheet from "../views/Reports/BalanceSheet";
 import DrOrCrReport from "../views/Vouchers/Reports/DrOrCrReport";
+import AccountReceivableStatement from "../views/TaxInvoice/AccountReceivableStatement";
+import AccountPayableStatement from "../views/TaxInvoice/AccountPayableStatement";
+import LedgerStatement from "../views/TaxInvoice/LedgerStatement";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -137,6 +140,10 @@ const authProtectedRoutes = [
   { path: "/trail", component: Trail },
   { path: "/account-details", component: AccountDetails },
   { path: "/account_detail", component: AccountDetail },
+  {
+    path: "/ledger-statement/:jobId",
+    component: LedgerStatement,
+  },
 
   // { path: "/journal/:id", component: Journal },
   // { path: "/tax-credit/:id", component: TaxCredit },
@@ -205,6 +212,14 @@ const publicRoutes = [
   {
     path: "/account-organizationstatement/:jobId",
     component: OrganizationStatement,
+  },
+  {
+    path: "/account-receivable-statement/:jobId",
+    component: AccountReceivableStatement,
+  },
+  {
+    path: "/account-payable-statement/:jobId",
+    component: AccountPayableStatement,
   },
 ];
 
