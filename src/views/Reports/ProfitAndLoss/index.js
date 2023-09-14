@@ -108,7 +108,7 @@ const ProfitAndLoss = (props) => {
                         <div className="mb-3" style={{ zIndex: 200 }}>
                           <label htmlFor="job" className="form-label">
                             Job Type
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             options={jobOptions}

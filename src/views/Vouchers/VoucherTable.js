@@ -184,7 +184,9 @@ const VoucherTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.party_account?.code}
+            {value?.party_account_type === "organization"
+              ? value.party_account?.name
+              : value.party_account?.code}
           </div>
         );
       },
