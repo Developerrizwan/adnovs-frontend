@@ -23,7 +23,7 @@ const ProfitAndLoss = (props) => {
             title={value.account}
             style={{
               whiteSpace: "nowrap",
-              // overflow: "hidden",
+              overflow: "hidden",
               textOverflow: "ellipsis",
               maxWidth: "250px",
             }}
@@ -88,7 +88,7 @@ const ProfitAndLoss = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.dr_amount}
+            {Number(value.dr_amount).toFixed(2)}
           </div>
         );
       },
@@ -108,7 +108,7 @@ const ProfitAndLoss = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.cr_amount}
+            {Number(value.cr_amount).toFixed(2)}
           </div>
         );
       },
@@ -128,7 +128,7 @@ const ProfitAndLoss = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.net_amount}
+            {Number(value.net_amount).toFixed(2)}
           </div>
         );
       },
@@ -245,7 +245,7 @@ const ProfitAndLoss = (props) => {
       .get(
         `/api/general/ledger/?coa=${
           id ? id : ""
-        }&start_time=${st}&end_time=${et}`
+        }&start_date=${st}&end_date=${et}`
       )
       .then((res) => {
         const { data } = res;

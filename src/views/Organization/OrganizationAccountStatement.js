@@ -33,6 +33,7 @@ const OrganizationAccountStatement = (props) => {
           <div
             title={value.account}
             style={{
+              overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
               maxWidth: "250px",
@@ -138,7 +139,7 @@ const OrganizationAccountStatement = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.net_amount}
+            {Number(value.net_amount).toFixed(2)}
           </div>
         );
       },
@@ -288,7 +289,7 @@ const OrganizationAccountStatement = (props) => {
     setLoading(true);
     apiAuth
       .get(
-        `/api/account/statement/?organization=${id}&type=${type}&start_time=${st}&end_time=${et}`
+        `/api/account/statement/?organization=${id}&type=${type}&start_date=${st}&end_date=${et}`
       )
       .then((res) => {
         const { data } = res;
