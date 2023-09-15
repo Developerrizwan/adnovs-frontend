@@ -101,10 +101,12 @@ const Content = ({ data }) => {
                   data?.map((dd) => {
                     return (
                       <>
-                        <div
-                          className="my-1 "
-                          style={{ marginLeft: "100px" }}
-                        >{`${dd?.name}-${dd?.code}`}</div>
+                        <div className="my-1 " style={{ marginLeft: "100px" }}>
+                          {" "}
+                          {dd?.income_amount === 0
+                            ? ""
+                            : `${dd?.name}-${dd?.code}`}
+                        </div>
                       </>
                     );
                   })}
@@ -134,7 +136,12 @@ const Content = ({ data }) => {
                     return (
                       <>
                         <div className="my-1 text-center">
-                          <span>{Number(dd?.income_amount).toFixed(2)}</span>
+                          <span>
+                            {" "}
+                            {dd?.income_amount === 0
+                              ? ""
+                              : Number(dd?.income_amount).toFixed(2)}{" "}
+                          </span>
                         </div>
                       </>
                     );
@@ -175,10 +182,12 @@ const Content = ({ data }) => {
                   data?.map((dd) => {
                     return (
                       <>
-                        <div
-                          className="my-1"
-                          style={{ marginLeft: "100px" }}
-                        >{`${dd?.name}-${dd?.code}`}</div>
+                        <div className="my-1" style={{ marginLeft: "100px" }}>
+                          {" "}
+                          {dd?.expenses_amount === 0
+                            ? ""
+                            : `${dd?.name}-${dd?.code}`}
+                        </div>
                       </>
                     );
                   })}
@@ -207,7 +216,12 @@ const Content = ({ data }) => {
                     return (
                       <>
                         <div className="my-1" style={{ textAlign: "center" }}>
-                          <span>{Number(dd?.expenses_amount).toFixed(2)}</span>
+                          <span>
+                            {" "}
+                            {dd?.expenses_amount === 0
+                              ? ""
+                              : Number(dd?.expenses_amount).toFixed(2)}
+                          </span>
                         </div>
                       </>
                     );
