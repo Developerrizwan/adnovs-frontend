@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
@@ -8,10 +8,21 @@ import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../assets/CustomTableStyles";
+import Select from "react-select";
 
-const ProfitAndLoss = (props) => {
+const OrganizationAccountStatement = (props) => {
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
+  const [selectedOrganizationLedger, setSelectedOrganizationLedger] = useState({
+    label: "ACCOUNTS RECEIVABLE STATEMENT",
+    value: "receive",
+  });
+
+  const LedgerOrganizationOptions = [
+    { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
+    { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
+  ];
+
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13">Account</span>,
@@ -22,7 +33,6 @@ const ProfitAndLoss = (props) => {
             title={value.account}
             style={{
               whiteSpace: "nowrap",
-              // overflow: "hidden",
               textOverflow: "ellipsis",
               maxWidth: "250px",
             }}
@@ -73,46 +83,46 @@ const ProfitAndLoss = (props) => {
       },
       sortable: true,
     },
-    {
-      name: <span className="font-weight-bold fs-13">Dr Amount</span>,
-      selector: (row) => row.dr_amount,
-      cell: (value) => {
-        return (
-          <div
-            title={value.dr_amount}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.dr_amount}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Cr Amount</span>,
-      selector: (row) => row.cr_amount,
-      cell: (value) => {
-        return (
-          <div
-            title={value.cr_amount}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.cr_amount}
-          </div>
-        );
-      },
-      sortable: true,
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Dr Amount</span>,
+    //   selector: (row) => row.dr_amount,
+    //   cell: (value) => {
+    //     return (
+    //       <div
+    //         title={value.dr_amount}
+    //         style={{
+    //           whiteSpace: "nowrap",
+    //           overflow: "hidden",
+    //           textOverflow: "ellipsis",
+    //           maxWidth: "200px",
+    //         }}
+    //       >
+    //         {value.dr_amount}
+    //       </div>
+    //     );
+    //   },
+    //   sortable: true,
+    // },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Cr Amount</span>,
+    //   selector: (row) => row.cr_amount,
+    //   cell: (value) => {
+    //     return (
+    //       <div
+    //         title={value.cr_amount}
+    //         style={{
+    //           whiteSpace: "nowrap",
+    //           overflow: "hidden",
+    //           textOverflow: "ellipsis",
+    //           maxWidth: "200px",
+    //         }}
+    //       >
+    //         {value.cr_amount}
+    //       </div>
+    //     );
+    //   },
+    //   sortable: true,
+    // },
     {
       name: <span className="font-weight-bold fs-13">Net Amount</span>,
       selector: (row) => row.net_amount,
@@ -213,36 +223,34 @@ const ProfitAndLoss = (props) => {
       },
       sortable: true,
     },
-    {
-      name: <span className="font-weight-bold fs-13">Language Name</span>,
-      selector: (row) => row.language_name,
-      cell: (value) => {
-        return (
-          <div
-            title={value.language_name}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.language_name}
-          </div>
-        );
-      },
-      sortable: true,
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Language Name</span>,
+    //   selector: (row) => row.language_name,
+    //   cell: (value) => {
+    //     return (
+    //       <div
+    //         title={value.language_name}
+    //         style={{
+    //           whiteSpace: "nowrap",
+    //           overflow: "hidden",
+    //           textOverflow: "ellipsis",
+    //           maxWidth: "200px",
+    //         }}
+    //       >
+    //         {value.language_name}
+    //       </div>
+    //     );
+    //   },
+    //   sortable: true,
+    // },
   ]);
   const history = useHistory();
 
-  const getReport = (id, st, et) => {
+  const getReport = (id, type, st, et) => {
     setLoading(true);
     apiAuth
       .get(
-        `/api/general/ledger/?coa=${
-          id ? id : ""
-        }&start_time=${st}&end_time=${et}`
+        `/api/account/statement/?organization=${id}&type=${type}&start_time=${st}&end_time=${et}`
       )
       .then((res) => {
         const { data } = res;
@@ -250,8 +258,8 @@ const ProfitAndLoss = (props) => {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         setLoading(false);
+        console.log(err);
       });
   };
 
@@ -268,7 +276,7 @@ const ProfitAndLoss = (props) => {
           className="mb-5 mt-3"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <h2 className="mx-3">Ledger Statement</h2>
+          <h2 className="mx-3">Accounts Statement</h2>
 
           <button className="btn btn-danger" onClick={() => history.goBack()}>
             Back
@@ -280,24 +288,51 @@ const ProfitAndLoss = (props) => {
             <div className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
                 initialValues={{
-                  start_time: props.voucherData?.start_time
-                    ? new Date(props.voucherData?.start_time)
-                    : new Date(),
-                  end_time: props.voucherData?.end_time
-                    ? new Date(props.voucherData?.end_time)
-                    : new Date(),
+                  start_time: new Date() || "",
+                  end_time: new Date() || "",
+                  organizationLedger: selectedOrganizationLedger?.value || "",
                 }}
-                validationSchema={Yup.object({})}
+                validationSchema={Yup.object({
+                  organizationLedger: Yup.string()
+                    .ensure()
+                    .required("Required"),
+                })}
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
                   const et = changeDateFormat(values.end_time);
-                  let coa = Number(props.match.params.coaId);
-                  getReport(coa, st, et);
+                  const id = Number(props.match.params.organizationId);
+                  const type = values?.organizationLedger;
+                  getReport(id, type, st, et);
                 }}
               >
                 {({ values, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3" style={{ zIndex: 200 }}>
+                          <label
+                            htmlFor="organizationLedger"
+                            className="form-label"
+                          >
+                            Type
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            options={LedgerOrganizationOptions}
+                            value={selectedOrganizationLedger}
+                            onChange={(data) => {
+                              setFieldValue("organizationLedger", data.value);
+                              setSelectedOrganizationLedger(data);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="job"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="start_time" className="form-label">
@@ -323,7 +358,6 @@ const ProfitAndLoss = (props) => {
                             <div
                               style={{
                                 position: "relative",
-                                // cursor: "pointer",
                               }}
                             >
                               <span
@@ -334,7 +368,6 @@ const ProfitAndLoss = (props) => {
                                   fill: "red",
                                 }}
                               >
-                                {/* <i className="bi bi-calendar4-week"></i> */}
                                 <img
                                   src="/calendar.svg"
                                   alt="calendar"
@@ -371,7 +404,6 @@ const ProfitAndLoss = (props) => {
                             <div
                               style={{
                                 position: "relative",
-                                // cursor: "pointer",
                               }}
                             >
                               <span
@@ -382,7 +414,6 @@ const ProfitAndLoss = (props) => {
                                   fill: "red",
                                 }}
                               >
-                                {/* <i className="bi bi-calendar4-week"></i> */}
                                 <img
                                   src="/calendar.svg"
                                   alt="calendar"
@@ -441,4 +472,4 @@ const ProfitAndLoss = (props) => {
   );
 };
 
-export default ProfitAndLoss;
+export default OrganizationAccountStatement;

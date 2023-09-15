@@ -94,6 +94,7 @@ import DrOrCrReport from "../views/Vouchers/Reports/DrOrCrReport";
 import AccountReceivableStatement from "../views/TaxInvoice/AccountReceivableStatement";
 import AccountPayableStatement from "../views/TaxInvoice/AccountPayableStatement";
 import LedgerStatement from "../views/TaxInvoice/LedgerStatement";
+import OrganizationAccountStatement from "../views/Organization/OrganizationAccountStatement";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -143,6 +144,10 @@ const authProtectedRoutes = [
   {
     path: "/ledger-statement/:coaId",
     component: LedgerStatement,
+  },
+  {
+    path: "/organization-statement/:organizationId",
+    component: OrganizationAccountStatement,
   },
 
   // { path: "/journal/:id", component: Journal },
