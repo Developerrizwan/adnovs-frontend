@@ -181,25 +181,25 @@ const CaoTable = (props) => {
       sortable: true,
     },
 
-    {
-      name: (
-        <span className="font-weight-bold fs-13">View Ledger statement</span>
-      ),
-      selector: (row) => row,
-      cell: (value) => {
-        return (
-          <div>
-            <Link to={`/ledger-statement/${value.id}`}>
-              <Button color="secondary" className="btn btn-sm">
-                {" "}
-                View
-              </Button>
-            </Link>
-          </div>
-        );
-      },
-      sortable: true,
-    },
+    // {
+    //   name: (
+    //     <span className="font-weight-bold fs-13">View Ledger statement</span>
+    //   ),
+    //   selector: (row) => row,
+    //   cell: (value) => {
+    //     return (
+    //       <div>
+    //         <Link to={`/ledger-statement/${value.id}`}>
+    //           <Button color="secondary" className="btn btn-sm">
+    //             {" "}
+    //             View
+    //           </Button>
+    //         </Link>
+    //       </div>
+    //     );
+    //   },
+    //   sortable: true,
+    // },
 
     {
       name: <span className="font-weight-bold fs-13">Actions</span>,

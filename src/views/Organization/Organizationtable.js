@@ -221,24 +221,24 @@ const OrganizationTable = (props) => {
     //   },
     // },
     //
-    {
-      name: (
-        <span className="font-weight-bold fs-13">View Account Statement</span>
-      ),
-      selector: (row) => row,
-      cell: (value) => {
-        return (
-          <div>
-            <Link to={`/organization-statement/${value.id}`}>
-              <Button color="secondary" className="btn btn-sm">
-                {" "}
-                View
-              </Button>
-            </Link>
-          </div>
-        );
-      },
-    },
+    // {
+    //   name: (
+    //     <span className="font-weight-bold fs-13">View Account Statement</span>
+    //   ),
+    //   selector: (row) => row,
+    //   cell: (value) => {
+    //     return (
+    //       <div>
+    //         <Link to={`/organization-statement/${value.id}`}>
+    //           <Button color="secondary" className="btn btn-sm">
+    //             {" "}
+    //             View
+    //           </Button>
+    //         </Link>
+    //       </div>
+    //     );
+    //   },
+    // },
     // {
     //   name: (
     //     <span className="font-weight-bold fs-13">
