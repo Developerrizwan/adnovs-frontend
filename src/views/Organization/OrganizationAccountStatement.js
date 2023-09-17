@@ -3,14 +3,25 @@ import { Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 import DatePicker from "react-datepicker";
 import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
+import jsPDF from "jspdf";
+import * as htmlToImage from "html-to-image";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Select from "react-select";
 import NotificationManager from "../../components/Common/NotificationManager";
-
+import {
+  Button,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  ModalFooter,
+  UncontrolledDropdown,
+} from "reactstrap";
 const OrganizationAccountStatement = (props) => {
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
@@ -23,6 +34,85 @@ const OrganizationAccountStatement = (props) => {
     { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
     { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
   ];
+
+  const exportProjectToPdf = () => {
+    setLoading(true);
+    const doc = new jsPDF("p", "px");
+    const elements = document.getElementsByClassName("reportdownproject");
+    creatPdf({ doc, elements });
+
+    doc.save(`${reports}-report.pdf`);
+    setLoading(false);
+  };
+
+  const creatPdf = ({ doc, elements }) => {
+    let top = 20;
+    const padding = 10;
+
+    for (let i = 0; i < elements.length; i++) {
+      const el = elements.item(i);
+      try {
+        const imgData = htmlToImage.toPng(el);
+        // setImgs(imgData);
+
+        let elHeight = el.offsetHeight;
+        let elWidth = el.offsetWidth;
+
+        const pageWidth = doc.internal.pageSize.getWidth();
+
+        if (elWidth > pageWidth) {
+          const ratio = pageWidth / elWidth;
+          elHeight = elHeight * ratio - padding;
+          elWidth = elWidth * ratio - padding;
+        }
+
+        const pageHeight = doc.internal.pageSize.getHeight();
+
+        if (top + elHeight > pageHeight) {
+          doc.addPage();
+          top = 20;
+        }
+
+        doc.addImage(
+          imgData,
+          "PNG",
+          padding,
+          top,
+          elWidth,
+          elHeight,
+          `image${i}`
+        );
+        top += elHeight;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const exportData = () => {
+    let apiData = reports.map((report) => {
+      let newuser = {
+        account: report?.account,
+        branch: report?.branch,
+        currency: report?.currency,
+        job_no: report?.job_no,
+        narrations: report?.narrations,
+        net_amount: Number(report?.net_amount).toFixed(),
+        party_account: report?.party_account,
+      };
+      return newuser;
+    });
+
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+    const fileName = "Reports Data";
+    const ws = XLSX.utils.json_to_sheet(apiData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
+  };
 
   const [cols, setCols] = useState([
     {
@@ -80,6 +170,26 @@ const OrganizationAccountStatement = (props) => {
             }}
           >
             {value.currency}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Voucher Number</span>,
+      selector: (row) => row.voucher_number,
+      cell: (value) => {
+        return (
+          <div
+            title={value.voucher_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.voucher_number}
           </div>
         );
       },
@@ -226,31 +336,43 @@ const OrganizationAccountStatement = (props) => {
       sortable: true,
     },
     // {
-    //   name: <span className="font-weight-bold fs-13">Language Name</span>,
-    //   selector: (row) => row.language_name,
+    //   name: <span className="font-weight-bold fs-13">Actions</span>,
+    //   selector: (row) => row,
     //   cell: (value) => {
     //     return (
-    //       <div
-    //         title={value.language_name}
-    //         style={{
-    //           whiteSpace: "nowrap",
-    //           overflow: "hidden",
-    //           textOverflow: "ellipsis",
-    //           maxWidth: "200px",
-    //         }}
-    //       >
-    //         {value.language_name}
-    //       </div>
+    //       <UncontrolledDropdown className="dropdown d-inline-block">
+    //         <DropdownToggle
+    //           className="btn btn-soft-secondary btn-sm"
+    //           tag="button"
+    //         >
+    //           <i className="ri-more-fill align-middle"></i>
+    //         </DropdownToggle>
+    //         <DropdownMenu className="dropdown-menu-end">
+    //           <DropdownItem
+    //             className="edit-item-btn"
+    //             // onClick={() => exportProjectToPdf()}
+    //           >
+    //             <i className="ri-download-2-fill align-bottom me-2 text-muted"></i>
+    //             PDF Download
+    //           </DropdownItem>
+    //           <DropdownItem
+    //             className="remove-item-btn"
+    //             // onClick={() => exportData()}
+    //           >
+    //             <i className="ri-file-excel-2-fill align-bottom me-2 text-muted"></i>
+    //             Excel Download
+    //           </DropdownItem>
+    //         </DropdownMenu>
+    //       </UncontrolledDropdown>
     //     );
     //   },
-    //   sortable: true,
     // },
   ]);
   const history = useHistory();
   const [organizationOptions, setOrganizationOptions] = useState([]);
   const [selectOrganization, setSelectedOrganization] = useState({});
 
-  const getOrganization = () => {
+  const getOrganization = (opts) => {
     setLoading(true);
     apiAuth
       .get(`/api/master/organization`)
@@ -263,7 +385,8 @@ const OrganizationAccountStatement = (props) => {
             value: account.id,
           };
         });
-        setOrganizationOptions(organizationOpts);
+        const finalOpts = organizationOpts.concat(opts);
+        setOrganizationOptions(finalOpts);
         // setAllOrganization(data);
         setLoading(false);
       })
@@ -282,8 +405,29 @@ const OrganizationAccountStatement = (props) => {
   };
 
   useEffect(() => {
-    getOrganization();
+    getPartyOptions();
   }, []);
+
+  const getPartyOptions = () => {
+    apiAuth
+      .get(`/api/get-coa/`)
+      .then((res) => {
+        let { data } = res;
+        data = data.map((rr) => {
+          return {
+            label: `${rr.code}-${rr.name}`,
+            value: rr.id,
+            type: "coa",
+          };
+        });
+        const selParty = data.find(
+          (cur) => cur.value === props.voucherData?.party_account?.id
+        );
+        // setSelectedParty(selParty);
+        getOrganization(data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const getReport = (id, type, st, et) => {
     setLoading(true);
@@ -528,6 +672,26 @@ const OrganizationAccountStatement = (props) => {
               columns={cols}
               data={reports}
               pagination={true}
+              actions={
+                reports && reports.length > 0 ? (
+                  <Grid>
+                    <Button
+                      style={{ background: "#3d78e3" }}
+                      onClick={exportProjectToPdf}
+                    >
+                      PDF Download
+                    </Button>{" "}
+                    <Button
+                      style={{ background: "#3d78e3" }}
+                      onClick={exportData}
+                    >
+                      Excel Download
+                    </Button>{" "}
+                  </Grid>
+                ) : (
+                  ""
+                )
+              }
             />
           </Grid>
         </Grid>
