@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
@@ -9,6 +9,7 @@ import moment from "moment";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Select from "react-select";
+import NotificationManager from "../../components/Common/NotificationManager";
 
 const OrganizationAccountStatement = (props) => {
   const [loading, setLoading] = useState(false);
@@ -246,6 +247,43 @@ const OrganizationAccountStatement = (props) => {
     // },
   ]);
   const history = useHistory();
+  const [organizationOptions, setOrganizationOptions] = useState([]);
+  const [selectOrganization, setSelectedOrganization] = useState({});
+
+  const getOrganization = () => {
+    setLoading(true);
+    apiAuth
+      .get(`/api/master/organization`)
+      .then((response) => {
+        // console.log("dd", response);
+        let data = response.data.results;
+        let organizationOpts = data.map((account, index) => {
+          return {
+            label: account.name,
+            value: account.id,
+          };
+        });
+        setOrganizationOptions(organizationOpts);
+        // setAllOrganization(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Organization Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    getOrganization();
+  }, []);
 
   const getReport = (id, type, st, et) => {
     setLoading(true);
@@ -301,14 +339,39 @@ const OrganizationAccountStatement = (props) => {
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
                   const et = changeDateFormat(values.end_time);
-                  const id = Number(props.match.params.organizationId);
+                  // const id = Number(props.match.params.organizationId);
                   const type = values?.organizationLedger;
-                  getReport(id, type, st, et);
+                  getReport(values.organization, type, st, et);
                 }}
               >
-                {({ values, setFieldValue }) => (
+                {({ values, errors, touched, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="coa_type" className="form-label">
+                            Organization
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="organization"
+                            styles={customStyles}
+                            value={selectOrganization}
+                            options={organizationOptions}
+                            onChange={(data) => {
+                              setFieldValue("organization", data.value);
+                              // setCoaOptions(data);
+                              setSelectedOrganization(data);
+                            }}
+                            placeholder="Select Organization..."
+                          />
+                          {errors.coa_type && touched.coa_type && (
+                            <div className="invalid-feedback d-block">
+                              {errors.coa_type}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3" style={{ zIndex: 200 }}>
                           <label

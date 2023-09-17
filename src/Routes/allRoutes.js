@@ -142,11 +142,11 @@ const authProtectedRoutes = [
   { path: "/account-details", component: AccountDetails },
   { path: "/account_detail", component: AccountDetail },
   {
-    path: "/ledger-statement/:coaId",
+    path: "/ledger-statement/",
     component: LedgerStatement,
   },
   {
-    path: "/organization-statement/:organizationId",
+    path: "/organization-statement/",
     component: OrganizationAccountStatement,
   },
 

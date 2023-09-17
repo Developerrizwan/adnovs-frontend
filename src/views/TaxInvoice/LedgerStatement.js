@@ -8,6 +8,7 @@ import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../assets/CustomTableStyles";
+import Select from "react-select";
 
 const ProfitAndLoss = (props) => {
   const [loading, setLoading] = useState(false);
@@ -235,6 +236,8 @@ const ProfitAndLoss = (props) => {
     },
   ]);
   const history = useHistory();
+  const [coaOptions, setCoaOptions] = useState([]);
+  const [selectCoa, setSelectedCoa] = useState({});
 
   const getReport = (id, st, et) => {
     setLoading(true);
@@ -259,6 +262,28 @@ const ProfitAndLoss = (props) => {
     const parsedDate = moment(time, "ddd MMM DD YYYY HH:mm:ss [GMT] ZZ (z)");
     const formattedDate = parsedDate.utc().format("YYYY-MM-DDTHH:mm:ss[Z]");
     return formattedDate;
+  };
+
+  useEffect(() => {
+    getAccounts();
+  }, []);
+
+  const getAccounts = () => {
+    apiAuth
+      .get(`/api/master/coa/`)
+      .then((response) => {
+        let data = response.data;
+        let CoaOpts = data.map((account, index) => {
+          return {
+            label: account.code,
+            value: account.id,
+          };
+        });
+        setCoaOptions(CoaOpts);
+        // setAccounts(data);
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -291,13 +316,38 @@ const ProfitAndLoss = (props) => {
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
                   const et = changeDateFormat(values.end_time);
-                  let coa = Number(props.match.params.coaId);
-                  getReport(coa, st, et);
+                  // let coa = Number(props.match.params.coaId);
+                  getReport(values.coa_type, st, et);
                 }}
               >
-                {({ values, setFieldValue }) => (
+                {({ values, errors, touched, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="coa_type" className="form-label">
+                            COA
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            name="coa_type"
+                            styles={customStyles}
+                            value={selectCoa}
+                            options={coaOptions}
+                            onChange={(data) => {
+                              setFieldValue("coa_type", data.value);
+                              // setCoaOptions(data);
+                              setSelectedCoa(data);
+                            }}
+                            placeholder="Select Coa..."
+                          />
+                          {errors.coa_type && touched.coa_type && (
+                            <div className="invalid-feedback d-block">
+                              {errors.coa_type}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="start_time" className="form-label">

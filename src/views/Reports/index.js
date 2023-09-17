@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import profitLoss from "../../assets/images/profit-loss.png";
 import trial from "../../assets/images/trial.png";
 import balanceSheet from "../../assets/images/balance-sheet.png";
+import ledger from "../../assets/images/ledger.png";
+import account from "../../assets/images/account.png";
 
 const Reports = () => {
   return (
@@ -46,6 +48,28 @@ const Reports = () => {
               />
               <h4 className="text-center" style={{ fontFamily: "sans-serif" }}>
                 BALANCE SHEET
+              </h4>
+            </div>
+          </Link>
+        </div>
+
+        <div className="col-lg-3">
+          <Link to="/ledger-statement">
+            <div className="card p-5 rounded-5">
+              <img className="m-auto mb-4" src={ledger} alt="" width={100} />
+              <h4 className="text-center" style={{ fontFamily: "sans-serif" }}>
+                LEDGER STATEMENT
+              </h4>
+            </div>
+          </Link>
+        </div>
+
+        <div className="col-lg-3">
+          <Link to="/organization-statement">
+            <div className="card p-5 rounded-5">
+              <img className="m-auto mb-4" src={account} alt="" width={100} />
+              <h4 className="text-center" style={{ fontFamily: "sans-serif" }}>
+                ACCOUNT STATEMENT
               </h4>
             </div>
           </Link>
