@@ -145,7 +145,7 @@ const OrganizationAccountStatement = (props) => {
     //   sortable: true,
     // },
     {
-      name: <span className="font-weight-bold fs-13">Net Amount</span>,
+      name: <span className="font-weight-bold fs-13">Total Amount</span>,
       selector: (row) => row.net_amount,
       cell: (value) => {
         return (
@@ -159,6 +159,26 @@ const OrganizationAccountStatement = (props) => {
             }}
           >
             {Number(value.net_amount).toFixed(2)}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Invoice Number</span>,
+      selector: (row) => row.invoice_number,
+      cell: (value) => {
+        return (
+          <div
+            title={value.invoice_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.invoice_number}
           </div>
         );
       },
@@ -291,7 +311,7 @@ const OrganizationAccountStatement = (props) => {
     const doc = new jsPDF();
     const reportObject = reports[0];
     doc.text(selectedOrganizationLedger?.label, 60, 10);
-    // doc.text(`Organization: ${reportObject?.account}`, 5, 20);
+    doc.text(`Account: ${reportObject?.account}`, 15, 20);
 
     const data = reports;
     const allKeys = Array.from(
@@ -299,11 +319,12 @@ const OrganizationAccountStatement = (props) => {
     );
 
     const customHeaderTitles = [
-      "Account",
+      // "Account",
       "Date",
       "Currency",
       "Voucher_number",
-      "Net Amount",
+      "Total Amount",
+      "Invoice Number",
       "Party Account",
       "Job No",
       "Narrations",
@@ -315,21 +336,23 @@ const OrganizationAccountStatement = (props) => {
       dataKey: key,
     }));
 
-    const tableData = data.map((row) =>
-      columns.map((column) => {
-        const value = row[column.dataKey];
-        if (column.dataKey === "net_amount") {
-          return Number(value).toFixed();
-        } else if (column.dataKey === "date") {
-          return moment(value).format("DD-MM-YYYY");
-        } else {
-          return value;
-        }
-      })
-    );
     doc.autoTable({
       head: [columns.map((column) => column.header)],
-      body: tableData,
+      body: data.map((row) => {
+        return [
+          // row?.account,
+          moment(row?.date).format("YYYY-MM-DD"),
+          row?.currency,
+          row?.Voucher_number,
+          Number(row?.net_amount).toFixed(2),
+          row?.invoice_number,
+          row?.party_account,
+          row?.job_no,
+          row?.narrations,
+          row?.branch,
+        ];
+      }),
+      startY: 25,
     });
 
     doc.save("account_statement.pdf");
@@ -343,7 +366,7 @@ const OrganizationAccountStatement = (props) => {
         Currency: report?.currency,
         "Job No": report?.job_no,
         Narrations: report?.narrations,
-        "Net Amount": Number(report?.net_amount).toFixed(),
+        "Total Amount": Number(report?.net_amount).toFixed(),
         "Party Account": report?.party_account,
       };
       return dataReport;
