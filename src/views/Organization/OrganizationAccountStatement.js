@@ -9,19 +9,12 @@ import DatePicker from "react-datepicker";
 import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
 import jsPDF from "jspdf";
-import * as htmlToImage from "html-to-image";
+import "jspdf-autotable";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Select from "react-select";
 import NotificationManager from "../../components/Common/NotificationManager";
-import {
-  Button,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  ModalFooter,
-  UncontrolledDropdown,
-} from "reactstrap";
+
 const OrganizationAccountStatement = (props) => {
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
@@ -36,77 +29,69 @@ const OrganizationAccountStatement = (props) => {
   ];
 
   const exportProjectToPdf = () => {
-    setLoading(true);
-    const doc = new jsPDF("p", "px");
-    const elements = document.getElementsByClassName("reportdownproject");
-    creatPdf({ doc, elements });
+    const doc = new jsPDF();
+    const reportObject = reports[0];
+    doc.text(selectedOrganizationLedger?.label, 60, 10);
+    // doc.text(`Organization: ${reportObject?.account}`, 5, 20);
 
-    doc.save(`${reports}-report.pdf`);
-    setLoading(false);
-  };
+    const data = reports;
+    const allKeys = Array.from(
+      new Set(data.flatMap((obj) => Object.keys(obj)))
+    );
 
-  const creatPdf = ({ doc, elements }) => {
-    let top = 20;
-    const padding = 10;
+    const customHeaderTitles = [
+      "Account",
+      "Branch",
+      "Currency",
+      "Job No",
+      "Narrations",
+      "Net Amount",
+      "Party Account",
+    ];
 
-    for (let i = 0; i < elements.length; i++) {
-      const el = elements.item(i);
-      try {
-        const imgData = htmlToImage.toPng(el);
-        // setImgs(imgData);
+    const columns = allKeys.map((key, index) => ({
+      header: customHeaderTitles[index],
+      dataKey: key,
+    }));
 
-        let elHeight = el.offsetHeight;
-        let elWidth = el.offsetWidth;
-
-        const pageWidth = doc.internal.pageSize.getWidth();
-
-        if (elWidth > pageWidth) {
-          const ratio = pageWidth / elWidth;
-          elHeight = elHeight * ratio - padding;
-          elWidth = elWidth * ratio - padding;
+    const tableData = data.map((row) =>
+      columns.map((column) => {
+        const value = row[column.dataKey];
+        if (typeof value === "net_amount") {
+          return Number(value).toFixed();
+        } else if (column.dataKey === "date") {
+          return moment(value).format("DD-MM-YYYY");
+        } else {
+          return value;
         }
+      })
+    );
+    doc.autoTable({
+      head: [columns.map((column) => column.header)],
+      body: tableData,
+    });
 
-        const pageHeight = doc.internal.pageSize.getHeight();
-
-        if (top + elHeight > pageHeight) {
-          doc.addPage();
-          top = 20;
-        }
-
-        doc.addImage(
-          imgData,
-          "PNG",
-          padding,
-          top,
-          elWidth,
-          elHeight,
-          `image${i}`
-        );
-        top += elHeight;
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    doc.save("account_statement.pdf");
   };
 
   const exportData = () => {
     let apiData = reports.map((report) => {
-      let newuser = {
-        account: report?.account,
-        branch: report?.branch,
-        currency: report?.currency,
-        job_no: report?.job_no,
-        narrations: report?.narrations,
-        net_amount: Number(report?.net_amount).toFixed(),
-        party_account: report?.party_account,
+      let dataReport = {
+        Account: report?.account,
+        Branch: report?.branch,
+        Currency: report?.currency,
+        "Job No": report?.job_no,
+        Narrations: report?.narrations,
+        "Net Amount": Number(report?.net_amount).toFixed(),
+        "Party Account": report?.party_account,
       };
-      return newuser;
+      return dataReport;
     });
 
     const fileType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
-    const fileName = "Reports Data";
+    const fileName = "Account Statement Data";
     const ws = XLSX.utils.json_to_sheet(apiData);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
@@ -534,7 +519,7 @@ const OrganizationAccountStatement = (props) => {
                             }}
                           />
                           <ErrorMessage
-                            name="job"
+                            name="organizationLedger"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
@@ -644,10 +629,37 @@ const OrganizationAccountStatement = (props) => {
                           <span className="sr-only">Loading...</span>
                         </div>
                       ) : (
-                        <div className="mt-4 mb-3">
+                        <div className="mt-4 mb-3 ">
                           <button className="btn btn-success" type="submit">
                             {"Generate"}
-                          </button>
+                          </button>{" "}
+                          {reports && reports.length > 0 ? (
+                            <>
+                              <button
+                                className="btn"
+                                style={{
+                                  background: "#3d78e3",
+                                  color: "white",
+                                  marginRight: "5px",
+                                }}
+                                onClick={exportProjectToPdf}
+                              >
+                                PDF Download
+                              </button>
+                              <button
+                                className="btn"
+                                style={{
+                                  background: "#3d78e3",
+                                  color: "white",
+                                }}
+                                onClick={exportData}
+                              >
+                                Excel Download
+                              </button>
+                            </>
+                          ) : (
+                            ""
+                          )}
                         </div>
                       )}
                     </div>
@@ -672,26 +684,6 @@ const OrganizationAccountStatement = (props) => {
               columns={cols}
               data={reports}
               pagination={true}
-              actions={
-                reports && reports.length > 0 ? (
-                  <Grid>
-                    <Button
-                      style={{ background: "#3d78e3" }}
-                      onClick={exportProjectToPdf}
-                    >
-                      PDF Download
-                    </Button>{" "}
-                    <Button
-                      style={{ background: "#3d78e3" }}
-                      onClick={exportData}
-                    >
-                      Excel Download
-                    </Button>{" "}
-                  </Grid>
-                ) : (
-                  ""
-                )
-              }
             />
           </Grid>
         </Grid>

@@ -367,6 +367,9 @@ const Sales = (props) => {
                   currency_sar: props.isEdit ? props.data?.currency_sar : "",
                   bayan_number: props.isEdit ? props.data?.bayan_number : "",
                   shipper_name: props.isEdit ? props.data?.shipper_name : "",
+                  supplier_inv_number: props.isEdit
+                    ? props.data?.supplier_inv_number
+                    : "",
                   branch: props.isEdit
                     ? props.data?.consignee_name?.branch
                     : "JEDDAH",
@@ -1077,6 +1080,31 @@ const Sales = (props) => {
                                 <div className="text-danger">{msg}</div>
                               )}
                             />
+                          </div>
+                        </Grid>
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <div>
+                              <Label
+                                htmlFor="supplier_inv_number"
+                                className=" w-50 p e-2"
+                              >
+                                Supplier Invoice No
+                              </Label>
+                              <Field
+                                className="form-control "
+                                name="supplier_inv_number"
+                                placeholder="Supplier Invoice Number"
+                                type="text"
+                                style={{ background: "#EDEDED" }}
+                              />
+                            </div>
+                            {errors.supplier_inv_number &&
+                              touched.supplier_inv_number && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.supplier_inv_number}
+                                </div>
+                              )}
                           </div>
                         </Grid>
                       </Grid>
