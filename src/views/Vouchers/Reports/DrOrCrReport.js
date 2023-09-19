@@ -13,7 +13,7 @@ import moment from "moment";
 const Content = ({ data, curReport }) => {
   // console.log("taxx", data);
   const [state, setState] = useState({});
-  var curCurrency = data?.voucher?.currency.split(" ")[0];
+  var curCurrency = data?.voucher?.currency?.split(" ")[0];
   var totalExcludeVat = 0;
   var totalTaxableAmt = 0;
   var totalVatAmt = 0;
