@@ -3,9 +3,13 @@ import { Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 import DatePicker from "react-datepicker";
 import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Select from "react-select";
@@ -23,6 +27,77 @@ const OrganizationAccountStatement = (props) => {
     { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
     { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
   ];
+
+  const exportProjectToPdf = () => {
+    const doc = new jsPDF();
+    const reportObject = reports[0];
+    doc.text(selectedOrganizationLedger?.label, 60, 10);
+    // doc.text(`Organization: ${reportObject?.account}`, 5, 20);
+
+    const data = reports;
+    const allKeys = Array.from(
+      new Set(data.flatMap((obj) => Object.keys(obj)))
+    );
+
+    const customHeaderTitles = [
+      "Account",
+      "Branch",
+      "Currency",
+      "Job No",
+      "Narrations",
+      "Net Amount",
+      "Party Account",
+    ];
+
+    const columns = allKeys.map((key, index) => ({
+      header: customHeaderTitles[index],
+      dataKey: key,
+    }));
+
+    const tableData = data.map((row) =>
+      columns.map((column) => {
+        const value = row[column.dataKey];
+        if (typeof value === "net_amount") {
+          return Number(value).toFixed();
+        } else if (column.dataKey === "date") {
+          return moment(value).format("DD-MM-YYYY");
+        } else {
+          return value;
+        }
+      })
+    );
+    doc.autoTable({
+      head: [columns.map((column) => column.header)],
+      body: tableData,
+    });
+
+    doc.save("account_statement.pdf");
+  };
+
+  const exportData = () => {
+    let apiData = reports.map((report) => {
+      let dataReport = {
+        Account: report?.account,
+        Branch: report?.branch,
+        Currency: report?.currency,
+        "Job No": report?.job_no,
+        Narrations: report?.narrations,
+        "Net Amount": Number(report?.net_amount).toFixed(),
+        "Party Account": report?.party_account,
+      };
+      return dataReport;
+    });
+
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+    const fileName = "Account Statement Data";
+    const ws = XLSX.utils.json_to_sheet(apiData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
+  };
 
   const [cols, setCols] = useState([
     {
@@ -80,6 +155,26 @@ const OrganizationAccountStatement = (props) => {
             }}
           >
             {value.currency}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Voucher Number</span>,
+      selector: (row) => row.voucher_number,
+      cell: (value) => {
+        return (
+          <div
+            title={value.voucher_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.voucher_number}
           </div>
         );
       },
@@ -226,31 +321,43 @@ const OrganizationAccountStatement = (props) => {
       sortable: true,
     },
     // {
-    //   name: <span className="font-weight-bold fs-13">Language Name</span>,
-    //   selector: (row) => row.language_name,
+    //   name: <span className="font-weight-bold fs-13">Actions</span>,
+    //   selector: (row) => row,
     //   cell: (value) => {
     //     return (
-    //       <div
-    //         title={value.language_name}
-    //         style={{
-    //           whiteSpace: "nowrap",
-    //           overflow: "hidden",
-    //           textOverflow: "ellipsis",
-    //           maxWidth: "200px",
-    //         }}
-    //       >
-    //         {value.language_name}
-    //       </div>
+    //       <UncontrolledDropdown className="dropdown d-inline-block">
+    //         <DropdownToggle
+    //           className="btn btn-soft-secondary btn-sm"
+    //           tag="button"
+    //         >
+    //           <i className="ri-more-fill align-middle"></i>
+    //         </DropdownToggle>
+    //         <DropdownMenu className="dropdown-menu-end">
+    //           <DropdownItem
+    //             className="edit-item-btn"
+    //             // onClick={() => exportProjectToPdf()}
+    //           >
+    //             <i className="ri-download-2-fill align-bottom me-2 text-muted"></i>
+    //             PDF Download
+    //           </DropdownItem>
+    //           <DropdownItem
+    //             className="remove-item-btn"
+    //             // onClick={() => exportData()}
+    //           >
+    //             <i className="ri-file-excel-2-fill align-bottom me-2 text-muted"></i>
+    //             Excel Download
+    //           </DropdownItem>
+    //         </DropdownMenu>
+    //       </UncontrolledDropdown>
     //     );
     //   },
-    //   sortable: true,
     // },
   ]);
   const history = useHistory();
   const [organizationOptions, setOrganizationOptions] = useState([]);
   const [selectOrganization, setSelectedOrganization] = useState({});
 
-  const getOrganization = () => {
+  const getOrganization = (opts) => {
     setLoading(true);
     apiAuth
       .get(`/api/master/organization`)
@@ -263,7 +370,8 @@ const OrganizationAccountStatement = (props) => {
             value: account.id,
           };
         });
-        setOrganizationOptions(organizationOpts);
+        const finalOpts = organizationOpts.concat(opts);
+        setOrganizationOptions(finalOpts);
         // setAllOrganization(data);
         setLoading(false);
       })
@@ -282,8 +390,29 @@ const OrganizationAccountStatement = (props) => {
   };
 
   useEffect(() => {
-    getOrganization();
+    getPartyOptions();
   }, []);
+
+  const getPartyOptions = () => {
+    apiAuth
+      .get(`/api/get-coa/`)
+      .then((res) => {
+        let { data } = res;
+        data = data.map((rr) => {
+          return {
+            label: `${rr.code}-${rr.name}`,
+            value: rr.id,
+            type: "coa",
+          };
+        });
+        const selParty = data.find(
+          (cur) => cur.value === props.voucherData?.party_account?.id
+        );
+        // setSelectedParty(selParty);
+        getOrganization(data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const getReport = (id, type, st, et) => {
     setLoading(true);
@@ -390,7 +519,7 @@ const OrganizationAccountStatement = (props) => {
                             }}
                           />
                           <ErrorMessage
-                            name="job"
+                            name="organizationLedger"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
@@ -500,10 +629,37 @@ const OrganizationAccountStatement = (props) => {
                           <span className="sr-only">Loading...</span>
                         </div>
                       ) : (
-                        <div className="mt-4 mb-3">
+                        <div className="mt-4 mb-3 ">
                           <button className="btn btn-success" type="submit">
                             {"Generate"}
-                          </button>
+                          </button>{" "}
+                          {reports && reports.length > 0 ? (
+                            <>
+                              <button
+                                className="btn"
+                                style={{
+                                  background: "#3d78e3",
+                                  color: "white",
+                                  marginRight: "5px",
+                                }}
+                                onClick={exportProjectToPdf}
+                              >
+                                PDF Download
+                              </button>
+                              <button
+                                className="btn"
+                                style={{
+                                  background: "#3d78e3",
+                                  color: "white",
+                                }}
+                                onClick={exportData}
+                              >
+                                Excel Download
+                              </button>
+                            </>
+                          ) : (
+                            ""
+                          )}
                         </div>
                       )}
                     </div>

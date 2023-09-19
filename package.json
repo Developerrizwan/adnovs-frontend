@@ -35,6 +35,7 @@
     "echarts-for-react": "^3.0.2",
     "eslint": "^8.9.0",
     "feather-icons-react": "^0.5.0",
+    "file-saver": "^2.0.5",
     "filepond": "^4.30.3",
     "filepond-plugin-image-exif-orientation": "^1.0.11",
     "filepond-plugin-image-preview": "^4.6.10",
@@ -48,6 +49,7 @@
     "i18next-browser-languagedetector": "^6.1.3",
     "iso-country-currency": "^0.7.2",
     "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.6.0",
     "jwt-decode": "^3.1.2",
     "leaflet": "^1.7.1",
     "list.js": "^2.3.1",
@@ -112,6 +114,7 @@
     "swiper": "^8.0.6",
     "translate": "^2.0.2",
     "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
     "yup": "^0.32.11"
   },
   "scripts": {

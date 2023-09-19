@@ -275,7 +275,7 @@ const ProfitAndLoss = (props) => {
         let data = response.data;
         let CoaOpts = data.map((account, index) => {
           return {
-            label: account.code,
+            label: `${account.code}-${account.name} `,
             value: account.id,
           };
         });

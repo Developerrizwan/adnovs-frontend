@@ -178,8 +178,6 @@ const PurchaseInvoice = (props) => {
           // console.log("dddddddddddd", final_amount, total_amount)
           // final_amount = Number(final_amount) + Number(total_amount);
 
-          
-
           // genrating qrcode string using TLV format
 
           // try {
@@ -327,7 +325,7 @@ const PurchaseInvoice = (props) => {
                 <tr>
                   <td className="border-0 fw">Ref No.:</td>
                   <td className="border-0">
-                    {state?.invoice?.job?.client_ref}
+                    {state?.invoice?.supplier_inv_number}
                   </td>
                 </tr>
                 <tr>

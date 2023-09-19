@@ -615,6 +615,26 @@ const InvoiceTable = (props) => {
       },
       sortable: true,
     },
+    {
+      name: <span className="font-weight-bold fs-13">Supplier Invoice No</span>,
+      selector: (row) => row.supplier_inv_number,
+      cell: (value) => {
+        return (
+          <div
+            title={value.supplier_inv_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.supplier_inv_number}
+          </div>
+        );
+      },
+      sortable: true,
+    },
 
     // {
     //   name: <span className="font-weight-bold fs-13">Against Concern</span>,
