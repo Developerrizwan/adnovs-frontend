@@ -6,13 +6,20 @@ import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 import DataTable from "react-data-table-component";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Select from "react-select";
 
 const ProfitAndLoss = (props) => {
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
+  const [coaOptions, setCoaOptions] = useState([]);
+  const [selectCoa, setSelectedCoa] = useState({});
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13">Account</span>,
@@ -235,9 +242,85 @@ const ProfitAndLoss = (props) => {
       sortable: true,
     },
   ]);
-  const history = useHistory();
-  const [coaOptions, setCoaOptions] = useState([]);
-  const [selectCoa, setSelectedCoa] = useState({});
+
+  const exportProjectToPdf = () => {
+    const doc = new jsPDF();
+
+    doc.text("General Ledger Statement", 70, 10);
+
+    const data = reports;
+    const allKeys = Array.from(
+      new Set(data.flatMap((obj) => Object.keys(obj)))
+    );
+
+    const customHeaderTitles = [
+      "Account",
+      "Date",
+      "Currency",
+      "Dr Amount",
+      "Cr Amount",
+      "Net Amount",
+      "Party Account",
+      "Job No",
+      "Narrations",
+      "Branch",
+      // "Language Name",
+    ];
+
+    const columns = allKeys.map((key, index) => ({
+      header: customHeaderTitles[index],
+      dataKey: key,
+    }));
+
+    doc.autoTable({
+      head: [columns.map((column) => column.header)],
+      body: data.map((row) => {
+        return [
+          row?.account,
+          moment(row?.date).format("YYYY-MM-DD"),
+          row?.currency,
+          Number(row?.dr_amount).toFixed(2),
+          Number(row?.cr_amount).toFixed(2),
+          Number(row?.net_amount).toFixed(2),
+          row?.party_account,
+          row?.job_no,
+          row?.narrations,
+          row?.branch,
+          // row?.language_name,
+        ];
+      }),
+    });
+    doc.save("ledger_statement.pdf");
+  };
+
+  const exportData = () => {
+    let apiData = reports.map((report) => {
+      let dataReport = {
+        Account: report?.account,
+        Branch: report?.branch,
+        Date: moment(report?.date).format("DD-MM-YYYY"),
+        "Cr Amount": Number(report?.cr_amount).toFixed(),
+        "Dr Amount": Number(report?.dr_amount).toFixed(),
+        "Language Name": report?.language_name,
+        Currency: report?.currency,
+        "Job No": report?.job_no,
+        Narrations: report?.narrations,
+        "Net Amount": Number(report?.net_amount).toFixed(),
+        "Party Account": report?.party_account,
+      };
+      return dataReport;
+    });
+
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+    const fileName = "Ledger Statement Data";
+    const ws = XLSX.utils.json_to_sheet(apiData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
+  };
 
   const getReport = (id, st, et) => {
     setLoading(true);
@@ -311,8 +394,11 @@ const ProfitAndLoss = (props) => {
                   end_time: props.voucherData?.end_time
                     ? new Date(props.voucherData?.end_time)
                     : new Date(),
+                  coa_type: "",
                 }}
-                validationSchema={Yup.object({})}
+                validationSchema={Yup.object({
+                  coa_type: Yup.string().ensure().required("COA is Required"),
+                })}
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
                   const et = changeDateFormat(values.end_time);
@@ -455,10 +541,43 @@ const ProfitAndLoss = (props) => {
                           <span className="sr-only">Loading...</span>
                         </div>
                       ) : (
-                        <div className="mt-4 mb-3">
-                          <button className="btn btn-success" type="submit">
-                            {"Generate"}
-                          </button>
+                        <div className="d-flex">
+                          <div>
+                            <button className="btn btn-success" type="submit">
+                              {"Generate"}
+                            </button>
+                          </div>
+                          <div>
+                            {reports && reports.length > 0 ? (
+                              <>
+                                <button
+                                  className="btn"
+                                  type="button"
+                                  style={{
+                                    background: "#3d78e3",
+                                    color: "white",
+                                    margin: "0px 5px",
+                                  }}
+                                  onClick={exportProjectToPdf}
+                                >
+                                  PDF Download
+                                </button>
+                                <button
+                                  className="btn"
+                                  type="button"
+                                  style={{
+                                    background: "#3d78e3",
+                                    color: "white",
+                                  }}
+                                  onClick={exportData}
+                                >
+                                  Excel Download
+                                </button>
+                              </>
+                            ) : (
+                              ""
+                            )}
+                          </div>
                         </div>
                       )}
                     </div>

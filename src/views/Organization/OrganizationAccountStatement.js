@@ -300,12 +300,14 @@ const OrganizationAccountStatement = (props) => {
 
     const customHeaderTitles = [
       "Account",
-      "Branch",
+      "Date",
       "Currency",
-      "Job No",
-      "Narrations",
+      "Voucher_number",
       "Net Amount",
       "Party Account",
+      "Job No",
+      "Narrations",
+      "Branch",
     ];
 
     const columns = allKeys.map((key, index) => ({
@@ -316,7 +318,7 @@ const OrganizationAccountStatement = (props) => {
     const tableData = data.map((row) =>
       columns.map((column) => {
         const value = row[column.dataKey];
-        if (typeof value === "net_amount") {
+        if (column.dataKey === "net_amount") {
           return Number(value).toFixed();
         } else if (column.dataKey === "date") {
           return moment(value).format("DD-MM-YYYY");
@@ -378,43 +380,13 @@ const OrganizationAccountStatement = (props) => {
       })
       .catch((error) => {
         console.log(error);
-        NotificationManager.error(
-          "",
-          `${error.response?.data?.Error || `Organization Get Error`}`,
-          3000,
-          null,
-          null,
-          ""
-        );
         setLoading(false);
       });
   };
 
   useEffect(() => {
-    // getPartyOptions();
-    getOrganization()
+    getOrganization();
   }, []);
-
-  const getPartyOptions = () => {
-    apiAuth
-      .get(`/api/get-coa/`)
-      .then((res) => {
-        let { data } = res;
-        data = data.map((rr) => {
-          return {
-            label: `${rr.code}-${rr.name}`,
-            value: rr.id,
-            type: "coa",
-          };
-        });
-        const selParty = data.find(
-          (cur) => cur.value === props.voucherData?.party_account?.id
-        );
-        // setSelectedParty(selParty);
-        getOrganization(data);
-      })
-      .catch((err) => console.log(err));
-  };
 
   const getReport = (id, type, st, et) => {
     setLoading(true);
@@ -461,11 +433,15 @@ const OrganizationAccountStatement = (props) => {
                   start_time: new Date() || "",
                   end_time: new Date() || "",
                   organizationLedger: selectedOrganizationLedger?.value || "",
+                  organization: "",
                 }}
                 validationSchema={Yup.object({
                   organizationLedger: Yup.string()
                     .ensure()
                     .required("Required"),
+                  organization: Yup.string()
+                    .ensure()
+                    .required("Organization is Required"),
                 })}
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
@@ -480,7 +456,7 @@ const OrganizationAccountStatement = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="coa_type" className="form-label">
+                          <label htmlFor="organization" className="form-label">
                             Organization
                             <span className="text-danger">*</span>
                           </label>
@@ -496,9 +472,9 @@ const OrganizationAccountStatement = (props) => {
                             }}
                             placeholder="Select Organization..."
                           />
-                          {errors.coa_type && touched.coa_type && (
+                          {errors.organization && touched.organization && (
                             <div className="invalid-feedback d-block">
-                              {errors.coa_type}
+                              {errors.organization}
                             </div>
                           )}
                         </div>
@@ -639,6 +615,7 @@ const OrganizationAccountStatement = (props) => {
                             <>
                               <button
                                 className="btn"
+                                type="button"
                                 style={{
                                   background: "#3d78e3",
                                   color: "white",
@@ -650,6 +627,7 @@ const OrganizationAccountStatement = (props) => {
                               </button>
                               <button
                                 className="btn"
+                                type="button"
                                 style={{
                                   background: "#3d78e3",
                                   color: "white",
