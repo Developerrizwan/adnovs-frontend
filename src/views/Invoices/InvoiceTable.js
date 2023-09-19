@@ -1016,6 +1016,7 @@ const InvoiceTable = (props) => {
                 props.getInvoices();
               });
             }}
+            selectedInvoice={props?.selectedValue}
           />
         </ModalBody>
       </Modal>

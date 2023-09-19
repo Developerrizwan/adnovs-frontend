@@ -23,11 +23,15 @@ const ReportHeader = ({ data }) => {
             {data?.account_name}
           </h3>
           <span>
-            <Translate
-              fontsize={"24px"}
-              fontWeight={600}
-              text={data?.account_name || ""}
-            />
+            {data?.account_name ? (
+              <Translate
+                fontsize={"24px"}
+                fontWeight={600}
+                text={data?.account_name || ""}
+              />
+            ) : (
+              ""
+            )}
           </span>
 
           <div className="d-flex flex-column align-items-end">
