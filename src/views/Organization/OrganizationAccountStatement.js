@@ -23,82 +23,6 @@ const OrganizationAccountStatement = (props) => {
     value: "receive",
   });
 
-  const LedgerOrganizationOptions = [
-    { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
-    { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
-  ];
-
-  const exportProjectToPdf = () => {
-    const doc = new jsPDF();
-    const reportObject = reports[0];
-    doc.text(selectedOrganizationLedger?.label, 60, 10);
-    // doc.text(`Organization: ${reportObject?.account}`, 5, 20);
-
-    const data = reports;
-    const allKeys = Array.from(
-      new Set(data.flatMap((obj) => Object.keys(obj)))
-    );
-
-    const customHeaderTitles = [
-      "Account",
-      "Branch",
-      "Currency",
-      "Job No",
-      "Narrations",
-      "Net Amount",
-      "Party Account",
-    ];
-
-    const columns = allKeys.map((key, index) => ({
-      header: customHeaderTitles[index],
-      dataKey: key,
-    }));
-
-    const tableData = data.map((row) =>
-      columns.map((column) => {
-        const value = row[column.dataKey];
-        if (typeof value === "net_amount") {
-          return Number(value).toFixed();
-        } else if (column.dataKey === "date") {
-          return moment(value).format("DD-MM-YYYY");
-        } else {
-          return value;
-        }
-      })
-    );
-    doc.autoTable({
-      head: [columns.map((column) => column.header)],
-      body: tableData,
-    });
-
-    doc.save("account_statement.pdf");
-  };
-
-  const exportData = () => {
-    let apiData = reports.map((report) => {
-      let dataReport = {
-        Account: report?.account,
-        Branch: report?.branch,
-        Currency: report?.currency,
-        "Job No": report?.job_no,
-        Narrations: report?.narrations,
-        "Net Amount": Number(report?.net_amount).toFixed(),
-        "Party Account": report?.party_account,
-      };
-      return dataReport;
-    });
-
-    const fileType =
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-    const fileExtension = ".xlsx";
-    const fileName = "Account Statement Data";
-    const ws = XLSX.utils.json_to_sheet(apiData);
-    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, fileName + fileExtension);
-  };
-
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13">Account</span>,
@@ -353,25 +277,102 @@ const OrganizationAccountStatement = (props) => {
     //   },
     // },
   ]);
+
   const history = useHistory();
   const [organizationOptions, setOrganizationOptions] = useState([]);
   const [selectOrganization, setSelectedOrganization] = useState({});
 
+  const LedgerOrganizationOptions = [
+    { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
+    { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
+  ];
+
+  const exportProjectToPdf = () => {
+    const doc = new jsPDF();
+    const reportObject = reports[0];
+    doc.text(selectedOrganizationLedger?.label, 60, 10);
+    // doc.text(`Organization: ${reportObject?.account}`, 5, 20);
+
+    const data = reports;
+    const allKeys = Array.from(
+      new Set(data.flatMap((obj) => Object.keys(obj)))
+    );
+
+    const customHeaderTitles = [
+      "Account",
+      "Branch",
+      "Currency",
+      "Job No",
+      "Narrations",
+      "Net Amount",
+      "Party Account",
+    ];
+
+    const columns = allKeys.map((key, index) => ({
+      header: customHeaderTitles[index],
+      dataKey: key,
+    }));
+
+    const tableData = data.map((row) =>
+      columns.map((column) => {
+        const value = row[column.dataKey];
+        if (typeof value === "net_amount") {
+          return Number(value).toFixed();
+        } else if (column.dataKey === "date") {
+          return moment(value).format("DD-MM-YYYY");
+        } else {
+          return value;
+        }
+      })
+    );
+    doc.autoTable({
+      head: [columns.map((column) => column.header)],
+      body: tableData,
+    });
+
+    doc.save("account_statement.pdf");
+  };
+
+  const exportData = () => {
+    let apiData = reports.map((report) => {
+      let dataReport = {
+        Account: report?.account,
+        Branch: report?.branch,
+        Currency: report?.currency,
+        "Job No": report?.job_no,
+        Narrations: report?.narrations,
+        "Net Amount": Number(report?.net_amount).toFixed(),
+        "Party Account": report?.party_account,
+      };
+      return dataReport;
+    });
+
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+    const fileName = "Account Statement Data";
+    const ws = XLSX.utils.json_to_sheet(apiData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
+  };
+
   const getOrganization = (opts) => {
     setLoading(true);
     apiAuth
-      .get(`/api/master/organization`)
+      .get(`/api/master/organization/`)
       .then((response) => {
         // console.log("dd", response);
-        let data = response.data.results;
+        let data = response.data;
         let organizationOpts = data.map((account, index) => {
           return {
             label: account.name,
             value: account.id,
           };
         });
-        const finalOpts = organizationOpts.concat(opts);
-        setOrganizationOptions(finalOpts);
+        // const finalOpts = organizationOpts.concat(opts);
+        setOrganizationOptions(organizationOpts);
         // setAllOrganization(data);
         setLoading(false);
       })
@@ -390,7 +391,8 @@ const OrganizationAccountStatement = (props) => {
   };
 
   useEffect(() => {
-    getPartyOptions();
+    // getPartyOptions();
+    getOrganization()
   }, []);
 
   const getPartyOptions = () => {
