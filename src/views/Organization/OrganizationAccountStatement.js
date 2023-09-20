@@ -341,7 +341,7 @@ const OrganizationAccountStatement = (props) => {
       body: data.map((row) => {
         return [
           // row?.account,
-          moment(row?.date).format("YYYY-MM-DD"),
+          moment(row?.date).format("DD-MM-YYYY"),
           row?.currency,
           row?.Voucher_number,
           Number(row?.net_amount).toFixed(2),
@@ -362,7 +362,7 @@ const OrganizationAccountStatement = (props) => {
     let apiData = reports.map((report) => {
       let dataReport = {
         // Account: report?.account,
-        Date: moment(report?.date).format("YYYY-MM-DD"),
+        Date: moment(report?.date).format("DD-MM-YYYY"),
         Currency: report?.currency,
         "Voucher Number": Number(report?.voucher_number).toFixed(),
         "Total Amount": Number(report?.net_amount).toFixed(),

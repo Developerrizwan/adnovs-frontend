@@ -277,7 +277,7 @@ const ProfitAndLoss = (props) => {
       body: data.map((row) => {
         return [
           row?.account,
-          moment(row?.date).format("YYYY-MM-DD"),
+          moment(row?.date).format("DD-MM-YYYY"),
           row?.currency,
           Number(row?.dr_amount).toFixed(2),
           Number(row?.cr_amount).toFixed(2),
