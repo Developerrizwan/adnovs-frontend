@@ -361,13 +361,16 @@ const OrganizationAccountStatement = (props) => {
   const exportData = () => {
     let apiData = reports.map((report) => {
       let dataReport = {
-        Account: report?.account,
-        Branch: report?.branch,
+        // Account: report?.account,
+        Date: moment(report?.date).format("YYYY-MM-DD"),
         Currency: report?.currency,
+        "Voucher Number": Number(report?.voucher_number).toFixed(),
+        "Total Amount": Number(report?.net_amount).toFixed(),
+        "Invoice Number": report?.invoice_number,
+        "Party Account": report?.party_account,
         "Job No": report?.job_no,
         Narrations: report?.narrations,
-        "Total Amount": Number(report?.net_amount).toFixed(),
-        "Party Account": report?.party_account,
+        Branch: report?.branch,
       };
       return dataReport;
     });

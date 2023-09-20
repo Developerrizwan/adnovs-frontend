@@ -297,16 +297,16 @@ const ProfitAndLoss = (props) => {
     let apiData = reports.map((report) => {
       let dataReport = {
         Account: report?.account,
-        Branch: report?.branch,
         Date: moment(report?.date).format("DD-MM-YYYY"),
-        "Cr Amount": Number(report?.cr_amount).toFixed(),
-        "Dr Amount": Number(report?.dr_amount).toFixed(),
-        "Language Name": report?.language_name,
         Currency: report?.currency,
-        "Job No": report?.job_no,
-        Narrations: report?.narrations,
+        "Dr Amount": Number(report?.dr_amount).toFixed(),
+        "Cr Amount": Number(report?.cr_amount).toFixed(),
         "Net Amount": Number(report?.net_amount).toFixed(),
         "Party Account": report?.party_account,
+        "Job No": report?.job_no,
+        Narrations: report?.narrations,
+        Branch: report?.branch,
+        "Language Name": report?.language_name,
       };
       return dataReport;
     });
