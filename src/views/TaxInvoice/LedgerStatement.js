@@ -289,6 +289,24 @@ const ProfitAndLoss = (props) => {
           // row?.language_name,
         ];
       }),
+      startY: 25,
+      styles: {
+        font: "Arial",
+        fontSize: 11,
+      },
+      columnStyles: {
+        0: { cellWidth: 20 },
+        1: { cellWidth: 20 },
+        2: { cellWidth: 20 },
+        3: { cellWidth: 18 },
+        4: { cellWidth: 18 },
+        5: { cellWidth: 18 },
+        6: { cellWidth: 18 },
+        7: { cellWidth: 18 },
+        8: { cellWidth: 22 },
+        9: { cellWidth: 19 },
+      },
+      margin: { left: 10, right: 10 },
     });
     doc.save("ledger_statement.pdf");
   };

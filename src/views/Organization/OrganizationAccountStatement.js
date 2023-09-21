@@ -322,7 +322,7 @@ const OrganizationAccountStatement = (props) => {
       // "Account",
       "Date",
       "Currency",
-      "Voucher_number",
+      "Voucher Number",
       "Total Amount",
       "Invoice Number",
       "Party Account",
@@ -353,6 +353,22 @@ const OrganizationAccountStatement = (props) => {
         ];
       }),
       startY: 25,
+      styles: {
+        font: "Arial",
+        fontSize: 11,
+      },
+      columnStyles: {
+        0: { cellWidth: 20 },
+        1: { cellWidth: 20 },
+        2: { cellWidth: 20 },
+        3: { cellWidth: 20 },
+        4: { cellWidth: 20 },
+        5: { cellWidth: 20 },
+        6: { cellWidth: 25 },
+        7: { cellWidth: 22 },
+        8: { cellWidth: 20 },
+      },
+      margin: { left: 10, right: 10 },
     });
 
     doc.save("account_statement.pdf");
