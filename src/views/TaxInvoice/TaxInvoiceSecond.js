@@ -327,10 +327,22 @@ const TaxInvoiceSecond = (props) => {
               <ShowDataWithTranslate
                 width={"200px"}
                 label={"Client - Bill To"}
-                value={state.invoice?.client_name?.name}
+                value={""}
               />
-
-              <div className="">
+              <div className="ms-3">
+                <span>
+                  <Translate text={state.invoice?.client_name?.name} />
+                </span>
+                <span
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  {state.invoice?.client_name?.name}
+                </span>{" "}
+                ,
+              </div>
+              <div className="ms-3">
                 <span>
                   <Translate text={state?.invoice?.client_name?.city} />
                 </span>
@@ -343,7 +355,7 @@ const TaxInvoiceSecond = (props) => {
                 </span>{" "}
                 ,
               </div>
-              <div className="">
+              <div className="ms-3">
                 <span>
                   <Translate text={state?.invoice?.client_name?.state_code} />
                 </span>
@@ -356,7 +368,7 @@ const TaxInvoiceSecond = (props) => {
                 </span>{" "}
                 ,
               </div>
-              <div className="">
+              <div className="ms-3">
                 <span>
                   <Translate text={state?.invoice?.client_name?.country} />
                 </span>
@@ -574,6 +586,11 @@ const TaxInvoiceSecond = (props) => {
                   width={"150px"}
                   label={"Commodity"}
                   value={state?.invoice?.job?.commodity}
+                />
+                <ShowDataWithTranslate
+                  width={"150px"}
+                  label={"Remarks"}
+                  // value={state?.invoice?.job?.commodity}
                 />
               </div>
               <div
