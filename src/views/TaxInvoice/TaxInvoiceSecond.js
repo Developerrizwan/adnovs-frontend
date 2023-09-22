@@ -473,7 +473,7 @@ const TaxInvoiceSecond = (props) => {
                 label={"POA"}
                 value={state.invoice?.poa}
               />
-              <ShowDataWithTranslate
+              {/* <ShowDataWithTranslate
                 width={"180px"}
                 label={"Currency Amount"}
                 value={state.invoice?.currency_sar}
@@ -482,7 +482,7 @@ const TaxInvoiceSecond = (props) => {
                 width={"180px"}
                 label={"Exchange Rate"}
                 value={state.invoice?.ex_rate}
-              />
+              /> */}
             </div>
           </div>
 
@@ -508,8 +508,8 @@ const TaxInvoiceSecond = (props) => {
                   </th>
                   <ShowTableHeadWithTranslate label={"Description"} />
                   <ShowTableHeadWithTranslate label={"Currency Rate"} />
-                  {/* <ShowTableHeadWithTranslate label={"Currency Amount"} /> */}
-                  {/* <ShowTableHeadWithTranslate label={"Currency"} /> */}
+                  <ShowTableHeadWithTranslate label={"Currency Amount"} />
+                  <ShowTableHeadWithTranslate label={"Currency"} />
                   <ShowTableHeadWithTranslate label={"Amount"} />
                   <ShowTableHeadWithTranslate label={"VAT%"} />
                   <ShowTableHeadWithTranslate label={"VAT"} />
@@ -543,12 +543,12 @@ const TaxInvoiceSecond = (props) => {
                           </div>
                         </td>
                         <td className="border-0 text-center">{cost.ex_rate}</td>
-                        {/* <td className="border-0 text-center">
+                        <td className="border-0 text-center">
                           {cost.fcy_amount}
-                        </td> */}
-                        {/* <td className="border-0 text-center">
+                        </td>
+                        <td className="border-0 text-center">
                           {cost.currency}
-                        </td> */}
+                        </td>
                         {/* <td className="border-0">1</td>
                       <td className="border-0">1,161.50</td> */}
                         <td
