@@ -1041,76 +1041,78 @@ const Sales = (props) => {
                     </Grid>
 
                     {selectedInvoice.value === "Purchase" ||
-                      (props?.selectedInvoice === "Purchase" && (
-                        <Grid container spacing={2}>
-                          <Grid item lg={4} xs={12}>
-                            <div className="form-group mb-3">
-                              <div>
-                                <Label htmlFor="bill_amount">Bill Amount</Label>
-                                <Field
-                                  name="bill_amount"
-                                  className="form-control"
-                                  placeholder="Bill Amount"
-                                  type="text"
-                                  style={{ background: "#EDEDED" }}
-                                />
-                              </div>
-                              <ErrorMessage
+                    props?.selectedInvoice === "Purchase" ? (
+                      <Grid container spacing={2}>
+                        <Grid item lg={4} xs={12}>
+                          <div className="form-group mb-3">
+                            <div>
+                              <Label htmlFor="bill_amount">Bill Amount</Label>
+                              <Field
                                 name="bill_amount"
-                                render={(msg) => (
-                                  <div className="text-danger">{msg}</div>
-                                )}
+                                className="form-control"
+                                placeholder="Bill Amount"
+                                type="text"
+                                style={{ background: "#EDEDED" }}
                               />
                             </div>
-                          </Grid>
-
-                          <Grid item lg={4} xs={12}>
-                            <div className="form-group mb-3">
-                              <div>
-                                <Label htmlFor="narration">Narration</Label>
-                                <Field
-                                  name="narration"
-                                  className="form-control"
-                                  placeholder="Narration"
-                                  type="text"
-                                  style={{ background: "#EDEDED" }}
-                                />
-                              </div>
-                              <ErrorMessage
-                                name="narration"
-                                render={(msg) => (
-                                  <div className="text-danger">{msg}</div>
-                                )}
-                              />
-                            </div>
-                          </Grid>
-                          <Grid item lg={4} xs={12}>
-                            <div className="mb-3">
-                              <div>
-                                <Label
-                                  htmlFor="supplier_inv_number"
-                                  className=" w-50 p e-2"
-                                >
-                                  Supplier Invoice No
-                                </Label>
-                                <Field
-                                  className="form-control "
-                                  name="supplier_inv_number"
-                                  placeholder="Supplier Invoice Number"
-                                  type="text"
-                                  style={{ background: "#EDEDED" }}
-                                />
-                              </div>
-                              {errors.supplier_inv_number &&
-                                touched.supplier_inv_number && (
-                                  <div className="invalid-feedback d-block">
-                                    {errors.supplier_inv_number}
-                                  </div>
-                                )}
-                            </div>
-                          </Grid>
+                            <ErrorMessage
+                              name="bill_amount"
+                              render={(msg) => (
+                                <div className="text-danger">{msg}</div>
+                              )}
+                            />
+                          </div>
                         </Grid>
-                      ))}
+
+                        <Grid item lg={4} xs={12}>
+                          <div className="form-group mb-3">
+                            <div>
+                              <Label htmlFor="narration">Narration</Label>
+                              <Field
+                                name="narration"
+                                className="form-control"
+                                placeholder="Narration"
+                                type="text"
+                                style={{ background: "#EDEDED" }}
+                              />
+                            </div>
+                            <ErrorMessage
+                              name="narration"
+                              render={(msg) => (
+                                <div className="text-danger">{msg}</div>
+                              )}
+                            />
+                          </div>
+                        </Grid>
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <div>
+                              <Label
+                                htmlFor="supplier_inv_number"
+                                className=" w-50 p e-2"
+                              >
+                                Supplier Invoice No
+                              </Label>
+                              <Field
+                                className="form-control "
+                                name="supplier_inv_number"
+                                placeholder="Supplier Invoice Number"
+                                type="text"
+                                style={{ background: "#EDEDED" }}
+                              />
+                            </div>
+                            {errors.supplier_inv_number &&
+                              touched.supplier_inv_number && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.supplier_inv_number}
+                                </div>
+                              )}
+                          </div>
+                        </Grid>
+                      </Grid>
+                    ) : (
+                      <></>
+                    )}
                     <Grid spacing={2} container>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">

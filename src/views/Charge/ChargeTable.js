@@ -86,7 +86,7 @@ const ChargeTable = (props) => {
       cell: (value) => {
         return (
           <div
-            title={value.coa?.code}
+            title={`${value?.coa?.name} - ${value.coa?.code}`}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -94,7 +94,7 @@ const ChargeTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.coa?.code}
+            {`${value?.coa?.name} - ${value.coa?.code}`}
           </div>
         );
       },

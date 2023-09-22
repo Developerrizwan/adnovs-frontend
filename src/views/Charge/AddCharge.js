@@ -55,7 +55,7 @@ const AddCharge = (props) => {
     setSelStatus(selectedStatus);
 
     const selectedCoa = coaOptions.find(
-      (cur) => cur.value === props.charge?.coa
+      (cur) => cur.value === props.charge?.coa?.id
     );
     setSelCoa(selectedCoa);
 

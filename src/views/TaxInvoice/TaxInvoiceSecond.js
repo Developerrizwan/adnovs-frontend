@@ -419,16 +419,40 @@ const TaxInvoiceSecond = (props) => {
               />
             </div>
             <div className="col-lg-4 custom-font">
-              <ShowDataWithTranslate
-                width={"180px"}
-                label={"Consignee"}
-                value={state.invoice?.consignee_name?.name}
-              />
-              <ShowDataWithTranslate
-                width={"180px"}
-                label={"Shipper Name"}
-                value={state.invoice?.shipper_name}
-              />
+              <div style={{ display: "flex" }}>
+                <ShowDataWithTranslate
+                  width={"180px"}
+                  label={"Consignee"}
+                  value={""}
+                />
+                <span>
+                  <Translate text={state.invoice?.consignee_name?.name} />
+                </span>
+                <span
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  {state.invoice?.consignee_name?.name}
+                </span>
+              </div>
+              <div style={{ display: "flex" }}>
+                <ShowDataWithTranslate
+                  width={"180px"}
+                  label={"Shipper Name"}
+                  value={""}
+                />
+                <span>
+                  <Translate text={state.invoice?.shipper_name} />
+                </span>
+                <span
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  {state.invoice?.shipper_name}
+                </span>
+              </div>
               <ShowDataWithTranslate
                 width={"180px"}
                 label={"Notify"}
@@ -484,8 +508,8 @@ const TaxInvoiceSecond = (props) => {
                   </th>
                   <ShowTableHeadWithTranslate label={"Description"} />
                   <ShowTableHeadWithTranslate label={"Currency Rate"} />
-                  <ShowTableHeadWithTranslate label={"Currency Amount"} />
-                  <ShowTableHeadWithTranslate label={"Currency"} />
+                  {/* <ShowTableHeadWithTranslate label={"Currency Amount"} /> */}
+                  {/* <ShowTableHeadWithTranslate label={"Currency"} /> */}
                   <ShowTableHeadWithTranslate label={"Amount"} />
                   <ShowTableHeadWithTranslate label={"VAT%"} />
                   <ShowTableHeadWithTranslate label={"VAT"} />
@@ -519,12 +543,12 @@ const TaxInvoiceSecond = (props) => {
                           </div>
                         </td>
                         <td className="border-0 text-center">{cost.ex_rate}</td>
-                        <td className="border-0 text-center">
+                        {/* <td className="border-0 text-center">
                           {cost.fcy_amount}
-                        </td>
-                        <td className="border-0 text-center">
+                        </td> */}
+                        {/* <td className="border-0 text-center">
                           {cost.currency}
-                        </td>
+                        </td> */}
                         {/* <td className="border-0">1</td>
                       <td className="border-0">1,161.50</td> */}
                         <td
@@ -590,7 +614,7 @@ const TaxInvoiceSecond = (props) => {
                 <ShowDataWithTranslate
                   width={"150px"}
                   label={"Remarks"}
-                  // value={state?.invoice?.job?.commodity}
+                  value={state?.invoice?.remarks}
                 />
               </div>
               <div
