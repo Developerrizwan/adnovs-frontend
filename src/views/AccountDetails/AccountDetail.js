@@ -75,8 +75,6 @@ const AccountDetail = (props) => {
     { value: "Credit Note", label: "Credit Note" },
   ];
 
-  console.log("propsss-------------------", props);
-
   useEffect(() => {
     const sel = voucherOptions.find((dd) => dd.value === voucherId);
     getJobOptions();
@@ -119,7 +117,6 @@ const AccountDetail = (props) => {
       const selCurr = allCurrencies.find(
         (cur) => cur.value === props.accountDetails?.currency
       );
-      console.log("curr", selCurrency);
       setSelCurrency(selCurr);
     }
     setCurrencyOptions(allCurrencies);
@@ -143,7 +140,7 @@ const AccountDetail = (props) => {
           );
           setSelectedParty(selParty);
         }
-        setPartyOptions(data);
+        // setPartyOptions(data);
         getOrganizationOptions(data);
       })
       .catch((err) => console.log(err));
@@ -235,7 +232,9 @@ const AccountDetail = (props) => {
                     props?.voucherId ||
                     "",
                   // line_no: props.accountDetails?.line_no || 1,
+
                   ac_name: props.accountDetails?.ac_name?.id || "",
+                  ac_name_type: props.accountDetails?.ac_name?.type || "",
                   dr_cr: props.accountDetails?.dr_cr || "",
                   narration: props.accountDetails?.narration || "",
                   qty: props.accountDetails?.qty || "",
@@ -363,9 +362,10 @@ const AccountDetail = (props) => {
                             name="ac_name"
                             styles={customStyles}
                             value={selectedParty}
-                            options={partyOptions}
+                            options={fromAndToOptions}
                             onChange={(data) => {
                               setFieldValue("ac_name", data?.value);
+                              setFieldValue("ac_name_type", data?.type);
                               setSelectedParty(data);
                             }}
                           />
