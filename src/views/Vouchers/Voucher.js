@@ -258,11 +258,11 @@ const Voucher = (props) => {
         setSelectedParty(sel_party);
 
         const sel_voucherFrom = finalOpts.find(
-          (item) => item.value === props?.voucherData?.voucher_from
+          (item) => item.value === Number(props?.voucherData?.voucher_from)
         );
         setSelectedVoucherFrom(sel_voucherFrom);
         const sel_voucherTo = finalOpts.find(
-          (item) => item.value === props?.voucherData?.voucher_to
+          (item) => item.value === Number(props?.voucherData?.voucher_to)
         );
 
         setSelectedVoucherTo(sel_voucherTo);
