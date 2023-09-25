@@ -18,6 +18,7 @@ import NotificationManager from "../../components/Common/NotificationManager";
 const OrganizationAccountStatement = (props) => {
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [selectedOrganizationLedger, setSelectedOrganizationLedger] = useState({
     label: "ACCOUNTS RECEIVABLE STATEMENT",
     value: "receive",
@@ -311,7 +312,8 @@ const OrganizationAccountStatement = (props) => {
     const doc = new jsPDF();
     const reportObject = reports[0];
     doc.text(selectedOrganizationLedger?.label, 60, 10);
-    doc.text(`Account: ${reportObject?.account}`, 15, 20);
+    doc.text(`Account: ${reportObject?.account}`, 12, 22);
+    doc.text(`Total Amount: ${totalAmount}`, 12, 32);
 
     const data = reports;
     const allKeys = Array.from(
@@ -352,7 +354,7 @@ const OrganizationAccountStatement = (props) => {
           row?.branch,
         ];
       }),
-      startY: 25,
+      startY: 36,
       styles: {
         font: "Arial",
         fontSize: 11,
@@ -438,6 +440,11 @@ const OrganizationAccountStatement = (props) => {
       )
       .then((res) => {
         const { data } = res;
+        let total_amount = data.reduce((x, y) => {
+          return Number(x) + Number(y.net_amount);
+        }, 0);
+
+        setTotalAmount(total_amount);
         setReports(data);
         setLoading(false);
       })
@@ -699,6 +706,21 @@ const OrganizationAccountStatement = (props) => {
             marginTop: "5px",
           }}
         >
+          {reports?.length > 0 ? (
+            <Grid
+              itm
+              lg="12"
+              style={{
+                marginLeft: "20px",
+                fontWeight: "bold",
+                fontSize: "16px",
+              }}
+            >
+              Total Amount - {totalAmount}
+            </Grid>
+          ) : (
+            <></>
+          )}
           <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
             {" "}
             <DataTable

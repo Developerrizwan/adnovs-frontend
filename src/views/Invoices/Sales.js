@@ -395,6 +395,12 @@ const Sales = (props) => {
                   party_account: props.isEdit
                     ? props.data?.party_account?.id
                     : "",
+                  payment_status: props.data?.payment_status
+                    ? props.data?.payment_status
+                    : "Unpaid",
+                  paid_amount: props.data?.paid_amount
+                    ? props.data?.paid_amount
+                    : 0,
                 }}
                 validationSchema={Yup.object({
                   job: Yup.string().ensure().required("Job is Required"),
@@ -1183,6 +1189,66 @@ const Sales = (props) => {
                         </div>
                       </Grid> */}
                     </Grid>
+                    {props.isEdit ? (
+                      <>
+                        <Grid spacing={2} container>
+                          <Grid item lg={4} xs={12}>
+                            <div className="form-group mb-3">
+                              <Label htmlFor="payment_status">
+                                Invoice Status
+                              </Label>
+                              <Field
+                                name="payment_status"
+                                className="form-control"
+                                as="select"
+                                style={{ background: "#EDEDED" }}
+                              >
+                                <option key={"Unpaid"} value={"Unpaid"}>
+                                  Unpaid
+                                </option>
+                                <option key={"Paid"} value={"Paid"}>
+                                  Paid
+                                </option>
+                                <option
+                                  key={"Partial Paid"}
+                                  value={"Partial Paid"}
+                                >
+                                  Partial Paid
+                                </option>
+                              </Field>
+                              <ErrorMessage
+                                name="payment_status"
+                                render={(msg) => (
+                                  <div className="text-danger">{msg}</div>
+                                )}
+                              />
+                            </div>
+                          </Grid>
+                          <Grid item lg={4} xs={12}>
+                            <div className="form-group mb-3">
+                              <div>
+                                <Label htmlFor="paid_amount">Amount Paid</Label>
+                                <Field
+                                  name="paid_amount"
+                                  className="form-control"
+                                  placeholder="Amount Paid"
+                                  type="text"
+                                  style={{ background: "#EDEDED" }}
+                                />
+                              </div>
+                              <ErrorMessage
+                                name="paid_amount"
+                                render={(msg) => (
+                                  <div className="text-danger">{msg}</div>
+                                )}
+                              />
+                            </div>
+                          </Grid>
+                        </Grid>
+                      </>
+                    ) : (
+                      <></>
+                    )}
 
                     <div className="d-flex">
                       <Button

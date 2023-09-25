@@ -369,6 +369,23 @@ const InvoiceTable = (props) => {
       ),
     },
     {
+      name: <span className="font-weight-bold fs-13">Invoice Status</span>,
+      selector: (row) => row.payment_status,
+      cell: (value) => (
+        <div
+          title={value.payment_status}
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: "200px",
+          }}
+        >
+          {value.payment_status}
+        </div>
+      ),
+    },
+    {
       name: <span className="font-weight-bold fs-13">View Invoice</span>,
       selector: (row) => row,
       cell: (value) => {
@@ -879,6 +896,23 @@ const InvoiceTable = (props) => {
           }}
         >
           {value.remarks}
+        </div>
+      ),
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Invoice Status</span>,
+      selector: (row) => row.payment_status,
+      cell: (value) => (
+        <div
+          title={value.payment_status}
+          style={{
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            maxWidth: "200px",
+          }}
+        >
+          {value.payment_status}
         </div>
       ),
     },
