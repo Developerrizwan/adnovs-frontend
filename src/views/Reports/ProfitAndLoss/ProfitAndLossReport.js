@@ -9,8 +9,12 @@ import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 const Content = ({ data }) => {
   // console.log("profit", data);
 
-  var incomeTotal = 0;
-  var expenseTotal = 0;
+  var incomeTotal = data?.reduce((x, y) => {
+    return Number(x) + Number(y?.income_amount);
+  }, 0);
+  var expenseTotal = data?.reduce((x, y) => {
+    return Number(x) + Number(y?.expenses_amount);
+  }, 0);
 
   return (
     <div id="content" className="mt-5 mx-2">
@@ -57,190 +61,195 @@ const Content = ({ data }) => {
 
       {/* Table */}
       <div id="table" className="my-4">
-        <table className="htmlTable mt-2 w-100 ">
+        <table className="htmlTable mt-2 w-100">
           <tr>
-            <th className="text-center w-50">Group Name</th>
-            <th className="text-center w-25">Previous Amount</th>
-            <th className="text-center w-25">Current Amount</th>
+            <th className="text-center ">Group Name</th>
+            <th className="text-center">Previous Amount</th>
+            <th className="text-center">Current Amount</th>
           </tr>
           <tr>
-            <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
-              <p
-                className="my-1 py-0"
-                style={{
-                  fontSize: "14px",
-                  fontWeight: 700,
-                  marginLeft: "30px",
-                  fontFamily: "sans-serif",
-                  color: "black",
-                }}
-              >
-                PROFIT AND LOSS
-              </p>
+            <td
+              className="text-center py-2"
+              style={{
+                fontSize: "16px",
+                fontWeight: 700,
+                marginLeft: "30px",
+                fontFamily: "sans-serif",
+                color: "black",
+              }}
+            >
+              PROFIT AND LOSS
             </td>
-            <td className="text-center border-top-0 border-bottom-0"></td>
-            <td className="text-center border-top-0 border-bottom-0"></td>
+            <td className="text-center"></td>
+            <td className="text-center"></td>
           </tr>
           <tr>
-            <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
-              <>
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
+            <td
+              className="text-center py-2"
+              style={{
+                fontSize: "16px",
 
-                    fontWeight: 700,
-                    marginLeft: "70px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  INCOME
-                </p>
-                {data?.length &&
-                  data?.map((dd) => {
-                    return (
-                      <>
-                        <div className="my-1 " style={{ marginLeft: "100px" }}>
-                          {" "}
-                          {dd?.income_amount === 0
-                            ? ""
-                            : `${dd?.name}-${dd?.code}`}
-                        </div>
-                      </>
-                    );
-                  })}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
-
-                    fontWeight: 700,
-                    marginLeft: "90px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  INCOME TOTAL
-                </p>
-              </>
+                fontWeight: 700,
+                marginLeft: "70px",
+                fontFamily: "sans-serif",
+                color: "black",
+              }}
+            >
+              INCOME
             </td>
-            <td className="text-center border-top-0 border-bottom-0"></td>
-            <td className="text-center border-top-0 border-bottom-0">
-              {/* Income - Current Amount details */}
-              <>
-                <p className="my-0 py-0">----------------</p>
-                {data?.length &&
-                  data?.map((dd) => {
-                    incomeTotal += Number(dd?.income_amount);
-                    return (
-                      <>
-                        <div className="my-1 text-center">
-                          <span>
-                            {" "}
-                            {dd?.income_amount === 0
-                              ? ""
-                              : Number(dd?.income_amount).toFixed(2)}{" "}
-                          </span>
-                        </div>
-                      </>
-                    );
-                  })}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 900,
-                    textAlign: "center",
-                    // marginLeft: "50px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  {incomeTotal.toFixed(2) || "0.00"}
-                </p>
-              </>
+            <td className="text-center"></td>
+            <td className="text-center">--------------------</td>
+          </tr>
+          {data?.length &&
+            data
+              ?.filter((dd) => dd?.income_amount)
+              .map((dd) => {
+                return (
+                  <tr key={dd.name}>
+                    <td
+                      className="text-center"
+                      style={{
+                        fontSize: "14px",
+                      }}
+                    >
+                      {dd?.income_amount === 0 ? "" : `${dd?.name}-${dd?.code}`}
+                    </td>
+                    <td className="text-center"></td>
+                    <td
+                      className="text-center"
+                      style={{
+                        fontSize: "16px",
+                      }}
+                    >
+                      {dd?.income_amount === 0
+                        ? ""
+                        : Number(dd?.income_amount).toFixed(2)}
+                    </td>
+                  </tr>
+                );
+              })}
+          <tr>
+            <td
+              className="text-center py-2"
+              style={{
+                fontSize: "16px",
+
+                fontWeight: 500,
+                marginLeft: "90px",
+                fontFamily: "sans-serif",
+                color: "black",
+              }}
+            >
+              INCOME TOTAL
+            </td>
+            <td className="text-center"></td>
+            <td
+              className="text-center"
+              style={{
+                fontSize: "18px",
+                fontWeight: 700,
+              }}
+            >
+              {incomeTotal ? Number(incomeTotal).toFixed(2) : "0.00"}
             </td>
           </tr>
           <tr>
-            <td className="text-left border-top-0">
-              <>
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontWeight: 700,
-                    fontSize: "14px",
+            <td
+              className="text-center py-2"
+              style={{
+                fontWeight: 700,
+                fontSize: "16px",
 
-                    marginLeft: "70px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  EXPENSES
-                </p>
-                {data?.length &&
-                  data?.map((dd) => {
-                    return (
-                      <>
-                        <div className="my-1" style={{ marginLeft: "100px" }}>
-                          {" "}
-                          {dd?.expenses_amount === 0
-                            ? ""
-                            : `${dd?.name}-${dd?.code}`}
-                        </div>
-                      </>
-                    );
-                  })}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    marginLeft: "80px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  EXPENSE TOTAL
-                </p>
-              </>
+                marginLeft: "70px",
+                fontFamily: "sans-serif",
+                color: "black",
+              }}
+            >
+              EXPENSES
             </td>
-            <td className="text-center border-top-0"></td>
-            <td className="text-center border-top-0">
-              <>
-                {/* Expense current Amount details */}
-                <p className="my-0 py-0">----------------</p>
-                {data?.length &&
-                  data?.map((dd) => {
-                    expenseTotal += Number(dd?.expenses_amount);
-                    return (
-                      <>
-                        <div className="my-1" style={{ textAlign: "center" }}>
-                          <span>
-                            {" "}
-                            {dd?.expenses_amount === 0
-                              ? ""
-                              : Number(dd?.expenses_amount).toFixed(2)}
-                          </span>
-                        </div>
-                      </>
-                    );
-                  })}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "16px",
+            <td className="text-center"></td>
+            <td className="text-center">--------------------</td>
+          </tr>
+          {data?.length &&
+            data
+              ?.filter((dd) => dd?.expenses_amount)
+              .map((dd) => {
+                return (
+                  <tr key={dd.name}>
+                    <td
+                      className="text-center"
+                      style={{
+                        fontSize: "14px",
+                      }}
+                    >
+                      {dd?.expenses_amount === 0
+                        ? ""
+                        : `${dd?.name}-${dd?.code}`}
+                    </td>
+                    <td className="text-center"></td>
+                    <td
+                      className="text-center"
+                      style={{
+                        fontSize: "16px",
+                      }}
+                    >
+                      {dd?.expenses_amount === 0
+                        ? ""
+                        : Number(dd?.expenses_amount).toFixed(2)}
+                    </td>
+                  </tr>
+                );
+              })}
+          <tr>
+            <td
+              className="text-center"
+              style={{
+                fontSize: "16px",
 
-                    fontWeight: 900,
-                    textAlign: "center",
-                    // marginLeft: "50px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  {expenseTotal.toFixed(2) || "0.00"}
-                </p>
-              </>
+                fontWeight: 500,
+                marginLeft: "90px",
+                fontFamily: "sans-serif",
+                color: "black",
+              }}
+            >
+              EXPENSE TOTAL
+            </td>
+            <td className="text-center"></td>
+            <td
+              className="text-center"
+              style={{
+                fontSize: "18px",
+                fontWeight: 700,
+              }}
+            >
+              {" "}
+              {expenseTotal ? Number(expenseTotal).toFixed(2) : "0.00"}
+            </td>
+          </tr>
+          <tr>
+            <td
+              className="text-center"
+              style={{
+                fontSize: "16px",
+
+                fontWeight: 700,
+                marginLeft: "90px",
+                fontFamily: "sans-serif",
+                color: "black",
+              }}
+            >
+              TOTAL AMOUNT
+            </td>
+            <td className="text-center"></td>
+            <td
+              className="text-center"
+              style={{
+                fontSize: "18px",
+                fontWeight: 700,
+              }}
+            >
+              {" "}
+              {Number(incomeTotal - expenseTotal).toFixed(2) || "0.00"}
             </td>
           </tr>
         </table>
