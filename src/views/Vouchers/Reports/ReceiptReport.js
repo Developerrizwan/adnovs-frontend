@@ -73,10 +73,14 @@ const Content = ({ data }) => {
               <div className=" ">
                 <span className="p-2">{data?.voucher?.received_from}</span>
                 <br />
+                <span className="p-2">
+                  {data?.voucher?.party_account?.name}{" "}
+                  {data?.voucher?.party_account?.language_name}
+                </span>
+                <br />
                 <div className="d-flex justify-content-between align-items-center p-2">
-                  <span>ADN/INV/23/0096 </span>
                   <span>
-                    {moment(data?.voucher?.date).format("DD/MM/YYYY")}{" "}
+                    {moment(data?.voucher?.date).format("DD/MM/YYYY")}
                   </span>
                   <span>{data?.voucher?.ref_no}</span>
                   <span>{Number(data?.voucher?.amount_sar).toFixed(2)}</span>

@@ -408,14 +408,15 @@ const Voucher = (props) => {
                     localStorage.getItem("authUser")
                   ).company_id;
                   setLoading(true);
-                  if (props.isEdit && props.voucherData) {
+                  if ((props.isEdit && props.voucherData) || vouchId) {
                     apiAuth
                       .patch(
-                        `/api/master/voucher/${props.voucherData?.id}/`,
+                        `/api/master/voucher/${
+                          props.voucherData?.id || vouchId
+                        }/`,
                         values
                       )
                       .then((res) => {
-                        setLoading(false);
                         NotificationManager.success(
                           "Journal Voucher",
                           "Voucher Updated Successfully",
@@ -424,7 +425,9 @@ const Voucher = (props) => {
                           null,
                           ""
                         );
-                        props.closeAddPopup();
+
+                        if (!vouchId) props.closeAddPopup();
+                        setLoading(false);
                       })
                       .catch((err) => {
                         setLoading(false);
@@ -438,39 +441,40 @@ const Voucher = (props) => {
                         );
                       });
                   } else {
-                    apiAuth
-                      .post("/api/master/voucher/", values)
-                      .then((res) => {
-                        const { data } = res;
-                        setVouchId(data?.id);
-                        setLoading(false);
-                        NotificationManager.success(
-                          "Journal Voucher",
-                          "Voucher Created Successfully",
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                        setVocherState((prev) => {
-                          return {
-                            ...vocherState,
-                            voucher_id: res.data.id,
-                          };
+                    if (!loading)
+                      apiAuth
+                        .post("/api/master/voucher/", values)
+                        .then((res) => {
+                          const { data } = res;
+                          setVouchId(data?.id);
+                          setLoading(false);
+                          NotificationManager.success(
+                            "Journal Voucher",
+                            "Voucher Created Successfully",
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                          setVocherState((prev) => {
+                            return {
+                              ...vocherState,
+                              voucher_id: res.data.id,
+                            };
+                          });
+                          // history.push("/vouchers");
+                        })
+                        .catch((err) => {
+                          setLoading(false);
+                          NotificationManager.error(
+                            "Journal Voucher",
+                            "Voucher Create Error",
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
                         });
-                        // history.push("/vouchers");
-                      })
-                      .catch((err) => {
-                        setLoading(false);
-                        NotificationManager.error(
-                          "Journal Voucher",
-                          "Voucher Create Error",
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                      });
                   }
                 }}
               >
@@ -1207,7 +1211,7 @@ const Voucher = (props) => {
                       >
                         <div className="mt-4 mb-3">
                           <button className="btn btn-success" type="submit">
-                            {props.isEdit ? "Update" : "Submit"}
+                            {props.isEdit || vouchId ? "Update" : "Submit"}
                           </button>
                           {vocherState.voucher_id ? (
                             <div
