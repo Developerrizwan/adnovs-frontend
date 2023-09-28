@@ -352,11 +352,11 @@ const InvoiceTable = (props) => {
       ),
     },
     {
-      name: <span className="font-weight-bold fs-13">Language Address</span>,
-      selector: (row) => row.language_address,
+      name: <span className="font-weight-bold fs-13">COA</span>,
+      selector: (row) => row?.coa?.name,
       cell: (value) => (
         <div
-          title={value?.language_address}
+          title={value?.coa?.name}
           style={{
             whiteSpace: "nowrap",
             overflow: "hidden",
@@ -364,7 +364,7 @@ const InvoiceTable = (props) => {
             maxWidth: "200px",
           }}
         >
-          {value?.language_address}
+          {value?.coa?.name}
         </div>
       ),
     },
@@ -827,12 +827,12 @@ const InvoiceTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Bill Amount</span>,
-      selector: (row) => row.bill_amount,
+      name: <span className="font-weight-bold fs-13">COA</span>,
+      selector: (row) => row?.coa?.name,
       cell: (value) => {
         return (
           <div
-            title={value?.bill?.amount}
+            title={value?.coa?.name}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -840,7 +840,7 @@ const InvoiceTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.bill_amount}
+            {value?.coa?.name}
           </div>
         );
       },
