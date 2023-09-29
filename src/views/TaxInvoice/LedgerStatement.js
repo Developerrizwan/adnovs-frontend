@@ -62,6 +62,66 @@ const ProfitAndLoss = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">Type</span>,
+      selector: (row) => row?.type,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.type}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.type}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Voucher</span>,
+      selector: (row) => row?.voucher,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.voucher}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.voucher}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Invoice Number</span>,
+      selector: (row) => row.invoice_number,
+      cell: (value) => {
+        return (
+          <div
+            title={value.invoice_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.invoice_number}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Currency</span>,
       selector: (row) => row.currency,
       cell: (value) => {
@@ -82,12 +142,92 @@ const ProfitAndLoss = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">Tax Code</span>,
+      selector: (row) => row?.vat_percent,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.vat_percent}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {Number(value?.vat_percent).toFixed(2)}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Fcy Amount</span>,
+      selector: (row) => row?.fcy_amount,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.fcy_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {Number(value?.fcy_amount).toFixed(2)}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Vat Amount</span>,
+      selector: (row) => row?.vat_amount,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.vat_amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {Number(value?.vat_amount).toFixed(2)}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Amount</span>,
+      selector: (row) => row?.amount,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {Number(value?.amount).toFixed(2)}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Dr Amount</span>,
       selector: (row) => row.dr_amount,
       cell: (value) => {
         return (
           <div
-            title={value.dr_amount}
+            title={value?.dr_amount}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -123,11 +263,11 @@ const ProfitAndLoss = (props) => {
     },
     {
       name: <span className="font-weight-bold fs-13">Net Amount</span>,
-      selector: (row) => row.net_amount,
+      selector: (row) => row?.net_amount,
       cell: (value) => {
         return (
           <div
-            title={value.net_amount}
+            title={value?.net_amount}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -135,7 +275,7 @@ const ProfitAndLoss = (props) => {
               maxWidth: "200px",
             }}
           >
-            {Number(value.net_amount).toFixed(2)}
+            {Number(value?.net_amount).toFixed(2)}
           </div>
         );
       },
@@ -143,11 +283,11 @@ const ProfitAndLoss = (props) => {
     },
     {
       name: <span className="font-weight-bold fs-13">Party Account</span>,
-      selector: (row) => row.party_account,
+      selector: (row) => row?.party_account,
       cell: (value) => {
         return (
           <div
-            title={value.party_account}
+            title={value?.party_account}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -155,7 +295,7 @@ const ProfitAndLoss = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.party_account}
+            {value?.party_account}
           </div>
         );
       },
@@ -163,11 +303,11 @@ const ProfitAndLoss = (props) => {
     },
     {
       name: <span className="font-weight-bold fs-13">JOB</span>,
-      selector: (row) => row.job_no,
+      selector: (row) => row?.job_no,
       cell: (value) => {
         return (
           <div
-            title={value.job_no}
+            title={value?.job_no}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -175,19 +315,19 @@ const ProfitAndLoss = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.job_no}
+            {value?.job_no}
           </div>
         );
       },
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Naration</span>,
-      selector: (row) => row.narrations,
+      name: <span className="font-weight-bold fs-13">Narrations</span>,
+      selector: (row) => row?.narrations,
       cell: (value) => {
         return (
           <div
-            title={value.narrations}
+            title={value?.narrations}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -195,7 +335,7 @@ const ProfitAndLoss = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.narrations}
+            {value?.narrations}
           </div>
         );
       },
@@ -256,57 +396,71 @@ const ProfitAndLoss = (props) => {
     const customHeaderTitles = [
       "Account",
       "Date",
-      "Currency",
+      // "Type",
+      "Voucher",
+      "Invoice Number",
+      // "Currency",
+      "Tax Code",
+      "Fcy Amount",
+      "Vat Amount",
+      "Amount",
       "Dr Amount",
       "Cr Amount",
-      "Net Amount",
+      // "Net Amount",
       "Party Account",
       "Job No",
-      "Narrations",
-      "Branch",
+      // "Narrations",
+      // "Branch",
       // "Language Name",
     ];
-
     const columns = allKeys.map((key, index) => ({
       header: customHeaderTitles[index],
       dataKey: key,
     }));
-
     doc.autoTable({
       head: [columns.map((column) => column.header)],
       body: data.map((row) => {
         return [
           row?.account,
           moment(row?.date).format("DD-MM-YYYY"),
-          row?.currency,
+          // row?.type,
+          row?.voucher,
+          row?.invoice_number,
+          // row?.currency,
+          row?.vat_percent,
+          row?.fcy_amount,
+          Number(row?.vat_amount).toFixed(2),
+          Number(row?.amount).toFixed(2),
           Number(row?.dr_amount).toFixed(2),
           Number(row?.cr_amount).toFixed(2),
-          Number(row?.net_amount).toFixed(2),
+          // Number(row?.net_amount).toFixed(2),
           row?.party_account,
           row?.job_no,
-          row?.narrations,
-          row?.branch,
+          // row?.narrations,
+          // row?.branch,
           // row?.language_name,
         ];
       }),
-      startY: 25,
-      styles: {
-        font: "Arial",
-        fontSize: 11,
-      },
+      // startY: 25,
+      // styles: {
+      //   font: "Arial",
+      //   fontSize: 11,
+      // },
       columnStyles: {
-        0: { cellWidth: 20 },
-        1: { cellWidth: 20 },
-        2: { cellWidth: 20 },
-        3: { cellWidth: 18 },
-        4: { cellWidth: 18 },
-        5: { cellWidth: 18 },
-        6: { cellWidth: 18 },
-        7: { cellWidth: 18 },
-        8: { cellWidth: 22 },
-        9: { cellWidth: 19 },
+        0: { cellWidth: 18 },
+        1: { cellWidth: 15 },
+        2: { cellWidth: 15 },
+        3: { cellWidth: 15 },
+        4: { cellWidth: 15 },
+        5: { cellWidth: 15 },
+        6: { cellWidth: 15 },
+        7: { cellWidth: 15 },
+        8: { cellWidth: 15 },
+        9: { cellWidth: 15 },
+        10: { cellWidth: 18 },
+        11: { cellWidth: 15 },
       },
-      margin: { left: 10, right: 10 },
+      // margin: { left: 10, right: 10 },
     });
     doc.save("ledger_statement.pdf");
   };
@@ -316,7 +470,14 @@ const ProfitAndLoss = (props) => {
       let dataReport = {
         Account: report?.account,
         Date: moment(report?.date).format("DD-MM-YYYY"),
+        Type: report?.type,
+        Voucher: report?.voucher,
+        "Invoice Numer": report?.invoice_number,
         Currency: report?.currency,
+        "Tax Code": report?.vat_percent,
+        "Fcy Amount": Number(report?.fcy_amount).toFixed(),
+        "Vat Amount": Number(report?.vat_amount).toFixed(),
+        Amount: Number(report?.amount).toFixed(),
         "Dr Amount": Number(report?.dr_amount).toFixed(),
         "Cr Amount": Number(report?.cr_amount).toFixed(),
         "Net Amount": Number(report?.net_amount).toFixed(),
@@ -324,7 +485,7 @@ const ProfitAndLoss = (props) => {
         "Job No": report?.job_no,
         Narrations: report?.narrations,
         Branch: report?.branch,
-        "Language Name": report?.language_name,
+        // "Language Name": report?.language_name,
       };
       return dataReport;
     });

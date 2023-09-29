@@ -34,8 +34,6 @@ const Sales = (props) => {
   const [dueDate, setDueDate] = useState(new Date());
   const [invoiceId, setInvoiceId] = useState(null);
   const [podValue, setPodValue] = useState(null);
-  const [coaOptions, setCoaOptions] = useState([]);
-  const [coaValue, setCoaValue] = useState(null);
 
   const [selectedParty, setSelectedParty] = useState(null);
   const [selectedInvoice, setSelectedInvoice] = useState({
@@ -253,7 +251,6 @@ const Sales = (props) => {
     // getPodOptions();
     getAllCurrencyCodes();
     getJobOptions();
-    getCoaOptions();
 
     setSelectedInvoice({
       label: invoicesId,
@@ -340,29 +337,6 @@ const Sales = (props) => {
       })
       .catch((err) => console.log(err));
   };
-  console.log("props.data?.coa?.code", props.data?.coa?.code);
-  const getCoaOptions = () => {
-    apiAuth
-      .get("api/get-coa/")
-      .then((response) => {
-        let data = response.data;
-        const opts = data.map((dd) => {
-          return {
-            label: `${dd.code}-${dd.name}`,
-            value: dd.id,
-          };
-        });
-        setCoaOptions(opts);
-        if (props.isEdit) {
-          const sel = opts.find((dd) => dd?.value === props.data?.coa?.id);
-          setCoaValue(sel);
-          console.log("ss", sel);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
 
   return (
     <React.Fragment>
@@ -429,7 +403,6 @@ const Sales = (props) => {
                   paid_amount: props.data?.paid_amount
                     ? props.data?.paid_amount
                     : 0,
-                  coa: props.data?.coa?.code ? props.data?.coa?.code : "",
                 }}
                 validationSchema={Yup.object({
                   job: Yup.string().ensure().required("Job is Required"),
@@ -836,27 +809,42 @@ const Sales = (props) => {
                       </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="coa" className="form-label">
-                            COA
-                            <span className="text-danger">*</span>
-                          </Label>
-                          <Select
-                            name="coa"
-                            placeholder={"Select"}
-                            options={coaOptions}
-                            value={coaValue}
-                            styles={customStyles}
-                            onChange={(data) => {
-                              setFieldValue("coa", data.value);
-                              setCoaValue(data);
+                          <label htmlFor="ref_data" className="form-label">
+                            Ref Date
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <div
+                            style={{
+                              position: "relative",
+                              // cursor: "pointer",
                             }}
-                          />
-                          <ErrorMessage
-                            name="coa"
-                            render={(msg) => (
-                              <div className="text-danger">{msg}</div>
-                            )}
-                          />
+                          >
+                            <DatePicker
+                              selected={refDate}
+                              onChange={(date) => setRefDate(date)}
+                            />
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                right: 10,
+                                fill: "red",
+                              }}
+                            >
+                              <img
+                                src="/calendar.svg"
+                                alt="calendar"
+                                width="20px"
+                                height="20px"
+                              />
+                            </span>
+                          </div>
+
+                          {errors.ref_data && touched.ref_data && (
+                            <div className="invalid-feedback d-block">
+                              {errors.ref_data}
+                            </div>
+                          )}
                         </div>
                       </Grid>
 
@@ -1135,46 +1123,6 @@ const Sales = (props) => {
                       <></>
                     )}
                     <Grid spacing={2} container>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="ref_data" className="form-label">
-                            Ref Date
-                            {/* <span className="text-danger">*</span> */}
-                          </label>
-                          <div
-                            style={{
-                              position: "relative",
-                              // cursor: "pointer",
-                            }}
-                          >
-                            <DatePicker
-                              selected={refDate}
-                              onChange={(date) => setRefDate(date)}
-                            />
-                            <span
-                              style={{
-                                position: "absolute",
-                                top: 8,
-                                right: 10,
-                                fill: "red",
-                              }}
-                            >
-                              <img
-                                src="/calendar.svg"
-                                alt="calendar"
-                                width="20px"
-                                height="20px"
-                              />
-                            </span>
-                          </div>
-
-                          {errors.ref_data && touched.ref_data && (
-                            <div className="invalid-feedback d-block">
-                              {errors.ref_data}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>

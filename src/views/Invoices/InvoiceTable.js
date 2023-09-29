@@ -351,23 +351,23 @@ const InvoiceTable = (props) => {
         </div>
       ),
     },
-    {
-      name: <span className="font-weight-bold fs-13">COA</span>,
-      selector: (row) => row?.coa?.name,
-      cell: (value) => (
-        <div
-          title={value?.coa?.name}
-          style={{
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            maxWidth: "200px",
-          }}
-        >
-          {value?.coa?.name}
-        </div>
-      ),
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">COA</span>,
+    //   selector: (row) => row?.coa?.name,
+    //   cell: (value) => (
+    //     <div
+    //       title={value?.coa?.name}
+    //       style={{
+    //         whiteSpace: "nowrap",
+    //         overflow: "hidden",
+    //         textOverflow: "ellipsis",
+    //         maxWidth: "200px",
+    //       }}
+    //     >
+    //       {value?.coa?.name}
+    //     </div>
+    //   ),
+    // },
     {
       name: <span className="font-weight-bold fs-13">Invoice Status</span>,
       selector: (row) => row.payment_status,
@@ -826,26 +826,26 @@ const InvoiceTable = (props) => {
       },
       sortable: true,
     },
-    {
-      name: <span className="font-weight-bold fs-13">COA</span>,
-      selector: (row) => row?.coa?.name,
-      cell: (value) => {
-        return (
-          <div
-            title={value?.coa?.name}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value?.coa?.name}
-          </div>
-        );
-      },
-      sortable: true,
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">COA</span>,
+    //   selector: (row) => row?.coa?.name,
+    //   cell: (value) => {
+    //     return (
+    //       <div
+    //         title={value?.coa?.name}
+    //         style={{
+    //           whiteSpace: "nowrap",
+    //           overflow: "hidden",
+    //           textOverflow: "ellipsis",
+    //           maxWidth: "200px",
+    //         }}
+    //       >
+    //         {value?.coa?.name}
+    //       </div>
+    //     );
+    //   },
+    //   sortable: true,
+    // },
     {
       name: <span className="font-weight-bold fs-13">Ref Date</span>,
       selector: (row) => row,
