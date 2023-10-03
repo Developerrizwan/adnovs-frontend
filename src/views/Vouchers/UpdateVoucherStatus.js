@@ -42,11 +42,12 @@ const UpdateVoucherStatus = (props) => {
             // setSelectedInvoiceStatus(e.target.value);
             UpdateInvoiceStatus(value?.id, e.target.value, value?.paid_amount);
           }}
-          // value={selectedInvoiceStatus}
+          defaultValue={value?.payment_status}
+          style={{ background: "#f3f3f9" }}
         >
-          <option defaultValue={value?.payment_status}>
+          {/* <option defaultValue={value?.payment_status}>
             {value?.payment_status}
-          </option>
+          </option> */}
           <option value="Unpaid">Unpaid</option>
           <option value="Paid">Paid</option>
           <option value="Partial Paid">Partial Paid</option>
@@ -72,6 +73,7 @@ const UpdateVoucherStatus = (props) => {
           onChange={(e) => {
             setAmountPaid1(e.target.value);
           }}
+          style={{ background: "#f3f3f9" }}
           onBlur={(e) => {
             UpdateInvoiceStatus(value?.id, value?.payment_status, amountPaid1);
           }}
