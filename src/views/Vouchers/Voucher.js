@@ -13,6 +13,7 @@ import { getAllISOCodes } from "iso-country-currency";
 import { useParams } from "react-router";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import AccountDetail from "../AccountDetails/AccountDetail";
+import UpdateVoucherStatus from "./UpdateVoucherStatus";
 
 const Voucher = (props) => {
   const history = useHistory();
@@ -43,6 +44,8 @@ const Voucher = (props) => {
   const [selCurrency, setSelCurrency] = useState(null);
   const [loading, setLoading] = useState(false);
   const [vouchId, setVouchId] = useState("");
+  const [updateStatusModal, setUpdateStatusModal] = useState(false);
+  const [invoiceData, setInvoiceData] = useState([]);
 
   const [selectedVoucher, setSelectedVoucher] = useState({
     value: "Journal",
@@ -156,6 +159,37 @@ const Voucher = (props) => {
       });
   };
 
+  const invoiceGetData = () => {
+    setLoading(true);
+    apiAuth
+      .get("/api/master/invoice/")
+      .then((response) => {
+        let data = response?.data;
+
+        const finalData = data?.filter(
+          (item) =>
+            item?.client_name === selectedParty?.value ||
+            item?.consignee_name === selectedParty?.value ||
+            item?.party_account === selectedParty?.value
+        );
+        setInvoiceData(finalData);
+        setLoading(false);
+        setUpdateStatusModal(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        NotificationManager.error(
+          "",
+          `${error.response?.data?.Error || `Invoice Get Error`}`,
+          3000,
+          null,
+          null,
+          ""
+        );
+        setLoading(false);
+      });
+  };
+
   const getAllCurrencyCodes = () => {
     let allCurrencies = getAllISOCodes();
     allCurrencies = allCurrencies.map((cur) => {
@@ -205,7 +239,6 @@ const Voucher = (props) => {
         const selParty = data.find(
           (cur) => cur.value === props.voucherData?.party_account?.id
         );
-        // setSelectedParty(selParty);
         setPartyOptions(data);
         getOrganizationOptions(data);
       })
@@ -240,7 +273,6 @@ const Voucher = (props) => {
       .get(`/api/get-organization/`)
       .then((response) => {
         let data = response.data;
-
         const consOpts = data.map((dd) => {
           return {
             label: dd?.name,
@@ -459,7 +491,7 @@ const Voucher = (props) => {
                           setVocherState((prev) => {
                             return {
                               ...vocherState,
-                              voucher_id: res.data.id,
+                              voucher_id: res?.data?.id,
                             };
                           });
                           // history.push("/vouchers");
@@ -1210,15 +1242,31 @@ const Voucher = (props) => {
                         }}
                       >
                         <div className="mt-4 mb-3">
-                          <button className="btn btn-success" type="submit">
+                          <button
+                            className="btn btn-success"
+                            // disabled={vocherState?.voucher_id && !props?.isEdit}
+                            type="submit"
+                          >
                             {props.isEdit || vouchId ? "Update" : "Submit"}
                           </button>
-                          {vocherState.voucher_id ? (
+                          {vocherState.voucher_id || props.isEdit ? (
                             <div
                               className="btn btn-info float-right ms-3"
                               onClick={() => setAccountDetailsModal(true)}
                             >
                               Add Account
+                            </div>
+                          ) : (
+                            <></>
+                          )}
+                          {vocherState.voucher_id || props.isEdit ? (
+                            <div
+                              className="btn btn-warning float-right ms-3"
+                              onClick={() => {
+                                invoiceGetData();
+                              }}
+                            >
+                              Update Status
                             </div>
                           ) : (
                             <></>
@@ -1272,6 +1320,28 @@ const Voucher = (props) => {
               setAccountDetailsModal(false);
             }}
           />
+        </ModalBody>
+      </Modal>
+
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={updateStatusModal}
+        toggle={() => {
+          setUpdateStatusModal(false);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setUpdateStatusModal(false);
+          }}
+        >
+          Update Status
+        </ModalHeader>
+        <ModalBody>
+          <UpdateVoucherStatus data={[...invoiceData]} />
         </ModalBody>
       </Modal>
     </React.Fragment>
