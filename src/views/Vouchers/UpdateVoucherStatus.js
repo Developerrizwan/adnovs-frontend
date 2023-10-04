@@ -4,6 +4,7 @@ import DataTable from "react-data-table-component";
 import { customStyles } from "../../assets/CustomTableStyles";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
+import { MenuItem, Select, TextField } from "@mui/material";
 
 const UpdateVoucherStatus = (props) => {
   const UpdateInvoiceStatus = (id, invoiceStatus, amountPaid) => {
@@ -14,30 +15,30 @@ const UpdateVoucherStatus = (props) => {
     apiAuth
       .patch(`/api/master/invoice/${id}/`, values)
       .then((res) => {
-        NotificationManager.success(
-          "Invoice Updated Successfully",
-          3000,
-          null,
-          null,
-          ""
-        );
+        // NotificationManager.success(
+        //   "Invoice Updated Successfully",
+        //   3000,
+        //   null,
+        //   null,
+        //   ""
+        // );
       })
       .catch((err) => {
-        NotificationManager.error(
-          "Journal Voucher",
-          "Invoice Updat Error",
-          3000,
-          null,
-          null,
-          ""
-        );
+        // NotificationManager.error(
+        //   "Journal Voucher",
+        //   "Invoice Updat Error",
+        //   3000,
+        //   null,
+        //   null,
+        //   ""
+        // );
       });
   };
 
   const StatusCell = ({ value, selectedInvoiceStatus }) => {
     return (
       <div title={value?.payment_status}>
-        <select
+        {/* <select
           onChange={(e) => {
             // setSelectedInvoiceStatus(e.target.value);
             UpdateInvoiceStatus(value?.id, e.target.value, value?.paid_amount);
@@ -45,13 +46,47 @@ const UpdateVoucherStatus = (props) => {
           defaultValue={value?.payment_status}
           style={{ background: "#f3f3f9" }}
         >
-          {/* <option defaultValue={value?.payment_status}>
-            {value?.payment_status}
-          </option> */}
+          
           <option value="Unpaid">Unpaid</option>
           <option value="Paid">Paid</option>
           <option value="Partial Paid">Partial Paid</option>
-        </select>
+        </select> */}
+        <div
+          style={{
+            width: "100px",
+          }}
+        >
+          <Select
+            // labelId="demo-simple-select-label"
+            // id="demo-simple-select"
+            defaultValue={value?.payment_status}
+            // label="Age"
+            onChange={(e) => {
+              // setSelectedInvoiceStatus(e.target.value);
+              UpdateInvoiceStatus(
+                value?.id,
+                e.target.value,
+                value?.paid_amount
+              );
+            }}
+            style={{
+              background: "#f3f3f9",
+              margin: "10px 0px",
+              width: "150px",
+              padding: "0px !important",
+            }}
+          >
+            <MenuItem value="Unpaid" className="py-1">
+              Unpaid
+            </MenuItem>
+            <MenuItem value="Paid" className="py-1">
+              Paid
+            </MenuItem>
+            <MenuItem value="Partial Paid" className="py-1">
+              Partial Paid
+            </MenuItem>
+          </Select>
+        </div>
       </div>
     );
   };
@@ -67,8 +102,21 @@ const UpdateVoucherStatus = (props) => {
           maxWidth: "200px",
         }}
       >
-        <input
+        {/* <input
           type="text"
+          value={amountPaid1}
+          onChange={(e) => {
+            setAmountPaid1(e.target.value);
+          }}
+          style={{ background: "#f3f3f9" }}
+          onBlur={(e) => {
+            UpdateInvoiceStatus(value?.id, value?.payment_status, amountPaid1);
+          }}
+        /> */}
+        <TextField
+          // id="outlined-basic"
+          // label="Outlined"
+          // variant="outlined"
           value={amountPaid1}
           onChange={(e) => {
             setAmountPaid1(e.target.value);

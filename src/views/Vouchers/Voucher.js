@@ -1266,7 +1266,7 @@ const Voucher = (props) => {
                                 invoiceGetData();
                               }}
                             >
-                              Update Status
+                              Update Invoices
                             </div>
                           ) : (
                             <></>
@@ -1338,7 +1338,7 @@ const Voucher = (props) => {
             setUpdateStatusModal(false);
           }}
         >
-          Update Status
+          Update Invoices
         </ModalHeader>
         <ModalBody>
           <UpdateVoucherStatus data={[...invoiceData]} />
