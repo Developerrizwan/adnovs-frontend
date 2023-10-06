@@ -162,17 +162,17 @@ const Voucher = (props) => {
   const invoiceGetData = () => {
     setLoading(true);
     apiAuth
-      .get("/api/master/invoice/")
+      .get(`/api/get_coa_invoices/?account=${selectedParty?.value}`)
       .then((response) => {
         let data = response?.data;
 
-        const finalData = data?.filter(
-          (item) =>
-            item?.client_name === selectedParty?.value ||
-            item?.consignee_name === selectedParty?.value ||
-            item?.party_account === selectedParty?.value
-        );
-        setInvoiceData(finalData);
+        // const finalData = data?.filter(
+        //   (item) =>
+        //     item?.client_name === selectedParty?.value ||
+        //     item?.consignee_name === selectedParty?.value ||
+        //     item?.party_account === selectedParty?.value
+        // );
+        setInvoiceData(data);
         setLoading(false);
         setUpdateStatusModal(true);
       })
@@ -332,16 +332,26 @@ const Voucher = (props) => {
     }
   };
 
-  const customValidation = (formType, fieldValue) => {
-    if (
-      formType === "Journal" ||
-      formType === "Payment" ||
-      formType === "Receipt"
-    ) {
-      return "Required ";
-    }
+  // const customValidation = (formType, fieldValue) => {
+  //   if (
+  //     formType === "Journal" ||
+  //     formType === "Payment" ||
+  //     formType === "Receipt"
+  //   ) {
+  //     return "Required";
+  //   }
 
-    return null;
+  //   return null;
+  // };
+
+  const validateAccount = (value) => {
+    if (
+      !value &&
+      (selectedVoucher?.value === "DebitNote" ||
+        selectedVoucher?.value === "CreditNote")
+    )
+      return "Required";
+    return "";
   };
 
   return (
@@ -423,15 +433,15 @@ const Voucher = (props) => {
                   //       selectedVoucher?.value === "CreditNote"),
                   //   otherwise: Yup.string().notRequired(),
                   // }),
-                  party_account: Yup.string().test(
-                    "customValidation",
-                    "Required",
-                    function (value) {
-                      // Access other form values if needed
-                      const formType = selectedVoucher?.value;
-                      return customValidation(formType, value);
-                    }
-                  ),
+                  // party_account: Yup.string().test(
+                  //   "customValidation",
+                  //   "Required",
+                  //   function (value) {
+                  //     // Access other form values if needed
+                  //     const formType = selectedVoucher?.value;
+                  //     return customValidation(formType, value);
+                  //   }
+                  // ),
                   // currency: Yup.string().ensure().required("Required!"),
                 })}
                 onSubmit={(values) => {
@@ -797,6 +807,14 @@ const Voucher = (props) => {
                               setSelectedParty(data);
                             }}
                           />
+                          <Field
+                            placeholder="1"
+                            className="form-control"
+                            name="party_account"
+                            validate={(value) => validateAccount(value)}
+                            style={{ background: "#EDEDED", display: "none" }}
+                          />
+
                           {errors.party_account && touched.party_account && (
                             <div className="invalid-feedback d-block">
                               {errors.party_account}

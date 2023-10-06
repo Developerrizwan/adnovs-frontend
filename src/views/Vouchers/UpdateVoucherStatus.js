@@ -100,6 +100,7 @@ const UpdateVoucherStatus = (props) => {
           overflow: "hidden",
           textOverflow: "ellipsis",
           maxWidth: "200px",
+          marginLeft: "15px",
         }}
       >
         {/* <input
@@ -153,6 +154,27 @@ const UpdateVoucherStatus = (props) => {
       checkHide: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">Invoice Amount</span>,
+      selector: (row) => row,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.amount}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "150px",
+            }}
+          >
+            {Number(value?.amount).toFixed(2)}
+          </div>
+        );
+      },
+      sortable: true,
+      // checkHide: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Date</span>,
       selector: (row) => row,
       cell: (value) => {
@@ -163,7 +185,7 @@ const UpdateVoucherStatus = (props) => {
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              maxWidth: "200px",
+              maxWidth: "150px",
             }}
           >
             {moment(value?.date).format("MM/DD/YYYY")}
