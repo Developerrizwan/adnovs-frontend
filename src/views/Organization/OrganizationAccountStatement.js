@@ -302,7 +302,6 @@ const OrganizationAccountStatement = (props) => {
   const history = useHistory();
   const [organizationOptions, setOrganizationOptions] = useState([]);
   const [selectOrganization, setSelectedOrganization] = useState({});
-  console.log("selectOrganization", selectOrganization);
   const LedgerOrganizationOptions = [
     { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
     { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
@@ -383,7 +382,7 @@ const OrganizationAccountStatement = (props) => {
         Date: moment(report?.date).format("DD-MM-YYYY"),
         Currency: report?.currency,
         "Voucher Number": Number(report?.voucher_number).toFixed(),
-        "Total Amount": Number(report?.net_amount).toFixed(),
+        "Total Amount": Number(report?.net_amount).toFixed(2),
         "Invoice Number": report?.invoice_number,
         "Party Account": report?.party_account,
         "Job No": report?.job_no,
