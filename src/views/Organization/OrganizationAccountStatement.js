@@ -302,7 +302,7 @@ const OrganizationAccountStatement = (props) => {
   const history = useHistory();
   const [organizationOptions, setOrganizationOptions] = useState([]);
   const [selectOrganization, setSelectedOrganization] = useState({});
-
+  console.log("selectOrganization", selectOrganization);
   const LedgerOrganizationOptions = [
     { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
     { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
@@ -310,9 +310,9 @@ const OrganizationAccountStatement = (props) => {
 
   const exportProjectToPdf = () => {
     const doc = new jsPDF();
-    const reportObject = reports[0];
+    // const reportObject = reports[0];
     doc.text(selectedOrganizationLedger?.label, 60, 10);
-    doc.text(`Account: ${reportObject?.account}`, 12, 22);
+    doc.text(`Account: ${selectOrganization?.label}`, 12, 22);
     doc.text(`Total Amount: ${totalAmount}`, 12, 32);
 
     const data = reports;
