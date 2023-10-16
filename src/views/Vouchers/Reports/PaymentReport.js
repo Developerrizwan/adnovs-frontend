@@ -69,7 +69,7 @@ const Content = ({ data }) => {
           </tr>
           <tr>
             <td className=" w-50">
-              <div className=" ">
+              <div className="text-center">
                 <span className="p-2"></span>
               </div>
             </td>
@@ -97,7 +97,7 @@ const Content = ({ data }) => {
           </tr>
           {data?.accounts?.length &&
             data?.accounts?.map((dd) => {
-              total += Number(dd?.amount_sar);
+              total += Number(dd?.amount_qty);
               word_amount = Number.isFinite(Number(total))
                 ? numberToWords.toWords(Number(total))
                 : String(total);
@@ -112,8 +112,8 @@ const Content = ({ data }) => {
                       {moment(dd?.ref_date).format("DD/MM/YYYY")}
                     </td>
                     {/* <td className="text-center">{dd?.ref_no}</td> */}
-                    <td className="text-center">{dd?.remarks}</td>
-                    <td className="text-center">{dd?.ac_name?.dr_cr}</td>
+                    <td className="text-center">{dd?.narration}</td>
+                    <td className="text-center">{dd?.dr_cr}</td>
                     <td className="text-center">
                       {dd?.currency.split(" - ")[0]}
                     </td>
@@ -122,7 +122,7 @@ const Content = ({ data }) => {
                       {Number(dd?.fcy_amount).toFixed(2)}
                     </td>
                     <td className="text-center">
-                      {Number(dd?.amount_sar).toFixed(2)}
+                      {Number(dd?.amount_qty).toFixed(2)}
                     </td>
                   </tr>
                 </>
