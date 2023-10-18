@@ -243,7 +243,7 @@ const AccountDetail = (props) => {
                   amount_qty: props.accountDetails?.amount_qty || "",
                   fcy_amount: props.accountDetails?.fcy_amount || "",
                   amount_sar: props.accountDetails?.amount_sar || "",
-                  tax_group_code: props.accountDetails?.tax_group_code || "",
+                  tax_group_code: props.accountDetails?.tax_group_code || 0,
                   taxable_amount: props.accountDetails?.taxable_amount || "",
                   tax_amount: props.accountDetails?.tax_amount || "",
                   division: props.accountDetails?.division || "",
@@ -512,6 +512,11 @@ const AccountDetail = (props) => {
                                   Number(e.target.value) *
                                     Number(values["ex_rate"])
                                 );
+                                setFieldValue(
+                                  "taxable_amount",
+                                  Number(e.target.value) *
+                                    Number(values["ex_rate"])
+                                );
                               }
                             }}
                           />
@@ -527,6 +532,12 @@ const AccountDetail = (props) => {
                             className="form-control"
                             name="amount_sar"
                             style={{ background: "#EDEDED" }}
+                            onChange={(e) => {
+                              setFieldValue("amount_sar", e.target.value);
+                              setFieldValue("taxable_amount", e.target.value);
+                              setTax(null);
+                              setFieldValue("tax_amount", "");
+                            }}
                           />
                         </div>
                       </Grid>
@@ -549,6 +560,13 @@ const AccountDetail = (props) => {
                             onChange={(data) => {
                               setFieldValue("tax_group_code", data.value);
                               setTax(data);
+                              const dd = data?.value / 100;
+                              if (values["amount_sar"] > 0) {
+                                setFieldValue(
+                                  "tax_amount",
+                                  Number(dd) * Number(values["amount_sar"])
+                                );
+                              }
                             }}
                           />
                         </div>
@@ -567,6 +585,15 @@ const AccountDetail = (props) => {
                             name="taxable_amount"
                             placeholder="Taxable Amount"
                             style={{ background: "#EDEDED" }}
+                            onChange={(e) => {
+                              setFieldValue("taxable_amount", e.target.value);
+                              const dd = Number(values["tax_group_code"]) / 100;
+                              if (values["taxable_amount"] > 0) {
+                                const dddd =
+                                  Number(dd) * Number(e.target.value);
+                                setFieldValue("tax_amount", Number(dddd));
+                              }
+                            }}
                           />
                         </div>
                       </Grid>

@@ -10,8 +10,12 @@ import NotificationManager from "../../../components/Common/NotificationManager"
 
 const Content = ({ data }) => {
   // console.log("payment", data);
-  var total = 0;
-  var word_amount = "";
+  // var total = 0;
+  var totalCr = 0;
+  var totalDr = 0;
+  // var word_amount = "";
+  var word_Dramount = "";
+  var word_Cramount = "";
   return (
     <div id="content" className="mt-5 mx-2">
       {/* VOUCHER Title */}
@@ -97,12 +101,32 @@ const Content = ({ data }) => {
           </tr>
           {data?.accounts?.length &&
             data?.accounts?.map((dd) => {
-              total += Number(dd?.amount_qty);
-              word_amount = Number.isFinite(Number(total))
-                ? numberToWords.toWords(Number(total))
-                : String(total);
-              word_amount = String(
-                word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
+              // total += Number(dd?.amount_qty);
+              // word_amount = Number.isFinite(Number(total))
+              //   ? numberToWords.toWords(Number(total))
+              //   : String(total);
+              // word_amount = String(
+              //   word_amount.charAt(0).toUpperCase() + word_amount.slice(1)
+              // );
+
+              // Dr
+
+              totalDr += dd?.dr_cr === "Dr" ? Number(dd?.amount_qty) : 0;
+              word_Dramount = Number.isFinite(Number(totalDr))
+                ? numberToWords.toWords(Number(totalDr))
+                : String(totalDr);
+              word_Dramount = String(
+                word_Dramount.charAt(0).toUpperCase() + word_Dramount.slice(1)
+              );
+
+              // Cr
+
+              totalCr += dd?.dr_cr === "Cr" ? Number(dd?.amount_qty) : 0;
+              word_Cramount = Number.isFinite(Number(totalCr))
+                ? numberToWords.toWords(Number(totalCr))
+                : String(totalCr);
+              word_Cramount = String(
+                word_Cramount.charAt(0).toUpperCase() + word_Cramount.slice(1)
               );
               return (
                 <>
@@ -112,7 +136,7 @@ const Content = ({ data }) => {
                       {moment(dd?.ref_date).format("DD/MM/YYYY")}
                     </td>
                     {/* <td className="text-center">{dd?.ref_no}</td> */}
-                    <td className="text-center">{dd?.narration}</td>
+                    <td className="text-center">{dd?.ac_name?.name}</td>
                     <td className="text-center">{dd?.dr_cr}</td>
                     <td className="text-center">
                       {dd?.currency.split(" - ")[0]}
@@ -131,28 +155,64 @@ const Content = ({ data }) => {
           <tr>
             <td className="text-center"></td>
             <td className="text-center"></td>
-            {/* <td className="text-center">/td> */}
             <td className="text-center"></td>
             <td className="text-center"></td>
             <td className="text-center"></td>
-            <td className="text-center"></td>
+            <td className="text-center"> Total Dr Amount - </td>
             <td className="text-center" style={{ background: "#d3d3d3" }}>
-              Total:
+              {word_Dramount} Only
             </td>
             <td className="text-center" style={{ background: "#d3d3d3" }}>
-              {Number(total).toFixed(2)}
+              {Number(totalDr).toFixed(2)}
+            </td>
+          </tr>
+          <tr>
+            <td className="text-center"></td>
+            <td className="text-center"></td>
+            <td className="text-center"></td>
+            <td className="text-center"></td>
+            <td className="text-center"></td>
+            <td className="text-center"> Total Cr Amount - </td>
+            <td className="text-center" style={{ background: "#d3d3d3" }}>
+              {word_Cramount} Only
+            </td>
+            <td className="text-center" style={{ background: "#d3d3d3" }}>
+              {Number(totalCr).toFixed(2)}
             </td>
           </tr>
         </table>
       </div>
 
       {/* Amount in words */}
-      <h5 className="text-end" style={{ fontFamily: "sans-serif" }}>
-        <span>{word_amount} Only </span>
-        <span style={{ marginLeft: "30px", marginRight: "10px" }}>
-          {Number(total).toFixed(2)}
-        </span>
-      </h5>
+      {/* <div className="d-flex justify-content-end">
+        <h5
+          className="text-end"
+          style={{ marginRight: "10px", position: "absolute", left: "20%" }}
+        >
+          Total Dr Amount -{" "}
+        </h5>
+        <h5 className="text-end" style={{ fontFamily: "sans-serif" }}>
+          <span>{word_Dramount} Only </span>
+          <span style={{ marginLeft: "30px", marginRight: "10px" }}>
+            {Number(totalDr).toFixed(2)}
+          </span>
+        </h5>
+      </div>
+
+      <div className="d-flex justify-content-end">
+        <h5
+          className="text-end"
+          style={{ marginRight: "10px", position: "absolute", left: "20%" }}
+        >
+          Total Cr Amount -{" "}
+        </h5>
+        <h5 className="text-end" style={{ fontFamily: "sans-serif" }}>
+          <span>{word_Cramount} Only </span>
+          <span style={{ marginLeft: "30px", marginRight: "10px" }}>
+            {Number(totalCr).toFixed(2)}
+          </span>
+        </h5>
+      </div> */}
     </div>
   );
 };
