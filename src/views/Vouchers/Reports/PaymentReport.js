@@ -10,7 +10,7 @@ import NotificationManager from "../../../components/Common/NotificationManager"
 
 const Content = ({ data }) => {
   const [state, setState] = useState({ accounts: [] });
-  console.log("payment", data);
+  // console.log("payment", data);
 
   useEffect(() => {
     let total_cr = 0;
@@ -50,7 +50,7 @@ const Content = ({ data }) => {
       dr_word,
       accounts,
     });
-  });
+  }, []);
 
   return (
     <div id="content" className="mt-5 mx-2">
@@ -85,7 +85,7 @@ const Content = ({ data }) => {
           <DisplayItem label={"Remarks"} value={data?.voucher?.job?.remarks} />
         </div>
         <div id="right-side-items">
-          <DisplayItem label={"Payment No"} value={""} />
+          <DisplayItem label={"Payment No"} value={data?.voucher?.id} />
           <DisplayItem
             label={"GL Date"}
             value={moment(data?.voucher?.gl_date).format("DD/MM/YYYY")}
