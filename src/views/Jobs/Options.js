@@ -143,8 +143,8 @@ export const typeOptions = [
     value: "Customs Clearance",
   },
   {
-    label: "Other",
-    value: "Other",
+    label: " Other",
+    value: " Other",
   },
 ];
 

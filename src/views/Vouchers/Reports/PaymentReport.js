@@ -18,6 +18,10 @@ const Content = ({ data }) => {
     let dr_word = "";
     let cr_word = "";
     let accounts = data.accounts?.map((ct) => {
+      console.log(
+        "rrrrrrrrrrrrrrrrrrrrrrr",
+        (Number(ct.amount_sar) * Number(ct.tax_group_code)) / 100
+      );
       ct.vat_amount = Number(
         (Number(ct.amount_sar) * Number(ct.tax_group_code)) / 100
       ).toFixed(2);
@@ -50,7 +54,7 @@ const Content = ({ data }) => {
       dr_word,
       accounts,
     });
-  }, []);
+  }, [data]);
 
   return (
     <div id="content" className="mt-5 mx-2">
@@ -174,6 +178,10 @@ const Content = ({ data }) => {
                       {Number(dd?.tax_group_code).toFixed(2)}
                     </td>
                     <td className="text-center">
+                      {console.log(
+                        "ttttttttttttttttttttttttt",
+                        Number(dd?.vat_amount).toFixed(2)
+                      )}
                       {Number(dd?.vat_amount).toFixed(2)}
                     </td>
                     <td className="text-center">
