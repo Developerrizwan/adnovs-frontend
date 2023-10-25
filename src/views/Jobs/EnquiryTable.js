@@ -14,6 +14,7 @@ import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 import CreateJob from "./CreateJob";
 import EditEnquiry from "./EditEnquiry";
+import apiAuth from "../../helpers/ApiAuth";
 const EnquiryTable = (props) => {
   const [editModal, setEditModal] = useState(false);
   const [jobTypeModal, setJobTypeModal] = useState(false);
@@ -392,13 +393,29 @@ const EnquiryTable = (props) => {
         </ModalHeader>
         <ModalBody>
           <CreateJob
-            closeAddPopup={() => {
+            closeAddPopup={(data) => {
+              try {
+                let url = `/api/master/job/${selectedJob?.id}/`;
+                apiAuth
+                  .patch(url, { job_number: data?.job_number })
+                  .then((response) => {
+                    const newdata = response.data;
+                  })
+                  .catch(function (error) {
+                    console.log(error);
+                  });
+              } catch (error) {
+                console.log(error);
+              }
               setJobTypeModal(false);
               setSelectedJob(null);
-              props.getJobs();
+              setTimeout(() => {
+                props.getJobs();
+              }, 1000);
             }}
             allJobs={selectedJob}
             history={props.history}
+            isFromEnquiry={true}
           />
         </ModalBody>
       </Modal>

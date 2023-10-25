@@ -18,8 +18,8 @@ import {
 } from "./Options";
 
 const CreateJob = (props) => {
-  const etaTime = props.allJobs.eta;
-  const etdTime = props.allJobs.etd;
+  const etaTime = props.allJobs?.eta;
+  const etdTime = props.allJobs?.etd;
 
   const etaDateObj = new Date(etaTime);
   const etdDateObj = new Date(etdTime);
@@ -215,32 +215,32 @@ const CreateJob = (props) => {
 
   useEffect(() => {
     const jobtype = options.find(
-      (item) => item.value === props.allJobs.job_type
+      (item) => item.value === props.allJobs?.job_type
     );
     setJobType(jobtype);
     const scopeType = scopeofworkOptions.find(
-      (item) => item.value === props.allJobs.scope_of_work
+      (item) => item.value === props.allJobs?.scope_of_work
     );
     setScopeType(scopeType);
-    const type = typeOptions.find((item) => item.value === props.allJobs.type);
+    const type = typeOptions.find((item) => item.value === props.allJobs?.type);
     setTypevalue(type);
     const jobStatus = statusOptions.find(
-      (item) => item.value === props.allJobs.job_status
+      (item) => item.value === props.allJobs?.job_status
     );
     setJobStatus(jobStatus);
 
-    const poa = poaOptions.find((item) => item.value === props.allJobs.poa);
+    const poa = poaOptions.find((item) => item.value === props.allJobs?.poa);
     setPoaValue({
-      label: props.allJobs.poa,
-      value: props.allJobs.poa,
+      label: props.allJobs?.poa,
+      value: props.allJobs?.poa,
     });
     const pod_Value = podOptions.find(
       (item) => item.value === props.allJobs?.pod
     );
 
     setPodValue({
-      label: props.allJobs.pod,
-      value: props.allJobs.pod,
+      label: props.allJobs?.pod,
+      value: props.allJobs?.pod,
     });
     setPolValue({
       label: props.allJobs?.pol,
@@ -294,6 +294,12 @@ const CreateJob = (props) => {
                 : "",
               container_type: props?.allJobs?.container_type
                 ? props?.allJobs?.container_type
+                : "",
+              enquiry_number: props?.allJobs?.enquiry_number
+                ? props?.allJobs?.enquiry_number
+                : "",
+              job_number: props?.allJobs?.job_number
+                ? props?.allJobs?.job_number
                 : "",
               type: props?.allJobs?.type ? props?.allJobs?.type : "",
               scope_of_work: props?.allJobs?.scope_of_work
@@ -364,7 +370,7 @@ const CreateJob = (props) => {
                     null,
                     ""
                   );
-                  props.closeAddPopup();
+                  props.closeAddPopup(response.data);
                 })
                 .catch((error) => {
                   NotificationManager.error(
