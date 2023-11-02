@@ -24,280 +24,7 @@ const OrganizationAccountStatement = (props) => {
     value: "receive",
   });
 
-  const [cols, setCols] = useState([
-    {
-      name: <span className="font-weight-bold fs-13">Account</span>,
-      selector: (row) => row.account,
-      cell: (value) => {
-        return (
-          <div
-            title={value.account}
-            style={{
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              maxWidth: "250px",
-            }}
-          >
-            {value.account}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Date</span>,
-      selector: (row) => moment(row.date).format("DD-MM-YYYY HH:mm:ss"),
-      cell: (value) => {
-        return (
-          <div
-            title={moment(value.date).format("DD-MM-YYYY HH:mm:ss")}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "220px",
-            }}
-          >
-            {moment(value.date).format("DD-MM-YYYY HH:mm:ss")}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Currency</span>,
-      selector: (row) => row.currency,
-      cell: (value) => {
-        return (
-          <div
-            title={value.currency}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.currency}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Voucher Number</span>,
-      selector: (row) => row.voucher_number,
-      cell: (value) => {
-        return (
-          <div
-            title={value.voucher_number}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.voucher_number}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    // {
-    //   name: <span className="font-weight-bold fs-13">Dr Amount</span>,
-    //   selector: (row) => row.dr_amount,
-    //   cell: (value) => {
-    //     return (
-    //       <div
-    //         title={value.dr_amount}
-    //         style={{
-    //           whiteSpace: "nowrap",
-    //           overflow: "hidden",
-    //           textOverflow: "ellipsis",
-    //           maxWidth: "200px",
-    //         }}
-    //       >
-    //         {value.dr_amount}
-    //       </div>
-    //     );
-    //   },
-    //   sortable: true,
-    // },
-    // {
-    //   name: <span className="font-weight-bold fs-13">Cr Amount</span>,
-    //   selector: (row) => row.cr_amount,
-    //   cell: (value) => {
-    //     return (
-    //       <div
-    //         title={value.cr_amount}
-    //         style={{
-    //           whiteSpace: "nowrap",
-    //           overflow: "hidden",
-    //           textOverflow: "ellipsis",
-    //           maxWidth: "200px",
-    //         }}
-    //       >
-    //         {value.cr_amount}
-    //       </div>
-    //     );
-    //   },
-    //   sortable: true,
-    // },
-    {
-      name: <span className="font-weight-bold fs-13">Total Amount</span>,
-      selector: (row) => row.net_amount,
-      cell: (value) => {
-        return (
-          <div
-            title={value.net_amount}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {Number(value.net_amount).toFixed(2)}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Invoice Number</span>,
-      selector: (row) => row.invoice_number,
-      cell: (value) => {
-        return (
-          <div
-            title={value.invoice_number}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.invoice_number}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Party Account</span>,
-      selector: (row) => row.party_account,
-      cell: (value) => {
-        return (
-          <div
-            title={value.party_account}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.party_account}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">JOB</span>,
-      selector: (row) => row.job_no,
-      cell: (value) => {
-        return (
-          <div
-            title={value.job_no}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.job_no}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Naration</span>,
-      selector: (row) => row.narrations,
-      cell: (value) => {
-        return (
-          <div
-            title={value.narrations}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.narrations}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    {
-      name: <span className="font-weight-bold fs-13">Branch</span>,
-      selector: (row) => row.branch,
-      cell: (value) => {
-        return (
-          <div
-            title={value.branch}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.branch}
-          </div>
-        );
-      },
-      sortable: true,
-    },
-    // {
-    //   name: <span className="font-weight-bold fs-13">Actions</span>,
-    //   selector: (row) => row,
-    //   cell: (value) => {
-    //     return (
-    //       <UncontrolledDropdown className="dropdown d-inline-block">
-    //         <DropdownToggle
-    //           className="btn btn-soft-secondary btn-sm"
-    //           tag="button"
-    //         >
-    //           <i className="ri-more-fill align-middle"></i>
-    //         </DropdownToggle>
-    //         <DropdownMenu className="dropdown-menu-end">
-    //           <DropdownItem
-    //             className="edit-item-btn"
-    //             // onClick={() => exportProjectToPdf()}
-    //           >
-    //             <i className="ri-download-2-fill align-bottom me-2 text-muted"></i>
-    //             PDF Download
-    //           </DropdownItem>
-    //           <DropdownItem
-    //             className="remove-item-btn"
-    //             // onClick={() => exportData()}
-    //           >
-    //             <i className="ri-file-excel-2-fill align-bottom me-2 text-muted"></i>
-    //             Excel Download
-    //           </DropdownItem>
-    //         </DropdownMenu>
-    //       </UncontrolledDropdown>
-    //     );
-    //   },
-    // },
-  ]);
+  // const [cols, setCols] = useState();
 
   const history = useHistory();
   const [organizationOptions, setOrganizationOptions] = useState([]);
@@ -323,7 +50,7 @@ const OrganizationAccountStatement = (props) => {
       // "Account",
       "Date",
       "Currency",
-      "Voucher Number",
+      "Voucher",
       "Total Amount",
       "Invoice Number",
       // "Party Account",
@@ -381,7 +108,7 @@ const OrganizationAccountStatement = (props) => {
         // Account: report?.account,
         Date: moment(report?.date).format("DD-MM-YYYY"),
         Currency: report?.currency,
-        "Voucher Number": Number(report?.voucher_number).toFixed(),
+        Voucher: Number(report?.voucher_number).toFixed(),
         "Total Amount": Number(report?.net_amount).toFixed(2),
         "Invoice Number": report?.invoice_number,
         "Party Account": report?.party_account,
@@ -724,7 +451,296 @@ const OrganizationAccountStatement = (props) => {
             {" "}
             <DataTable
               customStyles={customStyles}
-              columns={cols}
+              columns={[
+                {
+                  name: <span className="font-weight-bold fs-13">Account</span>,
+                  selector: (row) => row.account,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.account}
+                        style={{
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                          textOverflow: "ellipsis",
+                          maxWidth: "250px",
+                        }}
+                      >
+                        {/* {console.log("orggg", selectOrganization)} */}
+                        {selectOrganization?.label}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: <span className="font-weight-bold fs-13">Date</span>,
+                  selector: (row) =>
+                    moment(row.date).format("DD-MM-YYYY HH:mm:ss"),
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={moment(value.date).format("DD-MM-YYYY HH:mm:ss")}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "220px",
+                        }}
+                      >
+                        {moment(value.date).format("DD-MM-YYYY HH:mm:ss")}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: (
+                    <span className="font-weight-bold fs-13">Currency</span>
+                  ),
+                  selector: (row) => row.currency,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.currency}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {value.currency}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: <span className="font-weight-bold fs-13">Voucher</span>,
+                  selector: (row) => row.voucher_number,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.voucher_number}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {value.voucher_number}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                // {
+                //   name: <span className="font-weight-bold fs-13">Dr Amount</span>,
+                //   selector: (row) => row.dr_amount,
+                //   cell: (value) => {
+                //     return (
+                //       <div
+                //         title={value.dr_amount}
+                //         style={{
+                //           whiteSpace: "nowrap",
+                //           overflow: "hidden",
+                //           textOverflow: "ellipsis",
+                //           maxWidth: "200px",
+                //         }}
+                //       >
+                //         {value.dr_amount}
+                //       </div>
+                //     );
+                //   },
+                //   sortable: true,
+                // },
+                // {
+                //   name: <span className="font-weight-bold fs-13">Cr Amount</span>,
+                //   selector: (row) => row.cr_amount,
+                //   cell: (value) => {
+                //     return (
+                //       <div
+                //         title={value.cr_amount}
+                //         style={{
+                //           whiteSpace: "nowrap",
+                //           overflow: "hidden",
+                //           textOverflow: "ellipsis",
+                //           maxWidth: "200px",
+                //         }}
+                //       >
+                //         {value.cr_amount}
+                //       </div>
+                //     );
+                //   },
+                //   sortable: true,
+                // },
+                {
+                  name: (
+                    <span className="font-weight-bold fs-13">Total Amount</span>
+                  ),
+                  selector: (row) => row.net_amount,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.net_amount}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {Number(value.net_amount).toFixed(2)}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: (
+                    <span className="font-weight-bold fs-13">
+                      Invoice Number
+                    </span>
+                  ),
+                  selector: (row) => row.invoice_number,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.invoice_number}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {value.invoice_number}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: (
+                    <span className="font-weight-bold fs-13">
+                      Party Account
+                    </span>
+                  ),
+                  selector: (row) => row.party_account,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.party_account}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {value.party_account}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: <span className="font-weight-bold fs-13">JOB</span>,
+                  selector: (row) => row.job_no,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.job_no}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {value.job_no}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: (
+                    <span className="font-weight-bold fs-13">Naration</span>
+                  ),
+                  selector: (row) => row.narrations,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.narrations}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {value.narrations}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: <span className="font-weight-bold fs-13">Branch</span>,
+                  selector: (row) => row.branch,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.branch}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {value.branch}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                // {
+                //   name: <span className="font-weight-bold fs-13">Actions</span>,
+                //   selector: (row) => row,
+                //   cell: (value) => {
+                //     return (
+                //       <UncontrolledDropdown className="dropdown d-inline-block">
+                //         <DropdownToggle
+                //           className="btn btn-soft-secondary btn-sm"
+                //           tag="button"
+                //         >
+                //           <i className="ri-more-fill align-middle"></i>
+                //         </DropdownToggle>
+                //         <DropdownMenu className="dropdown-menu-end">
+                //           <DropdownItem
+                //             className="edit-item-btn"
+                //             // onClick={() => exportProjectToPdf()}
+                //           >
+                //             <i className="ri-download-2-fill align-bottom me-2 text-muted"></i>
+                //             PDF Download
+                //           </DropdownItem>
+                //           <DropdownItem
+                //             className="remove-item-btn"
+                //             // onClick={() => exportData()}
+                //           >
+                //             <i className="ri-file-excel-2-fill align-bottom me-2 text-muted"></i>
+                //             Excel Download
+                //           </DropdownItem>
+                //         </DropdownMenu>
+                //       </UncontrolledDropdown>
+                //     );
+                //   },
+                // },
+              ]}
               data={reports}
               pagination={true}
             />

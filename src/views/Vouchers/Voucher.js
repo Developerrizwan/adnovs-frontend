@@ -51,6 +51,7 @@ const Voucher = (props) => {
     value: "Journal",
     label: "Journal",
   });
+  const [selectedInvoucherFor, setSelectedInvoucherFor] = useState(null);
 
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [invoiceOptions, setInvoiceOptions] = useState(null);
@@ -91,7 +92,12 @@ const Voucher = (props) => {
   ];
 
   useEffect(() => {
-    console.log("voucherType", voucherId);
+    // console.log("voucherType", voucherId);
+    const selVouFor =
+      voucherId === "DebitNote"
+        ? { label: "Vendor", value: "Vendor" }
+        : { label: "Customer", value: "Customer" };
+    setSelectedInvoucherFor(selVouFor);
     const sel = voucherOptions.find((dd) => dd.value === voucherId);
     setSelectedVoucher(sel);
     getJobOptions();
@@ -109,6 +115,11 @@ const Voucher = (props) => {
           ? { label: "Created", value: "Created" }
           : { label: "Posted", value: "Posted" };
       setSelStatus(selectedStatus);
+
+      setSelectedInvoucherFor({
+        label: props.voucherData?.voucher_for,
+        value: props.voucherData?.voucher_for,
+      });
 
       setSelBranch({
         label: props.voucherData?.branch,
@@ -414,6 +425,10 @@ const Voucher = (props) => {
                   remarks: props.voucherData?.remarks || "",
                   instrument_type: props.voucherData?.instrument_type || "Cash",
                   received_from: props.voucherData?.received_from || "",
+                  voucher_for:
+                    props.voucherData?.voucher_for || voucherId === "DebitNote"
+                      ? "Vendor"
+                      : "Customer",
                 }}
                 validationSchema={Yup.object({
                   // branch: Yup.string().required("Required!"),
@@ -1096,9 +1111,10 @@ const Voucher = (props) => {
                         </div>
                       </Grid>
                     </Grid>
-                    <Grid container spacing={2}>
-                      {(selectedVoucher?.value === "DebitNote" ||
-                        selectedVoucher?.value === "CreditNote") && (
+
+                    {(selectedVoucher?.value === "DebitNote" ||
+                      selectedVoucher?.value === "CreditNote") && (
+                      <Grid container spacing={2}>
                         <Grid item lg={4} xs={12}>
                           <div className="mb-3">
                             <label htmlFor="invoice" className="form-label">
@@ -1123,8 +1139,37 @@ const Voucher = (props) => {
                             )}
                           </div>
                         </Grid>
-                      )}
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <label htmlFor="voucher_for" className="form-label">
+                              Voucher For
+                              {/* <span className="text-danger">*</span> */}
+                            </label>
+                            <Select
+                              name="voucher_for"
+                              styles={customStyles}
+                              value={selectedInvoucherFor}
+                              options={[
+                                { label: "Customer", value: "Customer" },
+                                { label: "Vendor", value: "Vendor" },
+                              ]}
+                              onChange={(event) => {
+                                // console.log(event, "event");
+                                setSelectedInvoucherFor(event);
+                                setFieldValue("voucher_for", event.value);
+                              }}
+                            />
+                            {errors.voucher_for && touched.voucher_for && (
+                              <div className="invalid-feedback d-block">
+                                {errors.voucher_for}
+                              </div>
+                            )}
+                          </div>
+                        </Grid>
+                      </Grid>
+                    )}
 
+                    <Grid container spacing={2}>
                       <Grid item lg={8} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="address" className="form-label">

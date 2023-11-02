@@ -213,11 +213,27 @@ const VoucherTable = (props) => {
       sortable: true,
       checkHide: true,
     },
-    // {
-    //   name: <span className="font-weight-bold fs-13">Against Concern</span>,
-    //   selector: (row) => row.groups,
-    //   sortable: true,
-    // },
+    {
+      name: <span className="font-weight-bold fs-13">Voucher For</span>,
+      selector: (row) => row,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.voucher_for}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.voucher_for}
+          </div>
+        );
+      },
+      sortable: true,
+      checkHide: true,
+    },
     {
       name: <span className="font-weight-bold fs-13">Naration</span>,
       selector: (row) => row.naration,
@@ -271,7 +287,7 @@ const VoucherTable = (props) => {
         const type = localStorage.getItem("voucher-type");
         return (
           <div>
-            {console.log("typee", type)}
+            {/* {console.log("typee", type)} */}
             <Link
               to={
                 type === "Payment"
