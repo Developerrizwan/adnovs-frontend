@@ -252,6 +252,7 @@ const AddCostEntry = (props) => {
                   amount: props.entry?.amount || "",
                   sale_cost: props.entry?.sale_cost || "",
                   dr_cr: props.entry?.dr_cr || "",
+                  quantity: props.entry?.quantity || "",
                   // prorate_method: props.entry?.prorate_method || "",
                   tax_group_code: props.entry?.tax_group_code || "",
                 }}
@@ -697,6 +698,27 @@ const AddCostEntry = (props) => {
                           {errors.sale_cost && touched.sale_cost && (
                             <div className="invalid-feedback d-block">
                               {errors.sale_cost}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={6} xs={12}>
+                        <div className="mb-3">
+                          <div>
+                            <label htmlFor="quantity" className=" w-50 p e-2">
+                              Quantity
+                            </label>
+                            <Field
+                              className="form-control "
+                              name="quantity"
+                              placeholder="1"
+                              type="text"
+                              style={{ background: "#EDEDED" }}
+                            />
+                          </div>
+                          {errors.quantity && touched.quantity && (
+                            <div className="invalid-feedback d-block">
+                              {errors.quantity}
                             </div>
                           )}
                         </div>
