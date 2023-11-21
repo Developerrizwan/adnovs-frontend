@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
@@ -16,10 +16,12 @@ import Select from "react-select";
 
 const ProfitAndLoss = (props) => {
   const history = useHistory();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
   const [coaOptions, setCoaOptions] = useState([]);
   const [selectCoa, setSelectedCoa] = useState({});
+  const [params, setParams] = useState(null);
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13">Account</span>,
@@ -527,10 +529,26 @@ const ProfitAndLoss = (props) => {
   };
 
   useEffect(() => {
-    getAccounts();
+    const searchParams = new URLSearchParams(location.search);
+    const coa = searchParams.get("coa") || null;
+    const st = searchParams.get("st");
+    const et = searchParams.get("et");
+    const dd = {
+      coa: coa,
+      st: st,
+      et: et,
+    };
+    setParams(dd);
+    getAccounts(coa);
+
+    setTimeout(() => {
+      if (coa) {
+        getReport(coa, st, et);
+      }
+    }, 500);
   }, []);
 
-  const getAccounts = () => {
+  const getAccounts = (coa = null) => {
     apiAuth
       .get(`/api/master/coa/`)
       .then((response) => {
@@ -541,6 +559,10 @@ const ProfitAndLoss = (props) => {
             value: account.id,
           };
         });
+        if (coa) {
+          const sel = CoaOpts.find((dd) => dd?.value === Number(coa));
+          setSelectedCoa(sel);
+        }
         setCoaOptions(CoaOpts);
         // setAccounts(data);
         setLoading(false);
@@ -566,14 +588,11 @@ const ProfitAndLoss = (props) => {
           <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
             <div className="p-3" style={{ background: "#EDEDED" }}>
               <Formik
+                enableReinitialize={params?.coa !== null ? true : false}
                 initialValues={{
-                  start_time: props.voucherData?.start_time
-                    ? new Date(props.voucherData?.start_time)
-                    : new Date(),
-                  end_time: props.voucherData?.end_time
-                    ? new Date(props.voucherData?.end_time)
-                    : new Date(),
-                  coa_type: "",
+                  start_time: params?.st ? new Date(params?.st) : new Date(),
+                  end_time: params?.et ? new Date(params?.et) : new Date(),
+                  coa_type: params?.coa || "",
                 }}
                 validationSchema={Yup.object({
                   coa_type: Yup.string().ensure().required("COA is Required"),
