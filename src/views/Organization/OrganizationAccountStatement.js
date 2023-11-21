@@ -29,6 +29,7 @@ const OrganizationAccountStatement = (props) => {
   const history = useHistory();
   const [organizationOptions, setOrganizationOptions] = useState([]);
   const [selectOrganization, setSelectedOrganization] = useState({});
+  const [selectedPaymentType, setSelectedPaymentType] = useState(null);
   const LedgerOrganizationOptions = [
     { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
     { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
@@ -158,11 +159,11 @@ const OrganizationAccountStatement = (props) => {
     getOrganization();
   }, []);
 
-  const getReport = (id, type, st, et) => {
+  const getReport = (id, type, st, et, pt) => {
     setLoading(true);
     apiAuth
       .get(
-        `/api/account/statement/?organization=${id}&type=${type}&start_date=${st}&end_date=${et}`
+        `/api/account/statement/?organization=${id}&type=${type}&start_date=${st}&end_date=${et}&payment=${pt}`
       )
       .then((res) => {
         const { data } = res;
@@ -209,6 +210,7 @@ const OrganizationAccountStatement = (props) => {
                   end_time: new Date() || "",
                   organizationLedger: selectedOrganizationLedger?.value || "",
                   organization: "",
+                  payment_type: "",
                 }}
                 validationSchema={Yup.object({
                   organizationLedger: Yup.string()
@@ -223,7 +225,8 @@ const OrganizationAccountStatement = (props) => {
                   const et = changeDateFormat(values.end_time);
                   // const id = Number(props.match.params.organizationId);
                   const type = values?.organizationLedger;
-                  getReport(values.organization, type, st, et);
+                  const payType = values.payment_type;
+                  getReport(values.organization, type, st, et, payType);
                 }}
               >
                 {({ values, errors, touched, setFieldValue }) => (
@@ -273,6 +276,32 @@ const OrganizationAccountStatement = (props) => {
                           />
                           <ErrorMessage
                             name="organizationLedger"
+                            render={(msg) => (
+                              <div className="text-danger">{msg}</div>
+                            )}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3" style={{ zIndex: 200 }}>
+                          <label htmlFor="payment_type" className="form-label">
+                            Payment Type
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Select
+                            options={[
+                              { label: "All", value: "all" },
+                              { label: "Paid", value: "Paid" },
+                              { label: "Unpaid", value: "Unpaid" },
+                            ]}
+                            value={selectedPaymentType}
+                            onChange={(data) => {
+                              setFieldValue("payment_type", data.value);
+                              setSelectedPaymentType(data);
+                            }}
+                          />
+                          <ErrorMessage
+                            name="payment_type"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
