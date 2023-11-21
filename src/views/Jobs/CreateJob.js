@@ -376,14 +376,14 @@ const CreateJob = (props) => {
                       .delete(url)
                       .then((response) => {
                         const newdata = response.data;
-                        NotificationManager.success(
-                          "",
-                          `Enquiry Deleted Successfully`,
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
+                        // NotificationManager.success(
+                        //   "",
+                        //   `Enquiry Deleted Successfully`,
+                        //   3000,
+                        //   null,
+                        //   null,
+                        //   ""
+                        // );
                         // getJobs(jobPagination, searchValue, selectedValue);
                       })
                       .catch(function (error) {
