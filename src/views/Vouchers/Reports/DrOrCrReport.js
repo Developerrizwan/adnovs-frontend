@@ -12,6 +12,7 @@ import moment from "moment";
 
 const Content = ({ data, curReport }) => {
   // console.log("taxx", data);
+  console.log("db/cb data", data);
   const [state, setState] = useState({});
   var curCurrency = data?.voucher?.currency?.split(" ")[0];
   var totalExcludeVat = 0;
@@ -146,6 +147,7 @@ const Content = ({ data, curReport }) => {
             <td className="text-center fw">Nature of goods or service</td>
             <td className="text-center fw">Unit Price</td>
             <td className="text-center fw">Quantity</td>
+            <th className="text-center">Dr/Cr </th>
             <td className="text-center fw">Taxable Amount</td>
             <td className="text-center fw">Discount</td>
             <td className="text-center fw">Tax Rate</td>
@@ -165,6 +167,7 @@ const Content = ({ data, curReport }) => {
                       {Number(dd?.fcy_amount).toFixed(2)}
                     </td>
                     <td className="text-center">{dd?.qty}</td>
+                    <td className="text-center">{dd?.dr_cr}</td>
                     <td className="text-center">
                       {Number(dd?.taxable_amount).toFixed(2)}
                     </td>

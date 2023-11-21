@@ -10,6 +10,7 @@ import moment from "moment";
 const Content = ({ data }) => {
   var totalDr = 0;
   var totalCr = 0;
+  console.log("journal data------", data);
   return (
     <div id="content" className="mt-5 mx-2">
       {/* VOUCHER Title */}
@@ -49,6 +50,7 @@ const Content = ({ data }) => {
             <th className="text-center ">A/C Name</th>
             <th className="text-center">Narration </th>
             <th className="text-center">Currency</th>
+            <th className="text-center">Dr/Cr </th>
             <th className="text-center">FCY Amount</th>
             <th className="text-center">Ex. Rate</th>
             <th className="text-center">Dr Amount</th>
@@ -68,6 +70,7 @@ const Content = ({ data }) => {
                     <td className="text-center">
                       {dd?.ac_name?.currency.split(" - ")[0]}
                     </td>
+                    <td className="text-center">{dd?.dr_cr}</td>
                     <td className="text-center">
                       {Number(dd?.fcy_amount).toFixed(2)}
                     </td>
@@ -95,9 +98,11 @@ const Content = ({ data }) => {
               Total:
             </td>
             <td className="text-center" style={{ background: "#d3d3d3" }}>
-              {Number(totalDr).toFixed(2)}
+              {console.log("totalDR: ", totalDr, typeof totalDr)}
+              {totalDr}
             </td>
             <td className="text-center" style={{ background: "#d3d3d3" }}>
+              {console.log("totalCR: ", totalCr)}
               {Number(totalCr).toFixed(2)}
             </td>
           </tr>

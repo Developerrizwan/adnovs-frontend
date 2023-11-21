@@ -176,14 +176,9 @@ const Voucher = (props) => {
       .get(`/api/get_coa_invoices/?account=${selectedParty?.value}`)
       .then((response) => {
         let data = response?.data;
-
-        // const finalData = data?.filter(
-        //   (item) =>
-        //     item?.client_name === selectedParty?.value ||
-        //     item?.consignee_name === selectedParty?.value ||
-        //     item?.party_account === selectedParty?.value
-        // );
-        setInvoiceData(data);
+        // console.log("data------------------------", data);
+        const finalData = data?.filter((item) => item?.type === "Sales");
+        setInvoiceData(finalData);
         setLoading(false);
         setUpdateStatusModal(true);
       })

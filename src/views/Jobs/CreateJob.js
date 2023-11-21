@@ -370,6 +370,39 @@ const CreateJob = (props) => {
                     null,
                     ""
                   );
+                  if (props?.isFromEnquiry) {
+                    let url = `/api/master/job/${props?.allJobs?.id}/`;
+                    apiAuth
+                      .delete(url)
+                      .then((response) => {
+                        const newdata = response.data;
+                        NotificationManager.success(
+                          "",
+                          `Enquiry Deleted Successfully`,
+                          3000,
+                          null,
+                          null,
+                          ""
+                        );
+                        // getJobs(jobPagination, searchValue, selectedValue);
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                        console.log(error.response?.data);
+                        console.log(error.response?.status);
+                        console.log(error.response?.headers);
+                        // NotificationManager.error(
+                        //   "",
+                        //   `${
+                        //     error.response?.data?.Error || "Job Delete Error"
+                        //   }`,
+                        //   3000,
+                        //   null,
+                        //   null,
+                        //   ""
+                        // );
+                      });
+                  }
                   props.closeAddPopup(response.data);
                 })
                 .catch((error) => {

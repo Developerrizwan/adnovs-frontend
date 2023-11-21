@@ -15,6 +15,23 @@ import { customStyles } from "../../assets/CustomTableStyles";
 import CreateJob from "./CreateJob";
 import EditEnquiry from "./EditEnquiry";
 import apiAuth from "../../helpers/ApiAuth";
+
+const getImageSource = (jobType) => {
+  switch (jobType) {
+    case "Air Freight":
+      return "/aeroplane.png";
+
+    case "Sea Freight":
+      return "/ship.png";
+
+    case "Land Freight":
+      return "/truck.png";
+
+    default:
+      return "/truck.png";
+  }
+};
+
 const EnquiryTable = (props) => {
   const [editModal, setEditModal] = useState(false);
   const [jobTypeModal, setJobTypeModal] = useState(false);
@@ -22,6 +39,20 @@ const EnquiryTable = (props) => {
   const [deletId, setDeletId] = useState();
   const [selectedJob, setSelectedJob] = useState([]);
   const [cols, setCols] = useState([
+    {
+      name: <span className="font-weight-bold fs-13">Image</span>,
+      selector: (row) => row.type,
+      cell: (value) => {
+        const imageSrc = getImageSource(value?.type);
+
+        return (
+          <div>
+            <img src={imageSrc} height="35px" width="35px" alt={value?.type} />
+          </div>
+        );
+      },
+      sortable: true,
+    },
     {
       name: <span className="font-weight-bold fs-13">Enquiry Number</span>,
       selector: (row) => row.enquiry_number,

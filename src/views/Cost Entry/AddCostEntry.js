@@ -32,6 +32,14 @@ const AddCostEntry = (props) => {
   const [jobOptions, setJobOptions] = useState([]);
   const [shipmentOptions, setShipmentOptions] = useState([]);
   const [chargeOptions, setChargeOptions] = useState([]);
+  const [saleOrCostOptions, setSaleOrCostOptions] = useState([
+    {
+      label: "Sale",
+      value: "Sale",
+    },
+    { label: "Cost", value: "Cost" },
+    { label: "Both", value: "both" },
+  ]);
 
   const voucherOptions = [
     { value: "Journal", label: "Journal" },
@@ -41,13 +49,14 @@ const AddCostEntry = (props) => {
     { value: "Credit Note", label: "Credit Note" },
   ];
 
-  const SaleOrCostOptions = [
-    {
-      label: "Sale",
-      value: "Sale",
-    },
-    { label: "Cost", value: "Cost" },
-  ];
+  // const SaleOrCostOptions = [
+  //   {
+  //     label: "Sale",
+  //     value: "Sale",
+  //   },
+  //   { label: "Cost", value: "Cost" },
+  //   { label: "Both", value: "both" },
+  // ];
 
   const drOrCrOptions = [
     {
@@ -138,6 +147,15 @@ const AddCostEntry = (props) => {
     }
   }, [currencyOptions.length, jobOptions.length, chargeOptions.length]);
 
+  useEffect(() => {
+    // Conditionally remove "Both" option if props.isedit is true
+    const modifiedSaleOrCostOptions = props.isEdit
+      ? saleOrCostOptions.filter((option) => option.value !== "both")
+      : saleOrCostOptions;
+
+    setSaleOrCostOptions(modifiedSaleOrCostOptions);
+  }, [props.isEdit]);
+
   const getInitialValues = () => {
     const selectedVoucher = voucherOptions.find(
       (dd) => dd.value === props.entry?.voucher_type
@@ -177,7 +195,7 @@ const AddCostEntry = (props) => {
     );
     setSelProrate(selectedProrate);
 
-    const selectedSorC = SaleOrCostOptions.find(
+    const selectedSorC = saleOrCostOptions.find(
       (cur) => cur.value === props.entry?.sale_cost
     );
     setSelSaleOrCost(selectedSorC);
@@ -276,29 +294,70 @@ const AddCostEntry = (props) => {
                         );
                       });
                   } else {
-                    apiAuth
-                      .post("/api/master/cost_entry/", values)
-                      .then((res) => {
-                        NotificationManager.success(
-                          "",
-                          "Cost Entry Created Successfully",
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                        history.push("/cost-entry");
-                      })
-                      .catch((err) => {
-                        NotificationManager.error(
-                          "",
-                          "Cost Entry Create Error",
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                      });
+                    if (values?.sale_cost === "both") {
+                      // 1st time api call
+
+                      const valuesWithCost = { ...values, sale_cost: "Cost" };
+                      const valuesWithSale = { ...values, sale_cost: "Sale" };
+                      apiAuth
+                        .post("/api/master/cost_entry/", valuesWithCost)
+                        .then((res) => {
+                          console.log("res", res);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                        });
+
+                      // 2nd time api call
+
+                      apiAuth
+                        .post("/api/master/cost_entry/", valuesWithSale)
+                        .then((res) => {
+                          NotificationManager.success(
+                            "",
+                            "Cost Entry Created Successfully",
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                          history.push("/cost-entry");
+                        })
+                        .catch((err) => {
+                          NotificationManager.error(
+                            "",
+                            "Cost Entry Create Error",
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                        });
+                    } else {
+                      apiAuth
+                        .post("/api/master/cost_entry/", values)
+                        .then((res) => {
+                          NotificationManager.success(
+                            "",
+                            "Cost Entry Created Successfully",
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                          history.push("/cost-entry");
+                        })
+                        .catch((err) => {
+                          NotificationManager.error(
+                            "",
+                            "Cost Entry Create Error",
+                            3000,
+                            null,
+                            null,
+                            ""
+                          );
+                        });
+                    }
                   }
                 }}
               >
@@ -629,7 +688,7 @@ const AddCostEntry = (props) => {
                             placeholder="Select"
                             styles={customStyles}
                             value={selSaleOrCost}
-                            options={SaleOrCostOptions}
+                            options={saleOrCostOptions}
                             onChange={(data) => {
                               setFieldValue("sale_cost", data.value);
                               setSelSaleOrCost(data);

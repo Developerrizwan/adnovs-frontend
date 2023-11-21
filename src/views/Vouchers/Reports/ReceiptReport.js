@@ -9,7 +9,7 @@ import DownloadReport from "./helpers/DownloadReport";
 import NotificationManager from "../../../components/Common/NotificationManager";
 
 const Content = ({ data }) => {
-  // console.log("receipt", data);
+  console.log("receipt", data);
 
   var word_amount = Number.isFinite(Number(data?.voucher?.amount_sar))
     ? numberToWords.toWords(Number(data?.voucher?.amount_sar))

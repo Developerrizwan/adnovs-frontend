@@ -259,7 +259,7 @@ const AccountDetail = (props) => {
                   // line_no: Yup.string().ensure().required("Required!"),
                   ac_name: Yup.string().ensure().required("Required!"),
                   qty: Yup.string().required("Required!"),
-                  amount_qty: Yup.string().required("Required!"),
+                  // amount_qty: Yup.string().required("Required!"),
                 })}
                 onSubmit={(values) => {
                   console.log("shskjkj", values);
@@ -352,7 +352,7 @@ const AccountDetail = (props) => {
                           )}
                         </div>
                       </Grid> */}
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="ac_name" className="form-label">
                             A/C Name
@@ -376,7 +376,7 @@ const AccountDetail = (props) => {
                           )}
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={6} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="dr_cr" className="form-label">
                             Dr / Cr
@@ -394,7 +394,7 @@ const AccountDetail = (props) => {
                           />
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                      {/* <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="amount_qty" className="form-label">
                             Amount / Qty
@@ -412,7 +412,7 @@ const AccountDetail = (props) => {
                             </div>
                           )}
                         </div>
-                      </Grid>
+                      </Grid> */}
                     </Grid>
 
                     <Grid container spacing={2}>

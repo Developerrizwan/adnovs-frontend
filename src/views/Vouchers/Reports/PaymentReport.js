@@ -77,7 +77,10 @@ const Content = ({ data }) => {
             label={"Date"}
             value={moment(data?.voucher?.date).format("DD/MM/YYYY")}
           />
-          <DisplayItem label={"Paid From"} value={"SNB BANK "} />
+          <DisplayItem
+            label={"Received From"}
+            value={data?.voucher?.received_from}
+          />
           <DisplayItem
             label={"Job No"}
             value={data?.voucher?.job?.job_number}

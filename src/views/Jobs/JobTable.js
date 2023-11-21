@@ -14,6 +14,23 @@ import EditJob from "./EditJob";
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 import CreateJob from "./CreateJob";
+
+const getImageSource = (jobType) => {
+  switch (jobType) {
+    case "Air Freight":
+      return "/aeroplane.png";
+
+    case "Sea Freight":
+      return "/ship.png";
+
+    case "Land Freight":
+      return "/truck.png";
+
+    default:
+      return "/truck.png";
+  }
+};
+
 const JobTable = (props) => {
   // const [displayModal, setDisplayModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -21,6 +38,20 @@ const JobTable = (props) => {
   const [deletId, setDeletId] = useState();
   const [selectedJob, setSelectedJob] = useState([]);
   const [cols, setCols] = useState([
+    {
+      name: <span className="font-weight-bold fs-13">Image</span>,
+      selector: (row) => row.type,
+      cell: (value) => {
+        const imageSrc = getImageSource(value?.type);
+
+        return (
+          <div>
+            <img src={imageSrc} height="35px" width="35px" alt={value?.type} />
+          </div>
+        );
+      },
+      sortable: true,
+    },
     {
       name: <span className="font-weight-bold fs-13">Job Number</span>,
       selector: (row) => row.job_number,
@@ -397,6 +428,8 @@ const JobTable = (props) => {
       },
     },
   ]);
+
+  console.log("all jobs", props.allJobs);
   return (
     <>
       <DataTable
