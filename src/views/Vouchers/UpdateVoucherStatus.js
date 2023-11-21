@@ -7,11 +7,22 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import { MenuItem, Select, TextField } from "@mui/material";
 
 const UpdateVoucherStatus = (props) => {
-  const UpdateInvoiceStatus = (id, invoiceStatus, amountPaid) => {
-    const values = {
-      payment_status: invoiceStatus || "",
-      paid_amount: amountPaid,
-    };
+  const UpdateInvoiceStatus = (id, value, type) => {
+    let values;
+    if (type === "status") {
+      values = {
+        payment_status: value,
+      };
+    } else if (type === "amount") {
+      values = {
+        paid_amount: value,
+      };
+    }
+    // const values = {
+    //   payment_status: invoiceStatus || "",
+    //   paid_amount: amountPaid,
+    // };
+
     apiAuth
       .patch(`/api/master/invoice/${id}/`, values)
       .then((res) => {
@@ -63,11 +74,7 @@ const UpdateVoucherStatus = (props) => {
             // label="Age"
             onChange={(e) => {
               // setSelectedInvoiceStatus(e.target.value);
-              UpdateInvoiceStatus(
-                value?.id,
-                e.target.value,
-                value?.paid_amount
-              );
+              UpdateInvoiceStatus(value?.id, e.target.value, "status");
             }}
             style={{
               background: "#f3f3f9",
@@ -124,7 +131,7 @@ const UpdateVoucherStatus = (props) => {
           }}
           style={{ background: "#f3f3f9" }}
           onBlur={(e) => {
-            UpdateInvoiceStatus(value?.id, value?.payment_status, amountPaid1);
+            UpdateInvoiceStatus(value?.id, e.target.value, "amount");
           }}
         />
       </div>
