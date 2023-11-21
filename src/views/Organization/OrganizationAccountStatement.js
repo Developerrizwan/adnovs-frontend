@@ -29,7 +29,10 @@ const OrganizationAccountStatement = (props) => {
   const history = useHistory();
   const [organizationOptions, setOrganizationOptions] = useState([]);
   const [selectOrganization, setSelectedOrganization] = useState({});
-  const [selectedInvcType, setSelectedInvcType] = useState(null);
+  const [selectedInvcType, setSelectedInvcType] = useState({
+    label: "All",
+    value: "all",
+  });
   const LedgerOrganizationOptions = [
     { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
     { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
@@ -72,7 +75,7 @@ const OrganizationAccountStatement = (props) => {
           // row?.account,
           moment(row?.date).format("DD-MM-YYYY"),
           row?.currency,
-          row?.Voucher_number,
+          row?.voucher_number,
           Number(row?.net_amount).toFixed(2),
           row?.invoice_number,
           // row?.party_account,
@@ -109,7 +112,7 @@ const OrganizationAccountStatement = (props) => {
         // Account: report?.account,
         Date: moment(report?.date).format("DD-MM-YYYY"),
         Currency: report?.currency,
-        Voucher: Number(report?.voucher_number).toFixed(),
+        Voucher: report?.voucher_number,
         "Total Amount": Number(report?.net_amount).toFixed(2),
         "Invoice Number": report?.invoice_number,
         "Party Account": report?.party_account,
