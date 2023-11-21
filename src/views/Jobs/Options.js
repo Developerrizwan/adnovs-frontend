@@ -264,4 +264,16 @@ export const containerTypes = [
     label: "Cartons",
     value: "Cartons",
   },
+  {
+    label: "Pieces",
+    value: "Pieces",
+  },
+  {
+    label: "40 HQ",
+    value: "40 HQ",
+  },
+  {
+    label: "packages",
+    value: "packages",
+  },
 ];

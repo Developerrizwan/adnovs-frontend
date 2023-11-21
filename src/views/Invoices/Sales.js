@@ -266,6 +266,9 @@ const Sales = (props) => {
         label: props?.data?.pod,
         value: props?.data?.pod,
       });
+
+      setRefDate(moment(props?.data?.ref_data).toDate());
+      setDueDate(moment(props?.data?.due_date).toDate());
     }
   }, []);
 
@@ -370,6 +373,7 @@ const Sales = (props) => {
                   currency_sar: props.isEdit ? props.data?.currency_sar : "",
                   bayan_number: props.isEdit ? props.data?.bayan_number : "",
                   shipper_name: props.isEdit ? props.data?.shipper_name : "",
+                  quantity: props.isEdit ? props.data?.quantity : "",
                   supplier_inv_number: props.isEdit
                     ? props.data?.supplier_inv_number
                     : "",
@@ -1123,6 +1127,27 @@ const Sales = (props) => {
                       <></>
                     )}
                     <Grid spacing={2} container>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <div>
+                            <Label htmlFor="quantity" className=" w-50 p e-2">
+                              Quantity
+                            </Label>
+                            <Field
+                              className="form-control "
+                              name="quantity"
+                              placeholder="1"
+                              type="text"
+                              style={{ background: "#EDEDED" }}
+                            />
+                          </div>
+                          {errors.quantity && touched.quantity && (
+                            <div className="invalid-feedback d-block">
+                              {errors.quantity}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <div>

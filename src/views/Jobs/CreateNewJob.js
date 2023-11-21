@@ -279,9 +279,9 @@ const CreateNewJob = (props) => {
                   // organization_type: Yup.string()
                   //   .ensure()
                   //   .required("Organization Type is Required"),
-                  container_type: Yup.string()
-                    .ensure()
-                    .required("Container Type is Required"),
+                  // container_type: Yup.string()
+                  //   .ensure()
+                  //   .required("Container Type is Required"),
                 })}
                 onSubmit={(values, { reset }) => {
                   const company = JSON.parse(
@@ -859,7 +859,7 @@ const CreateNewJob = (props) => {
                         <div className="mb-3">
                           <Label htmlFor="container" className="form-label">
                             Container/Consignment
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </Label>
                           <Select
                             placeholder={"Select"}

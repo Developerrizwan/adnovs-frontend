@@ -42,6 +42,26 @@ const InvoiceTable = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">Job Number</span>,
+      selector: (row) => row.job?.job_number,
+      cell: (value) => {
+        return (
+          <div
+            title={value.job?.job_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.job?.job_number}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">BL Number</span>,
       selector: (row) => row.bl_number,
       cell: (value) => {
@@ -480,6 +500,26 @@ const InvoiceTable = (props) => {
             }}
           >
             {value.invoice_number}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
+      name: <span className="font-weight-bold fs-13">Job Number</span>,
+      selector: (row) => row.job?.job_number,
+      cell: (value) => {
+        return (
+          <div
+            title={value.job?.job_number}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value.job?.job_number}
           </div>
         );
       },
