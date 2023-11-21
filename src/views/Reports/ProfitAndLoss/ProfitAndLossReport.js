@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import apiAuth from "../../../helpers/ApiAuth";
 import shipLogo from "../../../assets/images/ship-logo.png";
 import Translate from "../../TaxInvoice/Translate";
 import NotificationManager from "../../../components/Common/NotificationManager";
 import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 
-const Content = ({ data }) => {
+const Content = ({ data, params }) => {
   // console.log("profit", data);
 
   var incomeTotal = data?.reduce((x, y) => {
@@ -112,7 +112,13 @@ const Content = ({ data }) => {
                         fontSize: "14px",
                       }}
                     >
-                      {dd?.income_amount === 0 ? "" : `${dd?.name}-${dd?.code}`}
+                      <Link
+                        to={`/ledger-statement/?coa=${dd?.coa_id}&st=${params?.st}&et=${params?.et}`}
+                      >
+                        {dd?.income_amount === 0
+                          ? ""
+                          : `${dd?.name}-${dd?.code}`}
+                      </Link>
                     </td>
                     <td className="text-center"></td>
                     <td
@@ -182,9 +188,13 @@ const Content = ({ data }) => {
                         fontSize: "14px",
                       }}
                     >
-                      {dd?.expenses_amount === 0
-                        ? ""
-                        : `${dd?.name}-${dd?.code}`}
+                      <Link
+                        to={`/ledger-statement/?coa=${dd?.coa_id}&st=${params?.st}&et=${params?.et}`}
+                      >
+                        {dd?.expenses_amount === 0
+                          ? ""
+                          : `${dd?.name}-${dd?.code}`}
+                      </Link>
                     </td>
                     <td className="text-center"></td>
                     <td
@@ -306,12 +316,19 @@ const ReportHeader = ({ data }) => {
 const ProfitAndLossReport = (props) => {
   const location = useLocation();
   const [state, setState] = useState({});
+  const [params, setParams] = useState(null);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get("jobId");
     const startTime = searchParams.get("st");
     const endTime = searchParams.get("et");
+
+    const dd = {};
+    dd["id"] = id;
+    dd["st"] = startTime;
+    dd["et"] = endTime;
+    setParams(dd);
 
     getProfitLossData(id, startTime, endTime);
   }, []);
@@ -372,7 +389,7 @@ const ProfitAndLossReport = (props) => {
           />
 
           {/* Content */}
-          <Content data={state?.data} />
+          <Content data={state?.data} params={params} />
 
           {/* Footer */}
           {/* <ReportFooter /> */}
