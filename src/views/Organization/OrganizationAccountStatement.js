@@ -29,7 +29,7 @@ const OrganizationAccountStatement = (props) => {
   const history = useHistory();
   const [organizationOptions, setOrganizationOptions] = useState([]);
   const [selectOrganization, setSelectedOrganization] = useState({});
-  const [selectedPaymentType, setSelectedPaymentType] = useState(null);
+  const [selectedInvcType, setSelectedInvcType] = useState(null);
   const LedgerOrganizationOptions = [
     { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
     { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
@@ -210,7 +210,7 @@ const OrganizationAccountStatement = (props) => {
                   end_time: new Date() || "",
                   organizationLedger: selectedOrganizationLedger?.value || "",
                   organization: "",
-                  payment_type: "",
+                  invoice_type: "",
                 }}
                 validationSchema={Yup.object({
                   organizationLedger: Yup.string()
@@ -225,8 +225,14 @@ const OrganizationAccountStatement = (props) => {
                   const et = changeDateFormat(values.end_time);
                   // const id = Number(props.match.params.organizationId);
                   const type = values?.organizationLedger;
-                  const payType = values.payment_type;
-                  getReport(values.organization, type, st, et, payType);
+                  const InvcType = values.invoice_type;
+                  getReport(
+                    values.organization,
+                    type,
+                    st,
+                    et,
+                    InvcType === "all" ? "" : InvcType
+                  );
                 }}
               >
                 {({ values, errors, touched, setFieldValue }) => (
@@ -284,8 +290,8 @@ const OrganizationAccountStatement = (props) => {
                       </Grid>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3" style={{ zIndex: 200 }}>
-                          <label htmlFor="payment_type" className="form-label">
-                            Payment Type
+                          <label htmlFor="invoice_type" className="form-label">
+                            Invoice Type
                             <span className="text-danger">*</span>
                           </label>
                           <Select
@@ -294,14 +300,14 @@ const OrganizationAccountStatement = (props) => {
                               { label: "Paid", value: "Paid" },
                               { label: "Unpaid", value: "Unpaid" },
                             ]}
-                            value={selectedPaymentType}
+                            value={selectedInvcType}
                             onChange={(data) => {
-                              setFieldValue("payment_type", data.value);
-                              setSelectedPaymentType(data);
+                              setFieldValue("invoice_type", data.value);
+                              setSelectedInvcType(data);
                             }}
                           />
                           <ErrorMessage
-                            name="payment_type"
+                            name="invoice_type"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}
