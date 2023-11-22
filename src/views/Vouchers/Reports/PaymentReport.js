@@ -142,7 +142,7 @@ const Content = ({ data }) => {
             <th className="text-center">Vat Amount</th>
             <th className="text-center">Total Amount</th>
           </tr>
-          {data?.accounts?.length &&
+          {data?.accounts?.length > 0 &&
             data?.accounts?.map((dd) => {
               // totalDr += dd?.dr_cr === "Dr" ? Number(dd?.amount_qty) : 0;
               // word_Dramount = Number.isFinite(Number(totalDr))

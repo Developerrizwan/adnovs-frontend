@@ -56,8 +56,9 @@ const Content = ({ data }) => {
             <th className="text-center">Dr Amount</th>
             <th className="text-center">Cr Amount</th>
           </tr>
-          {data?.accounts?.length &&
+          {data?.accounts?.length > 0 &&
             data?.accounts?.map((dd) => {
+              console.log("inside map", dd);
               totalDr +=
                 dd.dr_cr === "Dr" ? Number(dd?.amount_sar).toFixed(2) : 0.0;
               totalCr +=

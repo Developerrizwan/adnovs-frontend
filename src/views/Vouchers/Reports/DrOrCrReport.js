@@ -154,7 +154,7 @@ const Content = ({ data, curReport }) => {
             <td className="text-center fw">Tax Amount</td>
             <td className="text-center fw">Item Subtotal(Including VAT)</td>
           </tr>
-          {data?.accounts?.length &&
+          {data?.accounts?.length > 0 &&
             data?.accounts.map((dd) => {
               totalExcludeVat += Number(dd?.qty) * Number(dd?.fcy_amount);
               totalTaxableAmt += Number(dd?.taxable_amount);

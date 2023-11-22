@@ -8,16 +8,13 @@ import { MenuItem, Select, TextField } from "@mui/material";
 
 const UpdateVoucherStatus = (props) => {
   const UpdateInvoiceStatus = (id, value, type) => {
-    let values;
-    if (type === "status") {
-      values = {
-        payment_status: value,
-      };
-    } else if (type === "amount") {
-      values = {
-        paid_amount: value,
-      };
-    }
+    const values =
+      type === "status"
+        ? { payment_status: value }
+        : type === "amount"
+        ? { paid_amount: value }
+        : {};
+
     // const values = {
     //   payment_status: invoiceStatus || "",
     //   paid_amount: amountPaid,
