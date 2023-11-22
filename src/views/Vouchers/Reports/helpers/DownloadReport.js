@@ -3,7 +3,7 @@ import jsPDF from "jspdf";
 import { Button } from "reactstrap";
 import * as htmlToImage from "html-to-image";
 
-const DownloadReport = () => {
+const DownloadReport = ({ reportName }) => {
   const [loading, setLoading] = useState(false);
 
   async function exportProjectToPdf() {
@@ -12,7 +12,7 @@ const DownloadReport = () => {
     const elements = document.getElementsByClassName("reportdownproject");
     await creatPdf({ doc, elements });
 
-    doc.save(`voucher.pdf`);
+    doc.save(reportName ? reportName : `voucher.pdf`);
     setLoading(false);
   }
 

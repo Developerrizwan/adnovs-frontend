@@ -7,14 +7,37 @@ import NotificationManager from "../../../components/Common/NotificationManager"
 import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 
 const Content = ({ data, params }) => {
-  // console.log("profit", data);
+  var incomeTotal = data
+    ?.filter((item) => item?.type === "INCOME")
+    ?.reduce((x, y) => {
+      return Number(x) + Number(y?.income_amount);
+    }, 0);
 
-  var incomeTotal = data?.reduce((x, y) => {
-    return Number(x) + Number(y?.income_amount);
-  }, 0);
   var expenseTotal = data?.reduce((x, y) => {
     return Number(x) + Number(y?.expenses_amount);
   }, 0);
+
+  var directExpenseTotal = data
+    ?.filter(
+      (item) =>
+        item?.expense_type === "DIRECT EXPENSES" && item?.type === "EXPENSE"
+    )
+    .reduce((x, y) => {
+      return Number(x) + Number(y?.expenses_amount);
+    }, 0);
+
+  var otherExpenseTotal = data
+    ?.filter(
+      (item) =>
+        item?.expense_type !== "DIRECT EXPENSES" && item?.type === "EXPENSE"
+    )
+    .reduce((x, y) => {
+      return Number(x) + Number(y?.expenses_amount);
+    }, 0);
+
+  var grossProfit =
+    Number(incomeTotal - directExpenseTotal).toFixed(2) || "0.00";
+  var netProfit = Number(grossProfit - otherExpenseTotal).toFixed(2) || "0.00";
 
   return (
     <div id="content" className="mt-5 mx-2">
@@ -83,6 +106,8 @@ const Content = ({ data, params }) => {
             <td className="text-center"></td>
             <td className="text-center"></td>
           </tr>
+          {/* income */}
+
           <tr>
             <td
               className="text-center py-2"
@@ -100,10 +125,11 @@ const Content = ({ data, params }) => {
             <td className="text-center"></td>
             <td className="text-center">--------------------</td>
           </tr>
-          {data?.length &&
+          {data?.length > 0 &&
             data
-              ?.filter((dd) => dd?.income_amount)
+              ?.filter((dd) => dd?.income_amount && dd?.type === "INCOME")
               .map((dd) => {
+                console.log("dd--------------", dd);
                 return (
                   <tr key={dd.name}>
                     <td
@@ -159,6 +185,9 @@ const Content = ({ data, params }) => {
               {incomeTotal ? Number(incomeTotal).toFixed(2) : "0.00"}
             </td>
           </tr>
+
+          {/* direct expenses */}
+
           <tr>
             <td
               className="text-center py-2"
@@ -171,14 +200,19 @@ const Content = ({ data, params }) => {
                 color: "black",
               }}
             >
-              EXPENSES
+              DIRECT EXPENSES
             </td>
             <td className="text-center"></td>
             <td className="text-center">--------------------</td>
           </tr>
           {data?.length &&
             data
-              ?.filter((dd) => dd?.expenses_amount)
+              ?.filter(
+                (dd) =>
+                  dd?.expenses_amount &&
+                  dd?.expense_type === "DIRECT EXPENSES" &&
+                  dd?.type === "EXPENSE"
+              )
               .map((dd) => {
                 return (
                   <tr key={dd.name}>
@@ -222,7 +256,7 @@ const Content = ({ data, params }) => {
                 color: "black",
               }}
             >
-              EXPENSE TOTAL
+              DIRECT EXPENSE TOTAL
             </td>
             <td className="text-center"></td>
             <td
@@ -233,9 +267,99 @@ const Content = ({ data, params }) => {
               }}
             >
               {" "}
-              {expenseTotal ? Number(expenseTotal).toFixed(2) : "0.00"}
+              {directExpenseTotal
+                ? Number(directExpenseTotal).toFixed(2)
+                : "0.00"}
             </td>
           </tr>
+
+          {/* other expenses */}
+
+          <tr>
+            <td
+              className="text-center py-2"
+              style={{
+                fontWeight: 700,
+                fontSize: "16px",
+
+                marginLeft: "70px",
+                fontFamily: "sans-serif",
+                color: "black",
+              }}
+            >
+              OTHER EXPENSES
+            </td>
+            <td className="text-center"></td>
+            <td className="text-center">--------------------</td>
+          </tr>
+          {data?.length &&
+            data
+              ?.filter(
+                (dd) =>
+                  dd?.expenses_amount &&
+                  dd?.expense_type !== "DIRECT EXPENSES" &&
+                  dd?.type === "EXPENSE"
+              )
+              .map((dd) => {
+                return (
+                  <tr key={dd.name}>
+                    <td
+                      className="text-center"
+                      style={{
+                        fontSize: "14px",
+                      }}
+                    >
+                      <Link
+                        to={`/ledger-statement/?coa=${dd?.coa_id}&st=${params?.st}&et=${params?.et}`}
+                      >
+                        {dd?.expenses_amount === 0
+                          ? ""
+                          : `${dd?.name}-${dd?.code}`}
+                      </Link>
+                    </td>
+                    <td className="text-center"></td>
+                    <td
+                      className="text-center"
+                      style={{
+                        fontSize: "16px",
+                      }}
+                    >
+                      {dd?.expenses_amount === 0
+                        ? ""
+                        : Number(dd?.expenses_amount).toFixed(2)}
+                    </td>
+                  </tr>
+                );
+              })}
+          <tr>
+            <td
+              className="text-center"
+              style={{
+                fontSize: "16px",
+
+                fontWeight: 500,
+                marginLeft: "90px",
+                fontFamily: "sans-serif",
+                color: "black",
+              }}
+            >
+              OTHER EXPENSE TOTAL
+            </td>
+            <td className="text-center"></td>
+            <td
+              className="text-center"
+              style={{
+                fontSize: "18px",
+                fontWeight: 700,
+              }}
+            >
+              {" "}
+              {otherExpenseTotal
+                ? Number(otherExpenseTotal).toFixed(2)
+                : "0.00"}
+            </td>
+          </tr>
+          {/* gross profit */}
           <tr>
             <td
               className="text-center"
@@ -248,7 +372,7 @@ const Content = ({ data, params }) => {
                 color: "black",
               }}
             >
-              TOTAL AMOUNT
+              GROSS PROFIT
             </td>
             <td className="text-center"></td>
             <td
@@ -259,9 +383,40 @@ const Content = ({ data, params }) => {
               }}
             >
               {" "}
-              {Number(incomeTotal - expenseTotal).toFixed(2) || "0.00"}
+              {grossProfit}
             </td>
           </tr>
+
+          {/* net profit */}
+
+          <tr>
+            <td
+              className="text-center"
+              style={{
+                fontSize: "16px",
+
+                fontWeight: 700,
+                marginLeft: "90px",
+                fontFamily: "sans-serif",
+                color: "black",
+              }}
+            >
+              NET PROFIT
+            </td>
+            <td className="text-center"></td>
+            <td
+              className="text-center"
+              style={{
+                fontSize: "18px",
+                fontWeight: 700,
+              }}
+            >
+              {" "}
+              {netProfit}
+            </td>
+          </tr>
+
+          {/* end */}
         </table>
       </div>
     </div>
@@ -317,6 +472,7 @@ const ProfitAndLossReport = (props) => {
   const location = useLocation();
   const [state, setState] = useState({});
   const [params, setParams] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -334,6 +490,7 @@ const ProfitAndLossReport = (props) => {
   }, []);
 
   const getProfitLossData = (id, st, et) => {
+    setLoading(true);
     apiAuth
       .get(
         `/api/profit/loss/?job=${
@@ -343,6 +500,7 @@ const ProfitAndLossReport = (props) => {
       .then((response) => {
         let data = response.data;
         setState({ ...state, data });
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -354,6 +512,7 @@ const ProfitAndLossReport = (props) => {
           null,
           ""
         );
+        setLoading(false);
       });
   };
 
@@ -365,36 +524,40 @@ const ProfitAndLossReport = (props) => {
         alignItems: "center",
       }}
     >
-      <div
-        style={{
-          marginTop: "15px",
-          marginBottom: "15px",
-          width: "1000px",
-        }}
-      >
-        {/* Download */}
-        <DownloadReport />
-
-        {/* Page for downloading pdf */}
+      {loading ? (
+        <div className="loading"></div>
+      ) : (
         <div
-          className="card reportdownproject"
           style={{
-            border: "1px solid black",
-            //   padding: "10px",
+            marginTop: "15px",
+            marginBottom: "15px",
+            width: "1000px",
           }}
         >
-          {/* Header */}
-          <ReportHeader
-            data={state?.data?.length > 0 ? state?.data[0]?.company : {}}
-          />
+          {/* Download */}
+          <DownloadReport reportName="Profit and Loss" />
 
-          {/* Content */}
-          <Content data={state?.data} params={params} />
+          {/* Page for downloading pdf */}
+          <div
+            className="card reportdownproject"
+            style={{
+              border: "1px solid black",
+              //   padding: "10px",
+            }}
+          >
+            {/* Header */}
+            <ReportHeader
+              data={state?.data?.length > 0 ? state?.data[0]?.company : {}}
+            />
 
-          {/* Footer */}
-          {/* <ReportFooter /> */}
+            {/* Content */}
+            <Content data={state?.data} params={params} />
+
+            {/* Footer */}
+            {/* <ReportFooter /> */}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

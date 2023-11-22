@@ -39,7 +39,7 @@ const JobTable = (props) => {
   const [selectedJob, setSelectedJob] = useState([]);
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13">Image</span>,
+      name: <span className="font-weight-bold fs-13">Mode</span>,
       selector: (row) => row.type,
       cell: (value) => {
         const imageSrc = getImageSource(value?.type);
@@ -51,6 +51,7 @@ const JobTable = (props) => {
         );
       },
       sortable: true,
+      width: "85px",
     },
     {
       name: <span className="font-weight-bold fs-13">Job Number</span>,

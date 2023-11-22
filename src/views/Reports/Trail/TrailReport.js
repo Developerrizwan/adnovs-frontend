@@ -98,7 +98,7 @@ const Content = ({ data }) => {
                 >
                   INCOME
                 </p>
-                {data?.length &&
+                {data?.length > 0 &&
                   data?.map((dd) => {
                     return (
                       <>
@@ -129,7 +129,7 @@ const Content = ({ data }) => {
               {/* Income - Current Amount details */}
               <>
                 <p className="my-0 py-0"></p>
-                {data?.length &&
+                {data?.length > 0 &&
                   data?.map((dd) => {
                     incomeTotal += Number(dd?.income_amount);
                     return (
@@ -172,7 +172,7 @@ const Content = ({ data }) => {
                 >
                   EXPENSES
                 </p>
-                {data?.length &&
+                {data?.length > 0 &&
                   data?.map((dd) => {
                     return (
                       <>
@@ -211,7 +211,7 @@ const Content = ({ data }) => {
                     color: "black",
                   }}
                 ></p>
-                {data?.length &&
+                {data?.length > 0 &&
                   data?.map((dd) => {
                     expenseTotal += Number(dd?.expenses_amount);
                     return (
