@@ -297,6 +297,27 @@ const CostEntryTable = (props) => {
     },
 
     {
+      name: <span className="font-weight-bold fs-13">Quantity</span>,
+      selector: (row) => row.quantity,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.quantity}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.quantity}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+
+    {
       name: <span className="font-weight-bold fs-13">Actions</span>,
       selector: (row) => row,
       cell: (value) => {

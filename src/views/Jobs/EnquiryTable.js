@@ -425,12 +425,27 @@ const EnquiryTable = (props) => {
         <ModalBody>
           <CreateJob
             closeAddPopup={(data) => {
+              console.log("data exists????", data);
               try {
                 let url = `/api/master/job/${selectedJob?.id}/`;
                 apiAuth
                   .patch(url, { job_number: data?.job_number })
                   .then((response) => {
                     const newdata = response.data;
+                    if (data) {
+                      let url = `/api/master/job/${selectedJob.id}/`;
+                      apiAuth
+                        .delete(url)
+                        .then((response) => {
+                          const newdata = response?.data;
+                        })
+                        .catch(function (error) {
+                          console.log(error);
+                          console.log(error.response?.data);
+                          console.log(error.response?.status);
+                          console.log(error.response?.headers);
+                        });
+                    }
                   })
                   .catch(function (error) {
                     console.log(error);
@@ -446,7 +461,6 @@ const EnquiryTable = (props) => {
             }}
             allJobs={selectedJob}
             history={props.history}
-            isFromEnquiry={true}
           />
         </ModalBody>
       </Modal>
