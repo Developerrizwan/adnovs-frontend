@@ -207,6 +207,8 @@ const TaxInvoiceSecond = (props) => {
       });
   };
 
+  console.log("costs data----", state?.costs);
+
   const getTLVForValue = (tag, value) => {
     var tagBuf = Buffer.from([tag], "utf8");
     var tagValueLenBuf = Buffer.from([String(value).length], "utf8");
@@ -509,6 +511,7 @@ const TaxInvoiceSecond = (props) => {
                   <ShowTableHeadWithTranslate label={"Description"} />
                   <ShowTableHeadWithTranslate label={"Currency Rate"} />
                   <ShowTableHeadWithTranslate label={"Currency Amount"} />
+                  <ShowTableHeadWithTranslate label={"Quantity"} />
                   <ShowTableHeadWithTranslate label={"Currency"} />
                   <ShowTableHeadWithTranslate label={"Amount"} />
                   <ShowTableHeadWithTranslate label={"VAT%"} />
@@ -543,8 +546,12 @@ const TaxInvoiceSecond = (props) => {
                           </div>
                         </td>
                         <td className="border-0 text-center">{cost.ex_rate}</td>
+
                         <td className="border-0 text-center">
                           {cost.fcy_amount}
+                        </td>
+                        <td className="border-0 text-center">
+                          {cost?.quantity}
                         </td>
                         <td className="border-0 text-center">
                           {cost.currency}
