@@ -46,7 +46,7 @@ const JobTable = (props) => {
 
         return (
           <div>
-            <img src={imageSrc} height="35px" width="35px" alt={value?.type} />
+            <img src={imageSrc} height="25px" width="25px" alt={value?.type} />
           </div>
         );
       },
