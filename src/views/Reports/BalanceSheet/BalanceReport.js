@@ -113,10 +113,13 @@ const Content = ({ data }) => {
                       return (
                         <>
                           {dd?.type === "ASSET" ? (
-                            <div
-                              className="my-2 border border-bottom-0"
-                            >
-                              <span style={{ fontSize: "14px", paddingLeft: "100px" }}>
+                            <div className="my-2 border border-bottom-0">
+                              <span
+                                style={{
+                                  fontSize: "14px",
+                                  paddingLeft: "100px",
+                                }}
+                              >
                                 {dd?.income_amount === 0 ? "" : `${dd?.group}`}
                               </span>
                             </div>
@@ -252,10 +255,13 @@ const Content = ({ data }) => {
                       return (
                         <>
                           {dd?.type === "LIABILITY" ? (
-                            <div
-                              className="my-2 border border-bottom-0"
-                            >
-                              <span style={{ fontSize: "14px", paddingLeft: "100px" }}>
+                            <div className="my-2 border border-bottom-0">
+                              <span
+                                style={{
+                                  fontSize: "14px",
+                                  paddingLeft: "100px",
+                                }}
+                              >
                                 {dd?.income_amount === 0 ? "" : `${dd?.group}`}
                               </span>
                             </div>
@@ -391,10 +397,13 @@ const Content = ({ data }) => {
                       return (
                         <>
                           {dd?.type === "EQUITY" ? (
-                            <div
-                              className="my-2 border border-bottom-0"
-                            >
-                              <span style={{ fontSize: "14px", paddingLeft: "100px" }}>
+                            <div className="my-2 border border-bottom-0">
+                              <span
+                                style={{
+                                  fontSize: "14px",
+                                  paddingLeft: "100px",
+                                }}
+                              >
                                 {dd?.income_amount === 0 ? "" : `${dd?.group}`}
                               </span>
                             </div>
@@ -606,7 +615,7 @@ const BalanceReport = (props) => {
         }}
       >
         {/* Download */}
-        <DownloadReport />
+        <DownloadReport reportName="Balance Report" />
 
         {/* Page for downloading pdf */}
         <div
