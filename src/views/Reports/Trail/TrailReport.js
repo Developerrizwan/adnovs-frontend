@@ -143,7 +143,7 @@ const Content = ({ data }) => {
                       <p
                         className="my-0 py-0 mt-2 mb-2"
                         style={{
-                          fontSize: "14px",
+                          fontSize: "16px",
                           fontWeight: 700,
                           marginLeft: "90px",
                           fontFamily: "sans-serif",
@@ -152,7 +152,10 @@ const Content = ({ data }) => {
                       >
                         {item} TOTAL
                       </p>
-                      <div className="border-bottom" style={{border: "1px solid #000"}}></div>
+                      <div
+                        className="border-bottom"
+                        style={{ border: "1px solid #000" }}
+                      ></div>
                     </>
                   </td>
 
@@ -197,7 +200,10 @@ const Content = ({ data }) => {
                       >
                         -------------------
                       </p>
-                      <div className="border-bottom" style={{border: "1px solid #000"}}></div>
+                      <div
+                        className="border-bottom"
+                        style={{ border: "1px solid #000" }}
+                      ></div>
                     </>
                   </td>
 
@@ -260,7 +266,10 @@ const Content = ({ data }) => {
                           ? expenseTotal.toFixed(2)
                           : "0.00"}
                       </p>
-                      <div className="border-bottom" style={{border: "1px solid #000"}}></div>
+                      <div
+                        className="border-bottom"
+                        style={{ border: "1px solid #000" }}
+                      ></div>
                     </>
                   </td>
                 </tr>
