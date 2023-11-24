@@ -29,7 +29,9 @@ const AddCostEntry = (props) => {
         )}
 
         <CostEntry props={props} title={"Sale"} />
-        <CostEntry props={props} title={"Cost"} />
+        <div className="mt-3">
+          <CostEntry props={props} title={"Cost"} />
+        </div>
       </div>
     </React.Fragment>
   );
