@@ -104,18 +104,14 @@ const Trail = (props) => {
                 {({ values, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
+                      {/* <Grid item lg={4} xs={12}>
                         <div className="mb-3" style={{ zIndex: 200 }}>
                           <label htmlFor="job" className="form-label">
                             Job Type
-                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             options={jobOptions}
                             value={selectedJob}
-                            // onInputChange={(val) => {
-                            //   getJobOptions(val);
-                            // }}
                             onChange={(data) => {
                               setFieldValue("job", data.value);
                               setSelectedJob(data);
@@ -128,7 +124,7 @@ const Trail = (props) => {
                             )}
                           />
                         </div>
-                      </Grid>
+                      </Grid> */}
 
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
