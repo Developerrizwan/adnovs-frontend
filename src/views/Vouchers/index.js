@@ -14,10 +14,7 @@ const Vouchers = (props) => {
   const [loading, setLoading] = useState(true);
   const [url, setUrl] = useState("/journal-voucher");
   const [searchValue, setSearchValue] = useState("");
-  const [selectedVoucher, setSelectedVoucher] = useState({
-    value: "Journal",
-    label: "Journal",
-  });
+  const [selectedVoucher, setSelectedVoucher] = useState();
   const [pagination, setPagination] = useState({
     rowsPerPage: 10,
     totalRows: 0,
@@ -33,11 +30,29 @@ const Vouchers = (props) => {
   ];
 
   useEffect(() => {
-    if (!localStorage.getItem("voucher-type")) {
-      localStorage.setItem("voucher-type", selectedVoucher.value);
-    }
-    getSelVoucherData(pagination, searchValue, selectedVoucher.value);
+    const fetchVoucherData = async () => {
+      if (localStorage.getItem("voucher-type")) {
+        const voucher = localStorage.getItem("voucher-type");
+        setSelectedVoucher({
+          label: voucher,
+          value: voucher,
+        });
+      } else {
+        localStorage.setItem("voucher-type", "Journal");
+        setSelectedVoucher({ label: "Journal", value: "Journal" });
+      }
+    };
+
+    fetchVoucherData();
   }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (selectedVoucher) {
+        getSelVoucherData(pagination, searchValue, selectedVoucher?.value);
+      }
+    }, 1000);
+  }, [selectedVoucher]);
 
   const getSelVoucherData = (pgdata, val, type) => {
     apiAuth
