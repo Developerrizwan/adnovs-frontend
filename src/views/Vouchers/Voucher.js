@@ -176,8 +176,22 @@ const Voucher = (props) => {
       .get(`/api/get_coa_invoices/?account=${selectedParty?.value}`)
       .then((response) => {
         let data = response?.data;
-        // console.log("data------------------------", data);
-        const finalData = data?.filter((item) => item?.type === "Sales");
+
+        console.log("localstorageeee", localStorage.getItem("voucher-type"));
+        const finalData = data?.filter((item) => {
+          switch (localStorage.getItem("voucher-type")) {
+            case "Journal":
+              return true;
+            case "Payment":
+            case "DebitNote":
+              return item?.type === "Purchase";
+            case "CreditNote":
+            case "Receipt":
+              return item?.type === "Sales";
+            default:
+              return false;
+          }
+        });
         setInvoiceData(finalData);
         setLoading(false);
         setUpdateStatusModal(true);
