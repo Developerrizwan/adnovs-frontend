@@ -12,7 +12,7 @@ const DownloadReport = ({ reportName }) => {
     const elements = document.getElementsByClassName("reportdownproject");
     await creatPdf({ doc, elements });
 
-    doc.save(reportName ? reportName : `voucher.pdf`);
+    doc.save(reportName ? reportName : `sheet.pdf`);
     setLoading(false);
   }
 
@@ -46,7 +46,7 @@ const DownloadReport = ({ reportName }) => {
           elHeight,
           `image${i}`
         );
-        top += elHeight;
+        top += elHeight + padding;
       } catch (error) {
         console.log(error);
       }
