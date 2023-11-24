@@ -189,7 +189,7 @@ const Voucher = (props) => {
             case "Receipt":
               return item?.type === "Sales";
             default:
-              return false;
+              return true;
           }
         });
         setInvoiceData(finalData);
