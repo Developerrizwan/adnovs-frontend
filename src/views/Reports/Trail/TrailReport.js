@@ -10,59 +10,68 @@ import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 const Content = ({ data }) => {
   // console.log("profit", data);
 
+  var assetTotal = 0;
+  var liabilityTotal = 0;
+  var equityTotal = 0;
   var incomeTotal = 0;
   var expenseTotal = 0;
 
   return (
-    <div id="content" className="mt-5 mx-2">
+    <div id="content" className="mt-3 mx-2">
       {/* VOUCHER Title */}
       <h4
         className="text-center mb-4"
         style={{ fontFamily: "sans-serif", color: "gray" }}
       >
-        Trail Balance
+        Trail Balance Sheet
       </h4>
 
       {/* Display Items */}
-      <div
-        id="display-items"
-        className="d-flex justify-content-around align-items-center"
-      >
-        <div id="left-side-items">
-          <table>
-            <tr>
-              <td className="border-0 fw">Branch Name:</td>
-              <td className="border-0"></td>
-            </tr>
-            <tr>
-              <td className="border-0 fw">Currency:</td>
-              <td className="border-0">
-                {data?.length > 0 ? data[0]?.currency.split(" - ")[0] : ""}
-              </td>
-            </tr>
-          </table>
-        </div>
-        <div id="right-side-items">
-          <table>
-            <tr>
-              <td className="border-0 fw"></td>
-              <td className="border-0"></td>
-            </tr>
-            <tr>
-              <td className="border-0 fw">To:</td>
-              <td className="border-0"></td>
-            </tr>
-          </table>
-        </div>
+      {/* <div
+      id="display-items"
+      className="d-flex justify-content-around align-items-center"
+    >
+      <div id="left-side-items">
+        <table>
+          <tr>
+            <td className="border-0 fw">Branch Name:</td>
+            <td className="border-0"></td>
+          </tr>
+          <tr>
+            <td className="border-0 fw">Currency:</td>
+            <td className="border-0">
+              {data?.length > 0 ? data[0]?.currency?.split(" - ")[0] : ""}
+            </td>
+          </tr>
+        </table>
       </div>
+      <div id="right-side-items">
+        <table>
+          <tr>
+            <td className="border-0 fw"></td>
+            <td className="border-0"></td>
+          </tr>
+          <tr>
+            <td className="border-0 fw">To:</td>
+            <td className="border-0"></td>
+          </tr>
+        </table>
+      </div>
+    </div> */}
 
       {/* Table */}
       <div id="table" className="my-4">
         <table className="htmlTable mt-2 w-100 ">
           <tr>
-            <th className="text-center w-50">Group Name</th>
-            <th className="text-center w-25">Previous Amount</th>
-            <th className="text-center w-25">Current Amount</th>
+            <th style={{ width: "40%" }} className="text-center">
+              Group Name
+            </th>
+            <th style={{ width: "40%" }} className="text-center">
+              Account Name
+            </th>
+            <th style={{ width: "20%" }} className="text-center">
+              Total Amount
+            </th>
           </tr>
           <tr>
             <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
@@ -76,169 +85,194 @@ const Content = ({ data }) => {
                   color: "black",
                 }}
               >
-                PROFIT AND LOSS
+                Balance Sheet
               </p>
             </td>
             <td className="text-center border-top-0 border-bottom-0"></td>
             <td className="text-center border-top-0 border-bottom-0"></td>
           </tr>
-          <tr>
-            <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
-              <>
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
 
-                    fontWeight: 700,
-                    marginLeft: "70px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  INCOME
-                </p>
-                {data?.length > 0 &&
-                  data?.map((dd) => {
-                    return (
-                      <>
-                        <div
-                          className="my-1 "
-                          style={{ marginLeft: "100px" }}
-                        >{`${dd?.name}-${dd?.code}`}</div>
-                      </>
-                    );
-                  })}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
-
-                    fontWeight: 700,
-                    marginLeft: "90px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  INCOME TOTAL
-                </p>
-              </>
-            </td>
-            <td className="text-center border-top-0 border-bottom-0"></td>
-            <td className="text-center border-top-0 border-bottom-0">
-              {/* Income - Current Amount details */}
+          {["ASSET", "LIABILITY", "EQUITY", "INCOME", "EXPENSE"].map((item) => {
+            return (
               <>
-                <p className="my-0 py-0"></p>
-                {data?.length > 0 &&
-                  data?.map((dd) => {
-                    incomeTotal += Number(dd?.income_amount);
-                    return (
-                      <>
-                        <div className="my-1 text-center">
-                          <span>{Number(dd?.income_amount).toFixed(2)}</span>
-                        </div>
-                      </>
-                    );
-                  })}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "20px",
-                    fontWeight: 700,
-                    textAlign: "center",
-                    // marginLeft: "50px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  {incomeTotal.toFixed(2) || "0.00"}
-                </p>
-              </>
-            </td>
-          </tr>
-          <tr>
-            <td className="text-left border-top-0">
-              <>
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontWeight: 700,
-                    fontSize: "14px",
+                <tr>
+                  {/* Group Name Column */}
+                  <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
+                    <>
+                      <p
+                        className="my-0 py-0 pb-2"
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: 700,
+                          marginLeft: "70px",
+                          fontFamily: "sans-serif",
+                          color: "black",
+                        }}
+                      >
+                        {item}
+                      </p>
+                      {data?.length ? (
+                        <>
+                          {data?.map((dd) => {
+                            return (
+                              <>
+                                {dd?.type === item ? (
+                                  <div className="my-2 border border-bottom-0">
+                                    <span
+                                      style={{
+                                        fontSize: "14px",
+                                        paddingLeft: "100px",
+                                      }}
+                                    >
+                                      {dd?.income_amount === 0
+                                        ? ""
+                                        : `${dd?.group}`}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <></>
+                                )}
+                              </>
+                            );
+                          })}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      <p
+                        className="my-0 py-0"
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: 700,
+                          marginLeft: "90px",
+                          fontFamily: "sans-serif",
+                          color: "black",
+                        }}
+                      >
+                        {item} TOTAL
+                      </p>
+                    </>
+                  </td>
 
-                    marginLeft: "70px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  EXPENSES
-                </p>
-                {data?.length > 0 &&
-                  data?.map((dd) => {
-                    return (
-                      <>
-                        <div
-                          className="my-1"
-                          style={{ marginLeft: "100px" }}
-                        >{`${dd?.name}-${dd?.code}`}</div>
-                      </>
-                    );
-                  })}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    marginLeft: "80px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  EXPENSE TOTAL
-                </p>
-              </>
-            </td>
-            <td className="text-center border-top-0"></td>
-            <td className="text-center border-top-0">
-              <>
-                {/* Expense current Amount details */}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    marginLeft: "50px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                ></p>
-                {data?.length > 0 &&
-                  data?.map((dd) => {
-                    expenseTotal += Number(dd?.expenses_amount);
-                    return (
-                      <>
-                        <div className="my-1" style={{ textAlign: "center" }}>
-                          <span>{Number(dd?.expenses_amount).toFixed(2)}</span>
-                        </div>
-                      </>
-                    );
-                  })}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "20px",
+                  {/* Account Name Column */}
+                  <td className="text-center border-top-0 border-bottom-0">
+                    <>
+                      <p className="my-0 py-0">
+                        ---------------------------------------------------
+                      </p>
+                      {data?.length ? (
+                        data?.map((dd, i) => {
+                          return (
+                            <>
+                              {dd?.type === item ? (
+                                <div className="my-2 text-center border border-bottom-0">
+                                  <span style={{ fontSize: "14px" }}>
+                                    {" "}
+                                    {dd?.account_name}
+                                  </span>
+                                </div>
+                              ) : (
+                                <></>
+                              )}
+                            </>
+                          );
+                        })
+                      ) : (
+                        <></>
+                      )}
+                      <p
+                        className="my-0 py-0"
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: 900,
+                          textAlign: "center",
+                          // marginLeft: "50px",
+                          fontFamily: "sans-serif",
+                          color: "black",
+                          display: "hidden",
+                        }}
+                      >
+                        -------------------
+                      </p>
+                    </>
+                  </td>
 
-                    fontWeight: 700,
-                    textAlign: "center",
-                    // marginLeft: "50px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  {expenseTotal.toFixed(2) || "0.00"}
-                </p>
+                  {/* Total Amount Column */}
+                  <td className="text-center border-top-0 border-bottom-0">
+                    <>
+                      <p className="my-0 py-0">----------------</p>
+                      {data?.length ? (
+                        data?.map((dd) => {
+                          if (dd?.type === "ASSET") {
+                            assetTotal += Number(dd?.total_amount);
+                          } else if (dd?.type === "LIABILITY") {
+                            liabilityTotal += Number(dd?.total_amount);
+                          } else if (dd?.type === "EQUITY") {
+                            equityTotal += Number(dd?.total_amount);
+                          } else if (dd?.type === "INCOME") {
+                            incomeTotal += Number(dd?.total_amount);
+                          } else if (dd?.type === "EXPENSE") {
+                            expenseTotal += Number(dd?.total_amount);
+                          }
+                          return (
+                            <>
+                              {dd?.type === item ? (
+                                <div className="my-2 text-center border border-bottom-0">
+                                  <span>
+                                    {" "}
+                                    {Number(
+                                      dd?.type === "ASSET"
+                                        ? assetTotal
+                                        : dd?.type === "LIABILITY"
+                                        ? liabilityTotal
+                                        : dd?.type === "EQUITY"
+                                        ? equityTotal
+                                        : dd?.type === "EXPENSE"
+                                        ? expenseTotal
+                                        : dd?.type === "INCOME"
+                                        ? incomeTotal
+                                        : 0
+                                    ).toFixed(2)}
+                                  </span>
+                                </div>
+                              ) : (
+                                <></>
+                              )}
+                            </>
+                          );
+                        })
+                      ) : (
+                        <></>
+                      )}
+                      <p
+                        className="my-0 py-0"
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: 900,
+                          textAlign: "center",
+                          // marginLeft: "50px",
+                          fontFamily: "sans-serif",
+                          color: "black",
+                        }}
+                      >
+                        {item === "ASSET"
+                          ? assetTotal.toFixed(2)
+                          : item === "LIABILITY"
+                          ? liabilityTotal.toFixed(2)
+                          : item === "EQUITY"
+                          ? equityTotal.toFixed(2)
+                          : item === "INCOME"
+                          ? incomeTotal.toFixed(2)
+                          : item === "EXPENSE"
+                          ? expenseTotal.toFixed(2)
+                          : "0.00"}
+                      </p>
+                    </>
+                  </td>
+                </tr>
               </>
-            </td>
-          </tr>
+            );
+          })}
         </table>
       </div>
     </div>
@@ -251,7 +285,7 @@ const ReportHeader = ({ data }) => {
     <>
       <div className="row" style={{ placeItems: "center" }}>
         {/* Logo */}
-        <div className="col-lg-3 mb-1">
+        <div className="col-lg-3 mt-4 mb-1">
           <img
             src={shipLogo}
             alt=""
@@ -261,7 +295,7 @@ const ReportHeader = ({ data }) => {
         </div>
 
         {/* Company Details */}
-        <div className="col-lg-9 d-flex flex-column align-items-end p-4">
+        {/* <div className="col-lg-9 d-flex flex-column align-items-end p-4">
           <h3 style={{ fontFamily: "sans-serif", margin: 0, padding: 0 }}>
             {data?.name}
           </h3>
@@ -280,11 +314,10 @@ const ReportHeader = ({ data }) => {
               {data?.state} , {data?.country}
             </span>
             <br />
-            {/* <span>CR : 4030471839</span>
-            <br /> */}
+
             <span>VAT : {data?.vat_number}</span>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
@@ -306,11 +339,7 @@ const TrailReport = (props) => {
 
   const getVoucherData = (id, st, et) => {
     apiAuth
-      .get(
-        `/api/profit/loss/?job=${
-          id ? id : ""
-        }&type=trail&start_time=${st}&end_time=${et}`
-      )
+      .get(`/api/trial_balance/?start_date=${st}&end_date=${et}`)
       .then((response) => {
         let data = response.data;
         setState({ ...state, data });
@@ -344,7 +373,7 @@ const TrailReport = (props) => {
         }}
       >
         {/* Download */}
-        <DownloadReport />
+        <DownloadReport reportName={"Trail Balance Sheet"} />
 
         {/* Page for downloading pdf */}
         <div
