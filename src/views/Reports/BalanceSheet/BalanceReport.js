@@ -8,13 +8,14 @@ import NotificationManager from "../../../components/Common/NotificationManager"
 import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 
 const Content = ({ data }) => {
-  // console.log("profit", data);
+  console.log("balance", data);
 
-  var incomeTotal = 0;
-  var expenseTotal = 0;
+  var assetTotal = 0;
+  let liabilityTotal = 0;
+  let equityTotal = 0;
 
   return (
-    <div id="content" className="mt-5 mx-2">
+    <div id="content" className="mt-3 mx-2">
       {/* VOUCHER Title */}
       <h4
         className="text-center mb-4"
@@ -24,7 +25,7 @@ const Content = ({ data }) => {
       </h4>
 
       {/* Display Items */}
-      <div
+      {/* <div
         id="display-items"
         className="d-flex justify-content-around align-items-center"
       >
@@ -37,7 +38,7 @@ const Content = ({ data }) => {
             <tr>
               <td className="border-0 fw">Currency:</td>
               <td className="border-0">
-                {data?.length > 0 ? data[0]?.currency.split(" - ")[0] : ""}
+                {data?.length > 0 ? data[0]?.currency?.split(" - ")[0] : ""}
               </td>
             </tr>
           </table>
@@ -54,15 +55,21 @@ const Content = ({ data }) => {
             </tr>
           </table>
         </div>
-      </div>
+      </div> */}
 
       {/* Table */}
       <div id="table" className="my-4">
         <table className="htmlTable mt-2 w-100 ">
           <tr>
-            <th className="text-center w-50">Group Name</th>
-            <th className="text-center w-25">Account Name</th>
-            <th className="text-center w-25">Total Amount</th>
+            <th style={{ width: "40%" }} className="text-center">
+              Group Name
+            </th>
+            <th style={{ width: "40%" }} className="text-center">
+              Account Name
+            </th>
+            <th style={{ width: "20%" }} className="text-center">
+              Total Amount
+            </th>
           </tr>
           <tr>
             <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
@@ -82,14 +89,16 @@ const Content = ({ data }) => {
             <td className="text-center border-top-0 border-bottom-0"></td>
             <td className="text-center border-top-0 border-bottom-0"></td>
           </tr>
+
+          {/* ASSET Section */}
           <tr>
-            <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
+            {/* Group Name Column */}
+            <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
               <>
                 <p
-                  className="mb-2 py-0"
+                  className="my-0 py-0 pb-2"
                   style={{
                     fontSize: "14px",
-
                     fontWeight: 700,
                     marginLeft: "70px",
                     fontFamily: "sans-serif",
@@ -98,33 +107,23 @@ const Content = ({ data }) => {
                 >
                   ASSET
                 </p>
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
-
-                    fontWeight: 700,
-                    marginLeft: "70px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  FIXED ASSET
-                </p>
                 {data?.length ? (
                   <>
                     {data?.map((dd) => {
                       return (
                         <>
-                          <div
-                            className="my-1 "
-                            style={{ marginLeft: "100px" }}
-                          >
-                            {" "}
-                            {dd?.income_amount === 0
-                              ? ""
-                              : `${dd?.name}-${dd?.code}`}
-                          </div>
+                          {dd?.type === "ASSET" ? (
+                            <div
+                              className="my-2 border border-left-0 border-bottom-0"
+                              style={{ marginLeft: "100px" }}
+                            >
+                              <span style={{ fontSize: "14px" }}>
+                                {dd?.income_amount === 0 ? "" : `${dd?.group}`}
+                              </span>
+                            </div>
+                          ) : (
+                            <></>
+                          )}
                         </>
                       );
                     })}
@@ -136,299 +135,135 @@ const Content = ({ data }) => {
                   className="my-0 py-0"
                   style={{
                     fontSize: "14px",
-
                     fontWeight: 700,
                     marginLeft: "90px",
                     fontFamily: "sans-serif",
                     color: "black",
                   }}
                 >
-                  FIXED ASSET TOTAL
+                  ASSET TOTAL
                 </p>
               </>
             </td>
-            <td className="text-center border-top-0 border-bottom-0"></td>
+
+            {/* Account Name Column */}
             <td className="text-center border-top-0 border-bottom-0">
-              {/* Income - Current Amount details */}
               <>
-                <p className="my-0 py-0">----------------</p>
+                <p className="my-0 py-0">
+                  ---------------------------------------------------
+                </p>
                 {data?.length ? (
-                  data?.map((dd) => {
-                    incomeTotal += Number(dd?.income_amount);
+                  data?.map((dd, i) => {
                     return (
                       <>
-                        <div className="my-1 text-center">
-                          <span>
-                            {" "}
-                            {dd?.income_amount === 0
-                              ? ""
-                              : Number(dd?.income_amount).toFixed(2)}
-                          </span>
-                        </div>
-                      </>
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 900,
-                    textAlign: "center",
-                    // marginLeft: "50px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  {incomeTotal.toFixed(2) || "0.00"}
-                </p>
-              </>
-            </td>
-          </tr>
-          <tr>
-            <td className="text-left border-top-0">
-              <>
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontWeight: 700,
-                    fontSize: "14px",
-
-                    marginLeft: "70px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  CURRENT ASSET
-                </p>
-                {data?.length ? (
-                  <>
-                    {data?.map((dd) => {
-                      return (
-                        <>
-                          <div className="my-1" style={{ marginLeft: "100px" }}>
-                            {" "}
-                            {dd?.expenses_amount === 0
-                              ? ""
-                              : `${dd?.name}-${dd?.code}`}
-                          </div>
-                        </>
-                      );
-                    })}
-                  </>
-                ) : (
-                  <></>
-                )}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    marginLeft: "80px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  CURRENT ASSET TOTAL
-                </p>
-              </>
-            </td>
-            <td className="text-center border-top-0"></td>
-            <td className="text-center border-top-0">
-              <>
-                {/* Expense current Amount details */}
-                <p className="my-0 py-0">----------------</p>
-                {data?.length ? (
-                  data?.map((dd) => {
-                    expenseTotal += Number(dd?.expenses_amount);
-                    return (
-                      <>
-                        <div className="my-1" style={{ textAlign: "center" }}>
-                          <span>
-                            {dd?.expenses_amount === 0
-                              ? ""
-                              : Number(dd?.expenses_amount).toFixed(2)}{" "}
-                          </span>
-                        </div>
-                      </>
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "16px",
-
-                    fontWeight: 900,
-                    textAlign: "center",
-                    // marginLeft: "50px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  {expenseTotal.toFixed(2) || "0.00"}
-                </p>
-              </>
-            </td>
-          </tr>
-          <tr>
-            <td className="text-left border-top-0">
-              <>
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontWeight: 700,
-                    fontSize: "14px",
-
-                    marginLeft: "70px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  CURRENT LIABILITIES
-                </p>
-                {data?.length ? (
-                  <>
-                    {data?.map((dd) => {
-                      return (
-                        <>
-                          <div className="my-1" style={{ marginLeft: "100px" }}>
-                            {" "}
-                            {dd?.expenses_amount === 0
-                              ? ""
-                              : `${dd?.name}-${dd?.code}`}
-                          </div>
-                        </>
-                      );
-                    })}
-                  </>
-                ) : (
-                  <></>
-                )}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    marginLeft: "80px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  CURRENT LIABILITIES TOTAL
-                </p>
-              </>
-            </td>
-            <td className="text-center border-top-0"></td>
-            <td className="text-center border-top-0">
-              <>
-                {/* Expense current Amount details */}
-                <p className="my-0 py-0">----------------</p>
-                {data?.length ? (
-                  data?.map((dd) => {
-                    expenseTotal += Number(dd?.expenses_amount);
-                    return (
-                      <>
-                        <div className="my-1" style={{ textAlign: "center" }}>
-                          <span>
-                            {dd?.expenses_amount === 0
-                              ? ""
-                              : Number(dd?.expenses_amount).toFixed(2)}{" "}
-                          </span>
-                        </div>
-                      </>
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "16px",
-
-                    fontWeight: 900,
-                    textAlign: "center",
-                    // marginLeft: "50px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  {expenseTotal.toFixed(2) || "0.00"}
-                </p>
-              </>
-            </td>
-          </tr>
-          <tr>
-            <td className="text-left border-top-0">
-              <>
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontWeight: 700,
-                    fontSize: "14px",
-
-                    marginLeft: "70px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  ACCOUNTS PAYABLE
-                </p>
-                {data?.length ? (
-                  <>
-                    {data?.map((dd) => {
-                      return (
-                        <>
-                          <div className="my-1" style={{ marginLeft: "100px" }}>
-                            {" "}
-                            {dd?.expenses_amount === 0
-                              ? ""
-                              : `${dd?.name}-${dd?.code}`}
-                          </div>
-                        </>
-                      );
-                    })}
-                  </>
-                ) : (
-                  <></>
-                )}
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    marginLeft: "80px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  ACCOUNTS PAYABLE TOTAL
-                </p>
-              </>
-            </td>
-            <td className="text-center border-top-0"></td>
-            <td className="text-center border-top-0">
-              <>
-                {/* Expense current Amount details */}
-                <p className="my-0 py-0">----------------</p>
-                {data?.length ? (
-                  <>
-                    {data?.map((dd) => {
-                      expenseTotal += Number(dd?.expenses_amount);
-                      return (
-                        <>
-                          <div className="my-1" style={{ textAlign: "center" }}>
-                            <span>
-                              {dd?.expenses_amount === 0
-                                ? ""
-                                : Number(dd?.expenses_amount).toFixed(2)}{" "}
+                        {dd?.type === "ASSET" ? (
+                          <div className="my-2 text-center border border-bottom-0">
+                            <span style={{ fontSize: "14px" }}>
+                              {" "}
+                              {dd?.account_name}
                             </span>
                           </div>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: 900,
+                    textAlign: "center",
+                    // marginLeft: "50px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                    display: "hidden",
+                  }}
+                >
+                  -------------------
+                </p>
+              </>
+            </td>
+
+            {/* Total Amount Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <p className="my-0 py-0">----------------</p>
+                {data?.length ? (
+                  data?.map((dd) => {
+                    if (dd?.type === "ASSET") {
+                      assetTotal += Number(dd?.total_amount);
+                    }
+                    return (
+                      <>
+                        {dd?.type === "ASSET" ? (
+                          <div className="my-2 text-center border border-bottom-0">
+                            <span> {Number(dd?.total_amount).toFixed(2)}</span>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: 900,
+                    textAlign: "center",
+                    // marginLeft: "50px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  {assetTotal.toFixed(2) || "0.00"}
+                </p>
+              </>
+            </td>
+          </tr>
+
+          {/* LIABILITY Section */}
+          <tr>
+            {/* Group Name Column */}
+            <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
+              <>
+                <p
+                  className="my-0 py-0 pb-2"
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    marginLeft: "70px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  LIABILITY
+                </p>
+                {data?.length ? (
+                  <>
+                    {data?.map((dd) => {
+                      return (
+                        <>
+                          {dd?.type === "LIABILITY" ? (
+                            <div
+                              className="my-2 border border-left-0 border-bottom-0"
+                              style={{ marginLeft: "100px" }}
+                            >
+                              <span style={{ fontSize: "14px" }}>
+                                {dd?.income_amount === 0 ? "" : `${dd?.group}`}
+                              </span>
+                            </div>
+                          ) : (
+                            <></>
+                          )}
                         </>
                       );
                     })}
@@ -439,8 +274,89 @@ const Content = ({ data }) => {
                 <p
                   className="my-0 py-0"
                   style={{
-                    fontSize: "16px",
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    marginLeft: "90px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  LIABILITY TOTAL
+                </p>
+              </>
+            </td>
 
+            {/* Account Name Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <p className="my-0 py-0">
+                  ---------------------------------------------------
+                </p>
+                {data?.length ? (
+                  data?.map((dd, i) => {
+                    return (
+                      <>
+                        {dd?.type === "LIABILITY" ? (
+                          <div className="my-2 text-center border border-bottom-0">
+                            <span style={{ fontSize: "14px" }}>
+                              {" "}
+                              {dd?.account_name}
+                            </span>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: 900,
+                    textAlign: "center",
+                    // marginLeft: "50px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                    display: "hidden",
+                  }}
+                >
+                  -------------------
+                </p>
+              </>
+            </td>
+
+            {/* Total Amount Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <p className="my-0 py-0">----------------</p>
+                {data?.length ? (
+                  data?.map((dd) => {
+                    if (dd?.type === "LIABILITY") {
+                      liabilityTotal += Number(dd?.total_amount);
+                    }
+                    return (
+                      <>
+                        {dd?.type === "LIABILITY" ? (
+                          <div className="my-2 text-center border border-bottom-0">
+                            <span> {Number(dd?.total_amount).toFixed(2)}</span>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "16px",
                     fontWeight: 900,
                     textAlign: "center",
                     // marginLeft: "50px",
@@ -448,7 +364,147 @@ const Content = ({ data }) => {
                     color: "black",
                   }}
                 >
-                  {expenseTotal.toFixed(2) || "0.00"}
+                  {liabilityTotal.toFixed(2) || "0.00"}
+                </p>
+              </>
+            </td>
+          </tr>
+
+          {/* EQUITY Section */}
+          <tr>
+            {/* Group Name Column */}
+            <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
+              <>
+                <p
+                  className="my-0 py-0 pb-2"
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    marginLeft: "70px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  EQUITY
+                </p>
+                {data?.length ? (
+                  <>
+                    {data?.map((dd) => {
+                      return (
+                        <>
+                          {dd?.type === "EQUITY" ? (
+                            <div
+                              className="my-2 border border-left-0 border-bottom-0"
+                              style={{ marginLeft: "100px" }}
+                            >
+                              <span style={{ fontSize: "14px" }}>
+                                {dd?.income_amount === 0 ? "" : `${dd?.group}`}
+                              </span>
+                            </div>
+                          ) : (
+                            <></>
+                          )}
+                        </>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <></>
+                )}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    marginLeft: "90px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  EQUITY TOTAL
+                </p>
+              </>
+            </td>
+
+            {/* Account Name Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <p className="my-0 py-0">
+                  ---------------------------------------------------
+                </p>
+                {data?.length ? (
+                  data?.map((dd, i) => {
+                    return (
+                      <>
+                        {dd?.type === "EQUITY" ? (
+                          <div className="my-2 text-center border border-bottom-0">
+                            <span style={{ fontSize: "14px" }}>
+                              {" "}
+                              {dd?.account_name}
+                            </span>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: 900,
+                    textAlign: "center",
+                    // marginLeft: "50px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                    display: "hidden",
+                  }}
+                >
+                  -------------------
+                </p>
+              </>
+            </td>
+
+            {/* Total Amount Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <p className="my-0 py-0">----------------</p>
+                {data?.length ? (
+                  data?.map((dd) => {
+                    if (dd?.type === "EQUITY") {
+                      equityTotal += Number(dd?.total_amount);
+                    }
+                    return (
+                      <>
+                        {dd?.type === "EQUITY" ? (
+                          <div className="my-2 text-center border border-bottom-0">
+                            <span> {Number(dd?.total_amount).toFixed(2)}</span>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: 900,
+                    textAlign: "center",
+                    // marginLeft: "50px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  {equityTotal.toFixed(2) || "0.00"}
                 </p>
               </>
             </td>
@@ -465,7 +521,7 @@ const ReportHeader = ({ data }) => {
     <>
       <div className="row" style={{ placeItems: "center" }}>
         {/* Logo */}
-        <div className="col-lg-3 mb-1">
+        <div className="col-lg-3 mt-4 mb-1">
           <img
             src={shipLogo}
             alt=""
@@ -475,7 +531,7 @@ const ReportHeader = ({ data }) => {
         </div>
 
         {/* Company Details */}
-        <div className="col-lg-9 d-flex flex-column align-items-end p-4">
+        {/* <div className="col-lg-9 d-flex flex-column align-items-end p-4">
           <h3 style={{ fontFamily: "sans-serif", margin: 0, padding: 0 }}>
             {data?.name}
           </h3>
@@ -494,11 +550,10 @@ const ReportHeader = ({ data }) => {
               {data?.state} , {data?.country}
             </span>
             <br />
-            {/* <span>CR : 4030471839</span>
-            <br /> */}
+
             <span>VAT : {data?.vat_number}</span>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );
