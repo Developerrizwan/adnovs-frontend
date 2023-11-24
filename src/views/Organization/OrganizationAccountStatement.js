@@ -206,7 +206,7 @@ const OrganizationAccountStatement = (props) => {
 
         <Grid container spacing={2}>
           <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
-            <div className="p-3" style={{ background: "#EDEDED" }}>
+            <div className="p-3" style={{ background: "white" }}>
               <Formik
                 initialValues={{
                   start_time: new Date() || "",

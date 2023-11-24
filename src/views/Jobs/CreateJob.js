@@ -261,7 +261,7 @@ const CreateJob = (props) => {
   return (
     <React.Fragment>
       {props.allJobs ? (
-        <Card className="p-3" style={{ background: "#EDEDED" }}>
+        <Card className="p-3" style={{ background: "white" }}>
           <Formik
             initialValues={{
               company: JSON.parse(localStorage.getItem("authUser"))?.company_id,
@@ -370,7 +370,7 @@ const CreateJob = (props) => {
                     null,
                     ""
                   );
-                  
+
                   props.closeAddPopup(response.data);
                 })
                 .catch((error) => {

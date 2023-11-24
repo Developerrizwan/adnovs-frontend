@@ -243,7 +243,7 @@ const AddOrganization = (props) => {
 
         <Grid container spacing={2}>
           <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
-            <Card className="p-3" style={{ background: "#EDEDED" }}>
+            <Card className="p-3" style={{ background: "white" }}>
               <Formik
                 initialValues={{
                   name: props.isEdit ? props.organizationData?.name : "",

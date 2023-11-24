@@ -215,7 +215,7 @@ const AddCOA = (props) => {
 
         <Grid container spacing={2}>
           <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
-            <Card className="p-3" style={{ background: "#EDEDED" }}>
+            <Card className="p-3" style={{ background: "white" }}>
               {/* {console.log(
                 "wwwwwwww",
                 JSON.parse(localStorage.getItem("authUser"))

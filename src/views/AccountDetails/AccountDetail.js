@@ -224,7 +224,7 @@ const AccountDetail = (props) => {
         )}
         <Grid container spacing={2}>
           <Grid item lg={11} style={{ margin: "auto" }}>
-            <Card className="p-3" style={{ background: "#EDEDED" }}>
+            <Card className="p-3" style={{ background: "white" }}>
               <Formik
                 initialValues={{
                   vouchers:

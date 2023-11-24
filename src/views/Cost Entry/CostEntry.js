@@ -214,7 +214,7 @@ const CostEntry = (props) => {
       <Grid container spacing={2}>
         {console.log("propsss", props)}
         <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
-          <Card className="p-3" style={{ background: "#EDEDED" }}>
+          <Card className="p-3" style={{ background: "white" }}>
             <h3
               className={`py-2 text-white px-3 ${
                 props?.title === "Sale" || props?.entry?.sale_cost === "Sale"
@@ -238,7 +238,7 @@ const CostEntry = (props) => {
                 ex_rate: props.entry?.ex_rate || "",
                 fcy_amount: props.entry?.fcy_amount || "",
                 amount: props.entry?.amount || "",
-                sale_cost: props.entry?.sale_cost || "",
+                sale_cost: props?.title || props?.entry?.sale_cost || "",
                 dr_cr: props.entry?.dr_cr || "",
                 quantity: props.entry?.quantity || "",
                 // prorate_method: props.entry?.prorate_method || "",
@@ -252,9 +252,10 @@ const CostEntry = (props) => {
                 currency: Yup.string().ensure().required("Required!"),
                 tax_group_code: Yup.string().ensure().required("Required!"),
                 dr_cr: Yup.string().ensure().required("Required!"),
-                sale_cost: Yup.string().ensure().required("Required!"),
+                // sale_cost: Yup.string().ensure().required("Required!"),
               })}
-              onSubmit={(values) => {
+              onSubmit={(values, { resetForm }) => {
+                console.log("valuesss", values);
                 if (props.isEdit && props.entry) {
                   apiAuth
                     .patch(`/api/master/cost_entry/${props.entry?.id}/`, values)
@@ -280,70 +281,36 @@ const CostEntry = (props) => {
                       );
                     });
                 } else {
-                  if (values?.sale_cost === "both") {
-                    // 1st time api call
+                  apiAuth
+                    .post("/api/master/cost_entry/", values)
+                    .then((res) => {
+                      NotificationManager.success(
+                        "",
+                        "Cost Entry Created Successfully",
+                        3000,
+                        null,
+                        null,
+                        ""
+                      );
+                      resetForm();
+                      setSelCharge(null);
+                      setSelCurrency(null);
+                      setSelJob(null);
+                      setTax(null);
+                      setIsDRorCR(null);
 
-                    const valuesWithCost = { ...values, sale_cost: "Cost" };
-                    const valuesWithSale = { ...values, sale_cost: "Sale" };
-                    apiAuth
-                      .post("/api/master/cost_entry/", valuesWithCost)
-                      .then((res) => {
-                        console.log("res", res);
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                      });
-
-                    // 2nd time api call
-
-                    apiAuth
-                      .post("/api/master/cost_entry/", valuesWithSale)
-                      .then((res) => {
-                        NotificationManager.success(
-                          "",
-                          "Cost Entry Created Successfully",
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                        history.push("/cost-entry");
-                      })
-                      .catch((err) => {
-                        NotificationManager.error(
-                          "",
-                          "Cost Entry Create Error",
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                      });
-                  } else {
-                    apiAuth
-                      .post("/api/master/cost_entry/", values)
-                      .then((res) => {
-                        NotificationManager.success(
-                          "",
-                          "Cost Entry Created Successfully",
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                        history.push("/cost-entry");
-                      })
-                      .catch((err) => {
-                        NotificationManager.error(
-                          "",
-                          "Cost Entry Create Error",
-                          3000,
-                          null,
-                          null,
-                          ""
-                        );
-                      });
-                  }
+                      // history.push("/cost-entry");
+                    })
+                    .catch((err) => {
+                      NotificationManager.error(
+                        "",
+                        "Cost Entry Create Error",
+                        3000,
+                        null,
+                        null,
+                        ""
+                      );
+                    });
                 }
               }}
             >

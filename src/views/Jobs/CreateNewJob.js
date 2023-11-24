@@ -214,7 +214,7 @@ const CreateNewJob = (props) => {
         </div>
         <Grid container spacing={2}>
           <Grid item lg={8}>
-            <Card className="p-3" style={{ background: "#EDEDED" }}>
+            <Card className="p-3" style={{ background: "white" }}>
               <Formik
                 initialValues={{
                   bl_number: "",

@@ -362,7 +362,7 @@ const Sales = (props) => {
         <Grid container spacing={2}>
           {/* {console.log("eeeeeeeee", props?.data)} */}
           <Grid item lg={11} style={{ margin: "auto" }}>
-            <Card className="p-3" style={{ background: "#EDEDED" }}>
+            <Card className="p-3" style={{ background: "white" }}>
               <Formik
                 initialValues={{
                   bl_number: props.isEdit ? props.data?.bl_number : "",

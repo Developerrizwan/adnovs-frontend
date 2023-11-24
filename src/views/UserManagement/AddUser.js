@@ -58,7 +58,7 @@ const AddUser = (props) => {
         )}
         <Row mb="4">
           <Colxx lg="12">
-            <Card className="p-3" style={{ background: "#EDEDED" }}>
+            <Card className="p-3" style={{ background: "white" }}>
               <h2>User Information</h2>
               <p>Fill User details here.</p>
               <div className="card-body">

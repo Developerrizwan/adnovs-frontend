@@ -411,6 +411,7 @@ const CostEntryTable = (props) => {
             entry={selectedAccount}
             history={props.history}
             isEdit={true}
+            title={selectedAccount?.sale_cost}
           />
         </ModalBody>
       </Modal>

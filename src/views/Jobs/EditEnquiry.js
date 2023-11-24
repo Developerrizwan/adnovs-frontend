@@ -315,7 +315,7 @@ const EditEnquiry = (props) => {
   return (
     <React.Fragment>
       {props.allJobs ? (
-        <Card className="p-3" style={{ background: "#EDEDED" }}>
+        <Card className="p-3" style={{ background: "white" }}>
           <Formik
             initialValues={{
               pod: props?.allJobs?.pod ? props?.allJobs?.pod : "",

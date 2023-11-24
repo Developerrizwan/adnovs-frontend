@@ -151,7 +151,7 @@ const EditUser = (props) => {
     <>
       <React.Fragment>
         {props.userData ? (
-          <Card className="p-3" style={{ background: "#EDEDED" }}>
+          <Card className="p-3" style={{ background: "white" }}>
             <Formik
               initialValues={{
                 first_name: props.userData?.first_name

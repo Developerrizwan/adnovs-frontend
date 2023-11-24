@@ -61,7 +61,7 @@ const CompanyEdit = (props) => {
   return (
     <React.Fragment>
       {props.companyData ? (
-        <Card className="p-3" style={{ background: "#EDEDED" }}>
+        <Card className="p-3" style={{ background: "white" }}>
           <Formik
             initialValues={{
               name: props?.companyData?.name ? props?.companyData?.name : "",

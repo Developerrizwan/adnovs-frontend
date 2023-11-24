@@ -299,7 +299,7 @@ const EditJob = (props) => {
       {/* {console.log("rrrr", props.allJobs)} */}
       <span>Job Number: {props.allJobs.job_number}</span>
       {props.allJobs ? (
-        <Card className="p-3" style={{ background: "#EDEDED" }}>
+        <Card className="p-3" style={{ background: "white" }}>
           <Formik
             initialValues={{
               bl_number: props?.allJobs?.bl_number
