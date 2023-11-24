@@ -114,10 +114,9 @@ const Content = ({ data }) => {
                         <>
                           {dd?.type === "ASSET" ? (
                             <div
-                              className="my-2 border border-left-0 border-bottom-0"
-                              style={{ marginLeft: "100px" }}
+                              className="my-2 border border-bottom-0"
                             >
-                              <span style={{ fontSize: "14px" }}>
+                              <span style={{ fontSize: "14px", paddingLeft: "100px" }}>
                                 {dd?.income_amount === 0 ? "" : `${dd?.group}`}
                               </span>
                             </div>
@@ -254,10 +253,9 @@ const Content = ({ data }) => {
                         <>
                           {dd?.type === "LIABILITY" ? (
                             <div
-                              className="my-2 border border-left-0 border-bottom-0"
-                              style={{ marginLeft: "100px" }}
+                              className="my-2 border border-bottom-0"
                             >
-                              <span style={{ fontSize: "14px" }}>
+                              <span style={{ fontSize: "14px", paddingLeft: "100px" }}>
                                 {dd?.income_amount === 0 ? "" : `${dd?.group}`}
                               </span>
                             </div>
@@ -394,10 +392,9 @@ const Content = ({ data }) => {
                         <>
                           {dd?.type === "EQUITY" ? (
                             <div
-                              className="my-2 border border-left-0 border-bottom-0"
-                              style={{ marginLeft: "100px" }}
+                              className="my-2 border border-bottom-0"
                             >
-                              <span style={{ fontSize: "14px" }}>
+                              <span style={{ fontSize: "14px", paddingLeft: "100px" }}>
                                 {dd?.income_amount === 0 ? "" : `${dd?.group}`}
                               </span>
                             </div>
