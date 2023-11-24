@@ -12,6 +12,7 @@ import {
 import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 import AddCostEntry from "./AddCostEntry";
+import CostEntry from "./CostEntry";
 
 const CostEntryTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -401,7 +402,7 @@ const CostEntryTable = (props) => {
           Edit Cost Entry
         </ModalHeader>
         <ModalBody>
-          <AddCostEntry
+          <CostEntry
             closeAddPopup={() => {
               setEditModal(false);
               setSelectedAccount(null);
