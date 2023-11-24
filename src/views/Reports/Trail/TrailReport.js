@@ -216,22 +216,21 @@ const Content = ({ data }) => {
                           }
                           return (
                             <>
-                              {console.log("rrrrrrr", assetTotal)}
                               {dd?.type === item ? (
                                 <div className="my-2 text-center border border-bottom-0">
                                   <span>
                                     {" "}
                                     {Number(
                                       dd?.type === "ASSET"
-                                        ? assetTotal
+                                        ? dd?.total_amount
                                         : dd?.type === "LIABILITY"
-                                        ? liabilityTotal
+                                        ? dd?.total_amount
                                         : dd?.type === "EQUITY"
-                                        ? equityTotal
+                                        ? dd?.total_amount
                                         : dd?.type === "EXPENSE"
-                                        ? expenseTotal
+                                        ? dd?.total_amount
                                         : dd?.type === "INCOME"
-                                        ? incomeTotal
+                                        ? dd?.total_amount
                                         : 0
                                     ).toFixed(2)}
                                   </span>
