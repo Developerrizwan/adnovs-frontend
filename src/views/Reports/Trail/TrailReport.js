@@ -216,6 +216,7 @@ const Content = ({ data }) => {
                           }
                           return (
                             <>
+                              {console.log("rrrrrrr", assetTotal)}
                               {dd?.type === item ? (
                                 <div className="my-2 text-center border border-bottom-0">
                                   <span>
