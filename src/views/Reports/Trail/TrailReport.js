@@ -220,19 +220,7 @@ const Content = ({ data }) => {
                                 <div className="my-2 text-center border border-bottom-0">
                                   <span>
                                     {" "}
-                                    {Number(
-                                      dd?.type === "ASSET"
-                                        ? dd?.total_amount
-                                        : dd?.type === "LIABILITY"
-                                        ? dd?.total_amount
-                                        : dd?.type === "EQUITY"
-                                        ? dd?.total_amount
-                                        : dd?.type === "EXPENSE"
-                                        ? dd?.total_amount
-                                        : dd?.type === "INCOME"
-                                        ? dd?.total_amount
-                                        : 0
-                                    ).toFixed(2)}
+                                    {Number(dd?.total_amount || 0).toFixed(2)}
                                   </span>
                                 </div>
                               ) : (
