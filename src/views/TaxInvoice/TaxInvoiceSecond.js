@@ -133,7 +133,7 @@ const TaxInvoiceSecond = (props) => {
         let qrcodeString = "";
 
         let data = response.data.map((ct) => {
-          let new_amount = Number(ct?.fcy_amount) * Number(ct?.quantity);
+          let new_amount = Number(ct?.amount) * Number(ct?.quantity);
           ct.vat_amount = Number(
             (new_amount * Number(ct.tax_group_code)) / 100
           ).toFixed(2);
@@ -219,14 +219,14 @@ const TaxInvoiceSecond = (props) => {
     return Buffer.concat(bufsArray);
   };
 
-  const calculateAmount = (fcy_amount, quantity) => {
-    let amount;
-    amount = Number(fcy_amount) * Number(quantity);
-    amount = amount?.toLocaleString("en-US", {
+  const calculateAmount = (amount, quantity) => {
+    let newamount;
+    newamount = Number(amount) * Number(quantity);
+    newamount = amount?.toLocaleString("en-US", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
-    return amount;
+    return newamount;
   };
 
   return (
@@ -575,7 +575,7 @@ const TaxInvoiceSecond = (props) => {
                           className="border-0 text-center"
                           style={{ textAlign: "center" }}
                         >
-                          {calculateAmount(cost?.fcy_amount, cost?.quantity)}
+                          {calculateAmount(cost?.amount, cost?.quantity)}
                           {/* {Number(cost?.amount)?.toLocaleString("en-US", {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,

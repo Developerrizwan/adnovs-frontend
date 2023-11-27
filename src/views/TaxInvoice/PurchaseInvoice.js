@@ -157,7 +157,7 @@ const PurchaseInvoice = (props) => {
         let qrcodeString = "";
         let final_amount = 0;
         let data = response.data.map((ct) => {
-          let new_amount = Number(ct?.fcy_amount) * Number(ct?.quantity);
+          let new_amount = Number(ct?.amount) * Number(ct?.quantity);
           ct.vat_amount = Number(
             (new_amount * Number(ct.tax_group_code)) / 100
           ).toFixed(2);
@@ -242,14 +242,14 @@ const PurchaseInvoice = (props) => {
     return Buffer.concat(bufsArray);
   };
 
-  const calculateAmount = (fcy_amount, quantity) => {
-    let amount;
-    amount = Number(fcy_amount) * Number(quantity);
-    amount = amount?.toLocaleString("en-US", {
+  const calculateAmount = (amount, quantity) => {
+    let newamount;
+    newamount = Number(amount) * Number(quantity);
+    newamount = amount?.toLocaleString("en-US", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
-    return amount;
+    return newamount;
   };
 
   return (
@@ -461,7 +461,7 @@ const PurchaseInvoice = (props) => {
                       <td className="text-end">{cost?.quantity}</td>
                       {/* <td className="text-end">{cost?.amount}</td> */}
                       <td className="text-end">
-                        {calculateAmount(cost?.fcy_amount, cost?.quantity)}
+                        {calculateAmount(cost?.amount, cost?.quantity)}
                       </td>
                       <td className="text-end">{cost?.tax_group_code}</td>
 
