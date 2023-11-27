@@ -12,7 +12,7 @@ const DownloadReport = ({ reportName }) => {
     const elements = document.getElementsByClassName("reportdownproject");
     await creatPdf({ doc, elements });
 
-    doc.save(reportName ? reportName : `voucher.pdf`);
+    doc.save(reportName ? reportName : `sheet.pdf`);
     setLoading(false);
   }
 

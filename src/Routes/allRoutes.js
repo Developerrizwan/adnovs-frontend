@@ -95,6 +95,7 @@ import AccountReceivableStatement from "../views/TaxInvoice/AccountReceivableSta
 import AccountPayableStatement from "../views/TaxInvoice/AccountPayableStatement";
 import LedgerStatement from "../views/TaxInvoice/LedgerStatement";
 import OrganizationAccountStatement from "../views/Organization/OrganizationAccountStatement";
+import VoucherReportTemplate from "../views/Vouchers/Reports/VoucherReportTemplate";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -196,11 +197,11 @@ const publicRoutes = [
   { path: "/tax-invoice/:invoiceId", component: TaxInvoice },
   { path: "/tax-invoice-second/:invoiceId", component: TaxInvoiceSecond },
   { path: "/purchase-invoice/:invoiceId", component: PurchaseInvoice },
-  { path: "/voucher/journal/:id", component: JournalReport },
-  { path: "/voucher/credit/:id", component: DrOrCrReport },
-  { path: "/voucher/debit/:id", component: DrOrCrReport },
-  { path: "/voucher/payment/:id", component: PaymentReport },
-  { path: "/voucher/receipt/:id", component: ReceiptReport },
+  { path: "/voucher/:type/:id", component: VoucherReportTemplate },
+  // { path: "/voucher/credit/:id", component: VoucherReportTemplate },
+  // { path: "/voucher/debit/:id", component: VoucherReportTemplate },
+  // { path: "/voucher/payment/:id", component: VoucherReportTemplate },
+  // { path: "/voucher/receipt/:id", component: VoucherReportTemplate },
   {
     path: "/report/profit-loss",
     component: ProfitAndLossReport,
