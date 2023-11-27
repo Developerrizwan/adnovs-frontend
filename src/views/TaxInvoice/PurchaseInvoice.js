@@ -157,15 +157,16 @@ const PurchaseInvoice = (props) => {
         let qrcodeString = "";
         let final_amount = 0;
         let data = response.data.map((ct) => {
+          let new_amount = Number(ct?.fcy_amount) * Number(ct?.quantity);
           ct.vat_amount = Number(
-            (Number(ct.amount) * Number(ct.tax_group_code)) / 100
+            (new_amount * Number(ct.tax_group_code)) / 100
           ).toFixed(2);
-          ct.total_amount = Number(
-            Number(ct.amount) + Number(ct.vat_amount)
-          ).toFixed(2);
+          ct.total_amount = Number(new_amount + Number(ct.vat_amount)).toFixed(
+            2
+          );
 
           exd_vat_total_amount = Number(
-            Number(exd_vat_total_amount) + Number(ct.amount)
+            Number(exd_vat_total_amount) + new_amount
           ).toFixed(2);
 
           total_amount = Number(
@@ -239,6 +240,16 @@ const PurchaseInvoice = (props) => {
     var tagValueBuf = Buffer.from(String(value), "utf8");
     var bufsArray = [tagBuf, tagValueLenBuf, tagValueBuf];
     return Buffer.concat(bufsArray);
+  };
+
+  const calculateAmount = (fcy_amount, quantity) => {
+    let amount;
+    amount = Number(fcy_amount) * Number(quantity);
+    amount = amount?.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    return amount;
   };
 
   return (
@@ -412,11 +423,12 @@ const PurchaseInvoice = (props) => {
                 <th className="text-center">A/C Name</th>
                 <th className="text-center">Narration</th>
                 <th className="text-center">Shipment No.</th>
-                {/* <th className="text-center">Qty</th> */}
                 <th className="text-center">Currency</th>
+                <th className="text-center">FCY Amount</th>
+                <th className="text-center">Quantity</th>
                 <th className="text-center">Amount</th>
                 <th className="text-center">VAT%</th>
-                <th className="text-center">FCY Amount</th>
+
                 <th className="text-center">VAT Amount</th>
                 <th className="text-center">Total Amount </th>
               </tr>
@@ -445,9 +457,14 @@ const PurchaseInvoice = (props) => {
                         {" "}
                         {cost?.currency?.toUpperCase()}
                       </td>
-                      <td className="text-end">{cost?.amount}</td>
-                      <td className="text-end">{cost?.tax_group_code}</td>
                       <td className="text-end">{cost?.fcy_amount}</td>
+                      <td className="text-end">{cost?.quantity}</td>
+                      {/* <td className="text-end">{cost?.amount}</td> */}
+                      <td className="text-end">
+                        {calculateAmount(cost?.fcy_amount, cost?.quantity)}
+                      </td>
+                      <td className="text-end">{cost?.tax_group_code}</td>
+
                       <td className=" text-center">
                         {Number(cost.vat_amount)?.toLocaleString("en-US", {
                           minimumFractionDigits: 2,

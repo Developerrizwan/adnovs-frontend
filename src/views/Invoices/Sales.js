@@ -32,6 +32,7 @@ const Sales = (props) => {
   const [poaValue, setPoaValue] = useState(null);
   const [refDate, setRefDate] = useState(new Date());
   const [dueDate, setDueDate] = useState(new Date());
+  const [invoiceDate, setInvoiceDate] = useState(new Date());
   const [invoiceId, setInvoiceId] = useState(null);
   const [podValue, setPodValue] = useState(null);
 
@@ -269,6 +270,7 @@ const Sales = (props) => {
 
       setRefDate(moment(props?.data?.ref_data).toDate());
       setDueDate(moment(props?.data?.due_date).toDate());
+      setInvoiceDate(moment(props?.data?.date).toDate());
     }
   }, []);
 
@@ -394,6 +396,7 @@ const Sales = (props) => {
                     ? props.data?.invoice_type
                     : selectedInvoice.value,
                   ref_data: props.isEdit ? props.data?.ref_data : "",
+                  date: props.isEdit ? props.data?.date : "",
                   bill_amount: props.isEdit ? props.data?.bill_amount : "",
                   narration: props.isEdit ? props.data?.narration : "",
                   job: props.isEdit ? props.data?.job?.bl_number : "",
@@ -416,6 +419,10 @@ const Sales = (props) => {
                 })}
                 onSubmit={(values, reset) => {
                   values["due_date"] = moment(dueDate).format(
+                    "YYYY-MM-DDTHH:mm:ss"
+                  );
+
+                  values["date"] = moment(invoiceDate).format(
                     "YYYY-MM-DDTHH:mm:ss"
                   );
 
@@ -877,7 +884,7 @@ const Sales = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={3} xs={12}>
                         <div className="mb-3">
                           <div>
                             <Label
@@ -901,7 +908,7 @@ const Sales = (props) => {
                           )}
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={3} xs={12}>
                         <div className="mb-3">
                           <div>
                             <Label htmlFor="bl_number" className="pe-2 w-50">
@@ -923,7 +930,47 @@ const Sales = (props) => {
                           )}
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={3} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="date" className="form-label">
+                            Invoice Date
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <div
+                            style={{
+                              position: "relative",
+                              // cursor: "pointer",
+                            }}
+                          >
+                            <DatePicker
+                              selected={invoiceDate}
+                              onChange={(date) => setInvoiceDate(date)}
+                            />
+                            <span
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                right: 10,
+                                fill: "red",
+                              }}
+                            >
+                              <img
+                                src="/calendar.svg"
+                                alt="calendar"
+                                width="20px"
+                                height="20px"
+                              />
+                            </span>
+                          </div>
+
+                          {errors.date && touched.date && (
+                            <div className="invalid-feedback d-block">
+                              {errors.date}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={3} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="date" className="form-label">
                             Due Date

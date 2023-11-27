@@ -88,20 +88,22 @@ const GenerateInvoice = (props) => {
 
   const handleCosts = async () => {
     let costs = state.checkedSalesBox;
+
     let x = 0;
     for (let i = 0; i < costs.length; i++) {
-      await apiAuth
-        .patch(`/api/master/cost_entry/${costs[i]}/`, {
-          invoice: props.invoice,
-          is_included: true,
-        })
-        .then((res) => {
-          let data = res.data;
-        })
-        .catch((err) => {
-          console.log(err.response);
-        });
-
+      if (props?.invoice) {
+        await apiAuth
+          .patch(`/api/master/cost_entry/${costs[i]}/`, {
+            invoice: props.invoice,
+            is_included: true,
+          })
+          .then((res) => {
+            let data = res.data;
+          })
+          .catch((err) => {
+            console.log(err.response);
+          });
+      }
       x = i;
     }
 

@@ -166,7 +166,9 @@ const OrganizationAccountStatement = (props) => {
     setLoading(true);
     apiAuth
       .get(
-        `/api/account/statement/?organization=${id}&type=${type}&start_date=${st}&end_date=${et}&payment=${pt}`
+        `/api/account/statement/?organization=${id}&type=${type}&start_date=${st}&end_date=${et}${
+          pt ? "&payment=" + pt : ""
+        }`
       )
       .then((res) => {
         const { data } = res;
@@ -174,7 +176,7 @@ const OrganizationAccountStatement = (props) => {
           return Number(x) + Number(y.net_amount);
         }, 0);
 
-        setTotalAmount(total_amount);
+        setTotalAmount(total_amount.toFixed(2));
         setReports(data);
         setLoading(false);
       })
