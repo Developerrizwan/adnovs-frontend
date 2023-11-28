@@ -209,8 +209,6 @@ const TaxInvoiceSecond = (props) => {
       });
   };
 
-  console.log("costs data----", state?.costs);
-
   const getTLVForValue = (tag, value) => {
     var tagBuf = Buffer.from([tag], "utf8");
     var tagValueLenBuf = Buffer.from([String(value).length], "utf8");
@@ -228,8 +226,6 @@ const TaxInvoiceSecond = (props) => {
     });
     return newamount;
   };
-
-  console.log("state-------", state);
 
   return (
     <>
