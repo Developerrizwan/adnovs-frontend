@@ -554,11 +554,11 @@ const CostEntry = (props) => {
                           style={{ background: "#EDEDED" }}
                           onChange={(e) => {
                             setFieldValue("fcy_amount", e.target.value);
-                            if (values["ex_rate"].length) {
+                            if (values["quantity"].length) {
                               setFieldValue(
                                 "amount",
                                 Number(e.target.value) *
-                                  Number(values["ex_rate"])
+                                  Number(values["quantity"])
                               );
                             }
                           }}

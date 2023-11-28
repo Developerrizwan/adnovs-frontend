@@ -135,14 +135,14 @@ const TaxInvoiceSecond = (props) => {
         let data = response.data.map((ct) => {
           let new_amount = Number(ct?.amount) * Number(ct?.quantity);
           ct.vat_amount = Number(
-            (new_amount * Number(ct.tax_group_code)) / 100
+            (Number(ct?.amount) * Number(ct.tax_group_code)) / 100
           ).toFixed(2);
-          ct.total_amount = Number(new_amount + Number(ct.vat_amount)).toFixed(
-            2
-          );
+          ct.total_amount = Number(
+            Number(ct?.amount) + Number(ct.vat_amount)
+          ).toFixed(2);
 
           exd_vat_total_amount = Number(
-            Number(exd_vat_total_amount) + new_amount
+            Number(exd_vat_total_amount) + Number(ct?.amount)
           ).toFixed(2);
 
           total_amount = Number(
@@ -228,6 +228,8 @@ const TaxInvoiceSecond = (props) => {
     });
     return newamount;
   };
+
+  console.log("state-------", state);
 
   return (
     <>
@@ -400,7 +402,7 @@ const TaxInvoiceSecond = (props) => {
               <ShowDataWithTranslate
                 width={"220px"}
                 label={"Invoice Date"}
-                value={moment(state.invoice?.created_at).format("DD/MM/YYYY")}
+                value={moment(state.invoice?.date).format("DD/MM/YYYY")}
               />
               <ShowDataWithTranslate
                 width={"220px"}
@@ -575,11 +577,11 @@ const TaxInvoiceSecond = (props) => {
                           className="border-0 text-center"
                           style={{ textAlign: "center" }}
                         >
-                          {calculateAmount(cost?.amount, cost?.quantity)}
-                          {/* {Number(cost?.amount)?.toLocaleString("en-US", {
+                          {/* {calculateAmount(cost?.amount, cost?.quantity)} */}
+                          {Number(cost?.amount)?.toLocaleString("en-US", {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
-                          })} */}
+                          })}
                         </td>
                         <td className="border-0 text-center">
                           {cost.tax_group_code}
