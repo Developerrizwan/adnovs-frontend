@@ -513,19 +513,19 @@ const JobDetail = (props) => {
                               <Grid item lg={3} xs={12}>
                                 <div className="mb-3">
                                   <Label
-                                    htmlFor="parties"
+                                    htmlFor="shipper_name"
                                     className="form-label"
                                   >
-                                    Parties
+                                    Shipper Name
                                   </Label>
                                   <Field
                                     disabled
                                     className="form-control"
-                                    name="parties"
+                                    name="shipper_name"
                                     style={{ background: "#EDEDED" }}
                                   />
                                   <ErrorMessage
-                                    name="parties"
+                                    name="shipper_name"
                                     render={(msg) => (
                                       <div className="text-danger">{msg}</div>
                                     )}
@@ -535,41 +535,19 @@ const JobDetail = (props) => {
                               <Grid item lg={3} xs={12}>
                                 <div className="mb-3">
                                   <Label
-                                    htmlFor="notify"
+                                    htmlFor="quantity_text"
                                     className="form-label"
                                   >
-                                    Notify
+                                    Quantity
                                   </Label>
                                   <Field
                                     disabled
                                     className="form-control"
-                                    name="notify"
+                                    name="quantity_text"
                                     style={{ background: "#EDEDED" }}
                                   />
                                   <ErrorMessage
-                                    name="notify"
-                                    render={(msg) => (
-                                      <div className="text-danger">{msg}</div>
-                                    )}
-                                  />
-                                </div>
-                              </Grid>
-                              <Grid item lg={3} xs={12}>
-                                <div className="mb-3">
-                                  <Label
-                                    htmlFor="broker"
-                                    className="form-label"
-                                  >
-                                    Broker
-                                  </Label>
-                                  <Field
-                                    disabled
-                                    className="form-control"
-                                    name="broker"
-                                    style={{ background: "#EDEDED" }}
-                                  />
-                                  <ErrorMessage
-                                    name="broker"
+                                    name="quantity_text"
                                     render={(msg) => (
                                       <div className="text-danger">{msg}</div>
                                     )}
@@ -599,9 +577,31 @@ const JobDetail = (props) => {
                                   />
                                 </div>
                               </Grid>
+                              <Grid item lg={3} xs={12}>
+                                <div className="mb-3">
+                                  <Label
+                                    htmlFor="broker"
+                                    className="form-label"
+                                  >
+                                    Broker
+                                  </Label>
+                                  <Field
+                                    disabled
+                                    className="form-control"
+                                    name="broker"
+                                    style={{ background: "#EDEDED" }}
+                                  />
+                                  <ErrorMessage
+                                    name="broker"
+                                    render={(msg) => (
+                                      <div className="text-danger">{msg}</div>
+                                    )}
+                                  />
+                                </div>
+                              </Grid>
                             </Grid>
 
-                            <Grid container spacing={2}>
+                            {/* <Grid container spacing={2}>
                               <Grid item lg={3} xs={12}>
                                 <div className="mb-3">
                                   <Label
@@ -649,19 +649,19 @@ const JobDetail = (props) => {
                               <Grid item lg={3} xs={12}>
                                 <div className="mb-3">
                                   <Label
-                                    htmlFor="quantity_text"
+                                    htmlFor="notify"
                                     className="form-label"
                                   >
-                                    Quantity
+                                    Notify
                                   </Label>
                                   <Field
                                     disabled
                                     className="form-control"
-                                    name="quantity_text"
+                                    name="notify"
                                     style={{ background: "#EDEDED" }}
                                   />
                                   <ErrorMessage
-                                    name="quantity_text"
+                                    name="notify"
                                     render={(msg) => (
                                       <div className="text-danger">{msg}</div>
                                     )}
@@ -691,31 +691,9 @@ const JobDetail = (props) => {
                                   />
                                 </div>
                               </Grid>
-                            </Grid>
+                            </Grid> */}
 
                             <Grid container spacing={2}>
-                              <Grid item lg={3} xs={12}>
-                                <div className="mb-3">
-                                  <Label
-                                    htmlFor="shipper_name"
-                                    className="form-label"
-                                  >
-                                    Shipper Name
-                                  </Label>
-                                  <Field
-                                    disabled
-                                    className="form-control"
-                                    name="shipper_name"
-                                    style={{ background: "#EDEDED" }}
-                                  />
-                                  <ErrorMessage
-                                    name="shipper_name"
-                                    render={(msg) => (
-                                      <div className="text-danger">{msg}</div>
-                                    )}
-                                  />
-                                </div>
-                              </Grid>
                               <Grid item lg={3} xs={12}>
                                 <div className="mb-3">
                                   <Label
@@ -772,7 +750,6 @@ const JobDetail = (props) => {
                     </div>
                     <div className="card-body">
                       <h4>Invoices</h4>
-                      {console.log("invoices", state?.invoices)}
                       <DataTable
                         customStyles={customStyles}
                         columns={[
@@ -1230,7 +1207,6 @@ const JobDetail = (props) => {
                     </div>
                     <div className="card-body">
                       <h4>Vouchers</h4>
-                      {console.log("vouchers", state?.vouchers)}
                       <DataTable
                         customStyles={customStyles}
                         columns={[
