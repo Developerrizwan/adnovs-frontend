@@ -59,7 +59,7 @@ const JobTable = (props) => {
       cell: (value) => {
         return (
           <>
-            <Link to={`/job/${value?.job_number}`}>
+            <Link to={`/job/${value?.id}`}>
               <div
                 title={value.job_number}
                 style={{
