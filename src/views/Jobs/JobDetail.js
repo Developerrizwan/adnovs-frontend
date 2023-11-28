@@ -16,13 +16,6 @@ import moment from "moment";
 const JobDetail = (props) => {
   const { jobId } = useParams();
   const [state, setState] = useState({});
-  const [cols, setCols] = useState([
-    {
-      Header: "Job Number",
-      accessor: (row, rowIndex) => row,
-      Cell: ({ cell: { value }, row }) => <>{value?.job_number}</>,
-    },
-  ]);
 
   useEffect(() => {
     console.log("jobId", jobId);
@@ -37,7 +30,7 @@ const JobDetail = (props) => {
       .then((response) => {
         let { data } = response;
         // console.log("dddd", data);
-        setState({ ...state, job: data });
+        setState((prev) => ({ ...prev, job: data }));
       })
       .catch((error) => {
         console.log(error);
@@ -52,7 +45,7 @@ const JobDetail = (props) => {
       .then((response) => {
         let { data } = response;
         // console.log("invoices", data);
-        setState({ ...state, invoices: data, loading: false });
+        setState((prev) => ({ ...prev, invoices: data, loading: false }));
       })
       .catch((error) => {
         console.log(error);
@@ -64,18 +57,18 @@ const JobDetail = (props) => {
           null,
           ""
         );
-        setState({ ...state, loading: false });
+        setState((prev) => ({ ...prev, loading: false }));
       });
   };
 
   const getVouchers = () => {
-    setState({ ...state, loading: true });
+    setState((prev) => ({ ...prev, loading: true }));
     apiAuth
       .get(`/api/job_voucher?job=${jobId}`)
       .then((response) => {
         let { data } = response;
         // console.log("vouchers", data);
-        setState({ ...state, vouchers: data, loading: false });
+        setState((prev) => ({ ...prev, vouchers: data, loading: false }));
       })
       .catch((error) => {
         console.log(error);
@@ -87,7 +80,7 @@ const JobDetail = (props) => {
           null,
           ""
         );
-        setState({ ...state, loading: false });
+        setState((prev) => ({ ...prev, loading: false }));
       });
   };
 
@@ -814,6 +807,464 @@ const JobDetail = (props) => {
                           </Form>
                         )}
                       </Formik>
+                    </div>
+                    <div className="card-body">
+                      <h4>Invoices</h4>
+                      {console.log("invoices", state?.invoices)}
+                      <DataTable
+                        customStyles={customStyles}
+                        columns={[
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Invoice Number
+                              </span>
+                            ),
+                            selector: (row) => row.invoice_number,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.invoice_number}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.invoice_number}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Job Number
+                              </span>
+                            ),
+                            selector: (row) => row.job?.job_number,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.job?.job_number}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.job?.job_number}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                BL Number
+                              </span>
+                            ),
+                            selector: (row) => row.bl_number,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.bl_number}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.bl_number}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Consignee Name
+                              </span>
+                            ),
+                            selector: (row) => row.consignee_name?.name,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.consignee_name?.name}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.consignee_name?.name}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Date
+                              </span>
+                            ),
+                            selector: (row) => row,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={moment(value?.date).format(
+                                    "MM/DD/YYYY"
+                                  )}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {moment(value?.date).format("MM/DD/YYYY")}
+                                </div>
+                              );
+                            },
+                          },
+
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Currency
+                              </span>
+                            ),
+                            selector: (row) => row.currency_sar,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.currency_sar}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.currency_sar}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Bayan Number
+                              </span>
+                            ),
+                            selector: (row) => row.bayan_number,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.bayan_number}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.bayan_number}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Shipper Name
+                              </span>
+                            ),
+                            selector: (row) => row.shipper_name,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.shipper_name}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.shipper_name}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Branch
+                              </span>
+                            ),
+                            selector: (row) => row.branch,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value?.branch}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value?.branch}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Ex Rate
+                              </span>
+                            ),
+                            selector: (row) => row.ex_rate,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.ex_rate}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.ex_rate}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                POD
+                              </span>
+                            ),
+                            selector: (row) => row.pod,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.pod}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.pod}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Client Name
+                              </span>
+                            ),
+                            selector: (row) => row.client_name?.name,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value?.client_name?.name}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value?.client_name?.name}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                FC Amount
+                              </span>
+                            ),
+                            selector: (row) => row.fc_amount,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.fc_amount}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.fc_amount}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Amount
+                              </span>
+                            ),
+                            selector: (row) => row.amount_sar,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.amount_sar}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.amount_sar}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                POA
+                              </span>
+                            ),
+                            selector: (row) => row.poa,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.poa}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.poa}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Invoice Type
+                              </span>
+                            ),
+                            selector: (row) => row.invoice_type,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.invoice_type}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.invoice_type}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Remarks
+                              </span>
+                            ),
+                            selector: (row) => row.remarks,
+                            cell: (value) => (
+                              <div
+                                title={value.remarks}
+                                style={{
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  maxWidth: "200px",
+                                }}
+                              >
+                                {value.remarks}
+                              </div>
+                            ),
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Invoice Status
+                              </span>
+                            ),
+                            selector: (row) => row.payment_status,
+                            cell: (value) => (
+                              <div
+                                title={value.payment_status}
+                                style={{
+                                  whiteSpace: "nowrap",
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  maxWidth: "200px",
+                                }}
+                              >
+                                {value.payment_status}
+                              </div>
+                            ),
+                          },
+                        ]}
+                        data={state?.invoices}
+                        paginationPerPage={props.userPagination?.rowsPerPage}
+                        onChangePage={(p, t) => {
+                          props.handlePagination({
+                            ...props.userPagination,
+                            currentPage: p,
+                          });
+                        }}
+                        onChangeRowsPerPage={(c, t) => {
+                          props.handlePagination({
+                            ...props.userPagination,
+                            rowsPerPage: c,
+                            currentPage: t,
+                          });
+                        }}
+                        paginationServer
+                        paginationDefaultPage={
+                          props.userPagination?.currentPage
+                        }
+                        paginationTotalRows={props.userPagination?.totalRows}
+                        pagination={state?.invoices?.length > 10}
+                      />
                     </div>
                   </div>
                 </Colxx>
