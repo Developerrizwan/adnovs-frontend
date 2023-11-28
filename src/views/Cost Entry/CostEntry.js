@@ -240,7 +240,7 @@ const CostEntry = (props) => {
                 amount: props.entry?.amount || "",
                 sale_cost: props?.title || props?.entry?.sale_cost || "",
                 dr_cr: props.entry?.dr_cr || "",
-                quantity: props.entry?.quantity || "",
+                quantity: props.entry?.quantity || "1",
                 // prorate_method: props.entry?.prorate_method || "",
                 tax_group_code: props.entry?.tax_group_code || "",
               }}
@@ -471,6 +471,21 @@ const CostEntry = (props) => {
                             placeholder="1"
                             type="text"
                             style={{ background: "#EDEDED" }}
+                            onChange={(e) => {
+                              if (e.target.value === "0") {
+                                // Reset to a minimum allowed value, e.g., 1
+                                setFieldValue("quantity", "1");
+                              } else {
+                                setFieldValue("quantity", e.target.value);
+                                if (values["fcy_amount"].length) {
+                                  setFieldValue(
+                                    "amount",
+                                    Number(e.target.value) *
+                                      Number(values["fcy_amount"])
+                                  );
+                                }
+                              }
+                            }}
                           />
                         </div>
                         {errors.quantity && touched.quantity && (
