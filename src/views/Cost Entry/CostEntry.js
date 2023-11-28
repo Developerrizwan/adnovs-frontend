@@ -235,7 +235,7 @@ const CostEntry = (props) => {
                 job_no: props.entry?.job_no?.id || "",
                 shipment_no: props.entry?.shipment_no || "",
                 currency: props.entry?.currency || "",
-                ex_rate: props.entry?.ex_rate || "",
+                ex_rate: props.entry?.ex_rate || "1",
                 fcy_amount: props.entry?.fcy_amount || "",
                 amount: props.entry?.amount || "",
                 sale_cost: props?.title || props?.entry?.sale_cost || "",
@@ -477,11 +477,15 @@ const CostEntry = (props) => {
                                 setFieldValue("quantity", "1");
                               } else {
                                 setFieldValue("quantity", e.target.value);
-                                if (values["fcy_amount"].length) {
+                                if (
+                                  values["fcy_amount"].length &&
+                                  values["ex_rate"].length
+                                ) {
                                   setFieldValue(
                                     "amount",
                                     Number(e.target.value) *
-                                      Number(values["fcy_amount"])
+                                      Number(values["fcy_amount"]) *
+                                      Number(values["ex_rate"])
                                   );
                                 }
                               }
@@ -539,13 +543,22 @@ const CostEntry = (props) => {
                           name="ex_rate"
                           style={{ background: "#EDEDED" }}
                           onChange={(e) => {
-                            setFieldValue("ex_rate", e.target.value);
-                            if (values["fcy_amount"].length) {
-                              setFieldValue(
-                                "amount",
-                                Number(e.target.value) *
-                                  Number(values["fcy_amount"])
-                              );
+                            if (e.target.value === "0") {
+                              // Reset to a minimum allowed value, e.g., 1
+                              setFieldValue("ex_rate", "1");
+                            } else {
+                              setFieldValue("ex_rate", e.target.value);
+                              if (
+                                values["fcy_amount"].length &&
+                                values["quantity"].length
+                              ) {
+                                setFieldValue(
+                                  "amount",
+                                  Number(e.target.value) *
+                                    Number(values["fcy_amount"]) *
+                                    Number(values["quantity"])
+                                );
+                              }
                             }
                           }}
                         />
@@ -569,11 +582,15 @@ const CostEntry = (props) => {
                           style={{ background: "#EDEDED" }}
                           onChange={(e) => {
                             setFieldValue("fcy_amount", e.target.value);
-                            if (values["quantity"].length) {
+                            if (
+                              values["quantity"].length &&
+                              values["ex_rate"].length
+                            ) {
                               setFieldValue(
                                 "amount",
                                 Number(e.target.value) *
-                                  Number(values["quantity"])
+                                  Number(values["quantity"]) *
+                                  Number(values["ex_rate"])
                               );
                             }
                           }}
