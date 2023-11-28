@@ -173,7 +173,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Job Number
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -196,7 +195,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     BL Number
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -219,7 +217,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Consignee Name
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -242,7 +239,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Client Name
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -265,7 +261,6 @@ const JobDetail = (props) => {
                                 <div className="mb-3">
                                   <Label htmlFor="pod" className="form-label">
                                     POD
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -286,7 +281,6 @@ const JobDetail = (props) => {
                                 <div className="mb-3">
                                   <Label htmlFor="poa" className="form-label">
                                     POA
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -306,7 +300,6 @@ const JobDetail = (props) => {
                                 <div className="mb-3">
                                   <Label htmlFor="pol" className="form-label">
                                     POL
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -329,7 +322,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Bayan Number
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -352,7 +344,6 @@ const JobDetail = (props) => {
                                 <div className="mb-3">
                                   <Label htmlFor="por" className="form-label">
                                     Place Of Receipt
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -372,7 +363,6 @@ const JobDetail = (props) => {
                                 <div className="mb-3">
                                   <Label htmlFor="type" className="form-label">
                                     Type
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -395,7 +385,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Scope Of Work
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -459,7 +448,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Job Status
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -482,7 +470,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Branch
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -622,7 +609,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Container/Consignment
-                                    {/* <span className="text-danger">*</span> */}
                                   </Label>
                                   <Field
                                     disabled
@@ -715,7 +701,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Shipper Name
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
@@ -738,7 +723,6 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Remarks
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
                                     disabled
