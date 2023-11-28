@@ -58,17 +58,21 @@ const JobTable = (props) => {
       selector: (row) => row.job_number,
       cell: (value) => {
         return (
-          <div
-            title={value.job_number}
-            style={{
-              whiteSpace: "nowrap",
-              // overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "250px",
-            }}
-          >
-            {value.job_number}
-          </div>
+          <>
+            <Link to={`/job/${value?.job_number}`}>
+              <div
+                title={value.job_number}
+                style={{
+                  whiteSpace: "nowrap",
+                  // overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: "250px",
+                }}
+              >
+                {value.job_number}
+              </div>
+            </Link>
+          </>
         );
       },
       sortable: true,

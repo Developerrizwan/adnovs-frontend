@@ -96,6 +96,7 @@ import AccountPayableStatement from "../views/TaxInvoice/AccountPayableStatement
 import LedgerStatement from "../views/TaxInvoice/LedgerStatement";
 import OrganizationAccountStatement from "../views/Organization/OrganizationAccountStatement";
 import VoucherReportTemplate from "../views/Vouchers/Reports/VoucherReportTemplate";
+import JobDetail from "../views/Jobs/JobDetail";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -103,6 +104,8 @@ const authProtectedRoutes = [
   { path: "/users", component: Users },
   { path: "/client", component: Client },
   { path: "/jobs", component: Jobs },
+  { path: "/job/:jobId", component: JobDetail },
+
   { path: "/jobs/add", component: AddEnquiry },
   { path: "/jobs/createjob", component: CreateNewJob },
   { path: "/organization", component: Organization },
