@@ -157,16 +157,16 @@ const PurchaseInvoice = (props) => {
         let qrcodeString = "";
         let final_amount = 0;
         let data = response.data.map((ct) => {
-          let new_amount = Number(ct?.amount) * Number(ct?.quantity);
+          // let new_amount = Number(ct?.amount) * Number(ct?.quantity);
           ct.vat_amount = Number(
-            (new_amount * Number(ct.tax_group_code)) / 100
+            (Number(ct?.amount) * Number(ct.tax_group_code)) / 100
           ).toFixed(2);
-          ct.total_amount = Number(new_amount + Number(ct.vat_amount)).toFixed(
-            2
-          );
+          ct.total_amount = Number(
+            Number(ct?.amount) + Number(ct.vat_amount)
+          ).toFixed(2);
 
           exd_vat_total_amount = Number(
-            Number(exd_vat_total_amount) + new_amount
+            Number(exd_vat_total_amount) + Number(ct?.amount)
           ).toFixed(2);
 
           total_amount = Number(
@@ -459,10 +459,10 @@ const PurchaseInvoice = (props) => {
                       </td>
                       <td className="text-end">{cost?.fcy_amount}</td>
                       <td className="text-end">{cost?.quantity}</td>
-                      {/* <td className="text-end">{cost?.amount}</td> */}
-                      <td className="text-end">
+                      <td className="text-end">{cost?.amount}</td>
+                      {/* <td className="text-end">
                         {calculateAmount(cost?.amount, cost?.quantity)}
-                      </td>
+                      </td> */}
                       <td className="text-end">{cost?.tax_group_code}</td>
 
                       <td className=" text-center">
