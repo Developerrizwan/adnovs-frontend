@@ -118,7 +118,7 @@ const VerticalLayout = (props) => {
                   isOpen={item.stateVariables}
                   id="sidebarApps"
                 >
-                  <ul className="nav nav-sm flex-column test">
+                  <ul className="flex-column test ps-3">
                     {/* subItms  */}
                     {item.subItems &&
                       (item.subItems || []).map((subItem, key) => (
@@ -126,15 +126,16 @@ const VerticalLayout = (props) => {
                           {!subItem.isChildItem ? (
                             <li className="nav-item">
                               <Link
+                                className="nav-link menu-link"
                                 to={subItem.link ? subItem.link : "/#"}
-                                className="nav-link"
+                                onClick={() => {}}
                               >
-                                {props.t(subItem.label)}
+                                <i className={subItem.icon}></i>{" "}
+                                <span>{props.t(subItem.label)}</span>
                                 {subItem.badgeName ? (
                                   <span
                                     className={
-                                      "badge badge-pill bg-" +
-                                      subItem.badgeColor
+                                      "badge badge-pill bg-" + subItem.badgeColor
                                     }
                                     data-key="t-new"
                                   >
