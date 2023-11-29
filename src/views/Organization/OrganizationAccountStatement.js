@@ -40,10 +40,23 @@ const OrganizationAccountStatement = (props) => {
 
   const exportProjectToPdf = () => {
     const doc = new jsPDF();
-    // const reportObject = reports[0];
     doc.text(selectedOrganizationLedger?.label, 60, 10);
     doc.text(`Account: ${selectOrganization?.label}`, 12, 22);
     doc.text(`Total Amount: ${totalAmount}`, 12, 32);
+    doc.text(
+      `Total Credit: ${
+        selectedOrganizationLedger?.value === "receive" ? totalAmount : "0.00"
+      }`,
+      80,
+      32
+    );
+    doc.text(
+      `Total Debit: ${
+        selectedOrganizationLedger?.value === "pay" ? totalAmount : "0.00"
+      }`,
+      144,
+      32
+    );
 
     const data = reports;
     const allKeys = Array.from(
@@ -55,12 +68,14 @@ const OrganizationAccountStatement = (props) => {
       "Date",
       "Currency",
       "Voucher",
-      "Total Amount",
       "Invoice Number",
       // "Party Account",
       "Job No",
-      "Narrations",
+      // "Narrations",
       "Branch",
+      "Credit",
+      "Debit",
+      "Total Amount",
     ];
 
     const columns = allKeys.map((key, index) => ({
@@ -76,12 +91,14 @@ const OrganizationAccountStatement = (props) => {
           moment(row?.date).format("DD-MM-YYYY"),
           row?.currency,
           row?.voucher_number,
-          Number(row?.net_amount).toFixed(2),
           row?.invoice_number,
           // row?.party_account,
           row?.job_no,
-          row?.narrations,
+          // row?.narrations,
           row?.branch,
+          row?.cr_amount,
+          row?.dr_amount,
+          Number(row?.net_amount).toFixed(2),
         ];
       }),
       startY: 36,
@@ -90,15 +107,16 @@ const OrganizationAccountStatement = (props) => {
         fontSize: 11,
       },
       columnStyles: {
-        0: { cellWidth: 25 },
+        0: { cellWidth: 22 },
         1: { cellWidth: 20 },
         2: { cellWidth: 20 },
         3: { cellWidth: 20 },
-        4: { cellWidth: 20 },
-        // 5: { cellWidth: 20 },
-        5: { cellWidth: 25 },
-        6: { cellWidth: 22 },
-        7: { cellWidth: 20 },
+        4: { cellWidth: 25 },
+        5: { cellWidth: 20 },
+        6: { cellWidth: 23 },
+        7: { cellWidth: 23 },
+        8: { cellWidth: 23 },
+        // 9: { cellWidth: 20 },
       },
       margin: { left: 10, right: 10 },
     });
@@ -113,12 +131,15 @@ const OrganizationAccountStatement = (props) => {
         Date: moment(report?.date).format("DD-MM-YYYY"),
         Currency: report?.currency,
         Voucher: report?.voucher_number,
-        "Total Amount": Number(report?.net_amount).toFixed(2),
+
         "Invoice Number": report?.invoice_number,
         "Party Account": report?.party_account,
         "Job No": report?.job_no,
-        Narrations: report?.narrations,
+        // Narrations: report?.narrations,
         Branch: report?.branch,
+        Credit: Number(report?.cr_amount).toFixed(2),
+        Debit: Number(report?.dr_amount).toFixed(2),
+        "Total Amount": Number(report?.net_amount).toFixed(2),
       };
       return dataReport;
     });
@@ -616,28 +637,7 @@ const OrganizationAccountStatement = (props) => {
                 //   },
                 //   sortable: true,
                 // },
-                {
-                  name: (
-                    <span className="font-weight-bold fs-13">Total Amount</span>
-                  ),
-                  selector: (row) => row.net_amount,
-                  cell: (value) => {
-                    return (
-                      <div
-                        title={value.net_amount}
-                        style={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          maxWidth: "200px",
-                        }}
-                      >
-                        {Number(value.net_amount).toFixed(2)}
-                      </div>
-                    );
-                  },
-                  sortable: true,
-                },
+
                 {
                   name: (
                     <span className="font-weight-bold fs-13">
@@ -706,28 +706,28 @@ const OrganizationAccountStatement = (props) => {
                   },
                   sortable: true,
                 },
-                {
-                  name: (
-                    <span className="font-weight-bold fs-13">Naration</span>
-                  ),
-                  selector: (row) => row.narrations,
-                  cell: (value) => {
-                    return (
-                      <div
-                        title={value.narrations}
-                        style={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          maxWidth: "200px",
-                        }}
-                      >
-                        {value.narrations}
-                      </div>
-                    );
-                  },
-                  sortable: true,
-                },
+                // {
+                //   name: (
+                //     <span className="font-weight-bold fs-13">Naration</span>
+                //   ),
+                //   selector: (row) => row.narrations,
+                //   cell: (value) => {
+                //     return (
+                //       <div
+                //         title={value.narrations}
+                //         style={{
+                //           whiteSpace: "nowrap",
+                //           overflow: "hidden",
+                //           textOverflow: "ellipsis",
+                //           maxWidth: "200px",
+                //         }}
+                //       >
+                //         {value.narrations}
+                //       </div>
+                //     );
+                //   },
+                //   sortable: true,
+                // },
                 {
                   name: <span className="font-weight-bold fs-13">Branch</span>,
                   selector: (row) => row.branch,
@@ -743,6 +743,68 @@ const OrganizationAccountStatement = (props) => {
                         }}
                       >
                         {value.branch}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: <span className="font-weight-bold fs-13">Credit</span>,
+                  selector: (row) => row.cr_amount,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.cr_amount}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {Number(value.cr_amount).toFixed(2)}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: <span className="font-weight-bold fs-13">Debit</span>,
+                  selector: (row) => row.dr_amount,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.dr_amount}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {Number(value.dr_amount).toFixed(2)}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: (
+                    <span className="font-weight-bold fs-13">Total Amount</span>
+                  ),
+                  selector: (row) => row.net_amount,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.net_amount}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {Number(value.net_amount).toFixed(2)}
                       </div>
                     );
                   },
