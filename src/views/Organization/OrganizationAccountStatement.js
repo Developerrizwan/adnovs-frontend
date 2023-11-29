@@ -96,8 +96,8 @@ const OrganizationAccountStatement = (props) => {
           row?.job_no,
           // row?.narrations,
           row?.branch,
-          row?.cr_amount,
-          row?.dr_amount,
+          Number(row?.cr_amount).toFixed(2),
+          Number(row?.dr_amount).toFixed(2),
           Number(row?.net_amount).toFixed(2),
         ];
       }),
