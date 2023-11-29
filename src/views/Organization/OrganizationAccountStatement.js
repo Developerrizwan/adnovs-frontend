@@ -19,6 +19,8 @@ const OrganizationAccountStatement = (props) => {
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [drAmount, setDrAmount] = useState(0.0);
+  const [crAmount, setCrAmount] = useState(0.0);
   const [selectedOrganizationLedger, setSelectedOrganizationLedger] = useState({
     label: "ACCOUNTS RECEIVABLE STATEMENT",
     value: "receive",
@@ -43,20 +45,8 @@ const OrganizationAccountStatement = (props) => {
     doc.text(selectedOrganizationLedger?.label, 60, 10);
     doc.text(`Account: ${selectOrganization?.label}`, 12, 22);
     doc.text(`Total Amount: ${totalAmount}`, 12, 32);
-    doc.text(
-      `Total Credit: ${
-        selectedOrganizationLedger?.value === "receive" ? totalAmount : "0.00"
-      }`,
-      80,
-      32
-    );
-    doc.text(
-      `Total Debit: ${
-        selectedOrganizationLedger?.value === "pay" ? totalAmount : "0.00"
-      }`,
-      144,
-      32
-    );
+    doc.text(`Total Debit: ${Number(drAmount).toFixed(2)}`, 80, 32);
+    doc.text(`Total Credit: ${Number(crAmount).toFixed(2)}`, 144, 32);
 
     const data = reports;
     const allKeys = Array.from(
@@ -73,8 +63,8 @@ const OrganizationAccountStatement = (props) => {
       "Job No",
       // "Narrations",
       "Branch",
-      "Credit",
       "Debit",
+      "Credit",
       "Total Amount",
     ];
 
@@ -96,8 +86,8 @@ const OrganizationAccountStatement = (props) => {
           row?.job_no,
           // row?.narrations,
           row?.branch,
-          Number(row?.cr_amount).toFixed(2),
           Number(row?.dr_amount).toFixed(2),
+          Number(row?.cr_amount).toFixed(2),
           Number(row?.net_amount).toFixed(2),
         ];
       }),
@@ -137,8 +127,8 @@ const OrganizationAccountStatement = (props) => {
         "Job No": report?.job_no,
         // Narrations: report?.narrations,
         Branch: report?.branch,
-        Credit: Number(report?.cr_amount).toFixed(2),
         Debit: Number(report?.dr_amount).toFixed(2),
+        Credit: Number(report?.cr_amount).toFixed(2),
         "Total Amount": Number(report?.net_amount).toFixed(2),
       };
       return dataReport;
@@ -197,7 +187,17 @@ const OrganizationAccountStatement = (props) => {
           return Number(x) + Number(y.net_amount);
         }, 0);
 
+        let dr_amount = data.reduce((x, y) => {
+          return Number(x) + Number(y.dr_amount);
+        }, 0);
+
+        let cr_amount = data.reduce((x, y) => {
+          return Number(x) + Number(y.cr_amount);
+        }, 0);
+
         setTotalAmount(total_amount.toFixed(2));
+        setDrAmount(dr_amount.toFixed(2));
+        setCrAmount(cr_amount.toFixed(2));
         setReports(data);
         setLoading(false);
       })
@@ -749,26 +749,6 @@ const OrganizationAccountStatement = (props) => {
                   sortable: true,
                 },
                 {
-                  name: <span className="font-weight-bold fs-13">Credit</span>,
-                  selector: (row) => row.cr_amount,
-                  cell: (value) => {
-                    return (
-                      <div
-                        title={value.cr_amount}
-                        style={{
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          maxWidth: "200px",
-                        }}
-                      >
-                        {Number(value.cr_amount).toFixed(2)}
-                      </div>
-                    );
-                  },
-                  sortable: true,
-                },
-                {
                   name: <span className="font-weight-bold fs-13">Debit</span>,
                   selector: (row) => row.dr_amount,
                   cell: (value) => {
@@ -783,6 +763,26 @@ const OrganizationAccountStatement = (props) => {
                         }}
                       >
                         {Number(value.dr_amount).toFixed(2)}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: <span className="font-weight-bold fs-13">Credit</span>,
+                  selector: (row) => row.cr_amount,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.cr_amount}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {Number(value.cr_amount).toFixed(2)}
                       </div>
                     );
                   },
