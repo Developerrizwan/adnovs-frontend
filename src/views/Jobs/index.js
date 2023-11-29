@@ -9,10 +9,33 @@ import JobTable from "./JobTable";
 import NotificationManager from "../../components/Common/NotificationManager";
 import EnquiryTable from "./EnquiryTable";
 
+const Tab = ({ label, setSelectedValue, selected, count }) => {
+  return (
+    <div
+      className={`btn ${selected ? "btn-primary" : "btn-light"}`}
+      onClick={() => setSelectedValue(label)}
+    >
+      {label}{" "}
+      <span
+        className={`${
+          selected ? "text-primary bg-white" : "text-light bg-dark"
+        } `}
+        style={{
+          padding: "3px",
+          borderRadius: "50%",
+        }}
+      >
+        {count}
+      </span>
+    </div>
+  );
+};
+
 const Jobs = (props) => {
   const [allJobs, setAllJobs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [count, setCount] = useState(null);
   const [selectedValue, setSelectedValue] = useState("Enquiry");
   const [jobPagination, setJobPagination] = useState({
     rowsPerPage: 10,
@@ -50,6 +73,7 @@ const Jobs = (props) => {
           ...pgdata,
           totalRows: response.data.count,
         });
+        setCount((prev) => ({ ...prev, [type]: response?.data?.count }));
         setAllJobs(data);
         setLoading(false);
       })
@@ -100,12 +124,21 @@ const Jobs = (props) => {
   };
 
   useEffect(() => {
-    getJobs(jobPagination, searchValue, selectedValue);
+    let val;
+    [1, 2].forEach((dd) => {
+      if (dd === 1) {
+        val = "Job";
+      } else {
+        val = "Enquiry";
+      }
+      getJobs(jobPagination, searchValue, val);
+    });
+    // getJobs(jobPagination, searchValue, selectedValue);
   }, []);
 
-  const handleJobChange = (e) => {
-    setSelectedValue(e.value);
-    getJobs(jobPagination, searchValue, e.value);
+  const onTabSelect = (val) => {
+    setSelectedValue(val);
+    getJobs(jobPagination, searchValue, val);
   };
 
   return (
@@ -126,14 +159,14 @@ const Jobs = (props) => {
               getJobs(jobPagination, val, selectedValue);
             }}
             export_button={allJobs.length > 0 ? true : false}
-            handleTypeChange={handleJobChange}
-            add_type={true}
-            add_type_select={true}
-            options={options}
-            selectedValue={{
-              label: selectedValue,
-              value: selectedValue,
-            }}
+            // handleTypeChange={handleJobChange}
+            // add_type={true}
+            // add_type_select={true}
+            // options={options}
+            // selectedValue={{
+            //   label: selectedValue,
+            //   value: selectedValue,
+            // }}
           />
         </Container>
 
@@ -145,6 +178,23 @@ const Jobs = (props) => {
                 marginBottom: "12px",
               }}
             >
+              <div className="d-flex justify-content-start align-items-center p-3">
+                <h5 className="mx-2">Filters :</h5>
+                <div className="d-flex gap-1 mx-2">
+                  <Tab
+                    label={"Job"}
+                    setSelectedValue={(val) => onTabSelect(val)}
+                    selected={selectedValue === "Job"}
+                    count={count?.Job}
+                  />
+                  <Tab
+                    label={"Enquiry"}
+                    setSelectedValue={(val) => onTabSelect(val)}
+                    selected={selectedValue === "Enquiry"}
+                    count={count?.Enquiry}
+                  />
+                </div>
+              </div>
               {selectedValue === "Job" ? (
                 <JobTable
                   allJobs={allJobs}
@@ -172,6 +222,7 @@ const Jobs = (props) => {
                     setJobPagination(data);
                     getJobs(data, searchValue, selectedValue);
                   }}
+                  userPagination={{ ...jobPagination }}
                   selectedValue={selectedValue}
                   getJobs={() => {
                     setAllJobs([]);
