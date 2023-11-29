@@ -108,7 +108,7 @@ const Navdata = () => {
     isMaster,
     isFinance,
     isJobs,
-    isInvoices
+    isInvoices,
   ]);
 
   const menuItems = [
@@ -133,7 +133,7 @@ const Navdata = () => {
     {
       id: "finance",
       label: "Finance",
-      icon: "ri-customer-service-line",
+      icon: "ri-bank-line",
       src: "/jobs-sidebar.png",
       stateVariables: isFinance,
       roles: ["superadmin", "admin", "user"],
@@ -209,7 +209,7 @@ const Navdata = () => {
     {
       id: "masters",
       label: "Masters",
-      icon: "ri-customer-service-line",
+      icon: "ri-admin-line",
       src: "/jobs-sidebar.png",
       stateVariables: isMaster,
       roles: ["superadmin", "admin", "user"],
