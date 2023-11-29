@@ -181,18 +181,16 @@ const Jobs = (props) => {
               <div className="d-flex justify-content-start align-items-center p-3">
                 <h5 className="mx-2">Filters :</h5>
                 <div className="d-flex gap-1 mx-2">
-                  <Tab
-                    label={"Job"}
-                    setSelectedValue={(val) => onTabSelect(val)}
-                    selected={selectedValue === "Job"}
-                    count={count?.Job}
-                  />
-                  <Tab
-                    label={"Enquiry"}
-                    setSelectedValue={(val) => onTabSelect(val)}
-                    selected={selectedValue === "Enquiry"}
-                    count={count?.Enquiry}
-                  />
+                  {["Job", "Enquiry"].map((dd, i) => (
+                    <div key={i}>
+                      <Tab
+                        label={dd}
+                        setSelectedValue={(val) => onTabSelect(val)}
+                        selected={selectedValue === dd}
+                        count={count[dd]}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
               {selectedValue === "Job" ? (
