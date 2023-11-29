@@ -6,12 +6,11 @@ const Navdata = () => {
   //state data
   const [isDashboard, setIsDashboard] = useState(false);
   const [isSettings, setIsSettings] = useState(false);
-  const [isTeam, setIsTeam] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  const [isProject, setIsProject] = useState(false);
-  const [isTicket, setIsTicket] = useState(false);
-  const [isPlans, setIsPlans] = useState(false);
-  const [isMyAccount, setisMyAccount] = useState(false);
+  const [isMaster, setMaster] = useState(false);
+  const [isJobs, setJobs] = useState(false);
+  const [isVouchers, setVouchers] = useState(false);
+  const [isInvoices, setInvoices] = useState(false);
+  const [isFinance, setFinance] = useState(false);
   const [isCompany, setIsCompany] = useState(false);
   const [isReports, setIsReports] = useState(false);
   const [isAccountDetails, setIsAccountDetails] = useState(false);
@@ -21,11 +20,8 @@ const Navdata = () => {
   const [isCharge, setIsCharge] = useState(false);
   const [isUserManagement, setisUserManagement] = useState(false);
   const [isOrganization, setIsOrganization] = useState(false);
-  const [isCouponManagement, setisCouponManagement] = useState(false);
-  const [isPaymentManagement, setisPaymentManagement] = useState(false);
-  const [isSubscriptionManagement, setisSubscriptionManagement] =
-    useState(false);
   const [iscurrentState, setIscurrentState] = useState("Dashboard");
+
   function updateIconSidebar(e) {
     if (e && e.target && e.target.getAttribute("subitems")) {
       const ul = document.getElementById("two-column-menu");
@@ -50,23 +46,8 @@ const Navdata = () => {
       setIsSettings(false);
     }
 
-    if (iscurrentState !== "Team") {
-      setIsTeam(false);
-    }
-    if (iscurrentState !== "Client") {
-      setIsClient(false);
-    }
-    if (iscurrentState !== "Project") {
-      setIsProject(false);
-    }
-    if (iscurrentState !== "Ticket") {
-      setIsTicket(false);
-    }
-    if (iscurrentState !== "Plans") {
-      setIsPlans(false);
-    }
-    if (iscurrentState !== "MyAccount") {
-      setisMyAccount(false);
+    if (iscurrentState !== "Masters") {
+      setMaster(false);
     }
     if (iscurrentState !== "UserManagement") {
       setisUserManagement(false);
@@ -80,15 +61,7 @@ const Navdata = () => {
     if (iscurrentState !== "Account Details") {
       setIsAccountDetails(false);
     }
-    if (iscurrentState !== "CouponManagement") {
-      setisCouponManagement(false);
-    }
-    if (iscurrentState !== "PaymentManagement") {
-      setisPaymentManagement(false);
-    }
-    if (iscurrentState !== "SubscriptionManagement") {
-      setisSubscriptionManagement(false);
-    }
+
     if (iscurrentState !== "Coa") {
       setIsCoa(false);
     }
@@ -105,6 +78,18 @@ const Navdata = () => {
       setIsReports(false);
     }
 
+    if (iscurrentState !== "Invoices") {
+      setInvoices(false);
+    }
+
+    if (iscurrentState !== "Finance") {
+      setFinance(false);
+    }
+
+    if (iscurrentState !== "Shipment") {
+      setJobs(false);
+    }
+
     if (iscurrentState === "Widgets") {
       history.push("/widgets");
       document.body.classList.add("twocolumn-panel");
@@ -113,22 +98,17 @@ const Navdata = () => {
     history,
     iscurrentState,
     isDashboard,
-    isClient,
-    isTeam,
-    isProject,
-    isTicket,
-    isPlans,
-    isMyAccount,
     isCompany,
     isAccountDetails,
     isUserManagement,
-    isCouponManagement,
-    isPaymentManagement,
-    isSubscriptionManagement,
     isCoa,
     isCostEntry,
     isCharge,
     isOrganization,
+    isMaster,
+    isFinance,
+    isJobs,
+    isInvoices
   ]);
 
   const menuItems = [
@@ -141,158 +121,144 @@ const Navdata = () => {
       stateVariables: isDashboard,
       roles: ["superadmin", "admin", "user"],
     },
-    // {
-    //   id: "team",
-    //   label: "Team",
-    //   icon: "ri-team-line",
-    //   link: "/team",
-    //   src: "/team.png",
-    //   stateVariables: isTeam,
-    //   roles: ["superadmin", "admin", "user"],
-    // },
     {
       id: "jobs",
-      label: "Jobs",
+      label: "Shipment",
       icon: "ri-customer-service-line",
       link: "/jobs",
       src: "/jobs-sidebar.png",
-      stateVariables: isClient,
+      stateVariables: isJobs,
       roles: ["superadmin", "admin", "user"],
     },
     {
-      id: "vouchers",
-      label: "Vouchers",
-      icon: "ri-folder-chart-line",
-      link: "/vouchers",
-      src: "/voucher-sidebar.png",
-      stateVariables: isProject,
+      id: "finance",
+      label: "Finance",
+      icon: "ri-customer-service-line",
+      src: "/jobs-sidebar.png",
+      stateVariables: isFinance,
       roles: ["superadmin", "admin", "user"],
-    },
-    {
-      id: "invoices",
-      label: "Invoices",
-      icon: "ri-ticket-line",
-      link: "/invoices",
-      src: "/invoices-sidebar.png",
-      stateVariables: isTicket,
-      roles: ["superadmin", "admin", "user"],
-    },
-    {
-      id: "coa",
-      label: "Chart of Accounts",
-      icon: "ri-line-chart-fill",
-      link: "/coa",
-      stateVariables: isCoa,
-      roles: ["superadmin", "admin", "user"],
-    },
-    {
-      id: "coag",
-      label: "COA Groups",
-      icon: "ri-line-chart-fill",
-      link: "/coag",
-      stateVariables: isCoag,
-      roles: ["superadmin", "admin", "user"],
-    },
-    {
-      id: "charge",
-      label: "Charge",
-      icon: "ri-money-dollar-box-line",
-      link: "/charge",
-      stateVariables: isCharge,
-      roles: ["superadmin", "admin", "user"],
-    },
-    {
-      id: "cost-entry",
-      label: "Cost Entry",
-      icon: "ri-wallet-3-line",
-      link: "/cost-entry",
-      stateVariables: isCostEntry,
-      roles: ["superadmin", "admin", "user"],
-    },
+      click: function (e) {
+        e.preventDefault();
+        setFinance(!isFinance);
+        setIscurrentState("Finance");
+        updateIconSidebar(e);
+      },
+      subItems: [
+        {
+          id: "vouchers",
+          label: "Vouchers",
+          icon: "ri-folder-chart-line",
+          link: "/vouchers",
+          src: "/voucher-sidebar.png",
+          stateVariables: isVouchers,
+          roles: ["superadmin", "admin", "user"],
+        },
+        {
+          id: "invoices",
+          label: "Invoices",
+          icon: "ri-ticket-line",
+          link: "/invoices",
+          src: "/invoices-sidebar.png",
+          stateVariables: isInvoices,
+          roles: ["superadmin", "admin", "user"],
+        },
+        {
+          id: "coag",
+          label: "COA Groups",
+          icon: "ri-line-chart-fill",
+          link: "/coag",
+          stateVariables: isCoag,
+          roles: ["superadmin", "admin", "user"],
+        },
+        {
+          id: "charge",
+          label: "Charge",
+          icon: "ri-money-dollar-box-line",
+          link: "/charge",
+          stateVariables: isCharge,
+          roles: ["superadmin", "admin", "user"],
+        },
+        {
+          id: "coa",
+          label: "Chart of Accounts",
+          icon: "ri-line-chart-fill",
+          link: "/coa",
+          stateVariables: isCoa,
+          roles: ["superadmin", "admin", "user"],
+        },
+        {
+          id: "cost-entry",
+          label: "Cost Entry",
+          icon: "ri-wallet-3-line",
+          link: "/cost-entry",
+          stateVariables: isCostEntry,
+          roles: ["superadmin", "admin", "user"],
+        },
 
-    {
-      id: "reports",
-      label: "Reports",
-      icon: "ri-folders-line",
-      link: "/reports",
-      src: "/account.png",
-      stateVariables: isReports,
-      roles: ["superadmin", "admin", "user"],
+        {
+          id: "reports",
+          label: "Reports",
+          icon: "ri-folders-line",
+          link: "/reports",
+          src: "/account.png",
+          stateVariables: isReports,
+          roles: ["superadmin", "admin", "user"],
+        },
+      ],
     },
     {
-      id: "Organization",
-      label: "Organization",
-      icon: "ri-team-line",
-      link: "/organization",
-      src: "/team.png",
-      stateVariables: isOrganization,
+      id: "masters",
+      label: "Masters",
+      icon: "ri-customer-service-line",
+      src: "/jobs-sidebar.png",
+      stateVariables: isMaster,
       roles: ["superadmin", "admin", "user"],
-    },
-    {
-      id: "user-management",
-      label: "User Management",
-      icon: "ri-account-circle-line",
-      link: "/user-management",
-      src: "/users-sidebar.png",
-      stateVariables: isMyAccount,
-      roles: ["superadmin", "admin", "user"],
-    },
-    {
-      id: "Company",
-      label: "Company",
-      icon: "ri-secure-payment-line",
-      link: "/company",
-      src: "/account.png",
+      click: function (e) {
+        e.preventDefault();
+        setMaster(!isMaster);
+        setIscurrentState("Masters");
+        updateIconSidebar(e);
+      },
+      subItems: [
+        {
+          id: "Account Details",
+          label: "Account Details",
+          icon: "ri-coupon-5-line",
+          link: "/account-details",
+          src: "/account.png",
+          stateVariables: isAccountDetails,
+          roles: ["admin"],
+        },
+        {
+          id: "Organization",
+          label: "Organization",
+          icon: "ri-team-line",
+          link: "/organization",
+          src: "/team.png",
+          stateVariables: isOrganization,
+          roles: ["superadmin", "admin", "user"],
+        },
+        {
+          id: "user-management",
+          label: "User Management",
+          icon: "ri-account-circle-line",
+          link: "/user-management",
+          src: "/users-sidebar.png",
+          stateVariables: isUserManagement,
+          roles: ["superadmin", "admin", "user"],
+        },
+        {
+          id: "Company",
+          label: "Company",
+          icon: "ri-secure-payment-line",
+          link: "/company",
+          src: "/account.png",
 
-      stateVariables: isCompany,
-      roles: ["admin"],
+          stateVariables: isCompany,
+          roles: ["admin"],
+        },
+      ],
     },
-    {
-      id: "Account Details",
-      label: "Account Details",
-      icon: "ri-coupon-5-line",
-      link: "/account-details",
-      src: "/account.png",
-      stateVariables: isAccountDetails,
-      roles: ["admin"],
-    },
-
-    // {
-    //   id: "plans",
-    //   label: "Plans",
-    //   icon: "ri-money-dollar-circle-line",
-    //   link: "/plans",
-    //   src: "/plan.png",
-    //   stateVariables: isPlans,
-    //   roles: ["superadmin", "admin", "user"],
-    // },
-    // {
-    //   id: "subscriptionmanagement",
-    //   label: "Subscription Management",
-    //   icon: "ri-money-dollar-box-line",
-    //   link: "/subscriptionmanagement",
-    //   src: "/subscription.png",
-    //   stateVariables: isSubscriptionManagement,
-    //   roles: ["superadmin", "admin"],
-    // },
-    // {
-    //   id: "admin",
-    //   label: "Payment Management",
-    //   icon: "ri-secure-payment-line",
-    //   link: "/admin",
-    //   src: "/payment.png",
-    //   stateVariables: isPaymentManagement,
-    //   roles: ["superadmin", "admin"],
-    // },
-    // {
-    //   id: "couponmanagement",
-    //   label: "Coupon Management",
-    //   icon: "ri-coupon-5-line",
-    //   src: "/coupon.png",
-    //   link: "/couponmanagement",
-    //   stateVariables: isCouponManagement,
-    //   roles: ["superadmin", "admin"],
-    // },
   ];
   return <React.Fragment>{menuItems}</React.Fragment>;
 };
