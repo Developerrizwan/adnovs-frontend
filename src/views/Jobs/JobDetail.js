@@ -86,7 +86,7 @@ const JobDetail = (props) => {
 
   return (
     <>
-      {console.log("wwwwwwwwww", state)}
+      {/* {console.log("wwwwwwwwww", state)} */}
       <div className="page-content">
         <Container fluid>
           <Fragment>
@@ -99,8 +99,6 @@ const JobDetail = (props) => {
                       <Formik
                         enableReinitialize
                         initialValues={{
-                          company: JSON.parse(localStorage.getItem("authUser"))
-                            ?.company_id,
                           bl_number: state?.job?.bl_number
                             ? state?.job?.bl_number
                             : "",
@@ -126,10 +124,9 @@ const JobDetail = (props) => {
                           remarks: state?.job?.remarks
                             ? state?.job?.remarks
                             : "",
-                          job_type:
-                            //  state?.job?.job_type
-                            //   ? state?.job?.job_type
-                            "Job",
+                          job_type: state?.job?.job_type
+                            ? state?.job?.job_type
+                            : "Job",
                           job_status: state?.job?.job_status
                             ? state?.job?.job_status
                             : "",
@@ -145,69 +142,25 @@ const JobDetail = (props) => {
                             ? state?.job?.scope_of_work
                             : "",
                           eta: state?.job?.eta
-                            ? moment(state?.job?.eta).format(
-                                "DD/MM/yyyy hh:mm:ss A"
-                              )
+                            ? moment(state?.job?.eta).format("DD/MM/yyyy")
                             : new Date(),
                           etd: state?.job?.etd
-                            ? moment(state?.job?.etd).format(
-                                "DD/MM/yyyy hh:mm:ss A"
-                              )
+                            ? moment(state?.job?.etd).format("DD/MM/yyyy")
                             : new Date(),
                           organization_type: state?.job?.organization_type
-                            ? state?.job?.organization_type
+                            ? state?.job?.organization_type.toString(", ")
                             : [],
-                          branch: "JEDDHA",
-                          parties: state?.job?.parties
+                          branch: state?.job?.branch || "",
+                          parties: state?.job?.parties.toString(", ")
                             ? state?.job?.parties
                             : [],
                           notify: state?.job?.notify?.name || "",
                           client_ref: state?.job?.client_ref || "",
                           broker: state?.job?.broker?.name || "",
-                          transporter: state?.transporter || "",
-                          commodity: state?.commodity || "",
-                          quantity_text: state?.commodity || "",
+                          transporter: state?.job?.transporter || "",
+                          commodity: state?.job?.commodity || "",
+                          quantity_text: state?.job?.quantity_text || "",
                         }}
-                        // validationSchema={Yup.object({
-                        //   bl_number: Yup.string().required(
-                        //     "BL Number is Required"
-                        //   ),
-                        //   branch: Yup.string().required("Branch is Required"),
-                        //   bayan_number: Yup.string().required(
-                        //     "Bayan Number is Required"
-                        //   ),
-                        //   pod: Yup.string()
-                        //     .ensure()
-                        //     .required("POD is Required"),
-                        //   poa: Yup.string().required("POA is Required"),
-                        //   por: Yup.string().required(
-                        //     "Place Of Receipt is Required"
-                        //   ),
-                        //   pol: Yup.string()
-                        //     .ensure()
-                        //     .required("POL is Required"),
-                        //   consignee_name: Yup.string()
-                        //     .ensure()
-                        //     .required("Cosignee Name is Required"),
-                        //   shipper_name: Yup.string()
-                        //     .max(50, "Must be 50 characters or less")
-                        //     .trim()
-                        //     .required("Shipper Name is Required"),
-                        //   client_name: Yup.string()
-                        //     .ensure()
-                        //     .required("Client Name is Required"),
-                        //   remarks: Yup.string()
-                        //     .max(400, "Must be 400 characters or less")
-                        //     .trim()
-                        //     .required("Remarks is Required"),
-                        //   type: Yup.string().required("Type is Required"),
-                        //   scope_of_work: Yup.string().required(
-                        //     "Scope of work is Required"
-                        //   ),
-                        //   job_status: Yup.string().required(
-                        //     "Job Status is Required"
-                        //   ),
-                        // })}
                         onSubmit={(values, { reset }) => {}}
                       >
                         {({ values, setFieldValue }) => (
@@ -220,9 +173,9 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Job Number
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control jobs-field"
                                     name="job_number"
                                     style={{ background: "#EDEDED" }}
@@ -242,9 +195,9 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     BL Number
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control jobs-field"
                                     name="bl_number"
                                     style={{ background: "#EDEDED" }}
@@ -264,9 +217,9 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Consignee Name
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control jobs-field"
                                     name="consignee_name"
                                     style={{ background: "#EDEDED" }}
@@ -286,9 +239,9 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Client Name
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="client_name"
                                     style={{ background: "#EDEDED" }}
@@ -308,9 +261,9 @@ const JobDetail = (props) => {
                                 <div className="mb-3">
                                   <Label htmlFor="pod" className="form-label">
                                     POD
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="pod"
                                     style={{ background: "#EDEDED" }}
@@ -328,9 +281,9 @@ const JobDetail = (props) => {
                                 <div className="mb-3">
                                   <Label htmlFor="poa" className="form-label">
                                     POA
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="poa"
                                     style={{ background: "#EDEDED" }}
@@ -347,9 +300,9 @@ const JobDetail = (props) => {
                                 <div className="mb-3">
                                   <Label htmlFor="pol" className="form-label">
                                     POL
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="pol"
                                     style={{ background: "#EDEDED" }}
@@ -369,9 +322,9 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Bayan Number
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="bayan_number"
                                     style={{ background: "#EDEDED" }}
@@ -391,9 +344,9 @@ const JobDetail = (props) => {
                                 <div className="mb-3">
                                   <Label htmlFor="por" className="form-label">
                                     Place Of Receipt
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="por"
                                     style={{ background: "#EDEDED" }}
@@ -410,9 +363,9 @@ const JobDetail = (props) => {
                                 <div className="mb-3">
                                   <Label htmlFor="type" className="form-label">
                                     Type
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="type"
                                     style={{ background: "#EDEDED" }}
@@ -432,9 +385,9 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Scope Of Work
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="scope_of_work"
                                     style={{ background: "#EDEDED" }}
@@ -453,6 +406,7 @@ const JobDetail = (props) => {
                                     ETA
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="eta"
                                     style={{ background: "#EDEDED" }}
@@ -474,6 +428,7 @@ const JobDetail = (props) => {
                                     ETD
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="etd"
                                     style={{ background: "#EDEDED" }}
@@ -493,9 +448,9 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Job Status
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="job_status"
                                     style={{ background: "#EDEDED" }}
@@ -515,9 +470,9 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Branch
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="branch"
                                     style={{ background: "#EDEDED" }}
@@ -539,6 +494,7 @@ const JobDetail = (props) => {
                                     Organization Types
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="organization_type"
                                     style={{ background: "#EDEDED" }}
@@ -557,18 +513,19 @@ const JobDetail = (props) => {
                               <Grid item lg={3} xs={12}>
                                 <div className="mb-3">
                                   <Label
-                                    htmlFor="parties"
+                                    htmlFor="shipper_name"
                                     className="form-label"
                                   >
-                                    Parties
+                                    Shipper Name
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
-                                    name="parties"
+                                    name="shipper_name"
                                     style={{ background: "#EDEDED" }}
                                   />
                                   <ErrorMessage
-                                    name="parties"
+                                    name="shipper_name"
                                     render={(msg) => (
                                       <div className="text-danger">{msg}</div>
                                     )}
@@ -578,39 +535,19 @@ const JobDetail = (props) => {
                               <Grid item lg={3} xs={12}>
                                 <div className="mb-3">
                                   <Label
-                                    htmlFor="notify"
+                                    htmlFor="quantity_text"
                                     className="form-label"
                                   >
-                                    Notify
+                                    Quantity
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
-                                    name="notify"
+                                    name="quantity_text"
                                     style={{ background: "#EDEDED" }}
                                   />
                                   <ErrorMessage
-                                    name="notify"
-                                    render={(msg) => (
-                                      <div className="text-danger">{msg}</div>
-                                    )}
-                                  />
-                                </div>
-                              </Grid>
-                              <Grid item lg={3} xs={12}>
-                                <div className="mb-3">
-                                  <Label
-                                    htmlFor="broker"
-                                    className="form-label"
-                                  >
-                                    Broker
-                                  </Label>
-                                  <Field
-                                    className="form-control"
-                                    name="broker"
-                                    style={{ background: "#EDEDED" }}
-                                  />
-                                  <ErrorMessage
-                                    name="broker"
+                                    name="quantity_text"
                                     render={(msg) => (
                                       <div className="text-danger">{msg}</div>
                                     )}
@@ -626,6 +563,7 @@ const JobDetail = (props) => {
                                     Commodity
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     placeholder="Commodity"
                                     name="commodity"
@@ -639,9 +577,31 @@ const JobDetail = (props) => {
                                   />
                                 </div>
                               </Grid>
+                              <Grid item lg={3} xs={12}>
+                                <div className="mb-3">
+                                  <Label
+                                    htmlFor="broker"
+                                    className="form-label"
+                                  >
+                                    Broker
+                                  </Label>
+                                  <Field
+                                    disabled
+                                    className="form-control"
+                                    name="broker"
+                                    style={{ background: "#EDEDED" }}
+                                  />
+                                  <ErrorMessage
+                                    name="broker"
+                                    render={(msg) => (
+                                      <div className="text-danger">{msg}</div>
+                                    )}
+                                  />
+                                </div>
+                              </Grid>
                             </Grid>
 
-                            <Grid container spacing={2}>
+                            {/* <Grid container spacing={2}>
                               <Grid item lg={3} xs={12}>
                                 <div className="mb-3">
                                   <Label
@@ -649,9 +609,9 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Container/Consignment
-                                    {/* <span className="text-danger">*</span> */}
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="container"
                                     style={{ background: "#EDEDED" }}
@@ -673,6 +633,7 @@ const JobDetail = (props) => {
                                     Transporter
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="transporter"
                                     style={{ background: "#EDEDED" }}
@@ -688,19 +649,19 @@ const JobDetail = (props) => {
                               <Grid item lg={3} xs={12}>
                                 <div className="mb-3">
                                   <Label
-                                    htmlFor="quantity_text"
+                                    htmlFor="notify"
                                     className="form-label"
                                   >
-                                    Quantity
+                                    Notify
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
-                                    placeholder="Quantity"
-                                    name="quantity_text"
+                                    name="notify"
                                     style={{ background: "#EDEDED" }}
                                   />
                                   <ErrorMessage
-                                    name="quantity_text"
+                                    name="notify"
                                     render={(msg) => (
                                       <div className="text-danger">{msg}</div>
                                     )}
@@ -716,6 +677,7 @@ const JobDetail = (props) => {
                                     Client Ref
                                   </Label>
                                   <Field
+                                    disabled
                                     className="form-control"
                                     name="client_ref"
                                     placeholder="Client Ref"
@@ -729,31 +691,9 @@ const JobDetail = (props) => {
                                   />
                                 </div>
                               </Grid>
-                            </Grid>
+                            </Grid> */}
 
                             <Grid container spacing={2}>
-                              <Grid item lg={3} xs={12}>
-                                <div className="mb-3">
-                                  <Label
-                                    htmlFor="shipper_name"
-                                    className="form-label"
-                                  >
-                                    Shipper Name
-                                    <span className="text-danger">*</span>
-                                  </Label>
-                                  <Field
-                                    className="form-control"
-                                    name="shipper_name"
-                                    style={{ background: "#EDEDED" }}
-                                  />
-                                  <ErrorMessage
-                                    name="shipper_name"
-                                    render={(msg) => (
-                                      <div className="text-danger">{msg}</div>
-                                    )}
-                                  />
-                                </div>
-                              </Grid>
                               <Grid item lg={3} xs={12}>
                                 <div className="mb-3">
                                   <Label
@@ -761,9 +701,9 @@ const JobDetail = (props) => {
                                     className="form-label"
                                   >
                                     Remarks
-                                    <span className="text-danger">*</span>
                                   </Label>
                                   <Field
+                                    disabled
                                     as="textarea"
                                     className="form-control"
                                     name="remarks"
@@ -810,7 +750,6 @@ const JobDetail = (props) => {
                     </div>
                     <div className="card-body">
                       <h4>Invoices</h4>
-                      {console.log("invoices", state?.invoices)}
                       <DataTable
                         customStyles={customStyles}
                         columns={[
@@ -1244,6 +1183,330 @@ const JobDetail = (props) => {
                           },
                         ]}
                         data={state?.invoices}
+                        paginationPerPage={props.userPagination?.rowsPerPage}
+                        onChangePage={(p, t) => {
+                          props.handlePagination({
+                            ...props.userPagination,
+                            currentPage: p,
+                          });
+                        }}
+                        onChangeRowsPerPage={(c, t) => {
+                          props.handlePagination({
+                            ...props.userPagination,
+                            rowsPerPage: c,
+                            currentPage: t,
+                          });
+                        }}
+                        paginationServer
+                        paginationDefaultPage={
+                          props.userPagination?.currentPage
+                        }
+                        paginationTotalRows={props.userPagination?.totalRows}
+                        pagination={state?.invoices?.length > 10}
+                      />
+                    </div>
+                    <div className="card-body">
+                      <h4>Vouchers</h4>
+                      <DataTable
+                        customStyles={customStyles}
+                        columns={[
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Voucher Type
+                              </span>
+                            ),
+                            selector: (row) => row.voucher_type,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value?.voucher_type}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.voucher_type}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Branch
+                              </span>
+                            ),
+                            selector: (row) => row.branch,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value?.branch}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.branch}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Job ID
+                              </span>
+                            ),
+                            selector: (row) => row,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value?.job?.job_number}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.job?.job_number}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Date
+                              </span>
+                            ),
+                            selector: (row) => row,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={moment(value?.date).format(
+                                    "MM/DD/YYYY"
+                                  )}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {moment(value?.date).format("MM/DD/YYYY")}
+                                </div>
+                              );
+                            },
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                G/L Date
+                              </span>
+                            ),
+                            selector: (row) => row,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={moment(value?.gl_date).format(
+                                    "MM/DD/YYYY"
+                                  )}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {moment(value?.gl_date).format("MM/DD/YYYY")}
+                                </div>
+                              );
+                            },
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                FC Amount
+                              </span>
+                            ),
+                            selector: (row) => row.fc_amount,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.fc_amount}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.fc_amount}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Amount(SAR)
+                              </span>
+                            ),
+                            selector: (row) => row.amount_sar,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.amount_sar}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.amount_sar}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Party A/C
+                              </span>
+                            ),
+                            selector: (row) => row,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.party_account?.code}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value?.party_account_type === "organization"
+                                    ? value.party_account?.name
+                                    : value.party_account?.code}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Invoice
+                              </span>
+                            ),
+                            selector: (row) => row,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value?.invoice?.invoice_number}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.invoice?.invoice_number}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                            checkHide: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Voucher For
+                              </span>
+                            ),
+                            selector: (row) => row,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value?.voucher_for}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value?.voucher_for}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                            checkHide: true,
+                          },
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Naration
+                              </span>
+                            ),
+                            selector: (row) => row.naration,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value?.naration}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.naration}
+                                </div>
+                              );
+                            },
+                            sortable: true,
+                          },
+
+                          {
+                            name: (
+                              <span className="font-weight-bold fs-13">
+                                Remarks
+                              </span>
+                            ),
+                            selector: (row) => row.remarks,
+                            cell: (value) => {
+                              return (
+                                <div
+                                  title={value.remarks}
+                                  style={{
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    maxWidth: "200px",
+                                  }}
+                                >
+                                  {value.remarks}
+                                </div>
+                              );
+                            },
+
+                            sortable: true,
+                          },
+                        ]}
+                        data={state?.vouchers}
                         paginationPerPage={props.userPagination?.rowsPerPage}
                         onChangePage={(p, t) => {
                           props.handlePagination({
