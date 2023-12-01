@@ -44,9 +44,9 @@ const OrganizationAccountStatement = (props) => {
     const doc = new jsPDF();
     doc.text(selectedOrganizationLedger?.label, 60, 10);
     doc.text(`Account: ${selectOrganization?.label}`, 12, 22);
-    doc.text(`Total Amount: ${totalAmount}`, 12, 32);
-    doc.text(`Total Debit: ${Number(drAmount).toFixed(2)}`, 80, 32);
-    doc.text(`Total Credit: ${Number(crAmount).toFixed(2)}`, 144, 32);
+    doc.text(`Total Debit: ${Number(drAmount).toFixed(2)}`, 12, 32);
+    doc.text(`Total Credit: ${Number(crAmount).toFixed(2)}`, 80, 32);
+    doc.text(`Total Amount: ${totalAmount}`, 144, 32);
 
     const data = reports;
     const allKeys = Array.from(
@@ -98,15 +98,31 @@ const OrganizationAccountStatement = (props) => {
       },
       columnStyles: {
         0: { cellWidth: 25 },
-        1: { cellWidth: 25 },
-        2: { cellWidth: 25 },
-        3: { cellWidth: 25 },
-        4: { cellWidth: 25 },
-        5: { cellWidth: 25 },
-        6: { cellWidth: 25 },
-        // 9: { cellWidth: 20 },
+        1: { cellWidth: 22 },
+        2: { cellWidth: 30 },
+        3: { cellWidth: 30 },
+        4: { cellWidth: 30 },
+        5: { cellWidth: 30 },
+        6: { cellWidth: 30 },
       },
-      margin: { left: 10, right: 10 },
+      margin: { left: 10, right: 20 },
+    });
+
+    doc.autoTable({
+      head: [["Total Debit", "Total Credit", "Total Amount"]],
+      body: [
+        [Number(drAmount).toFixed(2), Number(crAmount).toFixed(2), totalAmount],
+      ],
+      styles: {
+        font: "Arial",
+        fontSize: 11,
+      },
+      columnStyles: {
+        0: { cellWidth: 30 },
+        1: { cellWidth: 30 },
+        2: { cellWidth: 30 },
+      },
+      margin: { left: 117, right: 10 },
     });
 
     doc.save("account_statement.pdf");
