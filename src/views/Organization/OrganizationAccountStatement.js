@@ -109,7 +109,7 @@ const OrganizationAccountStatement = (props) => {
     });
 
     doc.autoTable({
-      head: [["Total Debit", "Total Credit", "Total Amount"]],
+      head: [["Total Debit", "Total Credit", "Balance"]],
       body: [
         [Number(drAmount).toFixed(2), Number(crAmount).toFixed(2), totalAmount],
       ],
@@ -197,9 +197,11 @@ const OrganizationAccountStatement = (props) => {
       )
       .then((res) => {
         const { data } = res;
-        let total_amount = data.reduce((x, y) => {
-          return Number(x) + Number(y.net_amount);
-        }, 0);
+        let total_amount = 0;
+
+        if (data.length > 0) {
+          total_amount = data[data.length - 1]["net_amount"];
+        }
 
         let dr_amount = data.reduce((x, y) => {
           return Number(x) + Number(y.dr_amount);
