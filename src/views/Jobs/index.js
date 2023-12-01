@@ -133,13 +133,11 @@ const Jobs = (props) => {
       }
       getJobs(jobPagination, searchValue, val);
     });
-    // getJobs(jobPagination, searchValue, selectedValue);
   }, []);
 
-  const onTabSelect = (val) => {
-    setSelectedValue(val);
-    getJobs(jobPagination, searchValue, val);
-  };
+  // const onTabSelect = (val) => {
+  //   setSelectedValue(val);
+  // };
 
   return (
     <>
@@ -185,7 +183,7 @@ const Jobs = (props) => {
                     <div key={i}>
                       <Tab
                         label={dd}
-                        setSelectedValue={(val) => onTabSelect(val)}
+                        setSelectedValue={(val) => setSelectedValue(val)}
                         selected={selectedValue === dd}
                         count={count[dd]}
                       />

@@ -215,7 +215,7 @@ const Voucher = (props) => {
     allCurrencies = allCurrencies.map((cur) => {
       return {
         label: cur.currency + "  -  " + cur.countryName,
-        value: cur.currency + "  -  " + cur.countryName,
+        value: cur.currency,
       };
     });
     if (props.isEdit) {
