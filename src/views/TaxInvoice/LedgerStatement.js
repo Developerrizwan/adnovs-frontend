@@ -19,8 +19,10 @@ const ProfitAndLoss = (props) => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [jobOptions, setJobOptions] = useState([]);
   const [coaOptions, setCoaOptions] = useState([]);
-  const [selectCoa, setSelectedCoa] = useState({});
+  const [selectCoa, setSelectedCoa] = useState(null);
   const [params, setParams] = useState(null);
   const [cols, setCols] = useState([
     {
@@ -84,7 +86,7 @@ const ProfitAndLoss = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Voucher</span>,
+      name: <span className="font-weight-bold fs-13">Branch</span>,
       selector: (row) => row?.voucher,
       cell: (value) => {
         return (
@@ -387,20 +389,22 @@ const ProfitAndLoss = (props) => {
 
   const exportProjectToPdf = () => {
     const doc = new jsPDF();
+    const data = reports;
 
     doc.text("General Ledger Statement", 70, 10);
+    doc.text(`Account: ${selectCoa?.label || selectedJob?.label}`, 12, 22);
+    console.log("selecccc", selectCoa);
 
-    const data = reports;
     const allKeys = Array.from(
       new Set(data.flatMap((obj) => Object.keys(obj)))
     );
 
     const customHeaderTitles = [
-      "Account",
+      // "Account",
       "Date",
       // "Type",
-      "Voucher",
-      "Invoice Number",
+      "Branch",
+      // "Invoice Number",
       // "Currency",
       "Tax Code",
       "Fcy Amount",
@@ -423,11 +427,11 @@ const ProfitAndLoss = (props) => {
       head: [columns.map((column) => column.header)],
       body: data.map((row) => {
         return [
-          row?.account,
+          // row?.account,
           moment(row?.date).format("DD-MM-YYYY"),
           // row?.type,
           row?.voucher,
-          row?.invoice_number,
+          // row?.invoice_number,
           // row?.currency,
           row?.vat_percent,
           row?.fcy_amount,
@@ -443,24 +447,24 @@ const ProfitAndLoss = (props) => {
           // row?.language_name,
         ];
       }),
-      // startY: 25,
-      // styles: {
-      //   font: "Arial",
-      //   fontSize: 11,
-      // },
+      startY: 25,
+      styles: {
+        font: "Arial",
+        fontSize: 10,
+      },
       columnStyles: {
-        0: { cellWidth: 18 },
-        1: { cellWidth: 15 },
+        0: { cellWidth: 20 },
+        1: { cellWidth: 18 },
         2: { cellWidth: 15 },
-        3: { cellWidth: 15 },
-        4: { cellWidth: 15 },
-        5: { cellWidth: 15 },
-        6: { cellWidth: 15 },
-        7: { cellWidth: 15 },
-        8: { cellWidth: 15 },
-        9: { cellWidth: 15 },
-        10: { cellWidth: 18 },
-        11: { cellWidth: 15 },
+        3: { cellWidth: 20 },
+        4: { cellWidth: 20 },
+        5: { cellWidth: 20 },
+        6: { cellWidth: 20 },
+        7: { cellWidth: 20 },
+        8: { cellWidth: 20 },
+        9: { cellWidth: 25 },
+        // 10: { cellWidth: 15 },
+        // 11: { cellWidth: 15 },
       },
       // margin: { left: 10, right: 10 },
     });
@@ -473,7 +477,7 @@ const ProfitAndLoss = (props) => {
         Account: report?.account,
         Date: moment(report?.date).format("DD-MM-YYYY"),
         Type: report?.type,
-        Voucher: report?.voucher,
+        Branch: report?.voucher,
         "Invoice Numer": report?.invoice_number,
         Currency: report?.currency,
         "Tax Code": report?.vat_percent,
@@ -503,13 +507,13 @@ const ProfitAndLoss = (props) => {
     FileSaver.saveAs(data, fileName + fileExtension);
   };
 
-  const getReport = (id, st, et) => {
+  const getReport = (id, st, et, jobId) => {
     setLoading(true);
     apiAuth
       .get(
-        `/api/general/ledger/?coa=${
-          id ? id : ""
-        }&start_date=${st}&end_date=${et}`
+        `/api/general/ledger/?start_date=${st}&end_date=${et}${
+          id ? `&coa=${id}` : ""
+        }${jobId ? `&job=${jobId}` : ""}`
       )
       .then((res) => {
         const { data } = res;
@@ -540,6 +544,7 @@ const ProfitAndLoss = (props) => {
     };
     setParams(dd);
     getAccounts(coa);
+    getJobOptions();
 
     setTimeout(() => {
       if (coa) {
@@ -570,6 +575,23 @@ const ProfitAndLoss = (props) => {
       .catch((err) => console.log(err));
   };
 
+  const getJobOptions = (val) => {
+    apiAuth
+      .get(`/api/master/job/?&type=Job`)
+      .then((res) => {
+        const { data } = res;
+        let jobOpts = data.map((opt) => {
+          return {
+            label: opt?.job_number,
+            value: opt?.id,
+          };
+        });
+
+        setJobOptions(jobOpts);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <React.Fragment>
       <div className={"page-content"}>
@@ -593,25 +615,56 @@ const ProfitAndLoss = (props) => {
                   start_time: params?.st ? new Date(params?.st) : new Date(),
                   end_time: params?.et ? new Date(params?.et) : new Date(),
                   coa_type: params?.coa || "",
+                  job: "",
                 }}
                 validationSchema={Yup.object({
-                  coa_type: Yup.string().ensure().required("COA is Required"),
+                  // coa_type: Yup.string().ensure().required("COA is Required"),
                 })}
                 onSubmit={(values, { reset }) => {
                   const st = changeDateFormat(values.start_time);
                   const et = changeDateFormat(values.end_time);
                   // let coa = Number(props.match.params.coaId);
-                  getReport(values.coa_type, st, et);
+                  getReport(
+                    selectCoa ? values?.coa_type : null,
+                    st,
+                    et,
+                    selectedJob ? values?.job : null
+                  );
                 }}
               >
                 {({ values, errors, touched, setFieldValue }) => (
                   <Form className="av-tooltip tooltip-label-bottom">
                     <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={3} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="job" className="form-label">
+                            Job
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <Select
+                            name="job"
+                            styles={customStyles}
+                            value={selectedJob}
+                            options={jobOptions}
+                            onChange={(data) => {
+                              setFieldValue("job", data.value);
+                              setSelectedCoa(null);
+                              setSelectedJob(data);
+                            }}
+                            placeholder="Select Job..."
+                          />
+                          {errors.job && touched.job && (
+                            <div className="invalid-feedback d-block">
+                              {errors.job}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+                      <Grid item lg={3} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="coa_type" className="form-label">
                             COA
-                            <span className="text-danger">*</span>
+                            {/* <span className="text-danger">*</span> */}
                           </label>
                           <Select
                             name="coa_type"
@@ -620,7 +673,7 @@ const ProfitAndLoss = (props) => {
                             options={coaOptions}
                             onChange={(data) => {
                               setFieldValue("coa_type", data.value);
-                              // setCoaOptions(data);
+                              setSelectedJob(null);
                               setSelectedCoa(data);
                             }}
                             placeholder="Select Coa..."
@@ -632,7 +685,7 @@ const ProfitAndLoss = (props) => {
                           )}
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={3} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="start_time" className="form-label">
                             Start Time
@@ -680,7 +733,7 @@ const ProfitAndLoss = (props) => {
                           </div>
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                      <Grid item lg={3} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="end_time" className="form-label">
                             End Time

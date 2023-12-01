@@ -955,56 +955,117 @@ const Voucher = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="voucher_from" className="form-label">
-                            From
-                            {/* <span className="text-danger">*</span> */}
-                          </label>
-                          <Select
-                            name="voucher_from"
-                            styles={customStyles}
-                            value={selectedVoucherFrom}
-                            options={fromAndToOptions}
-                            onChange={(event) => {
-                              console.log(event, "event");
-                              setSelectedVoucherFrom(event);
-                              setFieldValue("voucher_from", event.value);
-                              setFieldValue("voucher_from_type", event.type);
-                            }}
-                          />
-                          {errors.voucher_from && touched.voucher_from && (
-                            <div className="invalid-feedback d-block">
-                              {errors.voucher_from}
+                      {selectedVoucher?.value === "Payment" ||
+                      selectedVoucher?.value === "Receipt" ? (
+                        <></>
+                      ) : (
+                        <>
+                          <Grid item lg={4} xs={12}>
+                            <div className="mb-3">
+                              <label
+                                htmlFor="voucher_from"
+                                className="form-label"
+                              >
+                                From
+                                {/* <span className="text-danger">*</span> */}
+                              </label>
+                              <Select
+                                name="voucher_from"
+                                styles={customStyles}
+                                value={selectedVoucherFrom}
+                                options={fromAndToOptions}
+                                onChange={(event) => {
+                                  console.log(event, "event");
+                                  setSelectedVoucherFrom(event);
+                                  setFieldValue("voucher_from", event.value);
+                                  setFieldValue(
+                                    "voucher_from_type",
+                                    event.type
+                                  );
+                                }}
+                              />
+                              {errors.voucher_from && touched.voucher_from && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.voucher_from}
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      </Grid>
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="voucher_to" className="form-label">
-                            To
-                            {/* <span className="text-danger">*</span> */}
-                          </label>
-                          <Select
-                            name="voucher_to"
-                            styles={customStyles}
-                            value={selectedVoucherTo}
-                            options={fromAndToOptions}
-                            onChange={(event) => {
-                              // console.log(event, "event");
-                              setSelectedVoucherTo(event);
-                              setFieldValue("voucher_to", event.value);
-                              setFieldValue("voucher_to_type", event.type);
-                            }}
-                          />
-                          {errors.voucher_to && touched.voucher_to && (
-                            <div className="invalid-feedback d-block">
-                              {errors.voucher_to}
+                          </Grid>
+                          <Grid item lg={4} xs={12}>
+                            <div className="mb-3">
+                              <label
+                                htmlFor="voucher_to"
+                                className="form-label"
+                              >
+                                To
+                                {/* <span className="text-danger">*</span> */}
+                              </label>
+                              <Select
+                                name="voucher_to"
+                                styles={customStyles}
+                                value={selectedVoucherTo}
+                                options={fromAndToOptions}
+                                onChange={(event) => {
+                                  // console.log(event, "event");
+                                  setSelectedVoucherTo(event);
+                                  setFieldValue("voucher_to", event.value);
+                                  setFieldValue("voucher_to_type", event.type);
+                                }}
+                              />
+                              {errors.voucher_to && touched.voucher_to && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.voucher_to}
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      </Grid>
+                          </Grid>
+                        </>
+                      )}
+                      {selectedVoucher.value === "Payment" && (
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <label htmlFor="pay_to" className="form-label">
+                              Pay To
+                              {/* <span className="text-danger">*</span> */}
+                            </label>
+                            <Field
+                              className="form-control"
+                              name="pay_to"
+                              placeholder="Pay To"
+                              style={{ background: "#EDEDED" }}
+                            />
+                            {errors.pay_to && touched.pay_to && (
+                              <div className="invalid-feedback d-block">
+                                {errors.pay_to}
+                              </div>
+                            )}
+                          </div>
+                        </Grid>
+                      )}
+                      {selectedVoucher.value === "Receipt" && (
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <label
+                              htmlFor="received_from"
+                              className="form-label"
+                            >
+                              Recieved from
+                              {/* <span className="text-danger">*</span> */}
+                            </label>
+                            <Field
+                              className="form-control"
+                              name="received_from"
+                              placeholder="Recieved from"
+                              style={{ background: "#EDEDED" }}
+                            />
+                            {errors.received_from && touched.received_from && (
+                              <div className="invalid-feedback d-block">
+                                {errors.received_from}
+                              </div>
+                            )}
+                          </div>
+                        </Grid>
+                      )}
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="ref_date" className="form-label">
@@ -1058,6 +1119,37 @@ const Voucher = (props) => {
                           )}
                         </div>
                       </Grid>
+                      {(selectedVoucher.value === "Payment" ||
+                        selectedVoucher.value === "Receipt") && (
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <label
+                              htmlFor="instrument_type"
+                              className="form-label"
+                            >
+                              Instrument Type
+                              {/* <span className="text-danger">*</span> */}
+                            </label>
+
+                            <Select
+                              name="instrument_type"
+                              styles={customStyles}
+                              value={selInstType}
+                              options={instTypeOptions}
+                              onChange={(data) => {
+                                setFieldValue("instrument_type", data.value);
+                                setSelInstType(data);
+                              }}
+                            />
+                            {errors.instrument_type &&
+                              touched.instrument_type && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.instrument_type}
+                                </div>
+                              )}
+                          </div>
+                        </Grid>
+                      )}
                     </Grid>
 
                     <Grid container spacing={2}>
@@ -1178,103 +1270,28 @@ const Voucher = (props) => {
                       </Grid>
                     )}
 
-                    <Grid container spacing={2}>
-                      <Grid item lg={8} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="address" className="form-label">
-                            Address
-                            {/* <span className="text-danger">*</span> */}
-                          </label>
-                          <Field
-                            placeholder="Address"
-                            className="form-control"
-                            name="address"
-                            style={{ background: "#EDEDED" }}
-                          />
-                          {errors.address && touched.address && (
-                            <div className="invalid-feedback d-block">
-                              {errors.address}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
-                    </Grid>
-
-                    {(selectedVoucher.value === "Payment" ||
-                      selectedVoucher.value === "Receipt") && (
+                    {selectedVoucher?.value === "Payment" ||
+                    selectedVoucher?.value === "Receipt" ? (
+                      <></>
+                    ) : (
                       <Grid container spacing={2}>
-                        {selectedVoucher.value === "Payment" && (
-                          <Grid item lg={4} xs={12}>
-                            <div className="mb-3">
-                              <label htmlFor="pay_to" className="form-label">
-                                Pay To
-                                {/* <span className="text-danger">*</span> */}
-                              </label>
-                              <Field
-                                className="form-control"
-                                name="pay_to"
-                                placeholder="Pay To"
-                                style={{ background: "#EDEDED" }}
-                              />
-                              {errors.pay_to && touched.pay_to && (
-                                <div className="invalid-feedback d-block">
-                                  {errors.pay_to}
-                                </div>
-                              )}
-                            </div>
-                          </Grid>
-                        )}
-                        {selectedVoucher.value === "Receipt" && (
-                          <Grid item lg={4} xs={12}>
-                            <div className="mb-3">
-                              <label
-                                htmlFor="received_from"
-                                className="form-label"
-                              >
-                                Recieved from
-                                {/* <span className="text-danger">*</span> */}
-                              </label>
-                              <Field
-                                className="form-control"
-                                name="received_from"
-                                placeholder="Recieved from"
-                                style={{ background: "#EDEDED" }}
-                              />
-                              {errors.received_from &&
-                                touched.received_from && (
-                                  <div className="invalid-feedback d-block">
-                                    {errors.received_from}
-                                  </div>
-                                )}
-                            </div>
-                          </Grid>
-                        )}
-                        <Grid item lg={4} xs={12}>
+                        <Grid item lg={8} xs={12}>
                           <div className="mb-3">
-                            <label
-                              htmlFor="instrument_type"
-                              className="form-label"
-                            >
-                              Instrument Type
+                            <label htmlFor="address" className="form-label">
+                              Address
                               {/* <span className="text-danger">*</span> */}
                             </label>
-
-                            <Select
-                              name="instrument_type"
-                              styles={customStyles}
-                              value={selInstType}
-                              options={instTypeOptions}
-                              onChange={(data) => {
-                                setFieldValue("instrument_type", data.value);
-                                setSelInstType(data);
-                              }}
+                            <Field
+                              placeholder="Address"
+                              className="form-control"
+                              name="address"
+                              style={{ background: "#EDEDED" }}
                             />
-                            {errors.instrument_type &&
-                              touched.instrument_type && (
-                                <div className="invalid-feedback d-block">
-                                  {errors.instrument_type}
-                                </div>
-                              )}
+                            {errors.address && touched.address && (
+                              <div className="invalid-feedback d-block">
+                                {errors.address}
+                              </div>
+                            )}
                           </div>
                         </Grid>
                       </Grid>

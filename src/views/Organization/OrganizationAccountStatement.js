@@ -46,7 +46,7 @@ const OrganizationAccountStatement = (props) => {
     doc.text(`Account: ${selectOrganization?.label}`, 12, 22);
     doc.text(`Total Debit: ${Number(drAmount).toFixed(2)}`, 12, 32);
     doc.text(`Total Credit: ${Number(crAmount).toFixed(2)}`, 80, 32);
-    doc.text(`Total Amount: ${totalAmount}`, 144, 32);
+    doc.text(`Balance: ${totalAmount}`, 144, 32);
 
     const data = reports;
     const allKeys = Array.from(
@@ -65,7 +65,7 @@ const OrganizationAccountStatement = (props) => {
       // "Branch",
       "Debit",
       "Credit",
-      "Total Amount",
+      "Balance",
     ];
 
     const columns = allKeys.map((key, index) => ({
