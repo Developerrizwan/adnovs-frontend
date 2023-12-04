@@ -955,7 +955,8 @@ const Voucher = (props) => {
                     </Grid>
 
                     <Grid container spacing={2}>
-                      {selectedVoucher?.value === "Payment" ||
+                      {selectedVoucher?.value === "Journal" ||
+                      selectedVoucher?.value === "Payment" ||
                       selectedVoucher?.value === "Receipt" ? (
                         <></>
                       ) : (
@@ -1271,6 +1272,7 @@ const Voucher = (props) => {
                     )}
 
                     {selectedVoucher?.value === "Payment" ||
+                    selectedVoucher?.value === "Journal" ||
                     selectedVoucher?.value === "Receipt" ? (
                       <></>
                     ) : (
