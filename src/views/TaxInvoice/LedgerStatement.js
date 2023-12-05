@@ -398,7 +398,7 @@ const ProfitAndLoss = (props) => {
     doc.text(`Account: ${selectCoa?.label || selectedJob?.label}`, 12, 22);
     doc.text(`Total Debit: ${Number(drAmount).toFixed(2)}`, 12, 32);
     doc.text(`Total Credit: ${Number(crAmount).toFixed(2)}`, 80, 32);
-    doc.text(`Toal Amount: ${totalAmount}`, 144, 32);
+    doc.text(`Balance: ${totalAmount}`, 144, 32);
     console.log("selecccc", selectCoa);
 
     const allKeys = Array.from(
@@ -409,18 +409,18 @@ const ProfitAndLoss = (props) => {
       // "Account",
       "Date",
       // "Type",
-      "Branch",
+      // "Branch",
       // "Invoice Number",
       // "Currency",
       "Tax Code",
       "Fcy Amount",
       "Vat Amount",
       "Amount",
-      "Dr Amount",
-      "Cr Amount",
-      // "Net Amount",
       "Party Account",
       "Job No",
+      "Dr Amount",
+      "Cr Amount",
+      "Balance",
       // "Narrations",
       // "Branch",
       // "Language Name",
@@ -436,18 +436,18 @@ const ProfitAndLoss = (props) => {
           // row?.account,
           moment(row?.date).format("DD-MM-YYYY"),
           // row?.type,
-          row?.voucher,
+          // row?.voucher,
           // row?.invoice_number,
           // row?.currency,
           row?.vat_percent,
           row?.fcy_amount,
           Number(row?.vat_amount).toFixed(2),
           Number(row?.amount).toFixed(2),
-          Number(row?.dr_amount).toFixed(2),
-          Number(row?.cr_amount).toFixed(2),
-          // Number(row?.net_amount).toFixed(2),
           row?.party_account,
           row?.job_no,
+          Number(row?.dr_amount).toFixed(2),
+          Number(row?.cr_amount).toFixed(2),
+          Number(row?.net_amount).toFixed(2),
           // row?.narrations,
           // row?.branch,
           // row?.language_name,
@@ -460,15 +460,15 @@ const ProfitAndLoss = (props) => {
       },
       columnStyles: {
         0: { cellWidth: 20 },
-        1: { cellWidth: 18 },
-        2: { cellWidth: 15 },
+        1: { cellWidth: 12 },
+        2: { cellWidth: 20 },
         3: { cellWidth: 20 },
         4: { cellWidth: 20 },
-        5: { cellWidth: 20 },
+        5: { cellWidth: 25 },
         6: { cellWidth: 20 },
         7: { cellWidth: 20 },
         8: { cellWidth: 20 },
-        9: { cellWidth: 25 },
+        9: { cellWidth: 20 },
         // 10: { cellWidth: 15 },
         // 11: { cellWidth: 15 },
       },
@@ -476,7 +476,7 @@ const ProfitAndLoss = (props) => {
     });
 
     doc.autoTable({
-      head: [["Total Debit", "Total Credit", "Total Amount"]],
+      head: [["Total Debit", "Total Credit", "Balance"]],
       body: [
         [Number(drAmount).toFixed(2), Number(crAmount).toFixed(2), totalAmount],
       ],
@@ -489,7 +489,7 @@ const ProfitAndLoss = (props) => {
         1: { cellWidth: 20 },
         2: { cellWidth: 20 },
       },
-      margin: { left: 127, right: 10 },
+      margin: { left: 150, right: 10 },
     });
 
     doc.save("ledger_statement.pdf");
@@ -510,7 +510,7 @@ const ProfitAndLoss = (props) => {
         Amount: report?.amount.toFixed(2),
         "Dr Amount": report?.dr_amount.toFixed(2),
         "Cr Amount": report?.cr_amount.toFixed(2),
-        "Net Amount": report?.net_amount.toFixed(2),
+        Balance: report?.net_amount.toFixed(2),
         "Party Account": report?.party_account,
         "Job No": report?.job_no,
         Narrations: report?.narrations,
@@ -542,9 +542,11 @@ const ProfitAndLoss = (props) => {
       )
       .then((res) => {
         const { data } = res;
-        let total_amount = data.reduce((x, y) => {
-          return Number(x) + Number(y.net_amount);
-        }, 0);
+        let total_amount = 0;
+
+        if (data.length > 0) {
+          total_amount = data[data.length - 1]["net_amount"];
+        }
 
         let dr_amount = data.reduce((x, y) => {
           return Number(x) + Number(y.dr_amount);

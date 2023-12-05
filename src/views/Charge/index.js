@@ -11,6 +11,7 @@ import ChargeTable from "./ChargeTable";
 const Charge = (props) => {
   const [createModal, setCreateModal] = useState(false);
   const [chargeData, setChargeData] = useState([]);
+  const [filteredChargeData, setFilteredChargeData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [pagination, setPagination] = useState({
@@ -32,6 +33,7 @@ const Charge = (props) => {
         //   ...pgdata,
         //   totalRows: data.length,
         // });
+        setFilteredChargeData(data);
         setChargeData(data);
         setLoading(false);
       })
@@ -62,6 +64,12 @@ const Charge = (props) => {
       });
   };
 
+  const getFilteredCharge = (val) => {
+    let dd = [...chargeData];
+    dd = dd.filter((d) => d?.name.toLowerCase().includes(val.toLowerCase()));
+    setFilteredChargeData(dd);
+  };
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -78,7 +86,7 @@ const Charge = (props) => {
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getChargeData(pagination, val);
+              getFilteredCharge(val);
             }}
           />
         </Container>
@@ -92,7 +100,7 @@ const Charge = (props) => {
                   {" "}
                   <Card>
                     <ChargeTable
-                      chargeData={chargeData}
+                      chargeData={filteredChargeData}
                       deleteColumn={(id) => deleteColumn(id)}
                       handlePagination={(data) => {
                         setPagination(data);
