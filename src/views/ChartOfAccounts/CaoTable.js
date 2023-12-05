@@ -282,7 +282,7 @@ const CaoTable = (props) => {
             setEditModal((prev) => !prev);
           }}
         >
-          Edit Voucher
+          Edit Account
         </ModalHeader>
         <ModalBody>
           <AddCOA
