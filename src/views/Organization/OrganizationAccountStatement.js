@@ -141,9 +141,9 @@ const OrganizationAccountStatement = (props) => {
         "Job No": report?.job_no,
         Narrations: report?.narrations,
         Branch: report?.branch,
-        Debit: Number(report?.dr_amount).toFixed(2),
-        Credit: Number(report?.cr_amount).toFixed(2),
-        "Total Amount": Number(report?.net_amount).toFixed(2),
+        Debit: report?.dr_amount.toFixed(2),
+        Credit: report?.cr_amount.toFixed(2),
+        "Total Amount": report?.net_amount.toFixed(2),
       };
       return dataReport;
     });

@@ -24,6 +24,9 @@ const ProfitAndLoss = (props) => {
   const [coaOptions, setCoaOptions] = useState([]);
   const [selectCoa, setSelectedCoa] = useState(null);
   const [params, setParams] = useState(null);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [drAmount, setDrAmount] = useState(0.0);
+  const [crAmount, setCrAmount] = useState(0.0);
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13">Account</span>,
@@ -393,6 +396,9 @@ const ProfitAndLoss = (props) => {
 
     doc.text("General Ledger Statement", 70, 10);
     doc.text(`Account: ${selectCoa?.label || selectedJob?.label}`, 12, 22);
+    doc.text(`Total Debit: ${Number(drAmount).toFixed(2)}`, 12, 32);
+    doc.text(`Total Credit: ${Number(crAmount).toFixed(2)}`, 80, 32);
+    doc.text(`Toal Amount: ${totalAmount}`, 144, 32);
     console.log("selecccc", selectCoa);
 
     const allKeys = Array.from(
@@ -447,7 +453,7 @@ const ProfitAndLoss = (props) => {
           // row?.language_name,
         ];
       }),
-      startY: 25,
+      startY: 35,
       styles: {
         font: "Arial",
         fontSize: 10,
@@ -468,6 +474,24 @@ const ProfitAndLoss = (props) => {
       },
       // margin: { left: 10, right: 10 },
     });
+
+    doc.autoTable({
+      head: [["Total Debit", "Total Credit", "Total Amount"]],
+      body: [
+        [Number(drAmount).toFixed(2), Number(crAmount).toFixed(2), totalAmount],
+      ],
+      styles: {
+        font: "Arial",
+        fontSize: 11,
+      },
+      columnStyles: {
+        0: { cellWidth: 20 },
+        1: { cellWidth: 20 },
+        2: { cellWidth: 20 },
+      },
+      margin: { left: 127, right: 10 },
+    });
+
     doc.save("ledger_statement.pdf");
   };
 
@@ -481,18 +505,19 @@ const ProfitAndLoss = (props) => {
         "Invoice Numer": report?.invoice_number,
         Currency: report?.currency,
         "Tax Code": report?.vat_percent,
-        "Fcy Amount": Number(report?.fcy_amount).toFixed(),
-        "Vat Amount": Number(report?.vat_amount).toFixed(),
-        Amount: Number(report?.amount).toFixed(),
-        "Dr Amount": Number(report?.dr_amount).toFixed(),
-        "Cr Amount": Number(report?.cr_amount).toFixed(),
-        "Net Amount": Number(report?.net_amount).toFixed(),
+        "Fcy Amount": report?.fcy_amount.toFixed(2),
+        "Vat Amount": report?.vat_amount.toFixed(2),
+        Amount: report?.amount.toFixed(2),
+        "Dr Amount": report?.dr_amount.toFixed(2),
+        "Cr Amount": report?.cr_amount.toFixed(2),
+        "Net Amount": report?.net_amount.toFixed(2),
         "Party Account": report?.party_account,
         "Job No": report?.job_no,
         Narrations: report?.narrations,
         Branch: report?.branch,
         // "Language Name": report?.language_name,
       };
+      console.log("wwwwwwww", report?.dr_amount, report?.cr_amount);
       return dataReport;
     });
 
@@ -517,6 +542,21 @@ const ProfitAndLoss = (props) => {
       )
       .then((res) => {
         const { data } = res;
+        let total_amount = data.reduce((x, y) => {
+          return Number(x) + Number(y.net_amount);
+        }, 0);
+
+        let dr_amount = data.reduce((x, y) => {
+          return Number(x) + Number(y.dr_amount);
+        }, 0);
+
+        let cr_amount = data.reduce((x, y) => {
+          return Number(x) + Number(y.cr_amount);
+        }, 0);
+
+        setTotalAmount(total_amount.toFixed(2));
+        setDrAmount(dr_amount.toFixed(2));
+        setCrAmount(cr_amount.toFixed(2));
         setReports(data);
         setLoading(false);
       })
