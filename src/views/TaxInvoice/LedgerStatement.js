@@ -269,7 +269,7 @@ const ProfitAndLoss = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Net Amount</span>,
+      name: <span className="font-weight-bold fs-13">Balance</span>,
       selector: (row) => row?.net_amount,
       cell: (value) => {
         return (
@@ -368,26 +368,26 @@ const ProfitAndLoss = (props) => {
       },
       sortable: true,
     },
-    {
-      name: <span className="font-weight-bold fs-13">Language Name</span>,
-      selector: (row) => row.language_name,
-      cell: (value) => {
-        return (
-          <div
-            title={value.language_name}
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              maxWidth: "200px",
-            }}
-          >
-            {value.language_name}
-          </div>
-        );
-      },
-      sortable: true,
-    },
+    // {
+    //   name: <span className="font-weight-bold fs-13">Language Name</span>,
+    //   selector: (row) => row.language_name,
+    //   cell: (value) => {
+    //     return (
+    //       <div
+    //         title={value.language_name}
+    //         style={{
+    //           whiteSpace: "nowrap",
+    //           overflow: "hidden",
+    //           textOverflow: "ellipsis",
+    //           maxWidth: "200px",
+    //         }}
+    //       >
+    //         {value.language_name}
+    //       </div>
+    //     );
+    //   },
+    //   sortable: true,
+    // },
   ]);
 
   const exportProjectToPdf = () => {
@@ -517,7 +517,7 @@ const ProfitAndLoss = (props) => {
         Branch: report?.branch,
         // "Language Name": report?.language_name,
       };
-      console.log("wwwwwwww", report?.dr_amount, report?.cr_amount);
+      // console.log("wwwwwwww", report?.dr_amount, report?.cr_amount);
       return dataReport;
     });
 
