@@ -57,7 +57,8 @@ const OrganizationAccountStatement = (props) => {
       // "Account",
       "Date",
       // "Currency",
-      "Voucher",
+      "Type",
+      "Voucher Number",
       "Invoice Number",
       // "Party Account",
       "Job No",
@@ -79,7 +80,7 @@ const OrganizationAccountStatement = (props) => {
         return [
           // row?.account,
           moment(row?.date).format("DD-MM-YYYY"),
-          // row?.currency,
+          row?.type,
           row?.voucher_number,
           row?.invoice_number,
           // row?.party_account,
@@ -99,11 +100,12 @@ const OrganizationAccountStatement = (props) => {
       columnStyles: {
         0: { cellWidth: 25 },
         1: { cellWidth: 22 },
-        2: { cellWidth: 30 },
-        3: { cellWidth: 30 },
+        2: { cellWidth: 22 },
+        3: { cellWidth: 22 },
         4: { cellWidth: 30 },
-        5: { cellWidth: 30 },
-        6: { cellWidth: 30 },
+        5: { cellWidth: 27 },
+        6: { cellWidth: 27 },
+        7: { cellWidth: 27 },
       },
       margin: { left: 10, right: 20 },
     });
@@ -118,11 +120,11 @@ const OrganizationAccountStatement = (props) => {
         fontSize: 11,
       },
       columnStyles: {
-        0: { cellWidth: 30 },
-        1: { cellWidth: 30 },
-        2: { cellWidth: 30 },
+        0: { cellWidth: 27 },
+        1: { cellWidth: 27 },
+        2: { cellWidth: 27 },
       },
-      margin: { left: 117, right: 10 },
+      margin: { left: 130, right: 10 },
     });
 
     doc.save("account_statement.pdf");
@@ -134,8 +136,8 @@ const OrganizationAccountStatement = (props) => {
         // Account: report?.account,
         Date: moment(report?.date).format("DD-MM-YYYY"),
         Currency: report?.currency,
-        Voucher: report?.voucher_number,
-
+        Type: report?.type,
+        "Voucher Number": report?.voucher_number,
         "Invoice Number": report?.invoice_number,
         "Party Account": report?.party_account,
         "Job No": report?.job_no,
@@ -594,7 +596,31 @@ const OrganizationAccountStatement = (props) => {
                   sortable: true,
                 },
                 {
-                  name: <span className="font-weight-bold fs-13">Voucher</span>,
+                  name: <span className="font-weight-bold fs-13">Type</span>,
+                  selector: (row) => row.type,
+                  cell: (value) => {
+                    return (
+                      <div
+                        title={value.type}
+                        style={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {value.type}
+                      </div>
+                    );
+                  },
+                  sortable: true,
+                },
+                {
+                  name: (
+                    <span className="font-weight-bold fs-13">
+                      Voucher Number
+                    </span>
+                  ),
                   selector: (row) => row.voucher_number,
                   cell: (value) => {
                     return (
@@ -613,26 +639,7 @@ const OrganizationAccountStatement = (props) => {
                   },
                   sortable: true,
                 },
-                // {
-                //   name: <span className="font-weight-bold fs-13">Dr Amount</span>,
-                //   selector: (row) => row.dr_amount,
-                //   cell: (value) => {
-                //     return (
-                //       <div
-                //         title={value.dr_amount}
-                //         style={{
-                //           whiteSpace: "nowrap",
-                //           overflow: "hidden",
-                //           textOverflow: "ellipsis",
-                //           maxWidth: "200px",
-                //         }}
-                //       >
-                //         {value.dr_amount}
-                //       </div>
-                //     );
-                //   },
-                //   sortable: true,
-                // },
+
                 // {
                 //   name: <span className="font-weight-bold fs-13">Cr Amount</span>,
                 //   selector: (row) => row.cr_amount,

@@ -43,6 +43,26 @@ const VoucherTable = (props) => {
 
   const [cols, setCols] = useState([
     {
+      name: <span className="font-weight-bold fs-13">Voucher Id</span>,
+      selector: (row) => row.id,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.id}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.id}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Voucher Type</span>,
       selector: (row) => row.voucher_type,
       cell: (value) => {
