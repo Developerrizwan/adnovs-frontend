@@ -14,6 +14,8 @@ import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Voucher from "./Voucher";
 import AccountDetail from "../AccountDetails/AccountDetail";
+import AccountDetailsTable from "../AccountDetails/AccountDetailsTable";
+import apiAuth from "../../helpers/ApiAuth";
 
 const VoucherTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
@@ -22,6 +24,22 @@ const VoucherTable = (props) => {
   const [deletId, setDeletId] = useState();
   const [accountDetailsModal, setAccountDetailsModal] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
+  const [acctDetModal, setAcctDetModal] = useState(false);
+  const [acctDetData, setAcctDetData] = useState([]);
+
+  const getAccountDetails = (id) => {
+    apiAuth
+      .get(`/api/master/accountdetails/?voucher=${id}`)
+      .then((res) => {
+        let {
+          data: { results },
+        } = res;
+        // console.log("dataaa", results);
+        setAcctDetData(results);
+        setAcctDetModal(true);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const [cols, setCols] = useState([
     {
@@ -281,6 +299,27 @@ const VoucherTable = (props) => {
       sortable: true,
     },
     {
+      name: (
+        <span className="font-weight-bold fs-13">View Account Details</span>
+      ),
+      selector: (row) => row,
+      cell: (value) => {
+        return (
+          <div>
+            <Button
+              color="primary"
+              className="btn btn-primary"
+              onClick={() => {
+                getAccountDetails(value?.id);
+              }}
+            >
+              View
+            </Button>
+          </div>
+        );
+      },
+    },
+    {
       name: <span className="font-weight-bold fs-13">View</span>,
       selector: (row) => row.remarks,
       cell: (value) => {
@@ -487,6 +526,28 @@ const VoucherTable = (props) => {
           </Button>
           <Button onClick={() => setDeleteModal((prev) => !prev)}>No</Button>
         </ModalFooter>
+      </Modal>
+      <Modal
+        id="signupModals"
+        tabIndex="-1"
+        className="modal-lg"
+        isOpen={acctDetModal}
+        toggle={() => {
+          setAcctDetModal((prev) => !prev);
+        }}
+      >
+        <ModalHeader
+          className="p-3"
+          toggle={() => {
+            setAcctDetModal((prev) => !prev);
+          }}
+        >
+          Account Details
+        </ModalHeader>
+        <ModalBody>
+          {/* {console.log("dddddddd", acctDetData)} */}
+          <AccountDetailsTable users={acctDetData} />
+        </ModalBody>
       </Modal>
     </>
   );
