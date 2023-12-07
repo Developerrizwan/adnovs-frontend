@@ -16,12 +16,14 @@ import Voucher from "./Voucher";
 import AccountDetail from "../AccountDetails/AccountDetail";
 import AccountDetailsTable from "../AccountDetails/AccountDetailsTable";
 import apiAuth from "../../helpers/ApiAuth";
+import NotificationManager from "../../components/Common/NotificationManager";
 
 const VoucherTable = (props) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState([]);
   const [deletId, setDeletId] = useState();
+  const [acctId, setAcctId] = useState();
   const [accountDetailsModal, setAccountDetailsModal] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [acctDetModal, setAcctDetModal] = useState(false);
@@ -39,6 +41,30 @@ const VoucherTable = (props) => {
         setAcctDetModal(true);
       })
       .catch((err) => console.log(err));
+  };
+
+  const deleteAccount = (id) => {
+    let url = `/api/master/accountdetails/${id}/`;
+    apiAuth
+      .delete(url)
+      .then((response) => {
+        const newdata = response.data;
+        NotificationManager.success(
+          "",
+          "Account Deleted Successfully",
+          3000,
+          null,
+          null,
+          ""
+        );
+        getAccountDetails(acctId);
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.log(error.response?.data);
+        console.log(error.response?.status);
+        console.log(error.response?.headers);
+      });
   };
 
   const [cols, setCols] = useState([
@@ -136,7 +162,7 @@ const VoucherTable = (props) => {
       cell: (value) => {
         return (
           <div
-            title={moment(value?.date).format("MM/DD/YYYY")}
+            title={moment(value?.date).format("DD/MM/YYYY")}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -144,7 +170,7 @@ const VoucherTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {moment(value?.date).format("MM/DD/YYYY")}
+            {moment(value?.date).format("DD/MM/YYYY")}
           </div>
         );
       },
@@ -155,7 +181,7 @@ const VoucherTable = (props) => {
       cell: (value) => {
         return (
           <div
-            title={moment(value?.gl_date).format("MM/DD/YYYY")}
+            title={moment(value?.gl_date).format("DD/MM/YYYY")}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -163,7 +189,7 @@ const VoucherTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {moment(value?.gl_date).format("MM/DD/YYYY")}
+            {moment(value?.gl_date).format("DD/MM/YYYY")}
           </div>
         );
       },
@@ -331,6 +357,7 @@ const VoucherTable = (props) => {
               className="btn btn-primary"
               onClick={() => {
                 getAccountDetails(value?.id);
+                setAcctId(value?.id);
               }}
             >
               View
@@ -420,6 +447,7 @@ const VoucherTable = (props) => {
       },
     },
   ]);
+
   return (
     <>
       <DataTable
@@ -566,7 +594,14 @@ const VoucherTable = (props) => {
         </ModalHeader>
         <ModalBody>
           {/* {console.log("dddddddd", acctDetData)} */}
-          <AccountDetailsTable users={acctDetData} />
+          <AccountDetailsTable
+            users={acctDetData}
+            fromVoucherTable={true}
+            getAcctDetailsForVoucher={() => {
+              getAccountDetails(acctId);
+            }}
+            deleteAccount={(val) => deleteAccount(val)}
+          />
         </ModalBody>
       </Modal>
     </>

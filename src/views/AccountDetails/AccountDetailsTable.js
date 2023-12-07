@@ -15,7 +15,7 @@ import { customStyles } from "../../assets/CustomTableStyles";
 import AccountDetail from "./AccountDetail";
 
 const AccountDetailsTable = (props) => {
-  console.log("props", props);
+  // console.log("props", props);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState([]);
@@ -361,7 +361,12 @@ const AccountDetailsTable = (props) => {
             closeAddPopup={() => {
               setEditModal(false);
               setSelectedAccount(null);
-              props.getVouchers();
+
+              if (props?.fromVoucherTable) {
+                props.getAcctDetailsForVoucher();
+              } else {
+                props.getVouchers();
+              }
             }}
             accountDetails={selectedAccount}
             history={props.history}

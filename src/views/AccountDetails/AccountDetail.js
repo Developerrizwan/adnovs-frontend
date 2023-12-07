@@ -262,7 +262,7 @@ const AccountDetail = (props) => {
                   // amount_qty: Yup.string().required("Required!"),
                 })}
                 onSubmit={(values) => {
-                  console.log("shskjkj", values);
+                  // console.log("shskjkj", values);
                   setLoading(true);
                   if (props.isEdit && props.accountDetails) {
                     apiAuth
@@ -280,19 +280,19 @@ const AccountDetail = (props) => {
                           null,
                           ""
                         );
-                        props.closeAddPopup();
                       })
                       .catch((err) => {
                         setLoading(false);
                         NotificationManager.error(
                           "Account Details",
-                          "Account Create Error",
+                          "Account Update Error",
                           3000,
                           null,
                           null,
                           ""
                         );
                       });
+                    props.closeAddPopup();
                   } else {
                     apiAuth
                       .post("/api/master/accountdetails/", values)
