@@ -358,7 +358,7 @@ const PurchaseInvoice = (props) => {
                 <tr>
                   <td className="border-0 fw">Date:</td>
                   <td className="border-0">
-                    {moment(state.invoice?.date).format("MM/DD/YYYY")}
+                    {moment(state.invoice?.date).format("DD/MM/YYYY")}
                   </td>
                 </tr>
                 <tr>

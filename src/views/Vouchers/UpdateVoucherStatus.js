@@ -184,7 +184,7 @@ const UpdateVoucherStatus = (props) => {
       cell: (value) => {
         return (
           <div
-            title={moment(value?.date).format("MM/DD/YYYY")}
+            title={moment(value?.date).format("DD/MM/YYYY")}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -192,7 +192,7 @@ const UpdateVoucherStatus = (props) => {
               maxWidth: "150px",
             }}
           >
-            {moment(value?.date).format("MM/DD/YYYY")}
+            {moment(value?.date).format("DD/MM/YYYY")}
           </div>
         );
       },

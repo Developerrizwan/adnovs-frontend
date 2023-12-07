@@ -34,7 +34,7 @@ const Content = ({ data }) => {
         <div id="right-side-items">
           <DisplayItem
             label={"GL Date"}
-            value={moment(data?.voucher?.gl_date).format("MM/DD/YYYY")}
+            value={moment(data?.voucher?.gl_date).format("DD/MM/YYYY")}
           />
           <DisplayItem
             label={"Account"}

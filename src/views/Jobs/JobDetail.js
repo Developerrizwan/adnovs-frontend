@@ -860,7 +860,7 @@ const JobDetail = (props) => {
                               return (
                                 <div
                                   title={moment(value?.date).format(
-                                    "MM/DD/YYYY"
+                                    "DD/MM/YYYY"
                                   )}
                                   style={{
                                     whiteSpace: "nowrap",
@@ -869,7 +869,7 @@ const JobDetail = (props) => {
                                     maxWidth: "200px",
                                   }}
                                 >
-                                  {moment(value?.date).format("MM/DD/YYYY")}
+                                  {moment(value?.date).format("DD/MM/YYYY")}
                                 </div>
                               );
                             },
@@ -1292,7 +1292,7 @@ const JobDetail = (props) => {
                               return (
                                 <div
                                   title={moment(value?.date).format(
-                                    "MM/DD/YYYY"
+                                    "DD/MM/YYYY"
                                   )}
                                   style={{
                                     whiteSpace: "nowrap",
@@ -1301,7 +1301,7 @@ const JobDetail = (props) => {
                                     maxWidth: "200px",
                                   }}
                                 >
-                                  {moment(value?.date).format("MM/DD/YYYY")}
+                                  {moment(value?.date).format("DD/MM/YYYY")}
                                 </div>
                               );
                             },
@@ -1317,7 +1317,7 @@ const JobDetail = (props) => {
                               return (
                                 <div
                                   title={moment(value?.gl_date).format(
-                                    "MM/DD/YYYY"
+                                    "DD/MM/YYYY"
                                   )}
                                   style={{
                                     whiteSpace: "nowrap",
@@ -1326,7 +1326,7 @@ const JobDetail = (props) => {
                                     maxWidth: "200px",
                                   }}
                                 >
-                                  {moment(value?.gl_date).format("MM/DD/YYYY")}
+                                  {moment(value?.gl_date).format("DD/MM/YYYY")}
                                 </div>
                               );
                             },

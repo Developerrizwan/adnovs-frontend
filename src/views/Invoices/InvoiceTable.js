@@ -107,7 +107,7 @@ const InvoiceTable = (props) => {
       cell: (value) => {
         return (
           <div
-            title={moment(value?.date).format("MM/DD/YYYY")}
+            title={moment(value?.date).format("DD/MM/YYYY")}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -115,7 +115,7 @@ const InvoiceTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {moment(value?.date).format("MM/DD/YYYY")}
+            {moment(value?.date).format("DD/MM/YYYY")}
           </div>
         );
       },
@@ -145,7 +145,7 @@ const InvoiceTable = (props) => {
     //   name: <span className="font-weight-bold fs-13">G/L Date</span>,
     //   selector: (row) => row,
     //   cell: (value) => (
-    //     <span>{moment(value?.gl_date).format("MM/DD/YYYY")}</span>
+    //     <span>{moment(value?.gl_date).format("DD/MM/YYYY")}</span>
     //   ),
     // },
     {
@@ -591,7 +591,7 @@ const InvoiceTable = (props) => {
       cell: (value) => {
         return (
           <div
-            title={moment(value?.date).format("MM/DD/YYYY")}
+            title={moment(value?.date).format("DD/MM/YYYY")}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -599,7 +599,7 @@ const InvoiceTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {moment(value?.date).format("MM/DD/YYYY")}
+            {moment(value?.date).format("DD/MM/YYYY")}
           </div>
         );
       },
@@ -629,7 +629,7 @@ const InvoiceTable = (props) => {
     //   name: <span className="font-weight-bold fs-13">G/L Date</span>,
     //   selector: (row) => row,
     //   cell: (value) => (
-    //     <span>{moment(value?.gl_date).format("MM/DD/YYYY")}</span>
+    //     <span>{moment(value?.gl_date).format("DD/MM/YYYY")}</span>
     //   ),
     // },
     {
@@ -892,7 +892,7 @@ const InvoiceTable = (props) => {
       cell: (value) => {
         return (
           <div
-            title={moment(value?.date).format("MM/DD/YYYY")}
+            title={moment(value?.date).format("DD/MM/YYYY")}
             style={{
               whiteSpace: "nowrap",
               // overflow: "hidden",
@@ -900,7 +900,7 @@ const InvoiceTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {moment(value?.date).format("MM/DD/YYYY")}
+            {moment(value?.date).format("DD/MM/YYYY")}
           </div>
         );
       },
@@ -910,7 +910,7 @@ const InvoiceTable = (props) => {
       selector: (row) => row,
       cell: (value) => (
         <div
-          title={moment(value?.date).format("MM/DD/YYYY")}
+          title={moment(value?.date).format("DD/MM/YYYY")}
           style={{
             whiteSpace: "nowrap",
             // overflow: "hidden",
@@ -918,7 +918,7 @@ const InvoiceTable = (props) => {
             maxWidth: "200px",
           }}
         >
-          {moment(value?.date).format("MM/DD/YYYY")}
+          {moment(value?.date).format("DD/MM/YYYY")}
         </div>
       ),
     },

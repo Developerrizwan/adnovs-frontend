@@ -273,12 +273,12 @@ const OrganizationStatement = (props) => {
                   <td className="fw">From Date</td>
                   <td>
                     {moment(state.organization?.created_at).format(
-                      "MM/DD/YYYY"
+                      "DD/MM/YYYY"
                     )}
                   </td>
                   <td>
                     {moment(state.organization?.created_at).format(
-                      "MM/DD/YYYY"
+                      "DD/MM/YYYY"
                     )}
                   </td>
                 </tr>

@@ -374,8 +374,8 @@ const AccountStatement = (props) => {
                   <td className="fw">Account Code</td>
                   <td>{state?.job?.company?.account_number}</td>
                   <td className="fw">From Date</td>
-                  <td>{moment(state.job?.created_at).format("MM/DD/YYYY")}</td>
-                  <td>{moment(state.job?.created_at).format("MM/DD/YYYY")}</td>
+                  <td>{moment(state.job?.created_at).format("DD/MM/YYYY")}</td>
+                  <td>{moment(state.job?.created_at).format("DD/MM/YYYY")}</td>
                 </tr>
                 <tr>
                   <td className="fw">Account Name</td>

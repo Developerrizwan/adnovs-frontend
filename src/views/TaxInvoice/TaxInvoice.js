@@ -332,14 +332,14 @@ const TaxInvoice = (props) => {
               fontWeight={"600"}
               textTransform={"uppercase"}
               label={"Invoice Date"}
-              value={moment(state?.invoice?.date).format("MM/DD/YYYY")}
+              value={moment(state?.invoice?.date).format("DD/MM/YYYY")}
             />
             <ShowDataWithTranslate2
               width={"400px"}
               fontWeight={"600"}
               textTransform={"uppercase"}
               label={"Payment Due Date"}
-              value={moment(state?.invoice?.due_date).format("MM/DD/YYYY")}
+              value={moment(state?.invoice?.due_date).format("DD/MM/YYYY")}
             />
           </div>
         </div>
@@ -384,7 +384,7 @@ const TaxInvoice = (props) => {
                 value={
                   state.invoice?.job
                     ? moment(state.invoice?.job?.created_at).format(
-                        "MM/DD/YYYY"
+                        "DD/MM/YYYY"
                       )
                     : null
                 }
@@ -395,7 +395,7 @@ const TaxInvoice = (props) => {
                 label={"ETD"}
                 value={
                   state.invoice?.job
-                    ? moment(state.invoice?.job?.etd).format("MM/DD/YYYY")
+                    ? moment(state.invoice?.job?.etd).format("DD/MM/YYYY")
                     : null
                 }
               />
@@ -403,7 +403,7 @@ const TaxInvoice = (props) => {
                 label={"ETA"}
                 value={
                   state.invoice?.job
-                    ? moment(state.invoice?.job?.eta).format("MM/DD/YYYY")
+                    ? moment(state.invoice?.job?.eta).format("DD/MM/YYYY")
                     : null
                 }
               />
