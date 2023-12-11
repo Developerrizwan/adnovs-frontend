@@ -681,12 +681,12 @@ const ProfitAndLoss = (props) => {
                           </label>
                           <Select
                             name="job"
+                            isClearable
                             styles={customStyles}
                             value={selectedJob}
                             options={jobOptions}
                             onChange={(data) => {
-                              setFieldValue("job", data.value);
-                              // setSelectedCoa(null);
+                              setFieldValue("job", data?.value);
                               setSelectedJob(data);
                             }}
                             placeholder="Select Job..."
@@ -707,11 +707,11 @@ const ProfitAndLoss = (props) => {
                           <Select
                             name="coa_type"
                             styles={customStyles}
+                            isClearable
                             value={selectCoa}
                             options={coaOptions}
                             onChange={(data) => {
-                              setFieldValue("coa_type", data.value);
-                              // setSelectedJob(null);
+                              setFieldValue("coa_type", data?.value);
                               setSelectedCoa(data);
                             }}
                             placeholder="Select Coa..."
