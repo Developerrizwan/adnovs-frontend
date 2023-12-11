@@ -686,7 +686,7 @@ const ProfitAndLoss = (props) => {
                             options={jobOptions}
                             onChange={(data) => {
                               setFieldValue("job", data.value);
-                              setSelectedCoa(null);
+                              // setSelectedCoa(null);
                               setSelectedJob(data);
                             }}
                             placeholder="Select Job..."
@@ -711,7 +711,7 @@ const ProfitAndLoss = (props) => {
                             options={coaOptions}
                             onChange={(data) => {
                               setFieldValue("coa_type", data.value);
-                              setSelectedJob(null);
+                              // setSelectedJob(null);
                               setSelectedCoa(data);
                             }}
                             placeholder="Select Coa..."
