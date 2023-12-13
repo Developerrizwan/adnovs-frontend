@@ -109,6 +109,26 @@ const ProfitAndLoss = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">Charge</span>,
+      selector: (row) => row?.charge,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.charge}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.charge}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Invoice Number</span>,
       selector: (row) => row.invoice_number,
       cell: (value) => {
@@ -399,7 +419,7 @@ const ProfitAndLoss = (props) => {
     doc.text(`Total Debit: ${Number(drAmount).toFixed(2)}`, 12, 32);
     doc.text(`Total Credit: ${Number(crAmount).toFixed(2)}`, 80, 32);
     doc.text(`Balance: ${totalAmount}`, 144, 32);
-    console.log("selecccc", selectCoa);
+    // console.log("selecccc", selectCoa);
 
     const allKeys = Array.from(
       new Set(data.flatMap((obj) => Object.keys(obj)))
@@ -409,6 +429,7 @@ const ProfitAndLoss = (props) => {
       // "Account",
       "Date",
       "Voucher No",
+      "Charge",
       // "Type",
       // "Branch",
       // "Invoice Number",
@@ -438,6 +459,7 @@ const ProfitAndLoss = (props) => {
           moment(row?.date).format("DD-MM-YYYY"),
           // row?.type,
           row?.voucher,
+          row?.charge,
           // row?.invoice_number,
           // row?.currency,
           // row?.vat_percent,
@@ -463,10 +485,11 @@ const ProfitAndLoss = (props) => {
         0: { cellWidth: 25 },
         1: { cellWidth: 25 },
         2: { cellWidth: 25 },
-        3: { cellWidth: 30 },
-        4: { cellWidth: 27 },
-        5: { cellWidth: 27 },
-        6: { cellWidth: 27 },
+        3: { cellWidth: 23 },
+        4: { cellWidth: 25 },
+        5: { cellWidth: 25 },
+        6: { cellWidth: 25 },
+        7: { cellWidth: 25 },
       },
       // margin: { left: 10, right: 10 },
     });
@@ -481,11 +504,11 @@ const ProfitAndLoss = (props) => {
         fontSize: 11,
       },
       columnStyles: {
-        0: { cellWidth: 27 },
-        1: { cellWidth: 27 },
-        2: { cellWidth: 27 },
+        0: { cellWidth: 25 },
+        1: { cellWidth: 25 },
+        2: { cellWidth: 25 },
       },
-      margin: { left: 120, right: 10 },
+      margin: { left: 138, right: 10 },
     });
 
     doc.save("ledger_statement.pdf");
@@ -498,6 +521,7 @@ const ProfitAndLoss = (props) => {
         Date: moment(report?.date).format("DD-MM-YYYY"),
         Type: report?.type,
         "Voucher No": report?.voucher,
+        Charge: report?.charge,
         "Invoice No": report?.invoice_number,
         Currency: report?.currency,
         "Tax Code": report?.vat_percent,
