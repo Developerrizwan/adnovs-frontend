@@ -36,7 +36,8 @@ const AccountDetail = (props) => {
   const [selOption, setSelOption] = useState(null);
   const [selCurrency, setSelCurrency] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [chargeOptions, setChargeOptions] = useState([]);
+  const [selectedCharge, setSelectedCharge] = useState([]);
   const [selectedVoucher, setSelectedVoucher] = useState({});
 
   const [selInstType, setSelInstType] = useState({
@@ -80,6 +81,7 @@ const AccountDetail = (props) => {
     getJobOptions();
     getPartyOptions();
     getAllCurrencyCodes();
+    getChargeData();
 
     if (props?.isEdit) {
       setSelBranch({
@@ -120,6 +122,27 @@ const AccountDetail = (props) => {
       setSelCurrency(selCurr);
     }
     setCurrencyOptions(allCurrencies);
+  };
+
+  const getChargeData = (val) => {
+    apiAuth
+      .get(`/api/get-charge/`)
+      .then((response) => {
+        let { data } = response;
+        data = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+            description: dd?.description,
+          };
+        });
+        const sel = data.find(
+          (dd) => dd?.value === props.accountDetails?.charge?.id
+        );
+        setSelectedCharge(sel);
+        setChargeOptions(data);
+      })
+      .catch((err) => console.log(err));
   };
 
   const getPartyOptions = () => {
@@ -234,6 +257,7 @@ const AccountDetail = (props) => {
                   // line_no: props.accountDetails?.line_no || 1,
 
                   ac_name: props.accountDetails?.ac_name?.id || "",
+                  charge: props.accountDetails?.charge?.id || "",
                   ac_name_type: props.accountDetails?.ac_name?.type || "",
                   dr_cr: props.accountDetails?.dr_cr || "",
                   narration: props.accountDetails?.narration || "",
@@ -418,19 +442,27 @@ const AccountDetail = (props) => {
                     <Grid container spacing={2}>
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
-                          <label htmlFor="narration" className="form-label">
-                            Narration
+                          <label htmlFor="charge" className="form-label">
+                            Charge
                             {/* <span className="text-danger">*</span> */}
                           </label>
-                          <Field
-                            className="form-control"
-                            name="narration"
-                            placeholder="Narration"
-                            style={{ background: "#EDEDED" }}
+                          <Select
+                            name="charge"
+                            styles={customStyles}
+                            value={selectedCharge}
+                            options={chargeOptions}
+                            onChange={(data) => {
+                              setFieldValue("charge", data?.value);
+                              setSelectedCharge(data);
+                            }}
                           />
+                          {errors.charge && touched.charge && (
+                            <div className="invalid-feedback d-block">
+                              {errors.charge}
+                            </div>
+                          )}
                         </div>
                       </Grid>
-
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="qty" className="form-label">
@@ -646,6 +678,20 @@ const AccountDetail = (props) => {
                             placeholder="SAC Code"
                             className="form-control"
                             name="sac_code"
+                            style={{ background: "#EDEDED" }}
+                          />
+                        </div>
+                      </Grid>
+                      <Grid item lg={4} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="narration" className="form-label">
+                            Narration
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <Field
+                            className="form-control"
+                            name="narration"
+                            placeholder="Narration"
                             style={{ background: "#EDEDED" }}
                           />
                         </div>

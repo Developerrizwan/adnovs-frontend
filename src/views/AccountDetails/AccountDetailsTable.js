@@ -124,6 +124,26 @@ const AccountDetailsTable = (props) => {
       sortable: true,
     },
     {
+      name: <span className="font-weight-bold fs-13">Charge</span>,
+      selector: (row) => row.charge,
+      cell: (value) => {
+        return (
+          <div
+            title={value?.charge?.name}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "200px",
+            }}
+          >
+            {value?.charge?.name}
+          </div>
+        );
+      },
+      sortable: true,
+    },
+    {
       name: <span className="font-weight-bold fs-13">Inter Branch</span>,
       selector: (row) => row.inter_branch,
       cell: (value) => {
