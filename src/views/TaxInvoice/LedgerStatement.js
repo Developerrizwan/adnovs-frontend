@@ -428,7 +428,7 @@ const ProfitAndLoss = (props) => {
     const customHeaderTitles = [
       // "Account",
       "Date",
-      "Voucher No",
+      "Voucher",
       "Charge",
       // "Type",
       // "Branch",
@@ -483,13 +483,13 @@ const ProfitAndLoss = (props) => {
       },
       columnStyles: {
         0: { cellWidth: 20 },
-        1: { cellWidth: 22 },
-        2: { cellWidth: 23 },
+        1: { cellWidth: 16 },
+        2: { cellWidth: 23, fontSize: 8 },
         3: { cellWidth: 19 },
-        4: { cellWidth: 40 },
-        5: { cellWidth: 24 },
-        6: { cellWidth: 24 },
-        7: { cellWidth: 24 },
+        4: { cellWidth: 52, fontSize: 8 },
+        5: { cellWidth: 22 },
+        6: { cellWidth: 22 },
+        7: { cellWidth: 22 },
       },
       // margin: { left: 10, right: 10 },
     });
@@ -504,11 +504,11 @@ const ProfitAndLoss = (props) => {
         fontSize: 11,
       },
       columnStyles: {
-        0: { cellWidth: 24 },
+        0: { cellWidth: 22 },
         1: { cellWidth: 24 },
-        2: { cellWidth: 24 },
+        2: { cellWidth: 22 },
       },
-      margin: { left: 140, right: 10 },
+      margin: { left: 144, right: 10 },
     });
 
     doc.save("ledger_statement.pdf");
