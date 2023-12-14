@@ -482,14 +482,14 @@ const ProfitAndLoss = (props) => {
         fontSize: 10,
       },
       columnStyles: {
-        0: { cellWidth: 25 },
-        1: { cellWidth: 25 },
-        2: { cellWidth: 25 },
-        3: { cellWidth: 23 },
-        4: { cellWidth: 25 },
-        5: { cellWidth: 25 },
-        6: { cellWidth: 25 },
-        7: { cellWidth: 25 },
+        0: { cellWidth: 20 },
+        1: { cellWidth: 22 },
+        2: { cellWidth: 23 },
+        3: { cellWidth: 19 },
+        4: { cellWidth: 40 },
+        5: { cellWidth: 24 },
+        6: { cellWidth: 24 },
+        7: { cellWidth: 24 },
       },
       // margin: { left: 10, right: 10 },
     });
@@ -504,11 +504,11 @@ const ProfitAndLoss = (props) => {
         fontSize: 11,
       },
       columnStyles: {
-        0: { cellWidth: 25 },
-        1: { cellWidth: 25 },
-        2: { cellWidth: 25 },
+        0: { cellWidth: 24 },
+        1: { cellWidth: 24 },
+        2: { cellWidth: 24 },
       },
-      margin: { left: 138, right: 10 },
+      margin: { left: 140, right: 10 },
     });
 
     doc.save("ledger_statement.pdf");
