@@ -10,11 +10,22 @@ import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 const Content = ({ data }) => {
   // console.log("profit", data);
 
-  var assetTotal = 0;
-  var liabilityTotal = 0;
-  var equityTotal = 0;
-  var incomeTotal = 0;
-  var expenseTotal = 0;
+  var assetTotal = data?.reduce((x, y) => {
+    return Number(x) + Number(y?.type === "ASSET" ? y.total_amount : 0);
+  }, 0) || 0;
+  var liabilityTotal = data?.reduce((x, y) => {
+    return Number(x) + Number(y?.type === "LIABILITY" ? y.total_amount : 0);
+  }, 0) || 0;
+  var equityTotal = data?.reduce((x, y) => {
+    return Number(x) + Number(y?.type === "EQUITY" ? y.total_amount : 0);
+  }, 0) || 0;
+
+  var incomeTotal = data?.reduce((x, y) => {
+    return Number(x) + Number(y?.type === "INCOME" ? y.total_amount : 0);
+  }, 0) || 0;
+  var expenseTotal = data?.reduce((x, y) => {
+    return Number(x) + Number(y?.type === "EXPENSE" ? y.total_amount : 0);
+  }, 0) || 0;
 
   return (
     <div id="content" className="mt-3 mx-2">
@@ -213,17 +224,7 @@ const Content = ({ data }) => {
                       <p className="my-0 py-0">----------------</p>
                       {data?.length ? (
                         data?.map((dd) => {
-                          if (dd?.type === "ASSET") {
-                            assetTotal += Number(dd?.total_amount);
-                          } else if (dd?.type === "LIABILITY") {
-                            liabilityTotal += Number(dd?.total_amount);
-                          } else if (dd?.type === "EQUITY") {
-                            equityTotal += Number(dd?.total_amount);
-                          } else if (dd?.type === "INCOME") {
-                            incomeTotal += Number(dd?.total_amount);
-                          } else if (dd?.type === "EXPENSE") {
-                            expenseTotal += Number(dd?.total_amount);
-                          }
+                         
                           return (
                             <>
                               {dd?.type === item ? (
@@ -344,7 +345,7 @@ const TrailReport = (props) => {
     apiAuth
       .get(`/api/trial_balance/?start_date=${st}&end_date=${et}`)
       .then((response) => {
-        let data = response.data;
+        let data = response.data.filter((dd) => Math.abs(dd.total_amount) > 0);
         setState({ ...state, data });
       })
       .catch((err) => {
