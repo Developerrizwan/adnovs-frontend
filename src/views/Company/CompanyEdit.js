@@ -98,6 +98,18 @@ const CompanyEdit = (props) => {
               vat_number: props?.companyData?.vat_number
                 ? props?.companyData?.vat_number
                 : "",
+              job_count: props?.companyData?.job_count
+                ? props?.companyData?.job_count
+                : "",
+              enquiry_count: props?.companyData?.enquiry_count
+                ? props?.companyData?.enquiry_count
+                : "",
+              pinv_count: props?.companyData?.pinv_count
+                ? props?.companyData?.pinv_count
+                : "",
+              sinv_count: props?.companyData?.sinv_count
+                ? props?.companyData?.sinv_count
+                : "",
             }}
             validationSchema={Yup.object({
               name: Yup.string().required("Company Name is Required"),
@@ -375,6 +387,102 @@ const CompanyEdit = (props) => {
                         className="form-control"
                         placeholder="VAT Number"
                         name="vat_number"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="vat_number"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+                </Grid>
+
+                {/* count */}
+
+                <Grid spacing={2} container>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="job_count" className="form-label">
+                        Job Count
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Job Count"
+                        name="job_count"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="language_address"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="enquiry_count" className="form-label">
+                        Enquiry Count
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Enquiry Count"
+                        name="enquiry_count"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="vat_number"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+                </Grid>
+
+                {/* sales and purchase invoice count */}
+
+                <Grid spacing={2} container>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="pinv_count" className="form-label">
+                        Purchase Invoice Count
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Purchase Invoice Count"
+                        name="pinv_count"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="language_address"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="sinv_count" className="form-label">
+                        Sales Invoice Count
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Sales Invoice Count"
+                        name="sinv_count"
                         style={{ background: "#EDEDED" }}
                       />
 
