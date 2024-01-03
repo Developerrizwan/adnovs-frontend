@@ -1044,23 +1044,23 @@ const InvoiceTable = (props) => {
           (props.selectedValue === "Purchase" && purchaseCols)
         }
         data={props.invoices}
-        paginationPerPage={props.invoicePagination?.rowsPerPage}
-        onChangePage={(p, t) => {
-          props.handlePagination({
-            ...props.invoicePagination,
-            currentPage: p,
-          });
-        }}
-        onChangeRowsPerPage={(c, t) => {
-          props.handlePagination({
-            ...props.invoicePagination,
-            rowsPerPage: c,
-            currentPage: t,
-          });
-        }}
-        paginationServer
-        paginationDefaultPage={props.invoicePagination?.currentPage}
-        paginationTotalRows={props.invoicePagination?.totalRows}
+        // paginationPerPage={props.invoicePagination?.rowsPerPage}
+        // onChangePage={(p, t) => {
+        //   props.handlePagination({
+        //     ...props.invoicePagination,
+        //     currentPage: p,
+        //   });
+        // }}
+        // onChangeRowsPerPage={(c, t) => {
+        //   props.handlePagination({
+        //     ...props.invoicePagination,
+        //     rowsPerPage: c,
+        //     currentPage: t,
+        //   });
+        // }}
+        // paginationServer
+        // paginationDefaultPage={props.invoicePagination?.currentPage}
+        // paginationTotalRows={props.invoicePagination?.totalRows}
         pagination={true}
       />
       <Modal

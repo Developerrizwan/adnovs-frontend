@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Row, Button, Label, Container } from "reactstrap";
 import BreadCrumb from "../../components/Common/BreadCrumb";
-
+import moment from "moment";
 import * as Yup from "yup";
 import { Colxx } from "../../components/Common/CustomBootstrap";
 
@@ -15,6 +15,8 @@ import Purchase from "./Purchase";
 import Sales from "./Sales";
 import apiAuth from "../../helpers/ApiAuth";
 import InvoiceTable from "./InvoiceTable";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 
 const Invoices = (props) => {
   const [invoices, setInvoices] = useState([]);
@@ -61,7 +63,7 @@ const Invoices = (props) => {
           ...pgdata,
           totalRows: response.data.count,
         });
-        setInvoices(data.results);
+        setInvoices(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -115,6 +117,44 @@ const Invoices = (props) => {
     getInvoices(invoicePagination, searchValue, e.value);
   };
 
+  const exportData = () => {
+    let apiData = invoices.map((report) => {
+      let dataReport = {
+        "Invoice Number": report?.invoice_number,
+        "Job Number": report?.job_number,
+        "BL Number": report?.bl_number,
+        Supplier: report?.party_account?.name,
+        "Consignee Name": report?.consignee_name?.name,
+        Date: moment(report?.date).format("DD-MM-YYYY"),
+        "Currency SAR": report?.currency_sar,
+        "Bayan Number": report?.bayan_number,
+        "Shipper Name": report?.shipper_name,
+        "Supplier Invoice No": report?.supplier_inv_number,
+        "Ex. Rate": report?.ex_rate,
+        POD: report?.pod,
+        POA: report?.poa,
+        "Client Name": report?.client_name?.name,
+        "FC Amount": report?.fc_amount.toFixed(2),
+        Amount: report?.amount_sar.toFixed(2),
+        "Invoice Type": report?.invoice_type,
+        Narration: report?.narration,
+        Remarks: report?.remarks,
+        "Invoice Status": report?.payment_status,
+      };
+      return dataReport;
+    });
+
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+    const fileName = selectedValue.value;
+    const ws = XLSX.utils.json_to_sheet(apiData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
+  };
+
   return (
     <>
       <div className="page-content">
@@ -147,6 +187,27 @@ const Invoices = (props) => {
         </Container>
 
         <Row>
+          <Colxx lg="12" className="d-flex justify-content-end mb-2">
+            <div>
+              {invoices && invoices.length > 0 ? (
+                <>
+                  <button
+                    className="btn"
+                    type="button"
+                    style={{
+                      background: "#589662",
+                      color: "white",
+                    }}
+                    onClick={exportData}
+                  >
+                    Excel Download
+                  </button>
+                </>
+              ) : (
+                ""
+              )}
+            </div>
+          </Colxx>
           <Colxx lg="12">
             {invoices.length > 0 ? (
               <>
