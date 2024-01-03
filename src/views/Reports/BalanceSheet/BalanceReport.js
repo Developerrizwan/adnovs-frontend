@@ -10,15 +10,18 @@ import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 const Content = ({ data }) => {
   // console.log("balance", data);
 
-  var assetTotal = data?.reduce((x, y) => {
-    return Number(x) + Number(y?.type === "ASSET" ? y.total_amount : 0);
-  }, 0) || 0;
-  var liabilityTotal = data?.reduce((x, y) => {
-    return Number(x) + Number(y?.type === "LIABILITY" ? y.total_amount : 0);
-  }, 0) || 0;
-  var equityTotal = data?.reduce((x, y) => {
-    return Number(x) + Number(y?.type === "EQUITY" ? y.total_amount : 0);
-  }, 0) || 0;
+  var assetTotal =
+    data?.reduce((x, y) => {
+      return Number(x) + Number(y?.type === "ASSET" ? y.total_amount : 0);
+    }, 0) || 0;
+  var liabilityTotal =
+    data?.reduce((x, y) => {
+      return Number(x) + Number(y?.type === "LIABILITY" ? y.total_amount : 0);
+    }, 0) || 0;
+  var equityTotal =
+    data?.reduce((x, y) => {
+      return Number(x) + Number(y?.type === "EQUITY" ? y.total_amount : 0);
+    }, 0) || 0;
 
   return (
     <div id="content" className="mt-3 mx-2">
@@ -67,143 +70,50 @@ const Content = ({ data }) => {
       <div id="table" className="my-4">
         <table className="htmlTable mt-2 w-100 ">
           <tr>
-            <th style={{ width: "40%" }} className="text-center">
-              Group Name
+            <th style={{ width: "24%" }} className="text-center">
+              Account
             </th>
-            <th style={{ width: "40%" }} className="text-center">
-              Account Name
+            <th style={{ width: "21%" }} className="text-center">
+              Asset
             </th>
-            <th style={{ width: "20%" }} className="text-center">
-              Total Amount
+            <th style={{ width: "15%" }} className="text-center">
+              Amount
             </th>
-          </tr>
-          <tr className="mt-2">
-            <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
-              <p
-                className="my-1 py-0"
-                style={{
-                  fontSize: "14px",
-                  fontWeight: 700,
-                  marginLeft: "30px",
-                  fontFamily: "sans-serif",
-                  color: "black",
-                }}
-              >
-                Balance Sheet
-              </p>
-            </td>
-            <td className="text-center border-top-0 border-bottom-0"></td>
-            <td className="text-center border-top-0 border-bottom-0"></td>
+            <th style={{ width: "25%" }} className="text-center">
+              Liability
+            </th>
+            <th style={{ width: "15%" }} className="text-center">
+              Amount
+            </th>
           </tr>
 
-          {["ASSET", "LIABILITY", "EQUITY"].map((item) => {
+          {["ASSET", "LIABILITY"].map((item) => {
             return (
               <>
                 <tr>
-                  {/* Group Name Column */}
-                  <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
-                    <>
-                      <p
-                        className="my-0 py-0 pb-2"
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: 700,
-                          marginLeft: "70px",
-                          fontFamily: "sans-serif",
-                          color: "black",
-                        }}
-                      >
-                        {item}
-                      </p>
-                      {data?.length ? (
-                        <>
-                          {data?.map((dd) => {
-                            return (
-                              <>
-                                {dd?.type === item ? (
-                                  <div className="my-2 border border-bottom-0">
-                                    <span
-                                      style={{
-                                        fontSize: "14px",
-                                        paddingLeft: "100px",
-                                      }}
-                                    >
-                                      {dd?.income_amount === 0
-                                        ? ""
-                                        : `${dd?.group}`}
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <></>
-                                )}
-                              </>
-                            );
-                          })}
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      <div className="border-top"></div>
-                      <p
-                        className="my-0 py-0 mt-2 mb-2"
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: 700,
-                          marginLeft: "90px",
-                          fontFamily: "sans-serif",
-                          color: "black",
-                        }}
-                      >
-                        {item} TOTAL
-                      </p>
-                      <div
-                        className="border-bottom"
-                        style={{ border: "1px solid #000" }}
-                      ></div>
-                    </>
-                  </td>
-
                   {/* Account Name Column */}
                   <td className="text-center border-top-0 border-bottom-0">
                     <>
-                      <p className="my-0 py-0">
-                        ---------------------------------------------------
-                      </p>
                       {data?.length ? (
-                        data?.map((dd, i) => {
-                          return (
-                            <>
-                              {dd?.type === item ? (
+                        data
+                          .filter((tt) => tt.type === item)
+                          .map((dd, i) => {
+                            return (
+                              <>
                                 <div className="my-2 text-center border border-bottom-0">
                                   <span style={{ fontSize: "14px" }}>
                                     {" "}
                                     {dd?.account_name}
                                   </span>
                                 </div>
-                              ) : (
-                                <></>
-                              )}
-                            </>
-                          );
-                        })
+                              </>
+                            );
+                          })
                       ) : (
                         <></>
                       )}
                       <div className="border-top"></div>
-                      <p
-                        className="my-0 py-0 mt-2 mb-2"
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: 900,
-                          textAlign: "center",
-                          // marginLeft: "50px",
-                          fontFamily: "sans-serif",
-                          color: "black",
-                          display: "hidden",
-                        }}
-                      >
-                        -------------------
-                      </p>
+
                       <div
                         className="border-bottom"
                         style={{ border: "1px solid #000" }}
@@ -211,51 +121,178 @@ const Content = ({ data }) => {
                     </>
                   </td>
 
-                  {/* Total Amount Column */}
-                  <td className="text-center border-top-0 border-bottom-0">
+                  {/* Asset Column */}
+                  <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
                     <>
-                      <p className="my-0 py-0">----------------</p>
                       {data?.length ? (
-                        data?.map((dd) => {
-                         
-                          return (
-                            <>
-                              {dd?.type === item ? (
-                                <div className="my-2 text-center border border-bottom-0">
-                                  <span>
-                                    {" "}
-                                    {Number(dd?.total_amount).toFixed(2)}
-                                  </span>
-                                </div>
-                              ) : (
-                                <></>
-                              )}
-                            </>
-                          );
-                        })
+                        <>
+                          {data
+                            .filter((tt) => tt.type === item)
+                            .map((dd) => {
+                              return (
+                                <>
+                                  {dd?.type === "ASSET" ? (
+                                    <div className="my-2 border border-bottom-0">
+                                      <span
+                                        style={{
+                                          fontSize: "14px",
+                                          paddingLeft: "100px",
+                                        }}
+                                      >
+                                        {dd?.income_amount === 0
+                                          ? ""
+                                          : `${dd?.group}`}
+                                      </span>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <div className="my-2 border border-bottom-0">
+                                        <span
+                                          style={{
+                                            fontSize: "14px",
+                                            paddingLeft: "100px",
+                                          }}
+                                        ></span>
+                                      </div>
+                                    </>
+                                  )}
+                                </>
+                              );
+                            })}
+                        </>
                       ) : (
                         <></>
                       )}
                       <div className="border-top"></div>
-                      <p
-                        className="my-0 py-0 mt-2 mb-2"
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: 900,
-                          textAlign: "center",
-                          // marginLeft: "50px",
-                          fontFamily: "sans-serif",
-                          color: "black",
-                        }}
-                      >
-                        {item === "ASSET"
-                          ? assetTotal.toFixed(2)
-                          : item === "LIABILITY"
-                          ? liabilityTotal.toFixed(2)
-                          : item === "EQUITY"
-                          ? equityTotal.toFixed(2)
-                          : "0.00"}
-                      </p>
+                      <div
+                        className="border-bottom"
+                        style={{ border: "1px solid #000" }}
+                      ></div>
+                    </>
+                  </td>
+
+                  {/* Asset Amount Column */}
+                  <td className="text-center border-top-0 border-bottom-0">
+                    <>
+                      {data?.length ? (
+                        data
+                          .filter((tt) => tt.type === item)
+                          .map((dd) => {
+                            return (
+                              <>
+                                {dd?.type === "ASSET" ? (
+                                  <div className="my-2 text-center border border-bottom-0">
+                                    <span>
+                                      {" "}
+                                      {Math.abs(
+                                        Number(dd?.total_amount).toFixed(2)
+                                      )}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <div className="my-2 text-center border border-bottom-0">
+                                      <span>{Number(0).toFixed(2)}</span>
+                                    </div>
+                                  </>
+                                )}
+                              </>
+                            );
+                          })
+                      ) : (
+                        <></>
+                      )}
+                      <div className="border-top"></div>
+
+                      <div
+                        className="border-bottom"
+                        style={{ border: "1px solid #000" }}
+                      ></div>
+                    </>
+                  </td>
+
+                  {/* Liability Column */}
+                  <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
+                    <>
+                      {data?.length ? (
+                        <>
+                          {data
+                            .filter((tt) => tt.type === item)
+                            .map((dd) => {
+                              return (
+                                <>
+                                  {dd?.type === "LIABILITY" ? (
+                                    <div className="my-2 border border-bottom-0">
+                                      <span
+                                        style={{
+                                          fontSize: "14px",
+                                          paddingLeft: "100px",
+                                        }}
+                                      >
+                                        {dd?.income_amount === 0
+                                          ? ""
+                                          : `${dd?.group}`}
+                                      </span>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <div className="my-2 border border-bottom-0">
+                                        <span
+                                          style={{
+                                            fontSize: "14px",
+                                            paddingLeft: "100px",
+                                          }}
+                                        ></span>
+                                      </div>
+                                    </>
+                                  )}
+                                </>
+                              );
+                            })}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      <div className="border-top"></div>
+                      <div
+                        className="border-bottom"
+                        style={{ border: "1px solid #000" }}
+                      ></div>
+                    </>
+                  </td>
+
+                  {/* Liability Amount Column */}
+                  <td className="text-center border-top-0 border-bottom-0">
+                    <>
+                      {data?.length ? (
+                        data
+                          .filter((tt) => tt.type === item)
+                          .map((dd) => {
+                            return (
+                              <>
+                                {dd?.type === "LIABILITY" ? (
+                                  <div className="my-2 text-center border border-bottom-0">
+                                    <span>
+                                      {" "}
+                                      {Math.abs(
+                                        Number(dd?.total_amount).toFixed(2)
+                                      )}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <div className="my-2 text-center border border-bottom-0">
+                                      <span>{Number(0).toFixed(2)}</span>
+                                    </div>
+                                  </>
+                                )}
+                              </>
+                            );
+                          })
+                      ) : (
+                        <></>
+                      )}
+                      <div className="border-top"></div>
                       <div
                         className="border-bottom"
                         style={{ border: "1px solid #000" }}
@@ -266,6 +303,89 @@ const Content = ({ data }) => {
               </>
             );
           })}
+          <tr>
+            {/* Group Name Column */}
+            <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
+              <>
+                <div className="my-2 text-center border border-bottom-0">
+                  <span style={{ fontSize: "14px", fontWeight: 700 }}>
+                    TOTAL
+                  </span>
+                </div>
+                <div className="border-top"></div>
+                <div
+                  className="border-bottom"
+                  style={{ border: "1px solid #000" }}
+                ></div>
+              </>
+            </td>
+
+            {/* Asset Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <div className="my-2 border border-bottom-0">
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      paddingLeft: "100px",
+                    }}
+                  ></span>
+                </div>
+                <div className="border-top"></div>
+                <div
+                  className="border-bottom"
+                  style={{ border: "1px solid #000" }}
+                ></div>
+              </>
+            </td>
+
+            {/* Asset Amount Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <div className="my-2 text-center border border-bottom-0">
+                  <span style={{fontWeight:700}}>{Math.abs(Number(assetTotal).toFixed(2))}</span>
+                </div>
+                <div className="border-top"></div>
+                <div
+                  className="border-bottom"
+                  style={{ border: "1px solid #000" }}
+                ></div>
+              </>
+            </td>
+
+            {/* Liability Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <div className="my-2 border border-bottom-0">
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      paddingLeft: "100px",
+                    }}
+                  ></span>
+                </div>
+                <div className="border-top"></div>
+                <div
+                  className="border-bottom"
+                  style={{ border: "1px solid #000" }}
+                ></div>
+              </>
+            </td>
+
+            {/* Liability Amount Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+              <div className="my-2 text-center border border-bottom-0">
+                  <span style={{fontWeight:700}}>{Math.abs(Number(liabilityTotal).toFixed(2))}</span>
+                </div>
+                <div className="border-top"></div>
+                <div
+                  className="border-bottom"
+                  style={{ border: "1px solid #000" }}
+                ></div>
+              </>
+            </td>
+          </tr>
         </table>
       </div>
     </div>
@@ -362,7 +482,7 @@ const BalanceReport = (props) => {
         style={{
           marginTop: "15px",
           marginBottom: "15px",
-          width: "1000px",
+          width: "1100px",
         }}
       >
         {/* Download */}

@@ -10,22 +10,46 @@ import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 const Content = ({ data }) => {
   // console.log("profit", data);
 
-  var assetTotal = data?.reduce((x, y) => {
-    return Number(x) + Number(y?.type === "ASSET" ? y.total_amount : 0);
-  }, 0) || 0;
-  var liabilityTotal = data?.reduce((x, y) => {
-    return Number(x) + Number(y?.type === "LIABILITY" ? y.total_amount : 0);
-  }, 0) || 0;
-  var equityTotal = data?.reduce((x, y) => {
-    return Number(x) + Number(y?.type === "EQUITY" ? y.total_amount : 0);
-  }, 0) || 0;
+  // var assetTotal = data?.reduce((x, y) => {
+  //   return Number(x) + Number(y?.type === "ASSET" ? y.total_amount : 0);
+  // }, 0) || 0;
+  // var liabilityTotal = data?.reduce((x, y) => {
+  //   return Number(x) + Number(y?.type === "LIABILITY" ? y.total_amount : 0);
+  // }, 0) || 0;
+  // var equityTotal = data?.reduce((x, y) => {
+  //   return Number(x) + Number(y?.type === "EQUITY" ? y.total_amount : 0);
+  // }, 0) || 0;
 
-  var incomeTotal = data?.reduce((x, y) => {
-    return Number(x) + Number(y?.type === "INCOME" ? y.total_amount : 0);
-  }, 0) || 0;
-  var expenseTotal = data?.reduce((x, y) => {
-    return Number(x) + Number(y?.type === "EXPENSE" ? y.total_amount : 0);
-  }, 0) || 0;
+  // var incomeTotal = data?.reduce((x, y) => {
+  //   return Number(x) + Number(y?.type === "INCOME" ? y.total_amount : 0);
+  // }, 0) || 0;
+  // var expenseTotal = data?.reduce((x, y) => {
+  //   return Number(x) + Number(y?.type === "EXPENSE" ? y.total_amount : 0);
+  // }, 0) || 0;
+
+  var debitTotal =
+    data?.reduce((x, y) => {
+      return (
+        Number(x) +
+        Number(
+          y?.type === "ASSET" || y?.type === "EXPENSE"
+            ? Math.abs(Number(y.total_amount).toFixed(2))
+            : 0
+        )
+      );
+    }, 0) || 0;
+
+  var creditTotal =
+    data?.reduce((x, y) => {
+      return (
+        Number(x) +
+        Number(
+          y?.type !== "ASSET" && y?.type !== "EXPENSE"
+            ? Math.abs(Number(y.total_amount).toFixed(2))
+            : 0
+        )
+      );
+    }, 0) || 0;
 
   return (
     <div id="content" className="mt-3 mx-2">
@@ -74,17 +98,21 @@ const Content = ({ data }) => {
       <div id="table" className="my-4">
         <table className="htmlTable mt-2 w-100 ">
           <tr>
-            <th style={{ width: "40%" }} className="text-center">
+            <th style={{ width: "26%" }} className="text-center">
               Group Name
             </th>
-            <th style={{ width: "40%" }} className="text-center">
+            <th style={{ width: "34%" }} className="text-center">
               Account Name
             </th>
             <th style={{ width: "20%" }} className="text-center">
-              Total Amount
+              Debit
+            </th>
+            <th style={{ width: "20%" }} className="text-center">
+              Credit
             </th>
           </tr>
-          <tr>
+
+          {/* <tr>
             <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
               <p
                 className="my-1 py-0"
@@ -101,9 +129,9 @@ const Content = ({ data }) => {
             </td>
             <td className="text-center border-top-0 border-bottom-0"></td>
             <td className="text-center border-top-0 border-bottom-0"></td>
-          </tr>
+          </tr>*/}
 
-          {["ASSET", "LIABILITY", "EQUITY", "INCOME", "EXPENSE"].map((item) => {
+          {["ASSET", "EXPENSE", "LIABILITY", "EQUITY", "INCOME"].map((item) => {
             return (
               <>
                 <tr>
@@ -151,18 +179,7 @@ const Content = ({ data }) => {
                         <></>
                       )}
                       <div className="border-top"></div>
-                      <p
-                        className="my-0 py-0 mt-2 mb-2"
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: 700,
-                          marginLeft: "90px",
-                          fontFamily: "sans-serif",
-                          color: "black",
-                        }}
-                      >
-                        {item} TOTAL
-                      </p>
+
                       <div
                         className="border-bottom"
                         style={{ border: "1px solid #000" }}
@@ -173,9 +190,7 @@ const Content = ({ data }) => {
                   {/* Account Name Column */}
                   <td className="text-center border-top-0 border-bottom-0">
                     <>
-                      <p className="my-0 py-0">
-                        ---------------------------------------------------
-                      </p>
+                      <p className="my-0 py-0">----------------</p>
                       {data?.length ? (
                         data?.map((dd, i) => {
                           return (
@@ -197,20 +212,7 @@ const Content = ({ data }) => {
                         <></>
                       )}
                       <div className="border-top"></div>
-                      <p
-                        className="my-0 py-0 mt-2 mb-2"
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: 900,
-                          textAlign: "center",
-                          // marginLeft: "50px",
-                          fontFamily: "sans-serif",
-                          color: "black",
-                          display: "hidden",
-                        }}
-                      >
-                        -------------------
-                      </p>
+
                       <div
                         className="border-bottom"
                         style={{ border: "1px solid #000" }}
@@ -218,20 +220,25 @@ const Content = ({ data }) => {
                     </>
                   </td>
 
-                  {/* Total Amount Column */}
+                  {/* Debit Amount Column */}
                   <td className="text-center border-top-0 border-bottom-0">
                     <>
                       <p className="my-0 py-0">----------------</p>
                       {data?.length ? (
                         data?.map((dd) => {
-                         
                           return (
                             <>
                               {dd?.type === item ? (
                                 <div className="my-2 text-center border border-bottom-0">
                                   <span>
                                     {" "}
-                                    {Number(dd?.total_amount || 0).toFixed(2)}
+                                    {item === "EXPENSE" || item === "ASSET"
+                                      ? Math.abs(
+                                          Number(dd?.total_amount || 0).toFixed(
+                                            2
+                                          )
+                                        )
+                                      : Number(0).toFixed(2)}
                                   </span>
                                 </div>
                               ) : (
@@ -244,29 +251,46 @@ const Content = ({ data }) => {
                         <></>
                       )}
                       <div className="border-top"></div>
-                      <p
-                        className="my-0 py-0 mt-2 mb-2"
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: 900,
-                          textAlign: "center",
-                          // marginLeft: "50px",
-                          fontFamily: "sans-serif",
-                          color: "black",
-                        }}
-                      >
-                        {item === "ASSET"
-                          ? assetTotal.toFixed(2)
-                          : item === "LIABILITY"
-                          ? liabilityTotal.toFixed(2)
-                          : item === "EQUITY"
-                          ? equityTotal.toFixed(2)
-                          : item === "INCOME"
-                          ? incomeTotal.toFixed(2)
-                          : item === "EXPENSE"
-                          ? expenseTotal.toFixed(2)
-                          : "0.00"}
-                      </p>
+
+                      <div
+                        className="border-bottom"
+                        style={{ border: "1px solid #000" }}
+                      ></div>
+                    </>
+                  </td>
+
+                  {/* Credit Amount Column */}
+                  <td className="text-center border-top-0 border-bottom-0">
+                    <>
+                      <p className="my-0 py-0">----------------</p>
+                      {data?.length ? (
+                        data?.map((dd) => {
+                          return (
+                            <>
+                              {dd?.type === item ? (
+                                <div className="my-2 text-center border border-bottom-0">
+                                  <span>
+                                    {" "}
+                                    {item !== "EXPENSE" && item !== "ASSET"
+                                      ? Math.abs(
+                                          Number(dd?.total_amount || 0).toFixed(
+                                            2
+                                          )
+                                        )
+                                      : Number(0).toFixed(2)}
+                                  </span>
+                                </div>
+                              ) : (
+                                <></>
+                              )}
+                            </>
+                          );
+                        })
+                      ) : (
+                        <></>
+                      )}
+                      <div className="border-top"></div>
+
                       <div
                         className="border-bottom"
                         style={{ border: "1px solid #000" }}
@@ -277,6 +301,82 @@ const Content = ({ data }) => {
               </>
             );
           })}
+          <tr>
+            {/* Group Name Column */}
+            <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
+              <>
+                <p
+                  className="my-0 py-0 pb-2"
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: 700,
+                    marginLeft: "70px",
+                    fontFamily: "sans-serif",
+                    color: "black",
+                  }}
+                >
+                  TOTAL
+                </p>
+                <div className="border-top"></div>
+                <div
+                  className="border-bottom"
+                  style={{ border: "1px solid #000" }}
+                ></div>
+              </>
+            </td>
+
+            {/* Account Name Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <p className="my-0 py-0">----------------</p>
+                <div className="border-top"></div>
+                <div
+                  className="border-bottom"
+                  style={{ border: "1px solid #000" }}
+                ></div>
+              </>
+            </td>
+
+            {/* Debit Amount Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontWeight: 700,
+                    color: "black",
+                  }}
+                >
+                  {Number(debitTotal).toFixed(2)}
+                </p>
+                <div className="border-top"></div>
+                <div
+                  className="border-bottom"
+                  style={{ border: "1px solid #000" }}
+                ></div>
+              </>
+            </td>
+
+            {/* Credit Amount Column */}
+            <td className="text-center border-top-0 border-bottom-0">
+              <>
+                <p
+                  className="my-0 py-0"
+                  style={{
+                    fontWeight: 700,
+                    color: "black",
+                  }}
+                >
+                  {Number(creditTotal).toFixed(2)}
+                </p>
+                <div className="border-top"></div>
+                <div
+                  className="border-bottom"
+                  style={{ border: "1px solid #000" }}
+                ></div>
+              </>
+            </td>
+          </tr>
         </table>
       </div>
     </div>
