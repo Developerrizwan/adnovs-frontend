@@ -465,23 +465,23 @@ const VoucherTable = (props) => {
           return true;
         })}
         data={props.users}
-        paginationPerPage={props.pagination?.rowsPerPage}
-        onChangePage={(p, t) => {
-          props.handlePagination({
-            ...props.pagination,
-            currentPage: p,
-          });
-        }}
-        onChangeRowsPerPage={(c, t) => {
-          props.pagination({
-            ...props.pagination,
-            rowsPerPage: c,
-            currentPage: t,
-          });
-        }}
-        paginationServer
-        paginationDefaultPage={props.pagination?.currentPage}
-        paginationTotalRows={props.pagination?.totalRows}
+        // paginationPerPage={props.pagination?.rowsPerPage}
+        // onChangePage={(p, t) => {
+        //   props.handlePagination({
+        //     ...props.pagination,
+        //     currentPage: p,
+        //   });
+        // }}
+        // onChangeRowsPerPage={(c, t) => {
+        //   props.pagination({
+        //     ...props.pagination,
+        //     rowsPerPage: c,
+        //     currentPage: t,
+        //   });
+        // }}
+        // paginationServer
+        // paginationDefaultPage={props.pagination?.currentPage}
+        // paginationTotalRows={props.pagination?.totalRows}
         pagination={true}
       />
       <Modal

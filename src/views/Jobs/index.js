@@ -77,7 +77,7 @@ const Jobs = (props) => {
         });
 
         setCount((prev) => ({ ...prev, [type]: data?.length }));
-        setAllJobs(data);
+        setAllJobs([...data]);
         setLoading(false);
       })
       .catch((error) => {
@@ -128,15 +128,19 @@ const Jobs = (props) => {
 
   useEffect(() => {
     let val;
-    [1, 2].forEach((dd) => {
-      if (dd === 1) {
+    for(var i=0; i<2; i++){
+      if (i === 0) {
         val = "Job";
       } else {
         val = "Enquiry";
       }
       getJobs(jobPagination, searchValue, val);
-    });
+    }
   }, []);
+
+  useEffect(() => {
+      getJobs(jobPagination, searchValue, selectedValue);
+  }, [selectedValue]);
 
   const exportData = () => {
     let apiData = allJobs.map((report) => {

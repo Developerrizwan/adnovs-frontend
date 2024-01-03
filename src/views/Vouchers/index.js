@@ -7,6 +7,9 @@ import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
 import VoucherTable from "./VoucherTable";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
+import moment from "moment";
 
 const Vouchers = (props) => {
   const [createModal, setCreateModal] = useState(false);
@@ -61,12 +64,12 @@ const Vouchers = (props) => {
       )
       .then((response) => {
         let data = response.data;
-        console.log("xswjhjwx", response);
+        // console.log("xswjhjwx", response);
         setPagination({
           ...pgdata,
           totalRows: data.count,
         });
-        setUsers(data.results);
+        setUsers(data);
         setLoading(false);
         console.log(response);
       })
@@ -95,6 +98,37 @@ const Vouchers = (props) => {
         console.log(error.response?.status);
         console.log(error.response?.headers);
       });
+  };
+
+  const exportData = () => {
+    let apiData = users.map((report) => {
+      let dataReport = {
+        "Voucher Id": report?.id,
+        "Voucher Type": report?.voucher_type,
+        "Branch": report?.branch,
+        "Job ID": report?.job?.job_number,
+        Date: moment(report?.date).format("DD-MM-YYYY"),
+        "G/L Date": moment(report?.gl_date).format("DD-MM-YYYY"), 
+        "FC Amount": Number(report?.fc_amount || 0).toFixed(2),
+        Amount: Number(report?.amount_sar || 0).toFixed(2),
+        "Party A/C": report?.party_account?.code,
+        "Invoice": report?.invoice?.invoice_number,
+        "Voucher For": report?.voucher_for,
+        Narration: report?.naration,
+        Remarks: report?.remarks
+      };
+      return dataReport;
+    });
+
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+    const fileName = selectedVoucher?.value;
+    const ws = XLSX.utils.json_to_sheet(apiData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
   };
 
   return (
@@ -127,6 +161,27 @@ const Vouchers = (props) => {
           />
         </Container>
         <Row>
+          <Colxx lg="12" className="d-flex justify-content-end mb-2">
+            <div>
+              {users && users.length > 0 ? (
+                <>
+                  <button
+                    className="btn"
+                    type="button"
+                    style={{
+                      background: "#589662",
+                      color: "white",
+                    }}
+                    onClick={exportData}
+                  >
+                    Excel Download
+                  </button>
+                </>
+              ) : (
+                ""
+              )}
+            </div>
+          </Colxx>
           <Colxx lg="12">
             <>
               {loading ? (
