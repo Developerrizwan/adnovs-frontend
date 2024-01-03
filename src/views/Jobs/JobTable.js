@@ -441,23 +441,23 @@ const JobTable = (props) => {
         customStyles={customStyles}
         columns={cols}
         data={props.allJobs}
-        paginationPerPage={props.userPagination?.rowsPerPage}
-        onChangePage={(p, t) => {
-          props.handlePagination({
-            ...props.userPagination,
-            currentPage: p,
-          });
-        }}
-        onChangeRowsPerPage={(c, t) => {
-          props.handlePagination({
-            ...props.userPagination,
-            rowsPerPage: c,
-            currentPage: t,
-          });
-        }}
-        paginationServer
-        paginationDefaultPage={props.userPagination?.currentPage}
-        paginationTotalRows={props.userPagination?.totalRows}
+        // paginationPerPage={props.userPagination?.rowsPerPage}
+        // onChangePage={(p, t) => {
+        //   props.handlePagination({
+        //     ...props.userPagination,
+        //     currentPage: p,
+        //   });
+        // }}
+        // onChangeRowsPerPage={(c, t) => {
+        //   props.handlePagination({
+        //     ...props.userPagination,
+        //     rowsPerPage: c,
+        //     currentPage: t,
+        //   });
+        // }}
+        // paginationServer
+        // paginationDefaultPage={props.userPagination?.currentPage}
+        // paginationTotalRows={props.userPagination?.totalRows}
         pagination={true}
       />
       <Modal

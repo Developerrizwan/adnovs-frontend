@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Row, Container } from "reactstrap";
 import BreadCrumb from "../../components/Common/BreadCrumb";
 import { Colxx } from "../../components/Common/CustomBootstrap";
-
+import moment from "moment";
 import { Card } from "@mui/material";
 import apiAuth from "../../helpers/ApiAuth";
 import JobTable from "./JobTable";
 import NotificationManager from "../../components/Common/NotificationManager";
 import EnquiryTable from "./EnquiryTable";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 
 const Tab = ({ label, setSelectedValue, selected, count }) => {
   return (
@@ -68,12 +70,13 @@ const Jobs = (props) => {
       )
 
       .then((response) => {
-        let data = response.data.results;
+        let data = response.data;
         setJobPagination({
           ...pgdata,
           totalRows: response.data.count,
         });
-        setCount((prev) => ({ ...prev, [type]: response?.data?.count }));
+
+        setCount((prev) => ({ ...prev, [type]: data?.length }));
         setAllJobs(data);
         setLoading(false);
       })
@@ -135,6 +138,37 @@ const Jobs = (props) => {
     });
   }, []);
 
+  const exportData = () => {
+    let apiData = allJobs.map((report) => {
+      let dataReport = {
+        "Enquiry Number": report?.enquiry_number,
+        "Job Number": report?.job_number,
+        "Consigee Name": report?.consignee_name?.name,
+        "Shipper Name": report?.shipper_name,
+        "Consignee Name": report?.consignee_name?.name,
+        POD: report?.pod,
+        "Client Name": report?.client_name?.name,
+        ETA: moment(report?.eta).format("DD-MM-YYYY HH:mm:ss"),
+        ETD: moment(report?.etd).format("DD-MM-YYYY HH:mm:ss"),
+        POA: report?.poa,
+        POL: report?.pol,
+        "Scope Of Work": report?.scope_of_work,
+        Remarks: report?.remarks,
+      };
+      return dataReport;
+    });
+
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+    const fileName = selectedValue;
+    const ws = XLSX.utils.json_to_sheet(apiData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
+  };
+
   // const onTabSelect = (val) => {
   //   setSelectedValue(val);
   // };
@@ -189,6 +223,25 @@ const Jobs = (props) => {
                       />
                     </div>
                   ))}
+                </div>
+                <div>
+                  {allJobs && allJobs.length > 0 ? (
+                    <>
+                      <button
+                        className="btn"
+                        type="button"
+                        style={{
+                          background: "#589662",
+                          color: "white",
+                        }}
+                        onClick={exportData}
+                      >
+                        Excel Download
+                      </button>
+                    </>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
               {selectedValue === "Job" ? (
