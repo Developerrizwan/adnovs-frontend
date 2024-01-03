@@ -115,7 +115,7 @@ const AddOrganization = (props) => {
         setCoaOptions(opts);
         if (props.isEdit) {
           const sel = opts.find(
-            (dd) => dd?.label === props.organizationData?.coa?.code
+            (dd) => dd?.value === props.organizationData?.coa?.id
           );
           setCoaValue(sel);
         }

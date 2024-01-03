@@ -185,12 +185,12 @@ const OrganizationTable = (props) => {
       sortable: true,
     },
     {
-      name: <span className="font-weight-bold fs-13">Remarks</span>,
-      selector: (row) => row.remarks,
+      name: <span className="font-weight-bold fs-13">COA</span>,
+      selector: (row) => row.coa,
       cell: (value) => {
         return (
           <div
-            title={value.remarks}
+            title={value.coa?.name}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -198,7 +198,7 @@ const OrganizationTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.remarks}
+            {value.coa?.name}
           </div>
         );
       },

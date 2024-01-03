@@ -160,7 +160,7 @@ const Organization = (props) => {
 
         <Row>
           <Colxx lg="12">
-            {allOrganization?.length > 0 ? (
+            {allOrganization?.length > 0 && selectedValue ? (
               <>
                 <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
                   <OrganizationTable
@@ -170,7 +170,7 @@ const Organization = (props) => {
                     organizationPagination={{ ...organizationPagination }}
                     handlePagination={(data) => {
                       setOrganizationPagination(data);
-                      getOrganization(data);
+                      getOrganization(data, searchValue, selectedValue);
                     }}
                     selectedValue={selectedValue}
                     getOrganization={() => {
