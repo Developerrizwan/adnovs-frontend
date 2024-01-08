@@ -46,6 +46,7 @@ const Invoices = (props) => {
 
   const getInvoices = (pgdata, val, type) => {
     setLoading(true);
+    setInvoices([]);
     apiAuth
       .get(
         "/api/get-invoices/?" +
