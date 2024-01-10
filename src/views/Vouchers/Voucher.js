@@ -438,6 +438,7 @@ const Voucher = (props) => {
                     props.voucherData?.voucher_for || voucherId === "DebitNote"
                       ? "Vendor"
                       : "Customer",
+                  voucher_number: props.voucherData?.voucher_number || "",
                 }}
                 validationSchema={Yup.object({
                   // branch: Yup.string().required("Required!"),
@@ -572,6 +573,30 @@ const Voucher = (props) => {
                           )}
                         </div>
                       </Grid>
+                      {props?.isEdit && (
+                        <Grid item lg={4} xs={12}>
+                          <div className="mb-3">
+                            <label
+                              htmlFor="voucher_number"
+                              className="form-label"
+                            >
+                              Voucher Number
+                              {/* <span className="text-danger">*</span> */}
+                            </label>
+                            <Field
+                              placeholder="Voucher No"
+                              className="form-control"
+                              name="voucher_number"
+                              style={{ background: "#EDEDED" }}
+                            />
+                            {errors.voucher_no && touched.voucher_no && (
+                              <div className="invalid-feedback d-block">
+                                {errors.voucher_no}
+                              </div>
+                            )}
+                          </div>
+                        </Grid>
+                      )}
                       <Grid item lg={4} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="date" className="form-label">
@@ -625,7 +650,9 @@ const Voucher = (props) => {
                           )}
                         </div>
                       </Grid>
-                      <Grid item lg={4} xs={12}>
+                    </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item lg={5} xs={12}>
                         <div className="mb-3">
                           <label htmlFor="gl_date" className="form-label">
                             G/L Date
@@ -674,6 +701,60 @@ const Voucher = (props) => {
                           {errors.gl_date && touched.gl_date && (
                             <div className="invalid-feedback d-block">
                               {errors.gl_date}
+                            </div>
+                          )}
+                        </div>
+                      </Grid>
+
+                      <Grid item lg={5} xs={12}>
+                        <div className="mb-3">
+                          <label htmlFor="ref_date" className="form-label">
+                            Ref Date
+                            {/* <span className="text-danger">*</span> */}
+                          </label>
+                          <div
+                            style={{
+                              display: "flex",
+                            }}
+                          >
+                            <DatePicker
+                              selected={values["ref_date"]}
+                              onChange={(date) => {
+                                setFieldValue("ref_date", date);
+                              }}
+                              showTimeSelect
+                              timeFormat="HH:mm"
+                              timeIntervals={15}
+                              timeCaption="Time"
+                              dateFormat="d MMMM yyyy h:mm aa"
+                            />
+                            <div
+                              style={{
+                                position: "relative",
+                                // cursor: "pointer",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  top: 8,
+                                  right: 10,
+                                  fill: "red",
+                                }}
+                              >
+                                {/* <i className="bi bi-calendar4-week"></i> */}
+                                <img
+                                  src="/calendar.svg"
+                                  alt="calendar"
+                                  width="20px"
+                                  height="20px"
+                                />
+                              </span>
+                            </div>
+                          </div>
+                          {errors.ref_date && touched.ref_date && (
+                            <div className="invalid-feedback d-block">
+                              {errors.ref_date}
                             </div>
                           )}
                         </div>
@@ -1067,59 +1148,7 @@ const Voucher = (props) => {
                           </div>
                         </Grid>
                       )}
-                      <Grid item lg={4} xs={12}>
-                        <div className="mb-3">
-                          <label htmlFor="ref_date" className="form-label">
-                            Ref Date
-                            {/* <span className="text-danger">*</span> */}
-                          </label>
-                          <div
-                            style={{
-                              display: "flex",
-                            }}
-                          >
-                            <DatePicker
-                              selected={values["ref_date"]}
-                              onChange={(date) => {
-                                setFieldValue("ref_date", date);
-                              }}
-                              showTimeSelect
-                              timeFormat="HH:mm"
-                              timeIntervals={15}
-                              timeCaption="Time"
-                              dateFormat="d MMMM yyyy h:mm aa"
-                            />
-                            <div
-                              style={{
-                                position: "relative",
-                                // cursor: "pointer",
-                              }}
-                            >
-                              <span
-                                style={{
-                                  position: "absolute",
-                                  top: 8,
-                                  right: 10,
-                                  fill: "red",
-                                }}
-                              >
-                                {/* <i className="bi bi-calendar4-week"></i> */}
-                                <img
-                                  src="/calendar.svg"
-                                  alt="calendar"
-                                  width="20px"
-                                  height="20px"
-                                />
-                              </span>
-                            </div>
-                          </div>
-                          {errors.ref_date && touched.ref_date && (
-                            <div className="invalid-feedback d-block">
-                              {errors.ref_date}
-                            </div>
-                          )}
-                        </div>
-                      </Grid>
+
                       {(selectedVoucher.value === "Payment" ||
                         selectedVoucher.value === "Receipt") && (
                         <Grid item lg={4} xs={12}>

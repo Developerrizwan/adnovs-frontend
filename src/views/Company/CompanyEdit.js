@@ -110,6 +110,11 @@ const CompanyEdit = (props) => {
               sinv_count: props?.companyData?.sinv_count
                 ? props?.companyData?.sinv_count
                 : "",
+              journal_count: props?.companyData?.journal_count,
+              payment_count: props?.companyData?.payment_count,
+              receipt_count: props?.companyData?.receipt_count,
+              creditnote_count: props?.companyData?.creditnote_count,
+              debitnote_count: props?.companyData?.debitnote_count,
             }}
             validationSchema={Yup.object({
               name: Yup.string().required("Company Name is Required"),
@@ -400,6 +405,72 @@ const CompanyEdit = (props) => {
                   </Grid>
                 </Grid>
 
+                <Grid spacing={2} container>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="iban_code" className="form-label">
+                        IBAN Code
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="iban_code"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="iban_code"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="swift_code" className="form-label">
+                        Swift Code
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        name="swift_code"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="swift_code"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+                </Grid>
+
+                <Grid spacing={2} container>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="address" className="form-label">
+                        Address
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        as="textarea"
+                        className="form-control"
+                        name="address"
+                        style={{ background: "#EDEDED" }}
+                      />
+                      <ErrorMessage
+                        name="address"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                </Grid>
+
                 {/* count */}
 
                 <Grid spacing={2} container>
@@ -496,41 +567,68 @@ const CompanyEdit = (props) => {
                   </Grid>
                 </Grid>
 
+                {/* journal and payment voucher count */}
+
                 <Grid spacing={2} container>
-                  <Grid item lg={6} xs={12}>
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="iban_code" className="form-label">
-                        IBAN Code
+                      <Label htmlFor="journal_count" className="form-label">
+                        Journal Voucher Count
                         {/* <span className="text-danger">*</span> */}
                       </Label>
                       <Field
                         className="form-control"
-                        name="iban_code"
+                        placeholder="Journal Voucher Count"
+                        name="journal_count"
                         style={{ background: "#EDEDED" }}
                       />
 
                       {/* <ErrorMessage
-                        name="iban_code"
+                        name="language_address"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
                       /> */}
                     </div>
                   </Grid>
-                  <Grid item lg={6} xs={12}>
+
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="swift_code" className="form-label">
-                        Swift Code
+                      <Label htmlFor="payment_count" className="form-label">
+                        Payment Voucher Count
                         {/* <span className="text-danger">*</span> */}
                       </Label>
                       <Field
                         className="form-control"
-                        name="swift_code"
+                        placeholder="Payment Voucher Count"
+                        name="payment_count"
                         style={{ background: "#EDEDED" }}
                       />
 
                       {/* <ErrorMessage
-                        name="swift_code"
+                        name="vat_number"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
+                    </div>
+                  </Grid>
+
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="receipt_count" className="form-label">
+                        Receipt Voucher Count
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Receipt Voucher Count"
+                        name="receipt_count"
+                        style={{ background: "#EDEDED" }}
+                      />
+
+                      {/* <ErrorMessage
+                        name="language_address"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
@@ -539,25 +637,49 @@ const CompanyEdit = (props) => {
                   </Grid>
                 </Grid>
 
+                {/* Credit Note count and Debit Note voucher count */}
+
                 <Grid spacing={2} container>
-                  <Grid item lg={6} xs={12}>
+                  <Grid item lg={4} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="address" className="form-label">
-                        Address
+                      <Label htmlFor="debitnote_count" className="form-label">
+                        Debit Note Voucher Count
                         {/* <span className="text-danger">*</span> */}
                       </Label>
                       <Field
-                        as="textarea"
                         className="form-control"
-                        name="address"
+                        placeholder="Debit Note Voucher Count"
+                        name="debitnote_count"
                         style={{ background: "#EDEDED" }}
                       />
-                      <ErrorMessage
-                        name="address"
+
+                      {/* <ErrorMessage
+                        name="vat_number"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
+                      /> */}
+                    </div>
+                  </Grid>
+                  <Grid item lg={4} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="creditnote_count" className="form-label">
+                        Credit Note Voucher Count
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Field
+                        className="form-control"
+                        placeholder="Credit Note Voucher Count"
+                        name="creditnote_count"
+                        style={{ background: "#EDEDED" }}
                       />
+
+                      {/* <ErrorMessage
+                        name="vat_number"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      /> */}
                     </div>
                   </Grid>
                 </Grid>

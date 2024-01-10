@@ -69,12 +69,12 @@ const VoucherTable = (props) => {
 
   const [cols, setCols] = useState([
     {
-      name: <span className="font-weight-bold fs-13">Voucher Id</span>,
+      name: <span className="font-weight-bold fs-13">Voucher Number</span>,
       selector: (row) => row.id,
       cell: (value) => {
         return (
           <div
-            title={value?.id}
+            title={value?.voucher_number}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -82,7 +82,7 @@ const VoucherTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value?.id}
+            {value?.voucher_number}
           </div>
         );
       },
