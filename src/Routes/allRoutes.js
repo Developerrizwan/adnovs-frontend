@@ -58,6 +58,7 @@ import AddUser from "../views/UserManagement/AddUser";
 import EditUser from "../views/UserManagement/EditUser";
 import TaxInvoice from "../views/TaxInvoice/TaxInvoice";
 import TaxInvoiceSecond from "../views/TaxInvoice/TaxInvoiceSecond";
+import TaxInvoiceThird from "../views/TaxInvoice/TaxInvoiceThird";
 import ChartOfAccounts from "../views/ChartOfAccounts";
 import AddCOA from "../views/ChartOfAccounts/AddCOA";
 import AddCOAGroup from "../views/COAGroups/AddCOAGroup";
@@ -198,6 +199,7 @@ const publicRoutes = [
   { path: "/auth-offline", component: Offlinepage },
 
   { path: "/tax-invoice/:invoiceId", component: TaxInvoice },
+  { path: "/tax-invoice-third/:invoiceId", component: TaxInvoiceThird },
   { path: "/tax-invoice-second/:invoiceId", component: TaxInvoiceSecond },
   { path: "/purchase-invoice/:invoiceId", component: PurchaseInvoice },
   { path: "/voucher/:type/:id", component: VoucherReportTemplate },
