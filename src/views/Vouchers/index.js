@@ -103,7 +103,7 @@ const Vouchers = (props) => {
   const exportData = () => {
     let apiData = users.map((report) => {
       let dataReport = {
-        "Voucher Id": report?.id,
+        "Voucher Number": report?.voucher_number,
         "Voucher Type": report?.voucher_type,
         "Branch": report?.branch,
         "Job ID": report?.job?.job_number,

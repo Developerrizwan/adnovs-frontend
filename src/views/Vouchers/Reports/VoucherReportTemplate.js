@@ -19,10 +19,7 @@ const Content = ({ data, type }) => {
     let dr_word = "";
     let cr_word = "";
     let accounts = data.accounts?.map((ct) => {
-      console.log(
-        "rrrrrrrrrrrrrrrrrrrrrrr",
-        (Number(ct.amount_sar) * Number(ct.tax_group_code)) / 100
-      );
+      
       ct.vat_amount = Number(
         (Number(ct.amount_sar) * Number(ct.tax_group_code)) / 100
       ).toFixed(2);
@@ -93,7 +90,7 @@ const Content = ({ data, type }) => {
           <DisplayItem label={"Remarks"} value={data?.voucher?.job?.remarks} />
         </div>
         <div id="right-side-items">
-          <DisplayItem label={"Payment No"} value={data?.voucher?.id} />
+          <DisplayItem label={"Payment No"} value={data?.voucher?.voucher_number} />
           <DisplayItem
             label={"GL Date"}
             value={moment(data?.voucher?.gl_date).format("DD/MM/YYYY")}
@@ -182,10 +179,10 @@ const Content = ({ data, type }) => {
                       {Number(dd?.tax_group_code).toFixed(2)}
                     </td>
                     <td className="text-center">
-                      {console.log(
+                      {/* {console.log(
                         "ttttttttttttttttttttttttt",
                         Number(dd?.vat_amount).toFixed(2)
-                      )}
+                      )} */}
                       {Number(dd?.vat_amount).toFixed(2)}
                     </td>
                     <td className="text-center">
@@ -286,7 +283,7 @@ const VoucherReportTemplate = (props) => {
     let id = Number(params.id);
     const tp = params?.type;
     setType(tp);
-    console.log("wwwwwwwwww", props.match.params, params);
+    // console.log("wwwwwwwwww", props.match.params, params);
     getVoucherData(id);
   }, []);
 
