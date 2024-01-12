@@ -270,7 +270,7 @@ const Voucher = (props) => {
       .get(`/api/get-jobs/?page=${1}&search=${val || ""}&type=Job`)
       .then((res) => {
         const { data } = res;
-        let jobOpts = data.results.map((opt) => {
+        let jobOpts = data?.map((opt) => {
           return {
             label: ` ${opt?.type} - ${opt?.job_number}`,
             value: opt?.id,
