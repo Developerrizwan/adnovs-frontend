@@ -100,16 +100,16 @@ const CompanyEdit = (props) => {
                 : "",
               job_count: props?.companyData?.job_count
                 ? props?.companyData?.job_count
-                : "",
+                : 0,
               enquiry_count: props?.companyData?.enquiry_count
                 ? props?.companyData?.enquiry_count
-                : "",
+                : 0,
               pinv_count: props?.companyData?.pinv_count
                 ? props?.companyData?.pinv_count
-                : "",
+                : 0,
               sinv_count: props?.companyData?.sinv_count
                 ? props?.companyData?.sinv_count
-                : "",
+                : 0,
               journal_count: props?.companyData?.journal_count,
               payment_count: props?.companyData?.payment_count,
               receipt_count: props?.companyData?.receipt_count,
