@@ -30,7 +30,7 @@ const OrganizationAccountStatement = (props) => {
 
   const history = useHistory();
   const [organizationOptions, setOrganizationOptions] = useState([]);
-  const [selectOrganization, setSelectedOrganization] = useState({});
+  const [selectOrganization, setSelectedOrganization] = useState(null);
   const [selectedInvcType, setSelectedInvcType] = useState({
     label: "All",
     value: "all",
@@ -38,6 +38,7 @@ const OrganizationAccountStatement = (props) => {
   const LedgerOrganizationOptions = [
     { label: "ACCOUNTS RECEIVABLE STATEMENT", value: "receive" },
     { label: "ACCOUNTS PAYABLE STATEMENT", value: "pay" },
+    { label: "BOTH - RECEIVABLE & PAYABLE", value: "both" },
   ];
 
   const exportProjectToPdf = () => {

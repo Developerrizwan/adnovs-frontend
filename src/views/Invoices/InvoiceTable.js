@@ -280,7 +280,7 @@ const InvoiceTable = (props) => {
       cell: (value) => {
         return (
           <div
-            title={value.fc_amount}
+            title={value.fc_amount.toFixed(2)}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -288,7 +288,7 @@ const InvoiceTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.fc_amount}
+            {value.fc_amount.toFixed(2)}
           </div>
         );
       },
@@ -300,7 +300,7 @@ const InvoiceTable = (props) => {
       cell: (value) => {
         return (
           <div
-            title={value.amount_sar}
+            title={value.amount_sar.toFixed(2)}
             style={{
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -308,7 +308,7 @@ const InvoiceTable = (props) => {
               maxWidth: "200px",
             }}
           >
-            {value.amount_sar}
+            {value.amount_sar.toFixed(2)}
           </div>
         );
       },
