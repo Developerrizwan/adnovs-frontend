@@ -9,7 +9,6 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
 import {
   scopeofworkOptions,
-  branchOptions,
   statusOptions,
   typeOptions,
   OrganizationTypeOptions,
@@ -41,6 +40,7 @@ const EditJob = (props) => {
   const [selectedParties, setSelectedParties] = useState([]);
   const [organization_type, setOrganization_type] = useState([]);
   const [allParties, setAllParties] = useState([]);
+  const [branchOptions, setBranchOptions] = useState(null);
 
   const options = [
     {
@@ -52,6 +52,28 @@ const EditJob = (props) => {
     //   value: "Enquiry",
     // },
   ];
+
+  const getBranchOptions = () => {
+    apiAuth
+      .get("/api/master/branch")
+      .then((res) => {
+        let { data } = res;
+        data = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.name,
+          };
+        });
+        if (props?.isEdit) {
+          setSelBranch({
+            label: props?.allJobs?.branch,
+            value: props?.allJobs?.branch,
+          });
+        }
+        setBranchOptions(data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const getPoaOptions = (val) => {
     apiAuth
@@ -274,17 +296,13 @@ const EditJob = (props) => {
       value: props.allJobs?.pol,
     });
 
-    setSelBranch({
-      label: props?.allJobs?.branch,
-      value: props?.allJobs?.branch,
-    });
-
     getPoaOptions();
     // getPodOptions();
     getOrganization();
     getClientOrganization();
     getPartiesOptions(orgsOpts);
     getAllParties();
+    getBranchOptions();
   }, []);
 
   const customStyles = {
@@ -341,6 +359,7 @@ const EditJob = (props) => {
               etd: props?.allJobs?.etd
                 ? new Date(props?.allJobs?.etd)
                 : new Date(),
+              date: new Date(props?.allJobs?.date) || new Date(),
               organization_type: props?.allJobs?.organization_type
                 ? props?.allJobs?.organization_type
                 : [],
@@ -1061,6 +1080,30 @@ const EditJob = (props) => {
                       />
                       <ErrorMessage
                         name="remarks"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="date" className="form-label">
+                        Date
+                      </Label>
+                      <DatePicker
+                        selected={values["date"]}
+                        onChange={(date) => {
+                          setFieldValue("date", date);
+                        }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="d MMMM yyyy h:mm aa"
+                      />
+                      <ErrorMessage
+                        name="date"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}

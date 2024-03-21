@@ -19,11 +19,6 @@ const Voucher = (props) => {
   const history = useHistory();
   const { voucherId } = useParams();
 
-  const branchOptions = [
-    { label: " JEDDAH", value: " JEDDAH" },
-    { label: " DUBAI", value: " DUBAI" },
-  ];
-
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [organizationOptions, setOrganizationOptions] = useState(null);
@@ -55,6 +50,7 @@ const Voucher = (props) => {
 
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [invoiceOptions, setInvoiceOptions] = useState(null);
+  const [branchOptions, setBranchOptions] = useState(null);
 
   const [selStatus, setSelStatus] = useState({
     value: "Created",
@@ -108,6 +104,7 @@ const Voucher = (props) => {
     }
     getPartyOptions();
     getAllCurrencyCodes();
+    getBranchOptions();
 
     if (props?.isEdit) {
       const selectedStatus =
@@ -119,11 +116,6 @@ const Voucher = (props) => {
       setSelectedInvoucherFor({
         label: props.voucherData?.voucher_for,
         value: props.voucherData?.voucher_for,
-      });
-
-      setSelBranch({
-        label: props.voucherData?.branch,
-        value: props.voucherData?.branch,
       });
 
       const selvoucher = voucherOptions.find(
@@ -228,21 +220,27 @@ const Voucher = (props) => {
     setCurrencyOptions(allCurrencies);
   };
 
-  // const getCategoryOptions = () => {
-  //   apiAuth
-  //     .get("/api/master/coacategory/")
-  //     .then((res) => {
-  //       const { data } = res;
-  //       const catOptions = data.results.map((dd) => {
-  //         return {
-  //           label: dd?.name,
-  //           value: dd?.name,
-  //         };
-  //       });
-  //       setCategoryOptions(catOptions);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
+  const getBranchOptions = () => {
+    apiAuth
+      .get("/api/master/branch")
+      .then((res) => {
+        let { data } = res;
+        data = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.name,
+          };
+        });
+        if (props?.isEdit) {
+          setSelBranch({
+            label: props.voucherData?.branch,
+            value: props.voucherData?.branch,
+          });
+        }
+        setBranchOptions(data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const getPartyOptions = () => {
     apiAuth

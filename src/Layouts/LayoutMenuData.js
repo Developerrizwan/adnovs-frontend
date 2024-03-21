@@ -239,6 +239,15 @@ const Navdata = () => {
           roles: ["superadmin", "admin", "user"],
         },
         {
+          id: "Branch",
+          label: "Branch",
+          icon: "ri-git-branch-line",
+          link: "/branch",
+          src: "/account.png",
+          stateVariables: isCompany,
+          roles: ["admin"],
+        },
+        {
           id: "user-management",
           label: "User Management",
           icon: "ri-account-circle-line",

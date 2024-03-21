@@ -10,7 +10,6 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
 import {
   scopeofworkOptions,
-  branchOptions,
   statusOptions,
   typeOptions,
   OrganizationTypeOptions,
@@ -29,7 +28,7 @@ const CreateJob = (props) => {
   const [scopeType, setScopeType] = useState(null);
   const [jobStatus, setJobStatus] = useState(null);
   const [poaValue, setPoaValue] = useState(null);
-  const [branchValue, setBranchValue] = useState(null);
+  const [selBranch, setSelBranch] = useState(null);
   const [podValue, setPodValue] = useState(null);
   const [eta, setEta] = useState(etaDateObj);
   const [etd, setEtd] = useState(etdDateObj);
@@ -46,6 +45,7 @@ const CreateJob = (props) => {
 
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
+  const [branchOptions, setBranchOptions] = useState(null);
 
   const options = [
     {
@@ -196,12 +196,35 @@ const CreateJob = (props) => {
       });
   };
 
+  const getBranchOptions = () => {
+    apiAuth
+      .get("/api/master/branch")
+      .then((res) => {
+        let { data } = res;
+        data = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.id,
+          };
+        });
+        if (props?.isEdit) {
+          setSelBranch({
+            label: props.allJobs?.branch,
+            value: props.allJobs?.branch,
+          });
+        }
+        setBranchOptions(data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     getPoaOptions();
     // getPodOptions();
     getOrganization();
     getClientOrganization();
     getAllParties();
+    getBranchOptions();
   }, []);
 
   const history = useHistory();
@@ -264,6 +287,7 @@ const CreateJob = (props) => {
         <Card className="p-3" style={{ background: "white" }}>
           <Formik
             initialValues={{
+              date: new Date(props?.allJobs?.date) || new Date(),
               company: JSON.parse(localStorage.getItem("authUser"))?.company_id,
               bl_number: props?.allJobs?.bl_number
                 ? props?.allJobs?.bl_number
@@ -766,12 +790,10 @@ const CreateJob = (props) => {
                         placeholder={"Select"}
                         styles={customStyles}
                         options={branchOptions}
-                        defaultValue={{
-                          label: branchValue,
-                          value: branchValue,
-                        }}
+                        value={selBranch}
                         onChange={(data) => {
                           setFieldValue("branch", data.value);
+                          setSelBranch(data);
                         }}
                       />
                       <ErrorMessage
@@ -1021,6 +1043,30 @@ const CreateJob = (props) => {
                       />
                       <ErrorMessage
                         name="remarks"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="date" className="form-label">
+                        Date
+                      </Label>
+                      <DatePicker
+                        selected={values["date"]}
+                        onChange={(date) => {
+                          setFieldValue("date", date);
+                        }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="d MMMM yyyy h:mm aa"
+                      />
+                      <ErrorMessage
+                        name="date"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
