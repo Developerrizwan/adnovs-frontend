@@ -311,7 +311,6 @@ const AccountDetailsTable = (props) => {
                 className="edit-item-btn"
                 onClick={() => {
                   setSelectedAccount(value);
-                  console.log("wwwwwwwww", value);
                   setEditModal(true);
                 }}
               >

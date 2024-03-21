@@ -474,6 +474,9 @@ const Voucher = (props) => {
                   ).company_id;
                   setLoading(true);
                   if ((props.isEdit && props.voucherData) || vouchId) {
+                    values["voucher_number"] =
+                      vocherState?.voucher_number ||
+                      props.voucherData?.voucher_number;
                     apiAuth
                       .patch(
                         `/api/master/voucher/${
@@ -525,6 +528,7 @@ const Voucher = (props) => {
                             return {
                               ...vocherState,
                               voucher_id: res?.data?.id,
+                              voucher_number: res?.data?.voucher_number,
                             };
                           });
                           // history.push("/vouchers");
@@ -587,11 +591,12 @@ const Voucher = (props) => {
                               name="voucher_number"
                               style={{ background: "#EDEDED" }}
                             />
-                            {errors.voucher_no && touched.voucher_no && (
-                              <div className="invalid-feedback d-block">
-                                {errors.voucher_no}
-                              </div>
-                            )}
+                            {errors.voucher_number &&
+                              touched.voucher_number && (
+                                <div className="invalid-feedback d-block">
+                                  {errors.voucher_number}
+                                </div>
+                              )}
                           </div>
                         </Grid>
                       )}

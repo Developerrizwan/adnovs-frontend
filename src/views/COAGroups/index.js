@@ -8,6 +8,7 @@ import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
 import CaoGroupTable from "./CaoGroupTable";
 import { CheckLg } from "react-bootstrap-icons";
+import useDebounce from "../../components/Hooks/UseDebounce";
 
 const COAGroup = (props) => {
   const [createModal, setCreateModal] = useState(false);
@@ -20,9 +21,11 @@ const COAGroup = (props) => {
     currentPage: 1,
   });
 
+  const debouncedSearch = useDebounce(searchValue, 500);
+
   useEffect(() => {
     getAccounts(pagination, searchValue);
-  }, []);
+  }, [debouncedSearch]);
 
   const getAccounts = (pgdata, val) => {
     apiAuth
@@ -82,7 +85,7 @@ const COAGroup = (props) => {
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getAccounts(pagination, val);
+              // getAccounts(pagination, val);
             }}
           />
         </Container>
