@@ -47,7 +47,7 @@ const Sales = (props) => {
     label: "JEDDAH",
     value: "JEDDAH",
   });
-
+  const [branchOptions, setBranchOptions] = useState(null);
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [consigneeOptions, setConsigneeOptions] = useState([]);
   const [clientOptions, setClientOptions] = useState([]);
@@ -55,10 +55,6 @@ const Sales = (props) => {
   const [selectedParties, setSelectedParties] = useState([]);
   const [organization_type, setOrganization_type] = useState([]);
 
-  const branchOptions = [
-    { label: "JEDDAH", value: "JEDDAH" },
-    { label: "DUBAI", value: "DUBAI" },
-  ];
   const OrganizationTypeOptions = [
     {
       label: "Consignee",
@@ -242,10 +238,33 @@ const Sales = (props) => {
       });
   };
 
+  const getBranchOptions = () => {
+    apiAuth
+      .get("/api/master/branch")
+      .then((res) => {
+        let { data } = res;
+        data = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.name,
+          };
+        });
+        if (props?.isEdit) {
+          setBranchValue({
+            label: props.data?.consignee_name?.branch,
+            value: props.data?.consignee_name?.branch,
+          });
+        }
+        setBranchOptions(data);
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     if (props?.isEdit) {
       getPartiesOptions();
     }
+    getBranchOptions();
     getOrganization(searchValue);
     getClientOrganization(searchValue);
     getPoaOptions();
@@ -259,10 +278,6 @@ const Sales = (props) => {
     });
 
     if (props.isEdit) {
-      setBranchValue({
-        label: props.data?.consignee_name?.branch,
-        value: props.data?.consignee_name?.branch,
-      });
       setPodValue({
         label: props?.data?.pod,
         value: props?.data?.pod,

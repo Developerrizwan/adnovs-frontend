@@ -98,11 +98,13 @@ import LedgerStatement from "../views/TaxInvoice/LedgerStatement";
 import OrganizationAccountStatement from "../views/Organization/OrganizationAccountStatement";
 import VoucherReportTemplate from "../views/Vouchers/Reports/VoucherReportTemplate";
 import JobDetail from "../views/Jobs/JobDetail";
+import Branch from "../views/Branch";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
   { path: "/index", component: DashboardCrm },
   { path: "/users", component: Users },
+  { path: "/branch", component: Branch },
   { path: "/client", component: Client },
   { path: "/jobs", component: Jobs },
   { path: "/job/:jobId", component: JobDetail },

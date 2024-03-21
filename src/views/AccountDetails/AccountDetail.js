@@ -19,14 +19,10 @@ const AccountDetail = (props) => {
     { label: "Dr", value: "Dr" },
     { label: "Cr", value: "Cr" },
   ];
-  const branchOptions = [
-    { label: " JEDDAH", value: " JEDDAH" },
-    { label: " DUBAI", value: " DUBAI" },
-  ];
 
   const [jobOptions, setJobOptions] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
-  const [organizationOptions, setOrganizationOptions] = useState(null);
+  const [branchOptions, setBranchOptions] = useState(null);
   const [fromAndToOptions, setFromAndToOptions] = useState([]);
   const [tax, setTax] = useState(null);
 
@@ -82,13 +78,7 @@ const AccountDetail = (props) => {
     getPartyOptions();
     getAllCurrencyCodes();
     getChargeData();
-
-    if (props?.isEdit) {
-      setSelBranch({
-        label: props.accountDetails?.inter_branch,
-        value: props.accountDetails?.inter_branch,
-      });
-    }
+    getBranchOptions();
 
     if (props?.isEdit) {
       setSelOption({
@@ -214,6 +204,28 @@ const AccountDetail = (props) => {
         console.log(error);
         setLoading(false);
       });
+  };
+
+  const getBranchOptions = () => {
+    apiAuth
+      .get("/api/master/branch")
+      .then((res) => {
+        let { data } = res;
+        data = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.name,
+          };
+        });
+        if (props?.isEdit) {
+          setSelBranch({
+            label: props.accountDetails?.inter_branch,
+            value: props.accountDetails?.inter_branch,
+          });
+        }
+        setBranchOptions(data);
+      })
+      .catch((err) => console.log(err));
   };
 
   const customStyles = {

@@ -19,7 +19,6 @@ const Content = ({ data, type }) => {
     let dr_word = "";
     let cr_word = "";
     let accounts = data.accounts?.map((ct) => {
-      
       ct.vat_amount = Number(
         (Number(ct.amount_sar) * Number(ct.tax_group_code)) / 100
       ).toFixed(2);
@@ -90,7 +89,10 @@ const Content = ({ data, type }) => {
           <DisplayItem label={"Remarks"} value={data?.voucher?.job?.remarks} />
         </div>
         <div id="right-side-items">
-          <DisplayItem label={"Payment No"} value={data?.voucher?.voucher_number} />
+          <DisplayItem
+            label={"Payment No"}
+            value={data?.voucher?.voucher_number}
+          />
           <DisplayItem
             label={"GL Date"}
             value={moment(data?.voucher?.gl_date).format("DD/MM/YYYY")}
@@ -164,7 +166,7 @@ const Content = ({ data, type }) => {
                   <tr>
                     <td className="text-center">{dd?.sac_code}</td>
                     <td className="text-center">
-                      {moment(dd?.ref_date).format("DD/MM/YYYY")}
+                      {moment(dd?.vouchers?.date).format("DD/MM/YYYY")}
                     </td>
                     {/* <td className="text-center">{dd?.ref_no}</td> */}
                     <td className="text-center">{dd?.ac_name?.name}</td>

@@ -40,6 +40,7 @@ const AddOrganization = (props) => {
   const [stateOptions, setStateOptions] = useState([]);
   const [cityOptions, setCityOptions] = useState([]);
   const [branchValue, setBranchValue] = useState(null);
+  const [branchOptions, setBranchOptions] = useState(null);
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -96,10 +97,27 @@ const AddOrganization = (props) => {
     },
   ];
 
-  const branchOptions = [
-    { label: "JEDDAH", value: "JEDDAH" },
-    { label: "DUBAI", value: "DUBAI" },
-  ];
+  const getBranchOptions = () => {
+    apiAuth
+      .get("/api/master/branch")
+      .then((res) => {
+        let { data } = res;
+        data = data.map((dd) => {
+          return {
+            label: dd?.name,
+            value: dd?.name,
+          };
+        });
+        if (props?.isEdit) {
+          setBranchValue({
+            label: props.organizationData?.branch,
+            value: props.organizationData?.branch,
+          });
+        }
+        setBranchOptions(data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const getCoaOptions = () => {
     apiAuth
@@ -198,6 +216,7 @@ const AddOrganization = (props) => {
     getCoaOptions();
     getAllCurrencyCodes();
     getCountries();
+    getBranchOptions();
 
     if (props.isEdit) {
       const types = props?.organizationData?.type.map((dd) => {
@@ -207,11 +226,6 @@ const AddOrganization = (props) => {
         };
       });
       setTypeValue(types);
-
-      setBranchValue({
-        label: props.organizationData?.branch,
-        value: props.organizationData?.branch,
-      });
 
       setGstValue({
         label: props?.organizationData?.gstin_registered ? "Yes" : "No",

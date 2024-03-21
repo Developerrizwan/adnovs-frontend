@@ -49,11 +49,6 @@ export const scopeofworkOptions = [
   },
 ];
 
-export const branchOptions = [
-  { label: "JEDDAH", value: "JEDDAH" },
-  { label: "DUBAI", value: "DUBAI" },
-];
-
 export const statusOptions = [
   {
     label: "Cargo Collected",
