@@ -7,6 +7,7 @@ import { Alert, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
 import AccountDetailsTable from "./AccountDetailsTable";
+import useDebounce from "../../components/Hooks/UseDebounce";
 
 const AccountDetails = (props) => {
   const [createModal, setCreateModal] = useState(false);
@@ -40,12 +41,21 @@ const AccountDetails = (props) => {
     "Debit Note": "",
   };
 
+  // useEffect(() => {
+  //   getAccountData(pagination, searchValue, selectedVoucher.value);
+  //   if (!localStorage.getItem("voucher-type")) {
+  //     localStorage.setItem("voucher-type", selectedVoucher.value);
+  //   }
+  // }, []);
+
+  const debouncedSearch = useDebounce(searchValue, 500);
+
   useEffect(() => {
     getAccountData(pagination, searchValue, selectedVoucher.value);
     if (!localStorage.getItem("voucher-type")) {
       localStorage.setItem("voucher-type", selectedVoucher.value);
     }
-  }, []);
+  }, [debouncedSearch]);
 
   const getAccountData = (pgdata, val, type) => {
     apiAuth
@@ -109,7 +119,7 @@ const AccountDetails = (props) => {
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getAccountData(pagination, val, selectedVoucher.value);
+              // getAccountData(pagination, val, selectedVoucher.value);
             }}
             // add_type={true}
             // add_type_select={true}

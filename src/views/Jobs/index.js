@@ -10,6 +10,7 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import EnquiryTable from "./EnquiryTable";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
+import useDebounce from "../../components/Hooks/UseDebounce";
 
 const Tab = ({ label, setSelectedValue, selected, count }) => {
   return (
@@ -55,6 +56,12 @@ const Jobs = (props) => {
       value: "Enquiry",
     },
   ];
+
+  const debouncedSearch = useDebounce(searchValue, 500);
+
+  useEffect(() => {
+    getJobs(jobPagination, searchValue, selectedValue);
+  }, [debouncedSearch]);
 
   const getJobs = (pgdata, val, type) => {
     setLoading(true);
@@ -128,7 +135,7 @@ const Jobs = (props) => {
 
   useEffect(() => {
     let val;
-    for(var i=0; i<2; i++){
+    for (var i = 0; i < 2; i++) {
       if (i === 0) {
         val = "Job";
       } else {
@@ -137,10 +144,6 @@ const Jobs = (props) => {
       getJobs(jobPagination, searchValue, val);
     }
   }, []);
-
-  useEffect(() => {
-      getJobs(jobPagination, searchValue, selectedValue);
-  }, [selectedValue]);
 
   const exportData = () => {
     let apiData = allJobs.map((report) => {
@@ -192,7 +195,7 @@ const Jobs = (props) => {
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getJobs(jobPagination, val, selectedValue);
+              // getJobs(jobPagination, val, selectedValue);
             }}
             export_button={allJobs.length > 0 ? true : false}
             // handleTypeChange={handleJobChange}

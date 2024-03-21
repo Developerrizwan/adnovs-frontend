@@ -7,6 +7,7 @@ import { Card } from "@mui/material";
 import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import OrganizationTable from "./Organizationtable";
+import useDebounce from "../../components/Hooks/UseDebounce";
 
 const Organization = (props) => {
   const [allOrganization, setAllOrganization] = useState([]);
@@ -58,6 +59,12 @@ const Organization = (props) => {
     },
   ];
 
+  const debouncedSearch = useDebounce(searchValue, 500);
+
+  useEffect(() => {
+    getOrganization(organizationPagination, searchValue, selectedValue);
+  }, [debouncedSearch]);
+
   const getOrganization = (pgdata, val, type) => {
     setLoading(true);
     apiAuth
@@ -90,9 +97,9 @@ const Organization = (props) => {
       });
   };
 
-  useEffect(() => {
-    getOrganization(organizationPagination, searchValue, selectedValue);
-  }, []);
+  // useEffect(() => {
+  //   getOrganization(organizationPagination, searchValue, selectedValue);
+  // }, []);
 
   const deleteOrganization = (id) => {
     let url = `/api/master/organization/${id}/`;
@@ -144,7 +151,7 @@ const Organization = (props) => {
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getOrganization(organizationPagination, val, selectedValue);
+              // getOrganization(organizationPagination, val, selectedValue);
             }}
             export_button={allOrganization?.length > 0 ? true : false}
             handleTypeChange={handleOrganizationChange}

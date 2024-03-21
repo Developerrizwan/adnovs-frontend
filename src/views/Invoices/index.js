@@ -17,6 +17,7 @@ import apiAuth from "../../helpers/ApiAuth";
 import InvoiceTable from "./InvoiceTable";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
+import useDebounce from "../../components/Hooks/UseDebounce";
 
 const Invoices = (props) => {
   const [invoices, setInvoices] = useState([]);
@@ -43,6 +44,12 @@ const Invoices = (props) => {
       value: "Purchase",
     },
   ];
+
+  const debouncedSearch = useDebounce(searchValue, 500);
+
+  useEffect(() => {
+    getInvoices(invoicePagination, searchValue, selectedValue.value);
+  }, [debouncedSearch]);
 
   const getInvoices = (pgdata, val, type) => {
     setLoading(true);
@@ -109,10 +116,6 @@ const Invoices = (props) => {
       });
   };
 
-  useEffect(() => {
-    getInvoices(invoicePagination, searchValue, selectedValue.value);
-  }, []);
-
   const handleInvoiceChange = (e) => {
     setSelectedValue(e);
     getInvoices(invoicePagination, searchValue, e.value);
@@ -169,7 +172,7 @@ const Invoices = (props) => {
             searchValue={searchValue}
             setSearchValue={(val) => {
               setSearchValue(val);
-              getInvoices(invoicePagination, val, selectedValue.value);
+              // getInvoices(invoicePagination, val, selectedValue.value);
             }}
             export_button={invoices.length > 0 ? true : false}
             exportData={() => {
