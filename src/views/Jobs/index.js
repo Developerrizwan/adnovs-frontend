@@ -57,7 +57,7 @@ const Jobs = (props) => {
     },
   ];
 
-  const debouncedSearch = useDebounce(searchValue, 500);
+  const debouncedSearch = useDebounce(searchValue, 1500);
 
   useEffect(() => {
     getJobs(jobPagination, searchValue, selectedValue);

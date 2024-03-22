@@ -12,7 +12,6 @@ function useDebounce(value, delay) {
       clearTimeout(handler);
     };
   }, [value, delay]);
-
   return debouncedValue;
 }
 
