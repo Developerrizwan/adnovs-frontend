@@ -45,7 +45,7 @@ const Invoices = (props) => {
     },
   ];
 
-  const debouncedSearch = useDebounce(searchValue, 500);
+  const debouncedSearch = useDebounce(searchValue, 1500);
 
   useEffect(() => {
     getInvoices(invoicePagination, searchValue, selectedValue.value);

@@ -48,7 +48,7 @@ const AccountDetails = (props) => {
   //   }
   // }, []);
 
-  const debouncedSearch = useDebounce(searchValue, 500);
+  const debouncedSearch = useDebounce(searchValue, 1500);
 
   useEffect(() => {
     getAccountData(pagination, searchValue, selectedVoucher.value);
