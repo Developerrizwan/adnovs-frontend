@@ -12,6 +12,7 @@ import { Label, Button } from "reactstrap";
 const CompanyEdit = (props) => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
+  const [selInvoiceTemplate, setSelInvoiceTemplate] = useState(null);
 
   const [countryOptions, setCountryOptions] = useState([]);
   const [stateOptions, setStateOptions] = useState([]);
@@ -22,6 +23,12 @@ const CompanyEdit = (props) => {
       background: "#EDEDED",
     }),
   };
+
+  const invTempOptions = [
+    { label: "Invoice Template 1", value: "INV1" },
+    { label: "Invoice Template 2", value: "INV2" },
+    { label: "Invoice Template 3", value: "INV3" },
+  ];
 
   const getCountries = () => {
     const opts = Country.getAllCountries().map((state) => {
@@ -56,6 +63,11 @@ const CompanyEdit = (props) => {
 
   useEffect(() => {
     getCountries();
+
+    const sel = invTempOptions.find(
+      (dd) => dd.value === props.companyData?.invoice_template
+    );
+    setSelInvoiceTemplate(sel);
   }, []);
 
   return (
@@ -115,6 +127,7 @@ const CompanyEdit = (props) => {
               receipt_count: props?.companyData?.receipt_count,
               creditnote_count: props?.companyData?.creditnote_count,
               debitnote_count: props?.companyData?.debitnote_count,
+              invoice_template: props?.companyData?.invoice_template || "",
             }}
             validationSchema={Yup.object({
               name: Yup.string().required("Company Name is Required"),
@@ -463,6 +476,28 @@ const CompanyEdit = (props) => {
                       />
                       <ErrorMessage
                         name="address"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="invoice_template" className="form-label">
+                        Invoice Template
+                        {/* <span className="text-danger">*</span> */}
+                      </Label>
+                      <Select
+                        value={selInvoiceTemplate}
+                        options={invTempOptions}
+                        onChange={(data) => {
+                          setSelInvoiceTemplate(data);
+                          setFieldValue("invoice_template", data.value);
+                        }}
+                      />
+                      <ErrorMessage
+                        name="invoice_template"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
