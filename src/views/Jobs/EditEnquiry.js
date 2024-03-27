@@ -134,32 +134,32 @@ const EditEnquiry = (props) => {
     getOrganization();
     getClientOrganization();
     const scopeType = scopeofworkOptions.find(
-      (item) => item.value === props.allJobs.scope_of_work
+      (item) => item.value === props.allJobs?.scope_of_work
     );
     setScopeType(scopeType);
 
-    const type = typeOptions.find((item) => item.value === props.allJobs.type);
+    const type = typeOptions.find((item) => item.value === props.allJobs?.type);
     setTypevalue(type);
 
     const jobStatus = statusOptions.find(
-      (item) => item.value === props.allJobs.job_status
+      (item) => item.value === props.allJobs?.job_status
     );
     setJobStatus(jobStatus);
 
     // const poa_value = poaOptions.find((item) => item.id === props.allJobs.poa);
     setPoaValue({
-      label: props.allJobs.poa,
-      value: props.allJobs.poa,
+      label: props.allJobs?.poa,
+      value: props.allJobs?.poa,
     });
     setPolValue({
-      label: props.allJobs.pol,
-      value: props.allJobs.pol,
+      label: props.allJobs?.pol,
+      value: props.allJobs?.pol,
     });
 
     const pod_Value = podOptions.find((item) => item.id === props.allJobs?.pod);
     setPodValue({
-      label: props.allJobs.pod,
-      value: props.allJobs.pod,
+      label: props.allJobs?.pod,
+      value: props.allJobs?.pod,
     });
   }, []);
 
@@ -385,10 +385,8 @@ const EditEnquiry = (props) => {
               // values["client_name"] = clientNameValue.value;
               // values["consignee_name"] = consigneeNameValue.value;
               values["company"] = company;
-              if (eta) values["eta"] = eta;
-              if (etd) values["etd"] = etd;
 
-              const url = `/api/master/job/${props.allJobs.id}/`;
+              const url = `/api/master/job/${props.allJobs?.id}/`;
               apiAuth
                 .patch(url, values)
                 .then((response) => {

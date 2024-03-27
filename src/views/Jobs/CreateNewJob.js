@@ -249,8 +249,8 @@ const CreateNewJob = (props) => {
                   container_type: "",
                   type: "",
                   scope_of_work: "",
-                  eta: null,
-                  etd: null,
+                  eta: new Date(),
+                  etd: new Date(),
                   organization_type: [],
                   parties: [],
                   branch: "",
@@ -306,8 +306,6 @@ const CreateNewJob = (props) => {
                     localStorage.getItem("authUser")
                   )?.company_id;
                   values["company"] = company;
-                  values["eta"] = eta;
-                  values["etd"] = etd;
                   values["organization_type"] = organization_type.map(
                     (dd) => dd?.label
                   );
@@ -652,9 +650,9 @@ const CreateNewJob = (props) => {
                             ETA
                           </Label>
                           <DatePicker
-                            selected={eta}
+                            selected={values["eta"]}
                             onChange={(date) => {
-                              setEta(date);
+                              setFieldValue("eta", date);
                             }}
                             showTimeSelect
                             timeFormat="HH:mm"
@@ -679,9 +677,9 @@ const CreateNewJob = (props) => {
                             ETD
                           </Label>
                           <DatePicker
-                            selected={etd}
+                            selected={values["etd"]}
                             onChange={(date) => {
-                              setEtd(date);
+                              setFieldValue("etd", date);
                             }}
                             showTimeSelect
                             timeFormat="HH:mm"
