@@ -359,7 +359,9 @@ const EditJob = (props) => {
               etd: props?.allJobs?.etd
                 ? new Date(props?.allJobs?.etd)
                 : new Date(),
-              date: new Date(props?.allJobs?.date) || new Date(),
+              date: props?.allJobs?.date
+                ? new Date(props?.allJobs?.date)
+                : new Date(),
               organization_type: props?.allJobs?.organization_type
                 ? props?.allJobs?.organization_type
                 : [],

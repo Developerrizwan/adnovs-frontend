@@ -287,7 +287,9 @@ const CreateJob = (props) => {
         <Card className="p-3" style={{ background: "white" }}>
           <Formik
             initialValues={{
-              date: props?.allJobs?.date || new Date(),
+              date: props?.allJobs?.date
+                ? new Date(props?.allJobs?.date)
+                : new Date(),
               company: JSON.parse(localStorage.getItem("authUser"))?.company_id,
               bl_number: props?.allJobs?.bl_number
                 ? props?.allJobs?.bl_number

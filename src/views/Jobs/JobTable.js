@@ -434,7 +434,7 @@ const JobTable = (props) => {
     },
   ]);
 
-  console.log("all jobs", props.allJobs);
+  // console.log("all jobs", props.allJobs);
   return (
     <>
       <DataTable
