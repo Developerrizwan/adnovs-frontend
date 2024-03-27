@@ -234,7 +234,7 @@ const CreateNewJob = (props) => {
             <Card className="p-3" style={{ background: "white" }}>
               <Formik
                 initialValues={{
-                  date: new Date(),
+                  created_at: new Date(),
                   bl_number: "",
                   bayan_number: "",
                   pod: "",
@@ -983,13 +983,13 @@ const CreateNewJob = (props) => {
                       </Grid>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="date" className="form-label">
+                          <Label htmlFor="created_at" className="form-label">
                             Date
                           </Label>
                           <DatePicker
-                            selected={values["date"]}
+                            selected={values["created_at"]}
                             onChange={(date) => {
-                              setFieldValue("date", date);
+                              setFieldValue("created_at", date);
                             }}
                             showTimeSelect
                             timeFormat="HH:mm"
@@ -998,7 +998,7 @@ const CreateNewJob = (props) => {
                             dateFormat="d MMMM yyyy h:mm aa"
                           />
                           <ErrorMessage
-                            name="date"
+                            name="created_at"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}

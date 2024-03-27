@@ -359,8 +359,8 @@ const EditJob = (props) => {
               etd: props?.allJobs?.etd
                 ? new Date(props?.allJobs?.etd)
                 : new Date(),
-              date: props?.allJobs?.date
-                ? new Date(props?.allJobs?.date)
+              created_at: props?.allJobs?.created_at
+                ? new Date(props?.allJobs?.created_at)
                 : new Date(),
               organization_type: props?.allJobs?.organization_type
                 ? props?.allJobs?.organization_type
@@ -1090,13 +1090,13 @@ const EditJob = (props) => {
                   </Grid>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="date" className="form-label">
+                      <Label htmlFor="created_at" className="form-label">
                         Date
                       </Label>
                       <DatePicker
-                        selected={values["date"]}
+                        selected={values["created_at"]}
                         onChange={(date) => {
-                          setFieldValue("date", date);
+                          setFieldValue("created_at", date);
                         }}
                         showTimeSelect
                         timeFormat="HH:mm"
@@ -1105,7 +1105,7 @@ const EditJob = (props) => {
                         dateFormat="d MMMM yyyy h:mm aa"
                       />
                       <ErrorMessage
-                        name="date"
+                        name="created_at"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}

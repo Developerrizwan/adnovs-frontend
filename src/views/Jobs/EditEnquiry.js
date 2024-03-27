@@ -341,8 +341,15 @@ const EditEnquiry = (props) => {
               scope_of_work: props?.allJobs?.scope_of_work
                 ? props?.allJobs?.scope_of_work
                 : "",
-              eta: props?.allJobs?.eta ? props?.allJobs?.eta : "",
-              etd: props?.allJobs?.etd ? props?.allJobs?.etd : "",
+              eta: props?.allJobs?.eta
+                ? new Date(props?.allJobs?.eta)
+                : new Date(),
+              etd: props?.allJobs?.etd
+                ? new Date(props?.allJobs?.etd)
+                : new Date(),
+              created_at: props?.allJobs?.created_at
+                ? new Date(props?.allJobs?.created_at)
+                : new Date(),
             }}
             validationSchema={Yup.object({
               pod: Yup.string().ensure().required("POD is Required"),
@@ -745,6 +752,30 @@ const EditEnquiry = (props) => {
                       />
                       <ErrorMessage
                         name="eta"
+                        render={(msg) => (
+                          <div className="text-danger">{msg}</div>
+                        )}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item lg={6} xs={12}>
+                    <div className="mb-3">
+                      <Label htmlFor="created_at" className="form-label">
+                        Date
+                      </Label>
+                      <DatePicker
+                        selected={values["created_at"]}
+                        onChange={(date) => {
+                          setFieldValue("created_at", date);
+                        }}
+                        showTimeSelect
+                        timeFormat="HH:mm"
+                        timeIntervals={15}
+                        timeCaption="Time"
+                        dateFormat="d MMMM yyyy h:mm aa"
+                      />
+                      <ErrorMessage
+                        name="created_at"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}

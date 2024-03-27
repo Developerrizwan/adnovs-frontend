@@ -288,7 +288,7 @@ const AddEnquiry = (props) => {
                 initialValues={{
                   // bl_number: "",
                   // bayan_number: "",
-                  date: new Date(),
+                  created_at: new Date(),
                   pod: "",
                   poa: "",
                   pol: "",
@@ -300,8 +300,8 @@ const AddEnquiry = (props) => {
                   type: "",
                   scope_of_work: "",
                   job_status: "",
-                  eta: null,
-                  etd: null,
+                  eta: new Date(),
+                  etd: new Date(),
                   branch: "",
                 }}
                 validationSchema={Yup.object({
@@ -342,8 +342,6 @@ const AddEnquiry = (props) => {
                     localStorage.getItem("authUser")
                   )?.company_id;
                   values["company"] = company;
-                  values["eta"] = eta;
-                  values["etd"] = etd;
                   // values["client_name"] = selClient.value;
                   // values["consignee_name"] = selConsignee.value;
                   const url = "/api/master/job/";
@@ -662,9 +660,9 @@ const AddEnquiry = (props) => {
                             {/* <span className="text-danger">*</span> */}
                           </Label>
                           <DatePicker
-                            selected={eta}
+                            selected={values["eta"]}
                             onChange={(date) => {
-                              setEta(date);
+                              setFieldValue("eta", date);
                             }}
                             showTimeSelect
                             timeFormat="HH:mm"
@@ -688,9 +686,9 @@ const AddEnquiry = (props) => {
                             {/* <span className="text-danger">*</span> */}
                           </Label>
                           <DatePicker
-                            selected={etd}
+                            selected={values["etd"]}
                             onChange={(date) => {
-                              setEtd(date);
+                              setFieldValue("etd", date);
                             }}
                             showTimeSelect
                             timeFormat="HH:mm"
@@ -786,14 +784,14 @@ const AddEnquiry = (props) => {
                       </Grid>
                       <Grid item lg={6} xs={12}>
                         <div className="mb-3">
-                          <Label htmlFor="date" className="form-label">
+                          <Label htmlFor="created_at" className="form-label">
                             Date
                             {/* <span className="text-danger">*</span> */}
                           </Label>
                           <DatePicker
-                            selected={values["date"]}
+                            selected={values["created_at"]}
                             onChange={(date) => {
-                              setFieldValue("date", date);
+                              setFieldValue("created_at", date);
                             }}
                             showTimeSelect
                             timeFormat="HH:mm"
@@ -802,7 +800,7 @@ const AddEnquiry = (props) => {
                             dateFormat="d MMMM yyyy h:mm aa"
                           />
                           <ErrorMessage
-                            name="date"
+                            name="created_at"
                             render={(msg) => (
                               <div className="text-danger">{msg}</div>
                             )}

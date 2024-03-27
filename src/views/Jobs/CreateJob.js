@@ -287,9 +287,6 @@ const CreateJob = (props) => {
         <Card className="p-3" style={{ background: "white" }}>
           <Formik
             initialValues={{
-              date: props?.allJobs?.date
-                ? new Date(props?.allJobs?.date)
-                : new Date(),
               company: JSON.parse(localStorage.getItem("authUser"))?.company_id,
               bl_number: props?.allJobs?.bl_number
                 ? props?.allJobs?.bl_number
@@ -331,8 +328,15 @@ const CreateJob = (props) => {
               scope_of_work: props?.allJobs?.scope_of_work
                 ? props?.allJobs?.scope_of_work
                 : "",
-              eta: props?.allJobs?.eta ? props?.allJobs?.eta : new Date(),
-              etd: props?.allJobs?.etd ? props?.allJobs?.etd : new Date(),
+              eta: props?.allJobs?.eta
+                ? new Date(props?.allJobs?.eta)
+                : new Date(),
+              etd: props?.allJobs?.etd
+                ? new Date(props?.allJobs?.etd)
+                : new Date(),
+              created_at: props?.allJobs?.created_at
+                ? new Date(props?.allJobs?.created_at)
+                : new Date(),
               organization_type: props?.allJobs?.organization_type
                 ? props?.allJobs?.organization_type
                 : [],
@@ -1053,13 +1057,13 @@ const CreateJob = (props) => {
                   </Grid>
                   <Grid item lg={6} xs={12}>
                     <div className="mb-3">
-                      <Label htmlFor="date" className="form-label">
+                      <Label htmlFor="created_at" className="form-label">
                         Date
                       </Label>
                       <DatePicker
-                        selected={values["date"]}
+                        selected={values["created_at"]}
                         onChange={(date) => {
-                          setFieldValue("date", date);
+                          setFieldValue("created_at", date);
                         }}
                         showTimeSelect
                         timeFormat="HH:mm"
@@ -1068,7 +1072,7 @@ const CreateJob = (props) => {
                         dateFormat="d MMMM yyyy h:mm aa"
                       />
                       <ErrorMessage
-                        name="date"
+                        name="created_at"
                         render={(msg) => (
                           <div className="text-danger">{msg}</div>
                         )}
