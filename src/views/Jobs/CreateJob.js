@@ -204,7 +204,7 @@ const CreateJob = (props) => {
         data = data.map((dd) => {
           return {
             label: dd?.name,
-            value: dd?.id,
+            value: dd?.name,
           };
         });
         if (props?.isEdit) {
