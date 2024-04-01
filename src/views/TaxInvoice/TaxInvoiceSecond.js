@@ -466,16 +466,13 @@ const TaxInvoiceSecond = (props) => {
                   label={"Shipper Name"}
                   value={""}
                 />
-                <span>
-                  <Translate text={state.invoice?.shipper_name} />
-                </span>
-                <span
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  {state.invoice?.shipper_name}
-                </span>
+                <div>
+                  <span>
+                    <Translate text={state.invoice?.shipper_name} />
+                  </span>
+                  <br />
+                  <span>{state.invoice?.shipper_name}</span>
+                </div>
               </div>
               <ShowDataWithTranslate
                 width={"180px"}
