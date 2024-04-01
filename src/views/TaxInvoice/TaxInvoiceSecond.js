@@ -343,8 +343,15 @@ const TaxInvoiceSecond = (props) => {
                 value={""}
               />
               <div className="ms-3">
-                <span>
+                {/* <span>
                   <Translate text={state.invoice?.client_name?.name} />
+                </span> */}
+                <span
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  {state.invoice?.client_name?.language_name}
                 </span>
                 <span
                   style={{
@@ -352,7 +359,7 @@ const TaxInvoiceSecond = (props) => {
                   }}
                 >
                   {state.invoice?.client_name?.name}
-                </span>{" "}
+                </span>
                 ,
               </div>
               <div className="ms-3">
@@ -438,8 +445,15 @@ const TaxInvoiceSecond = (props) => {
                   label={"Consignee"}
                   value={""}
                 />
-                <span>
+                {/* <span>
                   <Translate text={state.invoice?.consignee_name?.name} />
+                </span> */}
+                <span
+                  style={{
+                    marginLeft: "10px",
+                  }}
+                >
+                  {state.invoice?.consignee_name?.language_name}
                 </span>
                 <span
                   style={{
