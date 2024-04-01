@@ -448,20 +448,17 @@ const TaxInvoiceSecond = (props) => {
                 {/* <span>
                   <Translate text={state.invoice?.consignee_name?.name} />
                 </span> */}
-                <span
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  {state.invoice?.consignee_name?.language_name}
-                </span>
-                <span
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  {state.invoice?.consignee_name?.name}
-                </span>
+                <div>
+                  <span
+                    style={{
+                      marginLeft: "10px",
+                    }}
+                  >
+                    {state.invoice?.consignee_name?.language_name}
+                  </span>
+                  <br />
+                  <span>{state.invoice?.consignee_name?.name}</span>
+                </div>
               </div>
               <div style={{ display: "flex" }}>
                 <ShowDataWithTranslate
