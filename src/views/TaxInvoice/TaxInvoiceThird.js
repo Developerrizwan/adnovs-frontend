@@ -39,9 +39,7 @@ const ShowTableHeadWithTranslate = ({ label }) => {
       <th className="border-0 text-center">
         {label}
         <br />
-        <span>
-          {/* <Translate text={label} /> */}
-        </span>
+        <span>{/* <Translate text={label} /> */}</span>
       </th>
     </>
   );
@@ -248,24 +246,23 @@ const TaxInvoiceSecond = (props) => {
         </div>
         <div className="card reportdownproject" style={{ padding: "20px" }}>
           <div className="row">
-            
             <div className="col-lg-8 mb-4 d-flex">
               <img
                 src={shipLogo}
                 alt=""
                 width={300}
                 // style={{ margin: "auto" }}
-                style={{marginTop:"auto", marginBottom:"auto"}}
+                style={{ marginTop: "auto", marginBottom: "auto" }}
               />
             </div>
-            <div className="col-lg-4 d-flex flex-column align-items-end">
-              <h3 className="custom-font" style={{ color: "#000"}}>
+            <div className="col-lg-4 d-flex flex-column justify-content-end align-items-end">
+              <h3 className="custom-font" style={{ color: "#000" }}>
                 {/* <Translate
                   text={String(state?.invoice?.company?.company_name_lang)}
                 /> */}
                 {String(state?.invoice?.company?.name)}
               </h3>
-              <p className="custom-font">
+              <p className="custom-font text-end">
                 {/* <Translate
                   text={
                     state?.invoice?.company?.address.length
@@ -287,7 +284,7 @@ const TaxInvoiceSecond = (props) => {
               </p> */}
               <p className="custom-font">
                 <span style={{ marginRight: "5px" }}>
-                VAT NO
+                  VAT NO
                   {/* <Translate text={"VAT NUMBER"} /> */}
                   {/* الرقم الضريبي */}
                 </span>
@@ -312,7 +309,7 @@ const TaxInvoiceSecond = (props) => {
               }}
             >
               <h2 style={{ color: "#000" }}>
-                TAX INVOICE 
+                TAX INVOICE
                 {/* / <Translate text={"TAX INVOICE"} /> */}
               </h2>
             </div>
@@ -343,52 +340,25 @@ const TaxInvoiceSecond = (props) => {
                 <span>
                   {/* <Translate text={state.invoice?.client_name?.name} /> */}
                 </span>
-                <span
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  {state.invoice?.client_name?.name}
-                </span>{" "}
-                ,
+                <span>{state.invoice?.client_name?.name}</span> ,
               </div>
               <div className="ms-3">
                 <span>
                   {/* <Translate text={state?.invoice?.client_name?.city} /> */}
                 </span>
-                <span
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  {state?.invoice?.client_name?.city}
-                </span>{" "}
-                ,
+                <span>{state?.invoice?.client_name?.city}</span> ,
               </div>
               <div className="ms-3">
                 <span>
                   {/* <Translate text={state?.invoice?.client_name?.state_code} /> */}
                 </span>
-                <span
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  {state?.invoice?.client_name?.state_code}
-                </span>{" "}
-                ,
+                <span>{state?.invoice?.client_name?.state_code}</span> ,
               </div>
               <div className="ms-3">
                 <span>
                   {/* <Translate text={state?.invoice?.client_name?.country} /> */}
                 </span>
-                <span
-                  style={{
-                    marginLeft: "10px",
-                  }}
-                >
-                  {state?.invoice?.client_name?.country}
-                </span>
+                <span>{state?.invoice?.client_name?.country}</span>
               </div>
             </div>
             <div className="col-lg-4 custom-font">
@@ -653,9 +623,7 @@ const TaxInvoiceSecond = (props) => {
                       >
                         /
                       </span>
-                      <span>
-                        {/* <Translate text={"Total excl VAT"} /> */}
-                      </span>
+                      <span>{/* <Translate text={"Total excl VAT"} /> */}</span>
                     </p>
                     <p className="custom-font">
                       Value Added Tax
@@ -685,9 +653,7 @@ const TaxInvoiceSecond = (props) => {
                       >
                         /
                       </span>
-                      <span>
-                        {/* <Translate text={"Total With VAT"} /> */}
-                      </span>
+                      <span>{/* <Translate text={"Total With VAT"} /> */}</span>
                     </p>
                   </div>
                   <div
