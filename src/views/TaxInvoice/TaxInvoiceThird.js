@@ -246,7 +246,7 @@ const TaxInvoiceSecond = (props) => {
         </div>
         <div className="card reportdownproject" style={{ padding: "20px" }}>
           <div className="row">
-            <div className="col-lg-8 mb-4 d-flex">
+            <div className="col-lg-5 mb-4 d-flex">
               <img
                 src={shipLogo}
                 alt=""
@@ -255,7 +255,7 @@ const TaxInvoiceSecond = (props) => {
                 style={{ marginTop: "auto", marginBottom: "auto" }}
               />
             </div>
-            <div className="col-lg-4 d-flex flex-column justify-content-end align-items-end">
+            <div className="col-lg-7 d-flex flex-column justify-content-end align-items-end">
               <h2
                 className=""
                 style={{
