@@ -65,7 +65,7 @@ const TaxInvoiceSecond = (props) => {
   }
 
   async function creatPdf({ doc, elements }) {
-    let top = 20;
+    let top = 10;
     const padding = 10;
 
     for (let i = 0; i < elements.length; i++) {
@@ -83,7 +83,7 @@ const TaxInvoiceSecond = (props) => {
         const pageHeight = doc.internal.pageSize.getHeight();
         if (top + elHeight > pageHeight) {
           doc.addPage();
-          top = 20;
+          top = 10;
         }
         doc.addImage(
           imgData,
@@ -244,7 +244,7 @@ const TaxInvoiceSecond = (props) => {
             {loading ? "Downloding..." : "Download"}
           </Button>
         </div>
-        <div className="card reportdownproject" style={{ padding: "20px" }}>
+        <div className="card reportdownproject" style={{ padding: "10px" }}>
           <div className="row">
             <div className="col-lg-5 mb-4 d-flex">
               <img
@@ -769,32 +769,30 @@ const TaxInvoiceSecond = (props) => {
             </div>
           </div>
 
-          <hr className="mt-5" style={{ border: "1px solid #000" }} />
-          <div className="mt-2">
-            <div className="row">
-              <div className="col-lg-9 col-xs-12">
-                <p className="custom-font">
-                  This is a computer generated invoice doesn't require signature
-                  or stamp
-                </p>
-                <p className="custom-font">
-                  Any discrepancy must be notified within 7 days from the date
-                  of invoice. Otherwise it shall be considered as confirmation
-                  of correctness
-                </p>
-                {/* <p>
+          <hr className="my-2" style={{ border: "1px solid #000" }} />
+          <div className="row">
+            <div className="col-lg-9 col-xs-12">
+              <p className="custom-font">
+                This is a computer generated invoice doesn't require signature
+                or stamp
+              </p>
+              <p className="custom-font">
+                Any discrepancy must be notified within 7 days from the date of
+                invoice. Otherwise it shall be considered as confirmation of
+                correctness
+              </p>
+              {/* <p>
                 <span style={{ fontWeight: 700 }}>Print Date </span>05-07-2023
                 11:00 am
               </p> */}
-              </div>
-              <div className="col-lg-1 col-xs-12 custom-font">
-                <p>Email:</p>
-                {/* <p>Phone:</p> */}
-              </div>
-              <div className="col-lg-2 col-xs-12 custom-font">
-                <p>info@adnovs.com</p>
-                {/* <p>9999999999</p> */}
-              </div>
+            </div>
+            <div className="col-lg-1 col-xs-12 custom-font">
+              <p>Email:</p>
+              {/* <p>Phone:</p> */}
+            </div>
+            <div className="col-lg-2 col-xs-12 custom-font">
+              <p>info@adnovs.com</p>
+              {/* <p>9999999999</p> */}
             </div>
           </div>
         </div>
