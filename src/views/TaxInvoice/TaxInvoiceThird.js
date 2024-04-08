@@ -262,6 +262,7 @@ const TaxInvoiceSecond = (props) => {
                   color: "#000",
                   fontWeight: "bold",
                   fontFamily: "Times New Roman",
+                  textTransform: "uppercase",
                 }}
               >
                 {/* <Translate
