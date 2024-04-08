@@ -256,13 +256,20 @@ const TaxInvoiceSecond = (props) => {
               />
             </div>
             <div className="col-lg-4 d-flex flex-column justify-content-end align-items-end">
-              <h3 className="custom-font" style={{ color: "#000" }}>
+              <h2
+                className=""
+                style={{
+                  color: "#000",
+                  fontWeight: "bold",
+                  fontFamily: "Times New Roman",
+                }}
+              >
                 {/* <Translate
                   text={String(state?.invoice?.company?.company_name_lang)}
                 /> */}
                 {String(state?.invoice?.company?.name)}
-              </h3>
-              <p className="custom-font text-end">
+              </h2>
+              <p className="text-end custom-font">
                 {/* <Translate
                   text={
                     state?.invoice?.company?.address.length
@@ -274,7 +281,7 @@ const TaxInvoiceSecond = (props) => {
                   ? state?.invoice?.company?.address
                   : ""}
               </p>
-              <p className="custom-font">
+              <p className="text-end custom-font">
                 {state?.invoice?.company?.state} ,
                 {state?.invoice?.company?.country}
               </p>
