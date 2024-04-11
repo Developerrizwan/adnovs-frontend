@@ -36,6 +36,7 @@ const Tab = ({ label, setSelectedValue, selected, count }) => {
 
 const Jobs = (props) => {
   const [allJobs, setAllJobs] = useState([]);
+  const [allEnquiries, setAllEnquiries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [count, setCount] = useState(null);
@@ -45,17 +46,6 @@ const Jobs = (props) => {
     totalRows: 0,
     currentPage: 1,
   });
-
-  const options = [
-    {
-      label: "Job",
-      value: "Job",
-    },
-    {
-      label: "Enquiry",
-      value: "Enquiry",
-    },
-  ];
 
   const debouncedSearch = useDebounce(searchValue, 1500);
 
@@ -78,13 +68,12 @@ const Jobs = (props) => {
 
       .then((response) => {
         let data = response.data;
-        setJobPagination({
-          ...pgdata,
-          totalRows: response.data.count,
-        });
-
+        if (type === "Job") {
+          setAllJobs([...data]);
+        } else if (type === "Enquiry") {
+          setAllEnquiries([...data]);
+        }
         setCount((prev) => ({ ...prev, [type]: data?.length }));
-        setAllJobs([...data]);
         setLoading(false);
       })
       .catch((error) => {
@@ -145,8 +134,8 @@ const Jobs = (props) => {
     }
   }, []);
 
-  const exportData = () => {
-    let apiData = allJobs.map((report) => {
+  const exportData = (arr) => {
+    let apiData = arr.map((report) => {
       let dataReport = {
         "Enquiry Number": report?.enquiry_number,
         "Job Number": report?.job_number,
@@ -197,7 +186,15 @@ const Jobs = (props) => {
               setSearchValue(val);
               // getJobs(jobPagination, val, selectedValue);
             }}
-            export_button={allJobs.length > 0 ? true : false}
+            export_button={
+              selectedValue === "Job"
+                ? allJobs.length > 0
+                  ? true
+                  : false
+                : allEnquiries.length > 0
+                ? true
+                : false
+            }
             // handleTypeChange={handleJobChange}
             // add_type={true}
             // add_type_select={true}
@@ -209,7 +206,7 @@ const Jobs = (props) => {
           />
         </Container>
 
-        {allJobs.length > 0 ? (
+        {allJobs.length > 0 || allEnquiries.length > 0 ? (
           <>
             <Card
               style={{
@@ -232,7 +229,8 @@ const Jobs = (props) => {
                   ))}
                 </div>
                 <div>
-                  {allJobs && allJobs.length > 0 ? (
+                  {(selectedValue === "Job" && allJobs.length > 0) ||
+                  (selectedValue === "Enquiry" && allEnquiries.length > 0) ? (
                     <>
                       <button
                         className="btn"
@@ -241,7 +239,13 @@ const Jobs = (props) => {
                           background: "#589662",
                           color: "white",
                         }}
-                        onClick={exportData}
+                        onClick={() => {
+                          const arr =
+                            selectedValue === "Job"
+                              ? [...allJobs]
+                              : [...allEnquiries];
+                          exportData(arr);
+                        }}
                       >
                         Excel Download
                       </button>
@@ -256,12 +260,12 @@ const Jobs = (props) => {
                   allJobs={allJobs}
                   deleteJob={deleteJob}
                   history={props.history}
-                  jobPagination={{ ...jobPagination }}
-                  handlePagination={(data) => {
-                    setJobPagination(data);
-                    getJobs(data, searchValue, selectedValue);
-                  }}
-                  userPagination={{ ...jobPagination }}
+                  // jobPagination={{ ...jobPagination }}
+                  // handlePagination={(data) => {
+                  //   setJobPagination(data);
+                  //   getJobs(data, searchValue, selectedValue);
+                  // }}
+                  // userPagination={{ ...jobPagination }}
                   selectedValue={selectedValue}
                   getJobs={() => {
                     setAllJobs([]);
@@ -270,15 +274,15 @@ const Jobs = (props) => {
                 />
               ) : (
                 <EnquiryTable
-                  allJobs={allJobs}
+                  allJobs={allEnquiries}
                   deleteJob={deleteJob}
                   history={props.history}
-                  jobPagination={{ ...jobPagination }}
-                  handlePagination={(data) => {
-                    setJobPagination(data);
-                    getJobs(data, searchValue, selectedValue);
-                  }}
-                  userPagination={{ ...jobPagination }}
+                  // jobPagination={{ ...jobPagination }}
+                  // handlePagination={(data) => {
+                  //   setJobPagination(data);
+                  //   getJobs(data, searchValue, selectedValue);
+                  // }}
+                  // userPagination={{ ...enquiryPagination }}
                   selectedValue={selectedValue}
                   getJobs={() => {
                     setAllJobs([]);
