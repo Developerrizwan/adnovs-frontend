@@ -315,8 +315,8 @@ const EditJob = (props) => {
   return (
     <React.Fragment>
       {/* {console.log("rrrr", props.allJobs)} */}
-      <span>Job Number: {props.allJobs.job_number}</span>
-      {props.allJobs ? (
+      <span>Job Number: {props?.allJobs?.job_number}</span>
+      {props?.allJobs ? (
         <Card className="p-3" style={{ background: "white" }}>
           <Formik
             initialValues={{
@@ -431,7 +431,7 @@ const EditJob = (props) => {
               );
               values["parties"] = selectedParties.map((item) => item.value);
 
-              const url = `/api/master/job/${props.allJobs.id}/`;
+              const url = `/api/master/job/${props?.allJobs?.id}/`;
               apiAuth
                 .patch(url, values)
                 .then((response) => {

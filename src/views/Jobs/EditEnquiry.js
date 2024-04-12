@@ -10,8 +10,8 @@ import NotificationManager from "../../components/Common/NotificationManager";
 import { Label, Button } from "reactstrap";
 
 const EditEnquiry = (props) => {
-  const etaTime = props.allJobs.eta;
-  const etdTime = props.allJobs.etd;
+  const etaTime = props.allJobs?.eta;
+  const etdTime = props.allJobs?.etd;
 
   const etaDateObj = new Date(etaTime);
   const etdDateObj = new Date(etdTime);
@@ -75,7 +75,7 @@ const EditEnquiry = (props) => {
           };
         });
         const consignee_name = ConsOpts.find(
-          (item) => item.value === Number(props.allJobs?.consignee_name?.id)
+          (item) => item.value === Number(props?.allJobs?.consignee_name?.id)
         );
         setConsigneeNameValue(consignee_name);
         setConsigneeOptions(ConsOpts);
@@ -314,7 +314,7 @@ const EditEnquiry = (props) => {
 
   return (
     <React.Fragment>
-      {props.allJobs ? (
+      {props?.allJobs ? (
         <Card className="p-3" style={{ background: "white" }}>
           <Formik
             initialValues={{
@@ -386,7 +386,7 @@ const EditEnquiry = (props) => {
               // values["consignee_name"] = consigneeNameValue.value;
               values["company"] = company;
 
-              const url = `/api/master/job/${props.allJobs?.id}/`;
+              const url = `/api/master/job/${props?.allJobs?.id}/`;
               apiAuth
                 .patch(url, values)
                 .then((response) => {
