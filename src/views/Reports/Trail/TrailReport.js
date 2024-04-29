@@ -7,7 +7,7 @@ import Translate from "../../TaxInvoice/Translate";
 import NotificationManager from "../../../components/Common/NotificationManager";
 import DownloadReport from "../../Vouchers/Reports/helpers/DownloadReport";
 
-const Content = ({ data }) => {
+const Content = ({ data, loading }) => {
   // console.log("profit", data);
 
   // var assetTotal = data?.reduce((x, y) => {
@@ -95,24 +95,38 @@ const Content = ({ data }) => {
     </div> */}
 
       {/* Table */}
-      <div id="table" className="my-4">
-        <table className="htmlTable mt-2 w-100 ">
-          <tr>
-            <th style={{ width: "26%" }} className="text-center">
-              Group Name
-            </th>
-            <th style={{ width: "34%" }} className="text-center">
-              Account Name
-            </th>
-            <th style={{ width: "20%" }} className="text-center">
-              Debit
-            </th>
-            <th style={{ width: "20%" }} className="text-center">
-              Credit
-            </th>
-          </tr>
+      {loading ? (
+        <div
+          style={{
+            height: "70vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div className="spinner-border text-dark" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      ) : (
+        <div id="table" className="my-4">
+          <table className="htmlTable mt-2 w-100 ">
+            <tr>
+              <th style={{ width: "26%" }} className="text-center">
+                Group Name
+              </th>
+              <th style={{ width: "34%" }} className="text-center">
+                Account Name
+              </th>
+              <th style={{ width: "20%" }} className="text-center">
+                Debit
+              </th>
+              <th style={{ width: "20%" }} className="text-center">
+                Credit
+              </th>
+            </tr>
 
-          {/* <tr>
+            {/* <tr>
             <td className="text-left border-top-0 border-bottom-0 my-0 py-0">
               <p
                 className="my-1 py-0"
@@ -131,254 +145,257 @@ const Content = ({ data }) => {
             <td className="text-center border-top-0 border-bottom-0"></td>
           </tr>*/}
 
-          {["ASSET", "EXPENSE", "LIABILITY", "EQUITY", "INCOME"].map((item) => {
-            return (
-              <>
-                <tr>
-                  {/* Group Name Column */}
-                  <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
-                    <>
-                      <p
-                        className="my-0 py-0 pb-2"
-                        style={{
-                          fontSize: "14px",
-                          fontWeight: 700,
-                          marginLeft: "70px",
-                          fontFamily: "sans-serif",
-                          color: "black",
-                        }}
-                      >
-                        {item}
-                      </p>
-                      {data?.length ? (
+            {["ASSET", "EXPENSE", "LIABILITY", "EQUITY", "INCOME"].map(
+              (item) => {
+                return (
+                  <>
+                    <tr>
+                      {/* Group Name Column */}
+                      <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
                         <>
-                          {data?.map((dd) => {
-                            return (
-                              <>
-                                {dd?.type === item ? (
-                                  <div className="my-2 border border-bottom-0">
-                                    <span
-                                      style={{
-                                        fontSize: "14px",
-                                        paddingLeft: "100px",
-                                      }}
-                                    >
-                                      {dd?.income_amount === 0
-                                        ? ""
-                                        : `${dd?.group}`}
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <></>
-                                )}
-                              </>
-                            );
-                          })}
+                          <p
+                            className="my-0 py-0 pb-2"
+                            style={{
+                              fontSize: "14px",
+                              fontWeight: 700,
+                              marginLeft: "70px",
+                              fontFamily: "sans-serif",
+                              color: "black",
+                            }}
+                          >
+                            {item}
+                          </p>
+                          {data?.length ? (
+                            <>
+                              {data?.map((dd) => {
+                                return (
+                                  <>
+                                    {dd?.type === item ? (
+                                      <div className="my-2 border border-bottom-0">
+                                        <span
+                                          style={{
+                                            fontSize: "14px",
+                                            paddingLeft: "100px",
+                                          }}
+                                        >
+                                          {dd?.income_amount === 0
+                                            ? ""
+                                            : `${dd?.group}`}
+                                        </span>
+                                      </div>
+                                    ) : (
+                                      <></>
+                                    )}
+                                  </>
+                                );
+                              })}
+                            </>
+                          ) : (
+                            <></>
+                          )}
+                          <div className="border-top"></div>
+
+                          <div
+                            className="border-bottom"
+                            style={{ border: "1px solid #000" }}
+                          ></div>
                         </>
-                      ) : (
-                        <></>
-                      )}
-                      <div className="border-top"></div>
+                      </td>
 
-                      <div
-                        className="border-bottom"
-                        style={{ border: "1px solid #000" }}
-                      ></div>
-                    </>
-                  </td>
+                      {/* Account Name Column */}
+                      <td className="text-center border-top-0 border-bottom-0">
+                        <>
+                          <p className="my-0 py-0">----------------</p>
+                          {data?.length ? (
+                            data?.map((dd, i) => {
+                              return (
+                                <>
+                                  {dd?.type === item ? (
+                                    <div className="my-2 text-center border border-bottom-0">
+                                      <span style={{ fontSize: "14px" }}>
+                                        {" "}
+                                        {dd?.account_name}
+                                      </span>
+                                    </div>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </>
+                              );
+                            })
+                          ) : (
+                            <></>
+                          )}
+                          <div className="border-top"></div>
 
-                  {/* Account Name Column */}
-                  <td className="text-center border-top-0 border-bottom-0">
-                    <>
-                      <p className="my-0 py-0">----------------</p>
-                      {data?.length ? (
-                        data?.map((dd, i) => {
-                          return (
-                            <>
-                              {dd?.type === item ? (
-                                <div className="my-2 text-center border border-bottom-0">
-                                  <span style={{ fontSize: "14px" }}>
-                                    {" "}
-                                    {dd?.account_name}
-                                  </span>
-                                </div>
-                              ) : (
-                                <></>
-                              )}
-                            </>
-                          );
-                        })
-                      ) : (
-                        <></>
-                      )}
-                      <div className="border-top"></div>
+                          <div
+                            className="border-bottom"
+                            style={{ border: "1px solid #000" }}
+                          ></div>
+                        </>
+                      </td>
 
-                      <div
-                        className="border-bottom"
-                        style={{ border: "1px solid #000" }}
-                      ></div>
-                    </>
-                  </td>
+                      {/* Debit Amount Column */}
+                      <td className="text-center border-top-0 border-bottom-0">
+                        <>
+                          <p className="my-0 py-0">----------------</p>
+                          {data?.length ? (
+                            data?.map((dd) => {
+                              return (
+                                <>
+                                  {dd?.type === item ? (
+                                    <div className="my-2 text-center border border-bottom-0">
+                                      <span>
+                                        {" "}
+                                        {item === "EXPENSE" || item === "ASSET"
+                                          ? Math.abs(
+                                              Number(
+                                                dd?.total_amount || 0
+                                              ).toFixed(2)
+                                            )
+                                          : Number(0).toFixed(2)}
+                                      </span>
+                                    </div>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </>
+                              );
+                            })
+                          ) : (
+                            <></>
+                          )}
+                          <div className="border-top"></div>
 
-                  {/* Debit Amount Column */}
-                  <td className="text-center border-top-0 border-bottom-0">
-                    <>
-                      <p className="my-0 py-0">----------------</p>
-                      {data?.length ? (
-                        data?.map((dd) => {
-                          return (
-                            <>
-                              {dd?.type === item ? (
-                                <div className="my-2 text-center border border-bottom-0">
-                                  <span>
-                                    {" "}
-                                    {item === "EXPENSE" || item === "ASSET"
-                                      ? Math.abs(
-                                          Number(dd?.total_amount || 0).toFixed(
-                                            2
-                                          )
-                                        )
-                                      : Number(0).toFixed(2)}
-                                  </span>
-                                </div>
-                              ) : (
-                                <></>
-                              )}
-                            </>
-                          );
-                        })
-                      ) : (
-                        <></>
-                      )}
-                      <div className="border-top"></div>
+                          <div
+                            className="border-bottom"
+                            style={{ border: "1px solid #000" }}
+                          ></div>
+                        </>
+                      </td>
 
-                      <div
-                        className="border-bottom"
-                        style={{ border: "1px solid #000" }}
-                      ></div>
-                    </>
-                  </td>
+                      {/* Credit Amount Column */}
+                      <td className="text-center border-top-0 border-bottom-0">
+                        <>
+                          <p className="my-0 py-0">----------------</p>
+                          {data?.length ? (
+                            data?.map((dd) => {
+                              return (
+                                <>
+                                  {dd?.type === item ? (
+                                    <div className="my-2 text-center border border-bottom-0">
+                                      <span>
+                                        {" "}
+                                        {item !== "EXPENSE" && item !== "ASSET"
+                                          ? Math.abs(
+                                              Number(
+                                                dd?.total_amount || 0
+                                              ).toFixed(2)
+                                            )
+                                          : Number(0).toFixed(2)}
+                                      </span>
+                                    </div>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </>
+                              );
+                            })
+                          ) : (
+                            <></>
+                          )}
+                          <div className="border-top"></div>
 
-                  {/* Credit Amount Column */}
-                  <td className="text-center border-top-0 border-bottom-0">
-                    <>
-                      <p className="my-0 py-0">----------------</p>
-                      {data?.length ? (
-                        data?.map((dd) => {
-                          return (
-                            <>
-                              {dd?.type === item ? (
-                                <div className="my-2 text-center border border-bottom-0">
-                                  <span>
-                                    {" "}
-                                    {item !== "EXPENSE" && item !== "ASSET"
-                                      ? Math.abs(
-                                          Number(dd?.total_amount || 0).toFixed(
-                                            2
-                                          )
-                                        )
-                                      : Number(0).toFixed(2)}
-                                  </span>
-                                </div>
-                              ) : (
-                                <></>
-                              )}
-                            </>
-                          );
-                        })
-                      ) : (
-                        <></>
-                      )}
-                      <div className="border-top"></div>
+                          <div
+                            className="border-bottom"
+                            style={{ border: "1px solid #000" }}
+                          ></div>
+                        </>
+                      </td>
+                    </tr>
+                  </>
+                );
+              }
+            )}
+            <tr>
+              {/* Group Name Column */}
+              <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
+                <>
+                  <p
+                    className="my-0 py-0 pb-2"
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: 700,
+                      marginLeft: "70px",
+                      fontFamily: "sans-serif",
+                      color: "black",
+                    }}
+                  >
+                    TOTAL
+                  </p>
+                  <div className="border-top"></div>
+                  <div
+                    className="border-bottom"
+                    style={{ border: "1px solid #000" }}
+                  ></div>
+                </>
+              </td>
 
-                      <div
-                        className="border-bottom"
-                        style={{ border: "1px solid #000" }}
-                      ></div>
-                    </>
-                  </td>
-                </tr>
-              </>
-            );
-          })}
-          <tr>
-            {/* Group Name Column */}
-            <td className="text-left border-top-0 border-bottom-0 my-0 py-0 ">
-              <>
-                <p
-                  className="my-0 py-0 pb-2"
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    marginLeft: "70px",
-                    fontFamily: "sans-serif",
-                    color: "black",
-                  }}
-                >
-                  TOTAL
-                </p>
-                <div className="border-top"></div>
-                <div
-                  className="border-bottom"
-                  style={{ border: "1px solid #000" }}
-                ></div>
-              </>
-            </td>
+              {/* Account Name Column */}
+              <td className="text-center border-top-0 border-bottom-0">
+                <>
+                  <p className="my-0 py-0">----------------</p>
+                  <div className="border-top"></div>
+                  <div
+                    className="border-bottom"
+                    style={{ border: "1px solid #000" }}
+                  ></div>
+                </>
+              </td>
 
-            {/* Account Name Column */}
-            <td className="text-center border-top-0 border-bottom-0">
-              <>
-                <p className="my-0 py-0">----------------</p>
-                <div className="border-top"></div>
-                <div
-                  className="border-bottom"
-                  style={{ border: "1px solid #000" }}
-                ></div>
-              </>
-            </td>
+              {/* Debit Amount Column */}
+              <td className="text-center border-top-0 border-bottom-0">
+                <>
+                  <p
+                    className="my-0 py-0"
+                    style={{
+                      fontWeight: 700,
+                      color: "black",
+                    }}
+                  >
+                    {Number(debitTotal).toFixed(2)}
+                  </p>
+                  <div className="border-top"></div>
+                  <div
+                    className="border-bottom"
+                    style={{ border: "1px solid #000" }}
+                  ></div>
+                </>
+              </td>
 
-            {/* Debit Amount Column */}
-            <td className="text-center border-top-0 border-bottom-0">
-              <>
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontWeight: 700,
-                    color: "black",
-                  }}
-                >
-                  {Number(debitTotal).toFixed(2)}
-                </p>
-                <div className="border-top"></div>
-                <div
-                  className="border-bottom"
-                  style={{ border: "1px solid #000" }}
-                ></div>
-              </>
-            </td>
-
-            {/* Credit Amount Column */}
-            <td className="text-center border-top-0 border-bottom-0">
-              <>
-                <p
-                  className="my-0 py-0"
-                  style={{
-                    fontWeight: 700,
-                    color: "black",
-                  }}
-                >
-                  {Number(creditTotal).toFixed(2)}
-                </p>
-                <div className="border-top"></div>
-                <div
-                  className="border-bottom"
-                  style={{ border: "1px solid #000" }}
-                ></div>
-              </>
-            </td>
-          </tr>
-        </table>
-      </div>
+              {/* Credit Amount Column */}
+              <td className="text-center border-top-0 border-bottom-0">
+                <>
+                  <p
+                    className="my-0 py-0"
+                    style={{
+                      fontWeight: 700,
+                      color: "black",
+                    }}
+                  >
+                    {Number(creditTotal).toFixed(2)}
+                  </p>
+                  <div className="border-top"></div>
+                  <div
+                    className="border-bottom"
+                    style={{ border: "1px solid #000" }}
+                  ></div>
+                </>
+              </td>
+            </tr>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
@@ -442,14 +459,16 @@ const TrailReport = (props) => {
   }, []);
 
   const getVoucherData = (id, st, et) => {
+    setState((prev) => ({ ...prev, loading: true }));
     apiAuth
       .get(`/api/trial_balance/?start_date=${st}&end_date=${et}`)
       .then((response) => {
         let data = response.data.filter((dd) => Math.abs(dd.total_amount) > 0);
-        setState({ ...state, data });
+        setState({ ...state, data, loading: false });
       })
       .catch((err) => {
         console.log(err);
+        setState((prev) => ({ ...prev, loading: false }));
         NotificationManager.error(
           "",
           "Invalid Trail Report.",
@@ -493,7 +512,7 @@ const TrailReport = (props) => {
           />
 
           {/* Content */}
-          <Content data={state?.data} />
+          <Content data={state?.data} loading={state?.loading} />
 
           {/* Footer */}
           {/* <ReportFooter /> */}
