@@ -8,6 +8,8 @@ import apiAuth from "../../helpers/ApiAuth";
 import NotificationManager from "../../components/Common/NotificationManager";
 import OrganizationTable from "./Organizationtable";
 import useDebounce from "../../components/Hooks/UseDebounce";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 
 const Organization = (props) => {
   const [allOrganization, setAllOrganization] = useState([]);
@@ -97,10 +99,6 @@ const Organization = (props) => {
       });
   };
 
-  // useEffect(() => {
-  //   getOrganization(organizationPagination, searchValue, selectedValue);
-  // }, []);
-
   const deleteOrganization = (id) => {
     let url = `/api/master/organization/${id}/`;
     apiAuth
@@ -138,6 +136,33 @@ const Organization = (props) => {
     getOrganization(organizationPagination, searchValue, e.value);
   };
 
+  const exportData = (arr) => {
+    let apiData = arr.map((org) => {
+      let dataOrg = {
+        "Name": org?.name,
+        "Type": org?.type.join(", "),
+        "Language Name": org?.language_name,
+        "Address": org?.address,
+        "Currency": org?.currency,
+        "GSTIN Registered": org?.gstin_registered ? "Yes" : "No",
+        "Payment Terms": org?.payment_terms,
+        "VAT TRN Number": org?.vat_trn_number,
+        "COA": org?.coa?.name,
+      };
+      return dataOrg;
+    });
+
+    const fileType =
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+    const fileExtension = ".xlsx";
+    const fileName = selectedValue;
+    const ws = XLSX.utils.json_to_sheet(apiData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
+  };
+
   return (
     <>
       <div className="page-content">
@@ -170,6 +195,42 @@ const Organization = (props) => {
             {allOrganization?.length > 0 && selectedValue ? (
               <>
                 <Card style={{ boxShadow: "0 5px 5px rgba(56, 65, 74, 0.15)" }}>
+                  <div className="d-flex justify-content-start align-items-center p-3">
+                    {/* <h5 className="mx-2">Filters :</h5>
+                    <div className="d-flex gap-1 mx-2">
+                      {options.map((opt, i) => (
+                        <div key={i}>
+                          <button
+                            className={`btn ${selectedValue === opt.value ? "btn-primary" : "btn-light"}`}
+                            onClick={() => setSelectedValue(opt.value)}
+                          >
+                            {opt.label}
+                          </button>
+                        </div>
+                      ))}
+                    </div> */}
+                    <div>
+                      {allOrganization.length > 0 ? (
+                        <>
+                          <button
+                            className="btn"
+                            type="button"
+                            style={{
+                              background: "#589662",
+                              color: "white",
+                            }}
+                            onClick={() => {
+                              exportData(allOrganization);
+                            }}
+                          >
+                            Excel Download
+                          </button>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
                   <OrganizationTable
                     allOrganization={allOrganization}
                     deleteOrganization={deleteOrganization}
