@@ -8,6 +8,10 @@ import { Colxx } from "../../components/Common/CustomBootstrap";
 import NotificationManager from "../../components/Common/NotificationManager";
 import CaoTable from "./CaoTable";
 
+// ─── Only these two lines are newly added ────────────────────────────────
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
+
 const ChartOfAccounts = (props) => {
   const [createModal, setCreateModal] = useState(false);
   const [accounts, setAccounts] = useState([]);
@@ -63,6 +67,39 @@ const ChartOfAccounts = (props) => {
       });
   };
 
+  // ─── Only this function is newly added ───────────────────────────────────
+  const exportToExcel = () => {
+    if (accounts.length === 0) return;
+
+    const dataForExcel = accounts.map((acc) => ({
+      Code: acc.code || "",
+      Name: acc.name || "",
+      "Language Name": acc.language_name || "",
+      Type: acc.type || "",
+      "Dr/Cr": acc.dr_cr || "",
+      Group: acc.group?.name || acc.group || "",
+      Subgroup: acc.subgroup?.name || acc.subgroup || "",
+      Category: acc.category || "",
+      "COA Type": acc.coa_type || "",
+      "Direct/Indirect": acc.is_direct_indirect || "",
+      "Subledger Req": acc.subledger_requried ? "Yes" : "No",
+      "Charge Req": acc.charge_required ? "Yes" : "No",
+      "Job Req": acc.job_required ? "Yes" : "No",
+      "Asset Req": acc.asset_required ? "Yes" : "No",
+      Currency: acc.currency || "",
+      "Short Name": acc.short_name || "",
+      Remarks: acc.remarks || "",
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dataForExcel);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
+    });
+    FileSaver.saveAs(data, "Chart_of_Accounts.xlsx");
+  };
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -89,8 +126,23 @@ const ChartOfAccounts = (props) => {
                 <div className="loading"></div>
               ) : (
                 <>
-                  {" "}
                   <Card>
+                    {/* ─── Only this small block is newly added ──────── */}
+                    {accounts.length > 0 && (
+                      <div className="p-3 d-flex justify-content-end">
+                        <button
+                          className="btn"
+                          style={{
+                            background: "#589662",
+                            color: "white",
+                          }}
+                          onClick={exportToExcel}
+                        >
+                          Excel Download
+                        </button>
+                      </div>
+                    )}
+
                     <CaoTable
                       accounts={accounts.filter(
                         (item) =>
