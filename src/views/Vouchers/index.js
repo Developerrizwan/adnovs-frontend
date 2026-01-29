@@ -58,22 +58,30 @@ const Vouchers = (props) => {
   }, [selectedVoucher]);
 
   const getSelVoucherData = (pgdata, val, type) => {
+    setLoading(true);
     apiAuth
       .get(
-        `/api/get-voucher/?type=${type}&page=${pgdata?.currentPage}&search=${val}`
+        `/api/get-voucher/?type=${type}&page=${pgdata?.currentPage}&search=${val}&page_size=${pgdata?.rowsPerPage || 10}`
       )
       .then((response) => {
         let data = response.data;
-        // console.log("xswjhjwx", response);
+
+        // Handle both paginated {count, results} and direct array
+        const voucherArray = data.results || data || [];
+
+        setUsers(voucherArray); // Keep users as array like original code
+
         setPagination({
           ...pgdata,
-          totalRows: data.count,
+          totalRows: data.count || voucherArray.length,
         });
-        setUsers(data);
+
         setLoading(false);
-        console.log(response);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log("Error fetching vouchers:", err);
+        setLoading(false);
+      });
   };
 
   const deleteUser = (id) => {
@@ -81,7 +89,6 @@ const Vouchers = (props) => {
     apiAuth
       .delete(url)
       .then((response) => {
-        const newdata = response.data;
         NotificationManager.success(
           "",
           "Voucher Deleted Successfully",
@@ -101,33 +108,89 @@ const Vouchers = (props) => {
   };
 
   const exportData = () => {
-    let apiData = users.map((report) => {
-      let dataReport = {
-        "Voucher Number": report?.voucher_number,
-        "Voucher Type": report?.voucher_type,
-        "Branch": report?.branch,
-        "Job ID": report?.job?.job_number,
-        Date: moment(report?.date).format("DD-MM-YYYY"),
-        "G/L Date": moment(report?.gl_date).format("DD-MM-YYYY"), 
-        "FC Amount": Number(report?.fc_amount || 0).toFixed(2),
-        Amount: Number(report?.amount_sar || 0).toFixed(2),
-        "Party A/C": report?.party_account?.code,
-        "Invoice": report?.invoice?.invoice_number,
-        "Voucher For": report?.voucher_for,
-        Narration: report?.naration,
-        Remarks: report?.remarks
-      };
-      return dataReport;
+    if (!users?.length) {
+      NotificationManager.info("No vouchers to export", "", 3000);
+      return;
+    }
+
+    const excelRows = [];
+
+    users.forEach((voucher) => {
+      const vNo = voucher.voucher_number || "—";
+      const vDate = voucher.date ? moment(voucher.date).format("DD-MM-YYYY") : "—";
+      const glDate = voucher.gl_date ? moment(voucher.gl_date).format("DD-MM-YYYY") : "—";
+      const vType = voucher.voucher_type || "—";
+      const branch = voucher.branch || "—";
+      const narration = voucher.naration || voucher.remarks || "";
+      const job = voucher.job?.job_number || "—";
+      const invoice = voucher.invoice?.invoice_number || "—";
+
+      // If no lines → fallback to single row (your old behavior)
+      if (!voucher.lines || voucher.lines.length === 0) {
+        excelRows.push({
+          "Voucher Number": vNo,
+          "Date": vDate,
+          "G/L Date": glDate,
+          "Voucher Type": vType,
+          "Branch": branch,
+          "Narration": narration,
+          "Party A/C": voucher.party_account?.code || "",
+          "Account Name": voucher.party_account?.name || "",
+          "Debit": Number(voucher.amount_sar || 0).toFixed(2),
+          "Credit": Number(voucher.amount_sar || 0).toFixed(2),
+          "Job ID": job,
+          "Invoice": invoice,
+          "Remarks": voucher.remarks || "",
+        });
+        return;
+      }
+
+      // Show both debit and credit sides — one row per line
+      voucher.lines.forEach((line) => {
+        const acc = line.ac_name_resolved || {};
+        const code = acc.type === "coa" ? (acc.code || "") : "";
+        const name = acc.name || "—";
+
+        let debit = "";
+        let credit = "";
+
+        const amount = Number(line.amount_sar || line.fcy_amount || 0);
+
+        if (line.dr_cr === "Dr") {
+          debit = amount.toFixed(2);
+        } else if (line.dr_cr === "Cr") {
+          credit = amount.toFixed(2);
+        }
+
+        excelRows.push({
+          "Voucher Number": vNo,
+          "Date": vDate,
+          "G/L Date": glDate,
+          "Voucher Type": vType,
+          "Branch": branch,
+          "Narration": line.narration || narration,
+          "Account Code": code,
+          "Account Name": name,
+          "Debit": debit,
+          "Credit": credit,
+          "Job ID": job,
+          "Invoice": invoice,
+          "Charge": line.charge_name || "",
+          "Remarks": line.remarks || voucher.remarks || "",
+        });
+      });
     });
 
     const fileType =
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
     const fileExtension = ".xlsx";
-    const fileName = selectedVoucher?.value;
-    const ws = XLSX.utils.json_to_sheet(apiData);
+    const fileName = selectedVoucher?.value || "Vouchers";
+
+    const ws = XLSX.utils.json_to_sheet(excelRows);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const data = new Blob([excelBuffer], { type: fileType });
+
     FileSaver.saveAs(data, fileName + fileExtension);
   };
 
@@ -174,7 +237,7 @@ const Vouchers = (props) => {
                     }}
                     onClick={exportData}
                   >
-                    Excel Download
+                    Excel Download (with Debit/Credit)
                   </button>
                 </>
               ) : (
@@ -188,7 +251,6 @@ const Vouchers = (props) => {
                 <div className="loading"></div>
               ) : (
                 <>
-                  {" "}
                   <Card>
                     <VoucherTable
                       curVoucher={selectedVoucher?.value}
