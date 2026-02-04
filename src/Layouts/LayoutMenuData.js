@@ -22,6 +22,11 @@ const Navdata = () => {
   const [isOrganization, setIsOrganization] = useState(false);
   const [iscurrentState, setIscurrentState] = useState("Dashboard");
 
+  // ────────────────────────────────────────────────
+  // NEW STATE — only for the new "New Reports" section
+  // ────────────────────────────────────────────────
+  const [isNewReports, setIsNewReports] = useState(false);
+
   function updateIconSidebar(e) {
     if (e && e.target && e.target.getAttribute("subitems")) {
       const ul = document.getElementById("two-column-menu");
@@ -88,6 +93,13 @@ const Navdata = () => {
 
     if (iscurrentState !== "Shipment") {
       setJobs(false);
+    }
+
+    // ────────────────────────────────────────────────
+    // NEW — reset new reports state when not active
+    // ────────────────────────────────────────────────
+    if (iscurrentState !== "NewReports") {
+      setIsNewReports(false);
     }
 
     if (iscurrentState === "Widgets") {
@@ -265,6 +277,46 @@ const Navdata = () => {
 
           stateVariables: isCompany,
           roles: ["admin"],
+        },
+      ],
+    },
+
+    // ────────────────────────────────────────────────
+    // NEW TOP-LEVEL ITEM ADDED HERE
+    // ────────────────────────────────────────────────
+    {
+      id: "new-reports",
+      label: "New Reports",
+      icon: "ri-file-list-3-line",           // ← you can change the icon later
+      stateVariables: isNewReports,
+      roles: ["superadmin", "admin", "user"],
+      click: function (e) {
+        e.preventDefault();
+        setIsNewReports(!isNewReports);
+        setIscurrentState("NewReports");
+        updateIconSidebar(e);
+      },
+      subItems: [
+        {
+          id: "ledger-statement",
+          label: "Ledger Statement",
+          icon: "ri-book-open-line",
+          link: "/ledger-statement",              // consistent with /reports
+          roles: ["superadmin", "admin", "user"],
+        },
+        {
+          id: "trial-balance",
+          label: "Trial Balance",
+          icon: "ri-balance-scale-line",
+          link: "/trail",
+          roles: ["superadmin", "admin", "user"],
+        },
+        {
+          id: "account-statement",
+          label: "Account Statement",
+          icon: "ri-file-chart-line",
+          link: "/organization-statement",
+          roles: ["superadmin", "admin", "user"],
         },
       ],
     },
