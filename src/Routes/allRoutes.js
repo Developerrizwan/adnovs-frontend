@@ -99,6 +99,8 @@ import OrganizationAccountStatement from "../views/Organization/OrganizationAcco
 import VoucherReportTemplate from "../views/Vouchers/Reports/VoucherReportTemplate";
 import JobDetail from "../views/Jobs/JobDetail";
 import Branch from "../views/Branch";
+import AccountsPayableReport from "../views/Reports/AccountsPayableReport";
+import AccountsReceivableReport from "../views/Reports/AccountsReceivableReport";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -233,6 +235,14 @@ const publicRoutes = [
   {
     path: "/account-payable-statement/:jobId",
     component: AccountPayableStatement,
+  },
+  {
+  path: "/accounts-receivable",
+  component: AccountsReceivableReport,
+  },
+  {
+    path: "/accounts-payable",
+    component: AccountsPayableReport,
   },
 ];
 
