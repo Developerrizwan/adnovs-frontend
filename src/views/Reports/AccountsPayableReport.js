@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import apiAuth from "../../helpers/ApiAuth";
 import moment from "moment";
 import jsPDF from "jspdf";
@@ -18,247 +19,400 @@ import NotificationManager from "../../components/Common/NotificationManager";
 const AccountsPayableReport = () => {
   const [loading, setLoading] = useState(false);
   const [reports, setReports] = useState([]);
-  const [totalAmount, setTotalAmount] = useState(0);
-  const [drAmount, setDrAmount] = useState(0.0);
-  const [crAmount, setCrAmount] = useState(0.0);
-  const [agingBuckets, setAgingBuckets] = useState({ '0-30': 0, '31-60': 0, '61-90': 0, '90+': 0 }); // New for aging
+  const [totalAmount, setTotalAmount] = useState("0.00");
+  const [drAmount, setDrAmount] = useState("0.00");
+  const [crAmount, setCrAmount] = useState("0.00");
   const [organizationOptions, setOrganizationOptions] = useState([]);
-  const [selectOrganization, setSelectedOrganization] = useState(null);
-  const [selectedInvcType, setSelectedInvcType] = useState({ label: "All", value: "all" });
+  const [selectedOrg, setSelectedOrg] = useState(null);
 
   const history = useHistory();
 
-  const ledgerType = "pay"; // Hardcoded for AP
-
   useEffect(() => {
-    getOrganization();
+    fetchSuppliers();
   }, []);
 
-  const getOrganization = () => {
+  const fetchSuppliers = () => {
     setLoading(true);
     apiAuth
-      .get(`/api/master/organization/`)
+      .get("/api/master/organization/?type=Supplier")
       .then((response) => {
-        let data = response.data;
-        let organizationOpts = data.map((account) => ({
-          label: account.name,
-          value: account.id,
+        const data = response.data || [];
+        const opts = data.map((org) => ({
+          label: org.name,
+          value: org.id,
         }));
-        setOrganizationOptions(organizationOpts);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
-  };
-
-  const getReport = (id, st, et, pt) => {
-    setLoading(true);
-    apiAuth
-      .get(
-        `/api/account/statement/?organization=${id}&type=${ledgerType}&start_date=${st}&end_date=${et}${
-          pt ? "&payment=" + pt : ""
-        }`
-      )
-      .then((res) => {
-        let data = res.data;
-        if (data.length > 0) {
-          // Correct running balance (assuming backend returns rows with dr/cr)
-          let balance = 0;
-          data = data.map((row) => {
-            balance += Number(row.dr_amount || 0) - Number(row.cr_amount || 0);
-            return { ...row, net_amount: balance.toFixed(2) };
-          });
-
-          // Calculate aging (based on due_date or date)
-          const today = moment();
-          let buckets = { '0-30': 0, '31-60': 0, '61-90': 0, '90+': 0 };
-          data.forEach((row) => {
-            if (row.type === 'Invoice' && row.balance > 0) { // Only unpaid positives
-              const age = today.diff(moment(row.due_date || row.date), 'days');
-              if (age <= 30) buckets['0-30'] += Number(row.balance);
-              else if (age <= 60) buckets['31-60'] += Number(row.balance);
-              else if (age <= 90) buckets['61-90'] += Number(row.balance);
-              else buckets['90+'] += Number(row.balance);
-            }
-          });
-          setAgingBuckets(buckets);
-
-          // Totals
-          const dr = data.reduce((sum, row) => sum + Number(row.dr_amount || 0), 0);
-          const cr = data.reduce((sum, row) => sum + Number(row.cr_amount || 0), 0);
-          const total = data[data.length - 1]?.net_amount || 0;
-
-          setTotalAmount(total);
-          setDrAmount(dr.toFixed(2));
-          setCrAmount(cr.toFixed(2));
-          setReports(data);
-        }
+        setOrganizationOptions(opts);
         setLoading(false);
       })
       .catch((err) => {
+        console.error("Error loading suppliers:", err);
+        NotificationManager.error("Failed to load suppliers");
         setLoading(false);
-        console.log(err);
       });
   };
 
-  const changeDateFormat = (time) => {
-    const parsedDate = moment(time, "ddd MMM DD YYYY HH:mm:ss [GMT] ZZ (z)");
-    return parsedDate.utc().format("YYYY-MM-DDTHH:mm:ss[Z]");
+  const getReport = (orgId, startDate, endDate) => {
+    if (!orgId) return;
+
+    setLoading(true);
+    const start = moment(startDate).format("YYYY-MM-DD");
+    const end = moment(endDate).format("YYYY-MM-DD");
+
+    apiAuth
+      .get("/api/account/payable/", {
+        params: {
+          organization: orgId,
+          start_date: start,
+          end_date: end,
+        },
+      })
+      .then((res) => {
+        const rows = res.data?.rows || [];
+        const opening = res.data?.opening_balance || 0;
+        const closing = res.data?.closing_balance || 0;
+
+        const displayRows = [
+          {
+            date: start,
+            type: "Opening Balance",
+            voucher_no: "",
+            invoice_number: "",
+            job_no: "",
+            debit: 0,
+            credit: 0,
+            balance: Number(opening).toFixed(2),
+            narration: "Opening balance",
+          },
+          ...rows,
+        ];
+
+        const totalDr = rows.reduce((sum, r) => sum + Number(r.debit || 0), 0);
+        const totalCr = rows.reduce((sum, r) => sum + Number(r.credit || 0), 0);
+
+        setDrAmount(totalDr.toFixed(2));
+        setCrAmount(totalCr.toFixed(2));
+        setTotalAmount(Number(closing).toFixed(2));
+        setReports(displayRows);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("AP report error:", err);
+        NotificationManager.error("Failed to load Accounts Payable");
+        setLoading(false);
+      });
   };
 
-  // ---------------------- PDF Export Function ----------------------
-const exportProjectToPdf = () => {
-  const doc = new jsPDF();
-  doc.text("Accounts " + (ledgerType === "receive" ? "Receivable" : "Payable") + " Statement", 60, 10);
-  doc.text(`Account: ${selectOrganization?.label || "Selected Organization"}`, 12, 22);
-  doc.text(`Total Debit: ${Number(drAmount).toFixed(2)}`, 12, 32);
-  doc.text(`Total Credit: ${Number(crAmount).toFixed(2)}`, 80, 32);
-  doc.text(`Balance: ${totalAmount}`, 144, 32);
+  const exportToPdf = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text("Accounts Payable Statement", 105, 15, { align: "center" });
 
-  // Build table data from reports state
-  const tableData = reports.map((row) => [
-    moment(row.date).format("DD-MM-YYYY"),
-    row.type || "",
-    row.voucher_number || "",
-    row.invoice_number || "",
-    row.job_no || "",
-    Number(row.dr_amount || 0).toFixed(2),
-    Number(row.cr_amount || 0).toFixed(2),
-    Number(row.net_amount || 0).toFixed(2),
-  ]);
+    doc.setFontSize(11);
+    doc.text(`Supplier: ${selectedOrg?.label || "Select Supplier"}`, 14, 25);
+    doc.text(
+      `Period: ${moment(reports[0]?.date).format("DD-MM-YYYY")} to ${moment(
+        reports[reports.length - 1]?.date
+      ).format("DD-MM-YYYY")}`,
+      14,
+      32
+    );
 
-  doc.autoTable({
-    head: [["Date", "Type", "Voucher Number", "Invoice Number", "Job No", "Debit", "Credit", "Balance"]],
-    body: tableData,
-    startY: 40,
-    styles: { fontSize: 10, cellPadding: 3 },
-    headStyles: { fillColor: [66, 139, 202] },
-    columnStyles: {
-      0: { cellWidth: 25 },
-      1: { cellWidth: 20 },
-      2: { cellWidth: 25 },
-      3: { cellWidth: 25 },
-      4: { cellWidth: 20 },
-      5: { cellWidth: 20 },
-      6: { cellWidth: 20 },
-      7: { cellWidth: 25 },
+    doc.text(`Total Debit: ${drAmount}`, 14, 40);
+    doc.text(`Total Credit: ${crAmount}`, 90, 40);
+    doc.text(`Closing Balance: ${totalAmount}`, 160, 40);
+
+    const tableData = reports.map((row) => [
+      moment(row.date).format("DD-MM-YYYY"),
+      row.type || "",
+      row.voucher_no || row.inv_no || "-",
+      row.invoice_number || "-",
+      row.job_no || "-",
+      Number(row.debit || 0).toFixed(2),
+      Number(row.credit || 0).toFixed(2),
+      Number(row.balance || 0).toFixed(2),
+      row.narration || "",
+    ]);
+
+    doc.autoTable({
+      head: [["Date", "Type", "Doc No", "Inv No", "Job No", "Debit", "Credit", "Balance", "Narration"]],
+      body: tableData,
+      startY: 50,
+      styles: { fontSize: 9, cellPadding: 2 },
+      headStyles: { fillColor: [66, 139, 202], textColor: [255, 255, 255] },
+      columnStyles: {
+        0: { cellWidth: 22 },
+        1: { cellWidth: 25 },
+        2: { cellWidth: 25 },
+        3: { cellWidth: 22 },
+        4: { cellWidth: 20 },
+        5: { cellWidth: 18 },
+        6: { cellWidth: 18 },
+        7: { cellWidth: 22 },
+        8: { cellWidth: "auto" },
+      },
+      margin: { top: 50, left: 10, right: 10 },
+    });
+
+    doc.save(`AP_Statement_${moment().format("YYYYMMDD_HHmm")}.pdf`);
+  };
+
+  const exportToExcel = () => {
+    const excelData = reports.map((row) => ({
+      Date: moment(row.date).format("DD-MM-YYYY"),
+      Type: row.type || "",
+      "Doc No": row.voucher_no || row.inv_no || "-",
+      "Inv No": row.invoice_number || "-",
+      "Job No": row.job_no || "-",
+      Debit: Number(row.debit || 0).toFixed(2),
+      Credit: Number(row.credit || 0).toFixed(2),
+      Balance: Number(row.balance || 0).toFixed(2),
+      Narration: row.narration || "",
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "AP Statement");
+    const buffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    FileSaver.saveAs(blob, `AP_Statement_${moment().format("YYYYMMDD_HHmm")}.xlsx`);
+  };
+
+  const tableColumns = [
+    {
+      name: "Date",
+      selector: (row) => moment(row.date).format("DD-MM-YYYY"),
+      sortable: true,
+      width: "120px",           // slightly wider
+      wrap: false,
     },
-    margin: { top: 40, left: 10, right: 10 },
-  });
-
-  // Footer totals
-  const finalY = doc.lastAutoTable.finalY + 10;
-  doc.text(`Total Debit: ${drAmount}`, 10, finalY);
-  doc.text(`Total Credit: ${crAmount}`, 80, finalY);
-  doc.text(`Closing Balance: ${totalAmount}`, 150, finalY);
-
-  doc.save(`account-${ledgerType === "receive" ? "receivable" : "payable"}-statement.pdf`);
-};
-
-// ---------------------- Excel Export Function ----------------------
-const exportData = () => {
-  const excelData = reports.map((row) => ({
-    Date: moment(row.date).format("DD-MM-YYYY"),
-    Type: row.type || "",
-    "Voucher Number": row.voucher_number || "",
-    "Invoice Number": row.invoice_number || "",
-    "Job No": row.job_no || "",
-    Debit: Number(row.dr_amount || 0).toFixed(2),
-    Credit: Number(row.cr_amount || 0).toFixed(2),
-    Balance: Number(row.net_amount || 0).toFixed(2),
-  }));
-
-  const worksheet = XLSX.utils.json_to_sheet(excelData);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Statement");
-
-  const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-  const data = new Blob([excelBuffer], {
-    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8",
-  });
-
-  FileSaver.saveAs(data, `account-${ledgerType === "receive" ? "receivable" : "payable"}-statement.xlsx`);
-};// ... (exportProjectToPdf, exportData functions – update to use correct dr/cr/net)
-
-  // Correct table columns for AR (customer owes us – positive balance good)
-  const columns = [
-    { name: "Date", selector: row => moment(row.date).format("DD-MM-YYYY"), sortable: true },
-    { name: "Type", selector: row => row.type },
-    { name: "Voucher Number", selector: row => row.voucher_number },
-    { name: "Invoice Number", selector: row => row.invoice_number },
-    { name: "Party Account", selector: row => row.party_account },
-    { name: "Job No", selector: row => row.job_no },
-    { name: "Debit", selector: row => Number(row.dr_amount).toFixed(2), sortable: true },
-    { name: "Credit", selector: row => Number(row.cr_amount).toFixed(2), sortable: true },
-    { name: "Balance", selector: row => Number(row.net_amount).toFixed(2), sortable: true },
+    {
+      name: "Type",
+      selector: (row) => row.type,
+      sortable: true,
+      width: "150px",
+    },
+    {
+      name: "Doc No",
+      selector: (row) => row.voucher_no || row.inv_no || "-",
+      sortable: true,
+      width: "130px",
+    },
+    {
+      name: "Inv No",
+      selector: (row) => row.invoice_number || "-",
+      width: "110px",
+    },
+    {
+      name: "Job No",
+      selector: (row) => row.job_no || "-",
+      width: "110px",
+    },
+    {
+      name: "Debit",
+      selector: (row) => Number(row.debit || 0).toFixed(2),
+      sortable: true,
+      right: true,
+      width: "100px",
+    },
+    {
+      name: "Credit",
+      selector: (row) => Number(row.credit || 0).toFixed(2),
+      sortable: true,
+      right: true,
+      width: "100px",
+    },
+    {
+      name: "Balance",
+      selector: (row) => Number(row.balance || 0).toFixed(2),
+      sortable: true,
+      right: true,
+      width: "110px",
+    },
+    {
+      name: "Narration",
+      selector: (row) => row.narration || "",
+      wrap: true,
+      grow: 2,                  // gives narration more space
+    },
   ];
 
   return (
     <div className="page-content">
-      <div className="d-flex justify-content-between mb-4">
-        <h2>Accounts Receivable Statement</h2>
-        <button className="btn btn-secondary" onClick={() => history.goBack()}>Back</button>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2>Accounts Payable Statement</h2>
+        <button className="btn btn-secondary" onClick={() => history.goBack()}>
+          Back
+        </button>
       </div>
 
-      {/* Summary Cards for Totals + Aging */}
+      {/* Summary Cards - only 3 now */}
       <div className="row mb-4">
-        <div className="col-md-3">
-          <div className="card bg-info text-white">
+        <div className="col-md-4">
+          <div className="card bg-info text-white shadow-sm">
             <div className="card-body">
               <h5>Total Debit</h5>
               <h3>{drAmount}</h3>
             </div>
           </div>
         </div>
-        <div className="col-md-3">
-          <div className="card bg-warning text-white">
+        <div className="col-md-4">
+          <div className="card bg-warning text-white shadow-sm">
             <div className="card-body">
               <h5>Total Credit</h5>
               <h3>{crAmount}</h3>
             </div>
           </div>
         </div>
-        <div className="col-md-3">
-          <div className="card bg-success text-white">
+        <div className="col-md-4">
+          <div className="card bg-success text-white shadow-sm">
             <div className="card-body">
               <h5>Closing Balance</h5>
               <h3>{totalAmount}</h3>
             </div>
           </div>
         </div>
-        <div className="col-md-3">
-          <div className="card bg-secondary text-white">
-            <div className="card-body">
-              <h5>Aging Summary</h5>
-              <p>0-30: {agingBuckets['0-30'].toFixed(2)}</p>
-              <p>31-60: {agingBuckets['31-60'].toFixed(2)}</p>
-              <p>61-90: {agingBuckets['61-90'].toFixed(2)}</p>
-              <p>90+: {agingBuckets['90+'].toFixed(2)}</p>
-            </div>
-          </div>
-        </div>
       </div>
 
-      {/* Form */}
-      <Grid container spacing={2}>
-        {/* ... your existing Formik form, but remove the ledger dropdown */}
-      </Grid>
+      {/* Filter Form */}
+      <Formik
+        initialValues={{
+          organization: null,
+          start_date: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+          end_date: new Date(),
+        }}
+        validationSchema={Yup.object({
+          organization: Yup.object().required("Supplier is required"),
+          start_date: Yup.date().required("Start date is required"),
+          end_date: Yup.date().required("End date is required"),
+        })}
+        onSubmit={(values) => {
+          getReport(
+            values.organization.value,
+            values.start_date,
+            values.end_date
+          );
+        }}
+      >
+        {({ values, setFieldValue, handleSubmit }) => (
+          <Form>
+            <Grid container spacing={3}>
+              <Grid item lg={4} md={6} xs={12}>
+                <label className="form-label">
+                  Supplier (Vendor) <span className="text-danger">*</span>
+                </label>
+                <Select
+                  options={organizationOptions}
+                  value={values.organization}
+                  onChange={(opt) => {
+                    setFieldValue("organization", opt);
+                    setSelectedOrg(opt);
+                  }}
+                  placeholder="Select Supplier..."
+                  isSearchable
+                  isLoading={loading}
+                />
+                <ErrorMessage
+                  name="organization"
+                  component="div"
+                  className="text-danger small mt-1"
+                />
+              </Grid>
 
-      {/* Table */}
-      <DataTable
-        columns={columns} // Updated with correct Debit/Credit/Balance
-        data={reports}
-        customStyles={customStyles}
-        pagination
-      />
+              <Grid item lg={4} md={6} xs={12}>
+                <label className="form-label">
+                  Start Date <span className="text-danger">*</span>
+                </label>
+                <DatePicker
+                  selected={values.start_date}
+                  onChange={(date) => setFieldValue("start_date", date)}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  maxDate={values.end_date}
+                />
+                <ErrorMessage
+                  name="start_date"
+                  component="div"
+                  className="text-danger small mt-1"
+                />
+              </Grid>
 
-      {/* Exports */}
-      {reports.length > 0 && (
-        <div className="mt-3">
-          <button className="btn btn-primary me-2" onClick={exportProjectToPdf}>PDF Download</button>
-          <button className="btn btn-success" onClick={exportData}>Excel Download</button>
+              <Grid item lg={4} md={6} xs={12}>
+                <label className="form-label">
+                  End Date <span className="text-danger">*</span>
+                </label>
+                <DatePicker
+                  selected={values.end_date}
+                  onChange={(date) => setFieldValue("end_date", date)}
+                  dateFormat="dd-MM-yyyy"
+                  className="form-control"
+                  minDate={values.start_date}
+                />
+                <ErrorMessage
+                  name="end_date"
+                  component="div"
+                  className="text-danger small mt-1"
+                />
+              </Grid>
+
+              <Grid item xs={12} className="mt-3">
+                <button
+                  type="submit"
+                  className="btn btn-success px-5"
+                  disabled={loading || !values.organization}
+                >
+                  {loading ? (
+                    <>
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        role="status"
+                      />
+                      Loading...
+                    </>
+                  ) : (
+                    "Generate Report"
+                  )}
+                </button>
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+
+      {loading ? (
+        <div className="text-center mt-5">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-3">Loading Accounts Payable statement...</p>
+        </div>
+      ) : reports.length > 0 ? (
+        <>
+          <DataTable
+            columns={tableColumns}
+            data={reports}
+            customStyles={customStyles}
+            pagination
+            paginationPerPage={15}
+            paginationRowsPerPageOptions={[10, 15, 25, 50]}
+            highlightOnHover
+            pointerOnHover
+            className="mt-4 shadow-sm"
+          />
+
+          <div className="mt-4 d-flex gap-3">
+            <button className="btn btn-primary" onClick={exportToPdf}>
+              <i className="fas fa-file-pdf me-2" /> Download PDF
+            </button>
+            <button className="btn btn-success" onClick={exportToExcel}>
+              <i className="fas fa-file-excel me-2" /> Download Excel
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="alert alert-info mt-5 text-center">
+          Select a supplier and date range to view the statement.
         </div>
       )}
     </div>
