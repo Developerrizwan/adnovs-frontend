@@ -24,7 +24,10 @@ const AccountsReceivableReport = () => {
   const [drAmount, setDrAmount] = useState("0.00");
   const [crAmount, setCrAmount] = useState("0.00");
   const [organizationOptions, setOrganizationOptions] = useState([]);
-  const [selectOrganization, setSelectedOrganization] = useState(null);
+  const [selectedOrganization, setSelectedOrganization] = useState(null);
+  const [isAllCustomers, setIsAllCustomers] = useState(false);
+  const [filterStartDate, setFilterStartDate] = useState(null);
+  const [filterEndDate, setFilterEndDate] = useState(null);
 
   const history = useHistory();
 
@@ -42,6 +45,7 @@ const AccountsReceivableReport = () => {
           label: org.name,
           value: org.id,
         }));
+        opts.unshift({ label: "All Customers", value: "all" });
         setOrganizationOptions(opts);
         setLoading(false);
       })
@@ -54,6 +58,8 @@ const AccountsReceivableReport = () => {
 
   const getReport = (orgId, startDate, endDate) => {
     setLoading(true);
+    setFilterStartDate(startDate);
+    setFilterEndDate(endDate);
 
     apiAuth
       .get("/api/account/receivable/", {
@@ -64,17 +70,24 @@ const AccountsReceivableReport = () => {
         },
       })
       .then((res) => {
-        const data = res.data?.rows || [];
-
-        // Calculate totals
-        const totalDr = data.reduce((sum, r) => sum + Number(r.debit || 0), 0);
-        const totalCr = data.reduce((sum, r) => sum + Number(r.credit || 0), 0);
-        const closing = res.data?.closing_balance?.toString() || "0.00";
-
-        setDrAmount(totalDr.toFixed(2));
-        setCrAmount(totalCr.toFixed(2));
-        setTotalAmount(closing);
-        setReports(data);
+        if (res.data.is_summary) {
+          // Summary for all customers
+          const data = res.data.rows || [];
+          setReports(data);
+          setDrAmount(res.data.totals.inv_amount.toFixed(2));
+          setCrAmount(res.data.totals.received_amount.toFixed(2));
+          setTotalAmount(res.data.totals.balance.toFixed(2));
+        } else {
+          // Detailed for single customer
+          const data = res.data?.rows || [];
+          const totalDr = data.reduce((sum, r) => sum + Number(r.debit || 0), 0);
+          const totalCr = data.reduce((sum, r) => sum + Number(r.credit || 0), 0);
+          const closing = res.data?.closing_balance?.toString() || "0.00";
+          setDrAmount(totalDr.toFixed(2));
+          setCrAmount(totalCr.toFixed(2));
+          setTotalAmount(closing);
+          setReports(data);
+        }
         setLoading(false);
       })
       .catch((err) => {
@@ -90,40 +103,65 @@ const AccountsReceivableReport = () => {
     doc.text("Accounts Receivable Statement", 105, 15, { align: "center" });
 
     doc.setFontSize(11);
-    doc.text(`Client: ${selectOrganization?.label || "Selected Client"}`, 14, 25);
-    doc.text(`Period: ${moment(reports[0]?.date).format("DD-MM-YYYY")} to ${moment(reports[reports.length - 1]?.date).format("DD-MM-YYYY") || ""}`, 14, 32);
+    const clientLabel = selectedOrganization?.value === "all" ? "All Customers" : selectedOrganization?.label || "Selected Client";
+    doc.text(`Client: ${clientLabel}`, 14, 25);
+    const periodText = `Period: ${moment(filterStartDate).format("DD-MM-YYYY")} to ${moment(filterEndDate).format("DD-MM-YYYY")}`;
+    doc.text(periodText, 14, 32);
 
     doc.text(`Total Debit: ${drAmount}`, 14, 40);
     doc.text(`Total Credit: ${crAmount}`, 90, 40);
     doc.text(`Closing Balance: ${totalAmount}`, 160, 40);
 
-    const tableData = reports.map((row) => [
-      moment(row.date).format("DD-MM-YYYY"),
-      row.inv_no || row.voucher_no || "-",
-      row.job_no || "-",
-      row.party_name || "-",
-      Number(row.debit || 0).toFixed(2),
-      Number(row.credit || 0).toFixed(2),
-      Number(row.balance || 0).toFixed(2),
-      row.narration || "",
-    ]);
+    let tableData = [];
+    let head = [];
+
+    if (isAllCustomers) {
+      head = [["SI.NO", "Customer Name", "Inv Amount", "Received Amount", "Balance"]];
+      tableData = reports.map((row) => [
+        row.si_no,
+        row.customer_name,
+        Number(row.inv_amount || 0).toFixed(2),
+        Number(row.received_amount || 0).toFixed(2),
+        Number(row.balance || 0).toFixed(2),
+      ]);
+    } else {
+      head = [["Date", "Document No", "Job No", "Client", "Debit", "Credit", "Balance", "Narration"]];
+      tableData = reports.map((row) => [
+        moment(row.date).format("DD-MM-YYYY"),
+        row.inv_no || row.voucher_no || "-",
+        row.job_no || "-",
+        row.party_name || "-",
+        Number(row.debit || 0).toFixed(2),
+        Number(row.credit || 0).toFixed(2),
+        Number(row.balance || 0).toFixed(2),
+        row.narration || "",
+      ]);
+    }
 
     doc.autoTable({
-      head: [["Date", "Document No", "Job No", "Client", "Debit", "Credit", "Balance", "Narration"]],
+      head: head,
       body: tableData,
       startY: 50,
       styles: { fontSize: 9, cellPadding: 2, overflow: "linebreak" },
       headStyles: { fillColor: [66, 139, 202], textColor: [255, 255, 255] },
-      columnStyles: {
-        0: { cellWidth: 22 },
-        1: { cellWidth: 28 },
-        2: { cellWidth: 22 },
-        3: { cellWidth: 35 },
-        4: { cellWidth: 18 },
-        5: { cellWidth: 18 },
-        6: { cellWidth: 22 },
-        7: { cellWidth: "auto" },
-      },
+      columnStyles: isAllCustomers
+        ? {
+            0: { cellWidth: 15 },
+            1: { cellWidth: 60 },
+            2: { cellWidth: 30 },
+            3: { cellWidth: 30 },
+            4: { cellWidth: 30 },
+          }
+        : {
+            0: { cellWidth: 22 },
+            1: { cellWidth: 28 },
+            2: { cellWidth: 22 },
+            3: { cellWidth: 35 },
+            4: { cellWidth: 18 },
+            5: { cellWidth: 18 },
+            6: { cellWidth: 22 },
+            7: { cellWidth: "auto" },
+          },
       margin: { top: 50, left: 10, right: 10 },
     });
 
@@ -131,16 +169,28 @@ const AccountsReceivableReport = () => {
   };
 
   const exportData = () => {
-    const excelData = reports.map((row) => ({
-      Date: moment(row.date).format("DD-MM-YYYY"),
-      "Document No": row.inv_no || row.voucher_no || "-",
-      "Job No": row.job_no || "-",
-      Client: row.party_name || "-",
-      Debit: Number(row.debit || 0).toFixed(2),
-      Credit: Number(row.credit || 0).toFixed(2),
-      Balance: Number(row.balance || 0).toFixed(2),
-      Narration: row.narration || "",
-    }));
+    let excelData = [];
+
+    if (isAllCustomers) {
+      excelData = reports.map((row) => ({
+        "SI NO": row.si_no,
+        "Customer Name": row.customer_name,
+        "Inv Amount": Number(row.inv_amount || 0).toFixed(2),
+        "Received Amount": Number(row.received_amount || 0).toFixed(2),
+        Balance: Number(row.balance || 0).toFixed(2),
+      }));
+    } else {
+      excelData = reports.map((row) => ({
+        Date: moment(row.date).format("DD-MM-YYYY"),
+        "Document No": row.inv_no || row.voucher_no || "-",
+        "Job No": row.job_no || "-",
+        Client: row.party_name || "-",
+        Debit: Number(row.debit || 0).toFixed(2),
+        Credit: Number(row.credit || 0).toFixed(2),
+        Balance: Number(row.balance || 0).toFixed(2),
+        Narration: row.narration || "",
+      }));
+    }
 
     const worksheet = XLSX.utils.json_to_sheet(excelData);
     const workbook = XLSX.utils.book_new();
@@ -154,58 +204,97 @@ const AccountsReceivableReport = () => {
   };
 
   // Table columns
-  const columns = [
-    {
-      name: "Date",
-      selector: (row) => moment(row.date).format("DD-MM-YYYY"),
-      sortable: true,
-      width: "110px",
-    },
-    {
-      name: "Document No",
-      selector: (row) => row.inv_no || row.voucher_no || "-",
-      sortable: true,
-      width: "140px",
-    },
-    {
-      name: "Job No",
-      selector: (row) => row.job_no || "-",
-      sortable: true,
-      width: "110px",
-    },
-    {
-      name: "Client",
-      selector: (row) => row.party_name || "-",
-      sortable: true,
-      width: "180px",
-    },
-    {
-      name: "Debit",
-      selector: (row) => Number(row.debit || 0).toFixed(2),
-      sortable: true,
-      right: true,
-      width: "100px",
-    },
-    {
-      name: "Credit",
-      selector: (row) => Number(row.credit || 0).toFixed(2),
-      sortable: true,
-      right: true,
-      width: "100px",
-    },
-    {
-      name: "Balance",
-      selector: (row) => Number(row.balance || 0).toFixed(2),
-      sortable: true,
-      right: true,
-      width: "110px",
-    },
-    {
-      name: "Narration",
-      selector: (row) => row.narration || "",
-      wrap: true,
-    },
-  ];
+  let columns = [];
+  if (isAllCustomers) {
+    columns = [
+      {
+        name: "SI.NO",
+        selector: (row) => row.si_no,
+        sortable: true,
+        width: "80px",
+      },
+      {
+        name: "Customer Name",
+        selector: (row) => row.customer_name,
+        sortable: true,
+        width: "250px",
+      },
+      {
+        name: "Inv Amount",
+        selector: (row) => Number(row.inv_amount || 0).toFixed(2),
+        sortable: true,
+        right: true,
+        width: "120px",
+      },
+      {
+        name: "Received Amount",
+        selector: (row) => Number(row.received_amount || 0).toFixed(2),
+        sortable: true,
+        right: true,
+        width: "140px",
+      },
+      {
+        name: "Balance",
+        selector: (row) => Number(row.balance || 0).toFixed(2),
+        sortable: true,
+        right: true,
+        width: "120px",
+      },
+    ];
+  } else {
+    columns = [
+      {
+        name: "Date",
+        selector: (row) => moment(row.date).format("DD-MM-YYYY"),
+        sortable: true,
+        width: "110px",
+      },
+      {
+        name: "Document No",
+        selector: (row) => row.inv_no || row.voucher_no || "-",
+        sortable: true,
+        width: "140px",
+      },
+      {
+        name: "Job No",
+        selector: (row) => row.job_no || "-",
+        sortable: true,
+        width: "110px",
+      },
+      {
+        name: "Client",
+        selector: (row) => row.party_name || "-",
+        sortable: true,
+        width: "180px",
+      },
+      {
+        name: "Debit",
+        selector: (row) => Number(row.debit || 0).toFixed(2),
+        sortable: true,
+        right: true,
+        width: "100px",
+      },
+      {
+        name: "Credit",
+        selector: (row) => Number(row.credit || 0).toFixed(2),
+        sortable: true,
+        right: true,
+        width: "100px",
+      },
+      {
+        name: "Balance",
+        selector: (row) => Number(row.balance || 0).toFixed(2),
+        sortable: true,
+        right: true,
+        width: "110px",
+      },
+      {
+        name: "Narration",
+        selector: (row) => row.narration || "",
+        wrap: true,
+      },
+    ];
+  }
 
   return (
     <div className="page-content">
@@ -257,7 +346,9 @@ const AccountsReceivableReport = () => {
           end_date: Yup.date().required("End date is required"),
         })}
         onSubmit={(values) => {
-          getReport(values.organization.value, values.start_date, values.end_date);
+          const orgId = values.organization.value;
+          setIsAllCustomers(orgId === "all");
+          getReport(orgId, values.start_date, values.end_date);
         }}
       >
         {({ values, setFieldValue }) => (
