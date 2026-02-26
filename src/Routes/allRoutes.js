@@ -101,6 +101,7 @@ import JobDetail from "../views/Jobs/JobDetail";
 import Branch from "../views/Branch";
 import AccountsPayableReport from "../views/Reports/AccountsPayableReport";
 import AccountsReceivableReport from "../views/Reports/AccountsReceivableReport";
+import TrailBalance from "../views/Reports/TrailBalance";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -244,6 +245,10 @@ const publicRoutes = [
     path: "/accounts-payable",
     component: AccountsPayableReport,
   },
+  {
+    path: "/trail-balance",
+    component: TrailBalance,
+  }
 ];
 
 export { authProtectedRoutes, publicRoutes };

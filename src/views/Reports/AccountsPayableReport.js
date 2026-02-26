@@ -21,61 +21,71 @@ const AccountsPayableReport = () => {
   const [totalAmount, setTotalAmount] = useState("0.00");
   const [drAmount, setDrAmount] = useState("0.00");
   const [crAmount, setCrAmount] = useState("0.00");
-  const [organizationOptions, setOrganizationOptions] = useState([]);
-  const [selectedOrg, setSelectedOrg] = useState(null);
-  const [isAllSuppliers, setIsAllSuppliers] = useState(false);
+  const [partyOptions, setPartyOptions] = useState([]);
+  const [selectedParty, setSelectedParty] = useState(null);
+  const [isSummaryView, setIsSummaryView] = useState(false);
   const [filterDates, setFilterDates] = useState({ start: null, end: null });
 
   const history = useHistory();
 
   useEffect(() => {
-    fetchSuppliers();
+    fetchPayableParties();
   }, []);
 
-  const fetchSuppliers = () => {
+  const fetchPayableParties = () => {
     setLoading(true);
     apiAuth
-      .get("/api/master/organization/?type=Supplier")
+      .get("/api/master/organization/")
       .then((response) => {
         const data = response.data || [];
-        const opts = data.map((org) => ({
-          label: org.name,
+
+        // Filter organizations that can be payable parties
+        const payableParties = data.filter((org) =>
+          org.type?.some((t) =>
+            ["Supplier", "Broker", "Counterpart"].includes(t)
+          )
+        );
+
+        const opts = payableParties.map((org) => ({
+          label: `${org.name || "Unnamed"} (${org.type?.join(", ") || "?"})`,
           value: org.id,
         }));
-        opts.unshift({ label: "All Suppliers", value: "all" });
-        setOrganizationOptions(opts);
+
+        opts.unshift({ label: "All Payable Parties", value: "all" });
+
+        setPartyOptions(opts);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error loading suppliers:", err);
-        NotificationManager.error("Failed to load suppliers");
+        console.error("Error loading payable parties:", err);
+        NotificationManager.error("Failed to load suppliers / brokers / counterparts");
         setLoading(false);
       });
   };
 
-  const getReport = (orgId, startDate, endDate) => {
+  const getReport = (partyId, startDate, endDate) => {
     setLoading(true);
     setFilterDates({ start: startDate, end: endDate });
-    setIsAllSuppliers(orgId === "all");
+    setIsSummaryView(partyId === "all");
 
     apiAuth
       .get("/api/account/payable/", {
         params: {
-          organization: orgId,
+          organization: partyId,
           start_date: moment(startDate).format("YYYY-MM-DD"),
           end_date: moment(endDate).format("YYYY-MM-DD"),
         },
       })
       .then((res) => {
         if (res.data.is_summary) {
-          // All suppliers summary
+          // Summary view - all parties
           const data = res.data.rows || [];
           setReports(data);
           setDrAmount(res.data.totals.paid_amount.toFixed(2));
           setCrAmount(res.data.totals.purchase_amount.toFixed(2));
           setTotalAmount(res.data.totals.balance.toFixed(2));
         } else {
-          // Single supplier detailed
+          // Detailed view - single party
           const rows = res.data?.rows || [];
           const opening = res.data?.opening_balance || 0;
           const closing = res.data?.closing_balance || 0;
@@ -92,10 +102,13 @@ const AccountsPayableReport = () => {
               balance: Number(opening).toFixed(2),
               narration: "Opening balance brought forward",
             },
-            ...rows,
+            ...rows.map((r) => ({
+              ...r,
+              balance: Number(r.balance || 0).toFixed(2),
+            })),
           ];
 
-          const totalDr = rows.reduce((sum, r) => sum + Number(r.debit || 0), 0);
+          const totalDr = rows.reduce((sum, r) => sum + Number(r.debit || 0), opening);
           const totalCr = rows.reduce((sum, r) => sum + Number(r.credit || 0), 0);
 
           setDrAmount(totalDr.toFixed(2));
@@ -117,26 +130,31 @@ const AccountsPayableReport = () => {
     doc.setFontSize(16);
     doc.text("Accounts Payable Statement", 105, 15, { align: "center" });
 
+    const title = isSummaryView
+      ? "All Payable Parties"
+      : selectedParty?.label || "Selected Party";
+
     doc.setFontSize(11);
-    const title = isAllSuppliers ? "All Suppliers" : selectedOrg?.label || "Selected Supplier";
-    doc.text(`Supplier: ${title}`, 14, 25);
+    doc.text(`Party: ${title}`, 14, 25);
     doc.text(
-      `Period: ${moment(filterDates.start).format("DD-MM-YYYY")} to ${moment(filterDates.end).format("DD-MM-YYYY")}`,
+      `Period: ${moment(filterDates.start).format("DD-MM-YYYY")} to ${moment(
+        filterDates.end
+      ).format("DD-MM-YYYY")}`,
       14,
       32
     );
 
-    doc.text(`Total Debit: ${drAmount}`, 14, 40);
-    doc.text(`Total Credit: ${crAmount}`, 90, 40);
-    doc.text(`Closing Balance: ${totalAmount}`, 160, 40);
+    doc.text(`Total Paid (Debit): ${drAmount} SAR`, 14, 40);
+    doc.text(`Total Purchases (Credit): ${crAmount} SAR`, 90, 40);
+    doc.text(`Net Payable (Closing): ${totalAmount} SAR`, 160, 40);
 
     let head, body;
 
-    if (isAllSuppliers) {
-      head = [["SI.No", "Supplier Name", "Purchase Amount", "Paid Amount", "Balance"]];
+    if (isSummaryView) {
+      head = [["SI.No", "Party Name", "Purchase Amount", "Paid Amount", "Balance Due"]];
       body = reports.map((row) => [
         row.si_no,
-        row.supplier_name,
+        row.party_name || row.supplier_name || "Unnamed",
         Number(row.purchase_amount || 0).toFixed(2),
         Number(row.paid_amount || 0).toFixed(2),
         Number(row.balance || 0).toFixed(2),
@@ -144,7 +162,7 @@ const AccountsPayableReport = () => {
     } else {
       head = [["Date", "Type", "Doc No", "Inv No", "Job No", "Debit", "Credit", "Balance", "Narration"]];
       body = reports.map((row) => [
-        moment(row.date).format("DD-MM-YYYY"),
+        row.date ? moment(row.date).format("DD-MM-YYYY") : "-",
         row.type || "",
         row.voucher_no || row.inv_no || "-",
         row.inv_no || "-",
@@ -162,7 +180,7 @@ const AccountsPayableReport = () => {
       startY: 50,
       styles: { fontSize: 9, cellPadding: 2, overflow: "linebreak" },
       headStyles: { fillColor: [66, 139, 202], textColor: [255, 255, 255] },
-      margin: { top: 50, left: 10, right: 10 },
+      margin: { top: 50, left: 14, right: 14 },
     });
 
     doc.save(`AP_Statement_${moment().format("YYYYMMDD_HHmm")}.pdf`);
@@ -171,24 +189,24 @@ const AccountsPayableReport = () => {
   const exportToExcel = () => {
     let excelData = [];
 
-    if (isAllSuppliers) {
+    if (isSummaryView) {
       excelData = reports.map((row) => ({
         "SI No": row.si_no,
-        "Supplier Name": row.supplier_name,
+        "Party Name": row.party_name || row.supplier_name || "Unnamed",
         "Purchase Amount": Number(row.purchase_amount || 0).toFixed(2),
         "Paid Amount": Number(row.paid_amount || 0).toFixed(2),
-        Balance: Number(row.balance || 0).toFixed(2),
+        "Balance Due": Number(row.balance || 0).toFixed(2),
       }));
     } else {
       excelData = reports.map((row) => ({
-        Date: moment(row.date).format("DD-MM-YYYY"),
+        Date: row.date ? moment(row.date).format("DD-MM-YYYY") : "-",
         Type: row.type || "",
         "Doc No": row.voucher_no || row.inv_no || "-",
         "Inv No": row.inv_no || "-",
         "Job No": row.job_no || "-",
         Debit: Number(row.debit || 0).toFixed(2),
         Credit: Number(row.credit || 0).toFixed(2),
-        Balance: Number(row.balance || 0).toFixed(2),
+        "Balance Due": Number(row.balance || 0).toFixed(2),
         Narration: row.narration || "",
       }));
     }
@@ -203,12 +221,16 @@ const AccountsPayableReport = () => {
     FileSaver.saveAs(blob, `AP_Statement_${moment().format("YYYYMMDD_HHmm")}.xlsx`);
   };
 
-  // Columns - switch between detailed and summary
   const getColumns = () => {
-    if (isAllSuppliers) {
+    if (isSummaryView) {
       return [
         { name: "SI.No", selector: (row) => row.si_no, sortable: true, width: "80px" },
-        { name: "Supplier Name", selector: (row) => row.supplier_name, sortable: true, width: "250px" },
+        {
+          name: "Party Name",
+          selector: (row) => row.party_name || row.supplier_name || "–",
+          sortable: true,
+          width: "300px",
+        },
         {
           name: "Purchase Amount",
           selector: (row) => Number(row.purchase_amount || 0).toFixed(2),
@@ -224,11 +246,11 @@ const AccountsPayableReport = () => {
           width: "140px",
         },
         {
-          name: "Balance",
+          name: "Balance Due",
           selector: (row) => Number(row.balance || 0).toFixed(2),
           sortable: true,
           right: true,
-          width: "120px",
+          width: "130px",
         },
       ];
     }
@@ -241,7 +263,7 @@ const AccountsPayableReport = () => {
       { name: "Job No", selector: (row) => row.job_no || "-", width: "110px" },
       { name: "Debit", selector: (row) => Number(row.debit || 0).toFixed(2), sortable: true, right: true, width: "100px" },
       { name: "Credit", selector: (row) => Number(row.credit || 0).toFixed(2), sortable: true, right: true, width: "100px" },
-      { name: "Balance", selector: (row) => Number(row.balance || 0).toFixed(2), sortable: true, right: true, width: "110px" },
+      { name: "Balance Due", selector: (row) => Number(row.balance || 0).toFixed(2), sortable: true, right: true, width: "110px" },
       { name: "Narration", selector: (row) => row.narration || "", wrap: true },
     ];
   };
@@ -260,24 +282,24 @@ const AccountsPayableReport = () => {
         <div className="col-md-4">
           <div className="card bg-info text-white shadow-sm">
             <div className="card-body">
-              <h5>Total Debit (Paid)</h5>
-              <h3>{drAmount}</h3>
+              <h5>Total Paid (Debit)</h5>
+              <h3>{drAmount} SAR</h3>
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="card bg-warning text-white shadow-sm">
             <div className="card-body">
-              <h5>Total Credit (Purchases)</h5>
-              <h3>{crAmount}</h3>
+              <h5>Total Purchases (Credit)</h5>
+              <h3>{crAmount} SAR</h3>
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="card bg-success text-white shadow-sm">
             <div className="card-body">
-              <h5>Closing Balance (Payable)</h5>
-              <h3>{totalAmount}</h3>
+              <h5>Net Payable (Closing Balance)</h5>
+              <h3>{totalAmount} SAR</h3>
             </div>
           </div>
         </div>
@@ -286,17 +308,17 @@ const AccountsPayableReport = () => {
       {/* Form */}
       <Formik
         initialValues={{
-          organization: null,
+          party: null,
           start_date: new Date(new Date().setMonth(new Date().getMonth() - 1)),
           end_date: new Date(),
         }}
         validationSchema={Yup.object({
-          organization: Yup.object().required("Supplier is required"),
+          party: Yup.object().required("Party is required"),
           start_date: Yup.date().required("Start date is required"),
           end_date: Yup.date().required("End date is required"),
         })}
         onSubmit={(values) => {
-          getReport(values.organization.value, values.start_date, values.end_date);
+          getReport(values.party.value, values.start_date, values.end_date);
         }}
       >
         {({ values, setFieldValue }) => (
@@ -304,20 +326,20 @@ const AccountsPayableReport = () => {
             <Grid container spacing={3}>
               <Grid item lg={4} md={6} xs={12}>
                 <label className="form-label">
-                  Supplier (Vendor) <span className="text-danger">*</span>
+                  Payable Party (Supplier / Broker / Counterpart) <span className="text-danger">*</span>
                 </label>
                 <Select
-                  options={organizationOptions}
-                  value={values.organization}
+                  options={partyOptions}
+                  value={values.party}
                   onChange={(opt) => {
-                    setFieldValue("organization", opt);
-                    setSelectedOrg(opt);
+                    setFieldValue("party", opt);
+                    setSelectedParty(opt);
                   }}
-                  placeholder="Select Supplier..."
+                  placeholder="Select Supplier, Broker or Counterpart..."
                   isSearchable
                   isLoading={loading}
                 />
-                <ErrorMessage name="organization" component="div" className="text-danger small mt-1" />
+                <ErrorMessage name="party" component="div" className="text-danger small mt-1" />
               </Grid>
 
               <Grid item lg={4} md={6} xs={12}>
@@ -350,7 +372,7 @@ const AccountsPayableReport = () => {
                 <button
                   type="submit"
                   className="btn btn-success px-5"
-                  disabled={loading || !values.organization}
+                  disabled={loading || !values.party}
                 >
                   {loading ? (
                     <>
@@ -399,7 +421,7 @@ const AccountsPayableReport = () => {
         </>
       ) : (
         <div className="alert alert-info mt-4 text-center">
-          No transactions found for the selected period and supplier.
+          No transactions found for the selected period and party.
         </div>
       )}
     </div>

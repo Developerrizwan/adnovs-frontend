@@ -304,13 +304,13 @@ const Navdata = () => {
           link: "/ledger-statement",              // consistent with /reports
           roles: ["superadmin", "admin", "user"],
         },
-        {
-          id: "trial-balance",
-          label: "Trial Balance",
-          icon: "ri-balance-scale-line",
-          link: "/trail",
-          roles: ["superadmin", "admin", "user"],
-        },
+        // {
+        //   id: "trial-balance",
+        //   label: "Trial Balance",
+        //   icon: "ri-balance-scale-line",
+        //   link: "/trail",
+        //   roles: ["superadmin", "admin", "user"],
+        // },
         // {
         //   id: "account-statement",
         //   label: "Account Statement",
@@ -330,6 +330,12 @@ const Navdata = () => {
           icon: "ri-arrow-up-circle-fill",
           link: "/accounts-payable",
         },
+        {
+          id: "trail-balance",
+          label: "Trial Balance",
+          icon: "ri-balance-scale-line",
+          link: "/trail-balance",
+        }
       ],
     },
   ];
