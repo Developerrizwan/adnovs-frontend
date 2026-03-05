@@ -335,7 +335,13 @@ const Navdata = () => {
           label: "Trial Balance",
           icon: "ri-balance-scale-line",
           link: "/trail-balance",
-        }
+        },
+        {
+          id: "daybook-report",
+          label: "Day Book Report",
+          icon: "ri-book-open-line",
+          link: "/daybook-report",
+        },
       ],
     },
   ];

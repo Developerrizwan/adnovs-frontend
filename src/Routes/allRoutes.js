@@ -102,6 +102,7 @@ import Branch from "../views/Branch";
 import AccountsPayableReport from "../views/Reports/AccountsPayableReport";
 import AccountsReceivableReport from "../views/Reports/AccountsReceivableReport";
 import TrailBalance from "../views/Reports/TrailBalance";
+import DayBookReport from "../views/Reports/DayBookReport";
 
 const authProtectedRoutes = [
   { path: "/dashboard", component: DashboardCrm },
@@ -248,6 +249,10 @@ const publicRoutes = [
   {
     path: "/trail-balance",
     component: TrailBalance,
+  },
+  {
+    path: "/daybook-report",
+    component : DayBookReport,
   }
 ];
 
