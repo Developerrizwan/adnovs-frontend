@@ -1,1 +1,1 @@
-export const smartsightAPI = "http://app.adnovs.com";
+export const smartsightAPI = "http://localhost:8000";
