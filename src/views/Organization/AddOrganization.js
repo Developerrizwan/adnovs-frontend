@@ -376,7 +376,7 @@ const AddOrganization = (props) => {
                   props.isEdit
                     ? apiAuth
                         .patch(
-                          `/api/master/organization/${props.organizationData.id}`,
+                          `/api/master/organization/${props.organizationData.id}/`,
                           values
                         )
                         .then((response) => {
