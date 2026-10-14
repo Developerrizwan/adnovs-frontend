@@ -1,6 +1,6 @@
 // src/views/Reports/AccountsReceivableReport.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
@@ -28,8 +28,35 @@ const AccountsReceivableReport = () => {
   const [isAllCustomers, setIsAllCustomers] = useState(false);
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
+  const [searchText, setSearchText] = useState("");
 
   const history = useHistory();
+
+  // Build one searchable string per row containing every raw field value plus
+  // the values as they are displayed in the table (formatted date, 2-decimal
+  // amounts), so a user can type anything they see on screen or in the data.
+  const rowSearchText = (row) => {
+    const parts = Object.values(row || {}).map((v) =>
+      v === null || v === undefined ? "" : String(v)
+    );
+    if (row?.date) parts.push(moment(row.date).format("DD-MM-YYYY"));
+    ["debit", "credit", "balance", "inv_amount", "received_amount"].forEach((k) => {
+      if (row?.[k] !== undefined && row?.[k] !== null && row?.[k] !== "") {
+        parts.push(Number(row[k] || 0).toFixed(2));
+      }
+    });
+    return parts.join(" | ").toLowerCase();
+  };
+
+  // Every whitespace-separated term must appear somewhere in the row.
+  const filteredReports = useMemo(() => {
+    const terms = searchText.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if (terms.length === 0) return reports;
+    return reports.filter((row) => {
+      const haystack = rowSearchText(row);
+      return terms.every((t) => haystack.includes(t));
+    });
+  }, [reports, searchText]);
 
   useEffect(() => {
     getOrganizations();
@@ -58,6 +85,7 @@ const AccountsReceivableReport = () => {
 
   const getReport = (orgId, startDate, endDate) => {
     setLoading(true);
+    setSearchText("");
     setFilterStartDate(startDate);
     setFilterEndDate(endDate);
 
@@ -435,16 +463,54 @@ const AccountsReceivableReport = () => {
         </div>
       ) : reports.length > 0 ? (
         <>
+          {/* Search Bar */}
+          <div className="mt-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div className="input-group" style={{ maxWidth: "480px" }}>
+              <span className="input-group-text">
+                <i className="fas fa-search"></i>
+              </span>
+              <input
+                type="text"
+                className="form-control"
+                placeholder={
+                  isAllCustomers
+                    ? "Search customer, amount, balance..."
+                    : "Search invoice no, voucher no, job no, date, amount, narration..."
+                }
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+              {searchText && (
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setSearchText("")}
+                  title="Clear search"
+                >
+                  &times;
+                </button>
+              )}
+            </div>
+            <small className="text-muted">
+              Showing {filteredReports.length} of {reports.length} rows
+            </small>
+          </div>
+
           <DataTable
             columns={columns}
-            data={reports}
+            data={filteredReports}
             customStyles={customStyles}
             pagination
             paginationPerPage={20}
             paginationRowsPerPageOptions={[10, 20, 50, 100]}
             highlightOnHover
             pointerOnHover
-            className="mt-4 shadow-sm"
+            className="mt-3 shadow-sm"
+            noDataComponent={
+              <div className="p-4 text-center text-muted">
+                No rows match "{searchText}".
+              </div>
+            }
           />
 
           {/* Export Buttons */}

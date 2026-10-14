@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Grid } from "@mui/material";
 import { useHistory } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
@@ -25,8 +25,35 @@ const AccountsPayableReport = () => {
   const [selectedParty, setSelectedParty] = useState(null);
   const [isSummaryView, setIsSummaryView] = useState(false);
   const [filterDates, setFilterDates] = useState({ start: null, end: null });
+  const [searchText, setSearchText] = useState("");
 
   const history = useHistory();
+
+  // Build one searchable string per row containing every raw field value plus
+  // the values as they are displayed in the table (formatted date, 2-decimal
+  // amounts), so a user can type anything they see on screen or in the data.
+  const rowSearchText = (row) => {
+    const parts = Object.values(row || {}).map((v) =>
+      v === null || v === undefined ? "" : String(v)
+    );
+    if (row?.date) parts.push(moment(row.date).format("DD-MM-YYYY"));
+    ["debit", "credit", "balance", "purchase_amount", "paid_amount"].forEach((k) => {
+      if (row?.[k] !== undefined && row?.[k] !== null && row?.[k] !== "") {
+        parts.push(Number(row[k] || 0).toFixed(2));
+      }
+    });
+    return parts.join(" | ").toLowerCase();
+  };
+
+  // Every whitespace-separated term must appear somewhere in the row.
+  const filteredReports = useMemo(() => {
+    const terms = searchText.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if (terms.length === 0) return reports;
+    return reports.filter((row) => {
+      const haystack = rowSearchText(row);
+      return terms.every((t) => haystack.includes(t));
+    });
+  }, [reports, searchText]);
 
   useEffect(() => {
     fetchPayableParties();
@@ -65,6 +92,7 @@ const AccountsPayableReport = () => {
 
   const getReport = (partyId, startDate, endDate) => {
     setLoading(true);
+    setSearchText("");
     setFilterDates({ start: startDate, end: endDate });
     setIsSummaryView(partyId === "all");
 
@@ -398,16 +426,54 @@ const AccountsPayableReport = () => {
         </div>
       ) : reports.length > 0 ? (
         <>
+          {/* Search Bar */}
+          <div className="mt-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div className="input-group" style={{ maxWidth: "480px" }}>
+              <span className="input-group-text">
+                <i className="fas fa-search"></i>
+              </span>
+              <input
+                type="text"
+                className="form-control"
+                placeholder={
+                  isSummaryView
+                    ? "Search party, amount, balance..."
+                    : "Search voucher no, invoice no, job no, type, date, amount, narration..."
+                }
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+              {searchText && (
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setSearchText("")}
+                  title="Clear search"
+                >
+                  &times;
+                </button>
+              )}
+            </div>
+            <small className="text-muted">
+              Showing {filteredReports.length} of {reports.length} rows
+            </small>
+          </div>
+
           <DataTable
             columns={getColumns()}
-            data={reports}
+            data={filteredReports}
             customStyles={customStyles}
             pagination
             paginationPerPage={20}
             paginationRowsPerPageOptions={[10, 20, 50, 100]}
             highlightOnHover
             pointerOnHover
-            className="mt-4 shadow-sm"
+            className="mt-3 shadow-sm"
+            noDataComponent={
+              <div className="p-4 text-center text-muted">
+                No rows match "{searchText}".
+              </div>
+            }
           />
 
           <div className="mt-4 d-flex gap-3">
