@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Grid } from "@mui/material";
 import { useHistory, useLocation } from "react-router-dom";
 import { Formik, Form, ErrorMessage } from "formik";
@@ -27,6 +27,37 @@ const ProfitAndLoss = (props) => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [drAmount, setDrAmount] = useState(0.0);
   const [crAmount, setCrAmount] = useState(0.0);
+  const [searchText, setSearchText] = useState("");
+
+  // Build one searchable string per row containing every raw field value plus
+  // the values as they are displayed in the table (formatted date, 2-decimal
+  // amounts), so a user can type anything they see on screen or in the data.
+  const rowSearchText = (row) => {
+    const parts = Object.values(row || {}).map((v) =>
+      v === null || v === undefined ? "" : String(v)
+    );
+    if (row?.date) {
+      parts.push(moment(row.date).format("DD-MM-YYYY"));
+      parts.push(moment(row.date).format("DD-MM-YYYY HH:mm:ss"));
+    }
+    ["fcy_amount", "vat_amount", "amount", "dr_amount", "cr_amount", "net_amount"].forEach((k) => {
+      if (row?.[k] !== undefined && row?.[k] !== null && row?.[k] !== "") {
+        parts.push(Number(row[k] || 0).toFixed(2));
+      }
+    });
+    return parts.join(" | ").toLowerCase();
+  };
+
+  // Every whitespace-separated term must appear somewhere in the row.
+  const filteredReports = useMemo(() => {
+    const terms = searchText.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    if (terms.length === 0) return reports;
+    return reports.filter((row) => {
+      const haystack = rowSearchText(row);
+      return terms.every((t) => haystack.includes(t));
+    });
+  }, [reports, searchText]);
+
   const [cols, setCols] = useState([
     {
       name: <span className="font-weight-bold fs-13">Account</span>,
@@ -555,6 +586,7 @@ const ProfitAndLoss = (props) => {
 
   const getReport = (id, st, et, jobId) => {
     setLoading(true);
+    setSearchText("");
     apiAuth
       .get(
         `/api/general/ledger/?start_date=${st}&end_date=${et}${
@@ -910,12 +942,45 @@ const ProfitAndLoss = (props) => {
           }}
         >
           <Grid item lg={12} style={{ placeItems: "center", margin: "auto" }}>
-            {" "}
+            {reports.length > 0 && (
+              <div className="mb-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <div className="input-group" style={{ maxWidth: "480px" }}>
+                  <span className="input-group-text">
+                    <i className="fas fa-search"></i>
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search account, voucher, invoice no, job no, party, amount, narration..."
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                  />
+                  {searchText && (
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => setSearchText("")}
+                      title="Clear search"
+                    >
+                      &times;
+                    </button>
+                  )}
+                </div>
+                <small className="text-muted">
+                  Showing {filteredReports.length} of {reports.length} rows
+                </small>
+              </div>
+            )}
             <DataTable
               customStyles={customStyles}
               columns={cols}
-              data={reports}
+              data={filteredReports}
               pagination={true}
+              noDataComponent={
+                <div className="p-4 text-center text-muted">
+                  {searchText ? `No rows match "${searchText}".` : "There are no records to display"}
+                </div>
+              }
             />
           </Grid>
         </Grid>
