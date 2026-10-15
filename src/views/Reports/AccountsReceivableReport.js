@@ -58,6 +58,27 @@ const AccountsReceivableReport = () => {
     });
   }, [reports, searchText]);
 
+  // When a search is active the cards describe only the matching rows.
+  const isFiltered = searchText.trim() !== "";
+  const filteredTotals = useMemo(() => {
+    if (isAllCustomers) {
+      const dr = filteredReports.reduce((s, r) => s + Number(r.inv_amount || 0), 0);
+      const cr = filteredReports.reduce((s, r) => s + Number(r.received_amount || 0), 0);
+      const bal = filteredReports.reduce((s, r) => s + Number(r.balance || 0), 0);
+      return { dr, cr, bal };
+    }
+    const dr = filteredReports.reduce((s, r) => s + Number(r.debit || 0), 0);
+    const cr = filteredReports.reduce((s, r) => s + Number(r.credit || 0), 0);
+    return { dr, cr, bal: dr - cr };
+  }, [filteredReports, isAllCustomers]);
+
+  const displayDr = isFiltered ? filteredTotals.dr.toFixed(2) : drAmount;
+  const displayCr = isFiltered ? filteredTotals.cr.toFixed(2) : crAmount;
+  const displayClosing = isFiltered ? filteredTotals.bal.toFixed(2) : totalAmount;
+  const filteredBadge = isFiltered ? (
+    <span className="badge bg-light text-dark ms-2 fs-12 align-middle">Filtered</span>
+  ) : null;
+
   useEffect(() => {
     getOrganizations();
   }, []);
@@ -338,24 +359,24 @@ const AccountsReceivableReport = () => {
         <div className="col-md-4">
           <div className="card bg-info text-white shadow-sm">
             <div className="card-body">
-              <h5 className="card-title">Total Debit</h5>
-              <h3>{drAmount}</h3>
+              <h5 className="card-title">Total Debit {filteredBadge}</h5>
+              <h3>{displayDr}</h3>
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="card bg-warning text-white shadow-sm">
             <div className="card-body">
-              <h5 className="card-title">Total Credit</h5>
-              <h3>{crAmount}</h3>
+              <h5 className="card-title">Total Credit {filteredBadge}</h5>
+              <h3>{displayCr}</h3>
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="card bg-success text-white shadow-sm">
             <div className="card-body">
-              <h5 className="card-title">Closing Balance</h5>
-              <h3>{totalAmount}</h3>
+              <h5 className="card-title">{isFiltered ? "Net Balance" : "Closing Balance"} {filteredBadge}</h5>
+              <h3>{displayClosing}</h3>
             </div>
           </div>
         </div>

@@ -565,29 +565,42 @@ const LedgerStatement = () => {
     period.st && period.et
       ? `${moment(period.st).format("DD MMM YYYY")} - ${moment(period.et).format("DD MMM YYYY")}`
       : null;
-  const closingIsDebit = Number(totalAmount) >= 0;
+
+  // When a search is active the cards describe only the matching rows:
+  // debit/credit are summed from the filtered rows and the balance is their net.
+  const isFiltered = searchText.trim() !== "";
+  const filteredTotals = useMemo(() => {
+    const dr = filteredReports.reduce((sum, r) => sum + Number(r.dr_amount || 0), 0);
+    const cr = filteredReports.reduce((sum, r) => sum + Number(r.cr_amount || 0), 0);
+    return { dr, cr, net: dr - cr };
+  }, [filteredReports]);
+
+  const displayDr = isFiltered ? filteredTotals.dr : Number(drAmount);
+  const displayCr = isFiltered ? filteredTotals.cr : Number(crAmount);
+  const displayClosing = isFiltered ? filteredTotals.net : Number(totalAmount);
+  const closingIsDebit = displayClosing >= 0;
 
   const summaryCards = [
     {
       label: "Total Debit",
-      value: fmtAmount(drAmount),
+      value: fmtAmount(displayDr),
       icon: "ri-arrow-up-circle-line",
       tone: "success",
-      hint: "Sum of all debit entries",
+      hint: isFiltered ? "Debit of matching entries" : "Sum of all debit entries",
     },
     {
       label: "Total Credit",
-      value: fmtAmount(crAmount),
+      value: fmtAmount(displayCr),
       icon: "ri-arrow-down-circle-line",
       tone: "danger",
-      hint: "Sum of all credit entries",
+      hint: isFiltered ? "Credit of matching entries" : "Sum of all credit entries",
     },
     {
-      label: "Closing Balance",
-      value: `${fmtAmount(Math.abs(Number(totalAmount)))} ${closingIsDebit ? "Dr" : "Cr"}`,
+      label: isFiltered ? "Net Balance" : "Closing Balance",
+      value: `${fmtAmount(Math.abs(displayClosing))} ${closingIsDebit ? "Dr" : "Cr"}`,
       icon: "ri-scales-3-line",
       tone: "primary",
-      hint: "Running balance at period end",
+      hint: isFiltered ? "Debit minus credit of matching entries" : "Running balance at period end",
     },
   ];
 
@@ -779,6 +792,11 @@ const LedgerStatement = () => {
                     <div className="flex-grow-1 overflow-hidden">
                       <p className="text-uppercase fw-medium text-muted mb-1 fs-12">
                         {c.label}
+                        {isFiltered && (
+                          <span className="badge bg-soft-warning text-warning ms-2 text-capitalize">
+                            Filtered
+                          </span>
+                        )}
                       </p>
                       <h4 className="mb-1 fw-semibold text-truncate">{c.value}</h4>
                       <small className="text-muted text-truncate d-block">{c.hint}</small>

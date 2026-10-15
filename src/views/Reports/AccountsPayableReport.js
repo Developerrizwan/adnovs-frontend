@@ -55,6 +55,27 @@ const AccountsPayableReport = () => {
     });
   }, [reports, searchText]);
 
+  // When a search is active the cards describe only the matching rows.
+  const isFiltered = searchText.trim() !== "";
+  const filteredTotals = useMemo(() => {
+    if (isSummaryView) {
+      const dr = filteredReports.reduce((s, r) => s + Number(r.paid_amount || 0), 0);
+      const cr = filteredReports.reduce((s, r) => s + Number(r.purchase_amount || 0), 0);
+      const bal = filteredReports.reduce((s, r) => s + Number(r.balance || 0), 0);
+      return { dr, cr, bal };
+    }
+    const dr = filteredReports.reduce((s, r) => s + Number(r.debit || 0), 0);
+    const cr = filteredReports.reduce((s, r) => s + Number(r.credit || 0), 0);
+    return { dr, cr, bal: cr - dr };
+  }, [filteredReports, isSummaryView]);
+
+  const displayDr = isFiltered ? filteredTotals.dr.toFixed(2) : drAmount;
+  const displayCr = isFiltered ? filteredTotals.cr.toFixed(2) : crAmount;
+  const displayClosing = isFiltered ? filteredTotals.bal.toFixed(2) : totalAmount;
+  const filteredBadge = isFiltered ? (
+    <span className="badge bg-light text-dark ms-2 fs-12 align-middle">Filtered</span>
+  ) : null;
+
   useEffect(() => {
     fetchPayableParties();
   }, []);
@@ -310,24 +331,24 @@ const AccountsPayableReport = () => {
         <div className="col-md-4">
           <div className="card bg-info text-white shadow-sm">
             <div className="card-body">
-              <h5>Total Paid (Debit)</h5>
-              <h3>{drAmount} SAR</h3>
+              <h5>Total Paid (Debit) {filteredBadge}</h5>
+              <h3>{displayDr} SAR</h3>
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="card bg-warning text-white shadow-sm">
             <div className="card-body">
-              <h5>Total Purchases (Credit)</h5>
-              <h3>{crAmount} SAR</h3>
+              <h5>Total Purchases (Credit) {filteredBadge}</h5>
+              <h3>{displayCr} SAR</h3>
             </div>
           </div>
         </div>
         <div className="col-md-4">
           <div className="card bg-success text-white shadow-sm">
             <div className="card-body">
-              <h5>Net Payable (Closing Balance)</h5>
-              <h3>{totalAmount} SAR</h3>
+              <h5>{isFiltered ? "Net Payable (Matching)" : "Net Payable (Closing Balance)"} {filteredBadge}</h5>
+              <h3>{displayClosing} SAR</h3>
             </div>
           </div>
         </div>
