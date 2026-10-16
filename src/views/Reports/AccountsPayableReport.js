@@ -14,6 +14,7 @@ import DataTable from "react-data-table-component";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Select from "react-select";
 import NotificationManager from "../../components/Common/NotificationManager";
+import { ReportLink, voucherPath, invoicePath, jobPath } from "../../helpers/reportLinks";
 
 const AccountsPayableReport = () => {
   const [loading, setLoading] = useState(false);
@@ -307,9 +308,34 @@ const AccountsPayableReport = () => {
     return [
       { name: "Date", selector: (row) => moment(row.date).format("DD-MM-YYYY"), sortable: true, width: "120px" },
       { name: "Type", selector: (row) => row.type, sortable: true, width: "150px" },
-      { name: "Doc No", selector: (row) => row.voucher_no || row.inv_no || "-", sortable: true, width: "130px" },
-      { name: "Inv No", selector: (row) => row.inv_no || "-", width: "110px" },
-      { name: "Job No", selector: (row) => row.job_no || "-", width: "110px" },
+      {
+        name: "Doc No",
+        selector: (row) => row.voucher_no || row.inv_no || "-",
+        sortable: true,
+        width: "130px",
+        cell: (row) => {
+          const path = row.voucher_id
+            ? voucherPath(row.voucher_type, row.voucher_id)
+            : invoicePath(row.invoice_type, row.invoice_template, row.invoice_id);
+          return <ReportLink path={path}>{row.voucher_no || row.inv_no || "-"}</ReportLink>;
+        },
+      },
+      {
+        name: "Inv No",
+        selector: (row) => row.inv_no || "-",
+        width: "110px",
+        cell: (row) => (
+          <ReportLink path={invoicePath(row.invoice_type, row.invoice_template, row.invoice_id)}>
+            {row.inv_no || "-"}
+          </ReportLink>
+        ),
+      },
+      {
+        name: "Job No",
+        selector: (row) => row.job_no || "-",
+        width: "110px",
+        cell: (row) => <ReportLink path={jobPath(row.job_id)}>{row.job_no || "-"}</ReportLink>,
+      },
       { name: "Debit", selector: (row) => Number(row.debit || 0).toFixed(2), sortable: true, right: true, width: "100px" },
       { name: "Credit", selector: (row) => Number(row.credit || 0).toFixed(2), sortable: true, right: true, width: "100px" },
       { name: "Balance Due", selector: (row) => Number(row.balance || 0).toFixed(2), sortable: true, right: true, width: "110px" },

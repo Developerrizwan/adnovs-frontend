@@ -11,6 +11,7 @@ import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import DataTable from "react-data-table-component";
 import Select from "react-select";
+import { ReportLink, voucherPath, invoicePath, jobPath } from "../../helpers/reportLinks";
 
 // ---------------------------------------------------------------------------
 // Presentation helpers
@@ -153,6 +154,21 @@ const LedgerStatement = () => {
     </span>
   );
 
+  const linkCell = (text, path, max = 110) => (
+    <span
+      title={text || ""}
+      style={{
+        display: "inline-block",
+        maxWidth: `${max}px`,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+      }}
+    >
+      <ReportLink path={path}>{text || "-"}</ReportLink>
+    </span>
+  );
+
   const columns = [
     {
       name: "Date",
@@ -191,14 +207,19 @@ const LedgerStatement = () => {
       selector: (row) => row?.voucher,
       sortable: true,
       width: "130px",
-      cell: (row) => ellipsis(row?.voucher, 110),
+      cell: (row) => linkCell(row?.voucher, voucherPath(row?.voucher_type, row?.voucher_id), 110),
     },
     {
       name: "Invoice No",
       selector: (row) => row.invoice_number,
       sortable: true,
       width: "130px",
-      cell: (row) => ellipsis(row.invoice_number, 110),
+      cell: (row) =>
+        linkCell(
+          row.invoice_number,
+          invoicePath(row?.invoice_type, row?.invoice_template, row?.invoice_id),
+          110
+        ),
     },
     {
       name: "Charge",
@@ -212,7 +233,7 @@ const LedgerStatement = () => {
       selector: (row) => row?.job_no,
       sortable: true,
       width: "120px",
-      cell: (row) => ellipsis(row?.job_no, 100),
+      cell: (row) => linkCell(row?.job_no, jobPath(row?.job_id), 100),
     },
     {
       name: "Party Account",

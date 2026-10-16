@@ -16,6 +16,7 @@ import DataTable from "react-data-table-component";
 import { customStyles } from "../../assets/CustomTableStyles";
 import Select from "react-select";
 import NotificationManager from "../../components/Common/NotificationManager";
+import { ReportLink, voucherPath, invoicePath, jobPath } from "../../helpers/reportLinks";
 
 const AccountsReceivableReport = () => {
   const [loading, setLoading] = useState(false);
@@ -303,12 +304,19 @@ const AccountsReceivableReport = () => {
         selector: (row) => row.inv_no || row.voucher_no || "-",
         sortable: true,
         width: "140px",
+        cell: (row) => {
+          const path = row.invoice_id
+            ? invoicePath(row.invoice_type, row.invoice_template, row.invoice_id)
+            : voucherPath(row.voucher_type, row.voucher_id);
+          return <ReportLink path={path}>{row.inv_no || row.voucher_no || "-"}</ReportLink>;
+        },
       },
       {
         name: "Job No",
         selector: (row) => row.job_no || "-",
         sortable: true,
         width: "110px",
+        cell: (row) => <ReportLink path={jobPath(row.job_id)}>{row.job_no || "-"}</ReportLink>,
       },
       {
         name: "Client",
