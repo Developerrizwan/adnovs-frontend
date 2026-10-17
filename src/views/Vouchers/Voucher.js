@@ -305,7 +305,7 @@ const Voucher = (props) => {
           (item) => item.value === props?.voucherData?.party_account?.id
         );
 
-        setSelectedParty(sel_party);
+        setSelectedParty(sel_party || null);
 
         const sel_voucherFrom = finalOpts.find(
           (item) => item.value === Number(props?.voucherData?.voucher_from)
@@ -909,10 +909,15 @@ const Voucher = (props) => {
                             styles={customStyles}
                             value={selectedParty}
                             options={fromAndToOptions}
+                            isClearable
                             onChange={(data) => {
-                              setFieldValue("party_account", data.value);
-                              setFieldValue("party_account_type", data.type);
-                              setSelectedParty(data);
+                              // data is null when the user clears the select
+                              setFieldValue("party_account", data?.value ?? null);
+                              setFieldValue(
+                                "party_account_type",
+                                data?.type ?? null
+                              );
+                              setSelectedParty(data ?? null);
                             }}
                           />
                           <Field
