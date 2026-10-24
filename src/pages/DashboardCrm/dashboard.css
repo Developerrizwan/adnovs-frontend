@@ -1,0 +1,384 @@
+.adn-dash {
+  --dash-surface: #ffffff;
+  --dash-muted-surface: #f6f7f9;
+  --dash-border: #e7e9ee;
+  --dash-text: #1c1f26;
+  --dash-text-2: #545b69;
+  --dash-text-3: #7b8291;
+  --dash-blue: #2a78d6;
+  --dash-orange: #eb6834;
+  --dash-good: #0ca30c;
+  --dash-warning: #fab219;
+  --dash-critical: #d03b3b;
+  color: var(--dash-text);
+  font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.adn-dash * {
+  font-family: inherit;
+}
+
+[data-layout-mode="dark"] .adn-dash {
+  --dash-surface: #212529;
+  --dash-muted-surface: #2a2f34;
+  --dash-border: #32383e;
+  --dash-text: #f0efec;
+  --dash-text-2: #c3c2b7;
+  --dash-text-3: #9a9a92;
+  --dash-blue: #3987e5;
+  --dash-orange: #d95926;
+}
+
+/* Header */
+.adn-dash__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.adn-dash__header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: var(--dash-text);
+}
+.adn-dash__header p {
+  margin: 0;
+  color: var(--dash-text-2);
+  font-size: 13px;
+}
+.adn-dash__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.adn-dash__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--dash-border);
+  background: var(--dash-surface);
+  color: var(--dash-text);
+  text-decoration: none;
+  cursor: pointer;
+}
+.adn-dash__btn:hover {
+  border-color: var(--dash-blue);
+  color: var(--dash-blue);
+}
+.adn-dash__btn--primary {
+  background: var(--dash-blue);
+  border-color: var(--dash-blue);
+  color: #fff;
+}
+.adn-dash__btn--primary:hover {
+  filter: brightness(0.92);
+  color: #fff;
+}
+.adn-dash a:focus-visible,
+.adn-dash button:focus-visible {
+  outline: 2px solid var(--dash-blue);
+  outline-offset: 2px;
+}
+
+/* KPI tiles */
+.adn-kpis {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+@media (max-width: 1399px) {
+  .adn-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 767px) {
+  .adn-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.adn-kpi {
+  display: block;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.adn-kpi:hover {
+  border-color: var(--dash-blue);
+  box-shadow: 0 2px 10px rgba(20, 30, 50, 0.06);
+  color: inherit;
+}
+.adn-kpi__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--dash-text-2);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.adn-kpi__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--dash-muted-surface);
+  color: var(--dash-text-2);
+}
+.adn-kpi__value {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  color: var(--dash-text);
+}
+.adn-kpi__value small {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dash-text-3);
+  margin-right: 4px;
+}
+.adn-kpi__sub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--dash-text-3);
+}
+.adn-kpi--critical .adn-kpi__icon {
+  background: rgba(208, 59, 59, 0.1);
+  color: var(--dash-critical);
+}
+.adn-kpi--critical .adn-kpi__sub { color: var(--dash-critical); }
+
+/* Panels */
+.adn-panel {
+  background: var(--dash-surface);
+  border: 1px solid var(--dash-border);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  height: calc(100% - 20px);
+  display: flex;
+  flex-direction: column;
+}
+.adn-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--dash-border);
+}
+.adn-panel__head h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--dash-text);
+}
+.adn-panel__head span,
+.adn-panel__head a {
+  font-size: 12px;
+  color: var(--dash-text-3);
+}
+.adn-panel__head a { color: var(--dash-blue); text-decoration: none; }
+.adn-panel__body {
+  padding: 12px 16px 16px;
+  flex: 1;
+}
+.adn-panel__body--flush { padding: 0; }
+
+.adn-tabs {
+  display: inline-flex;
+  background: var(--dash-muted-surface);
+  border-radius: 6px;
+  padding: 2px;
+}
+.adn-tabs button {
+  border: 0;
+  background: transparent;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--dash-text-2);
+  border-radius: 4px;
+}
+.adn-tabs button[aria-selected="true"] {
+  background: var(--dash-surface);
+  color: var(--dash-text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Tables */
+.adn-table {
+  width: 100%;
+  font-size: 13px;
+  border-collapse: collapse;
+}
+/* views/TaxInvoice/table.css leaks a global `th, td { border; font-size: 20px }`, so reset fully here */
+.adn-dash .adn-table th,
+.adn-dash .adn-table td {
+  border: 0;
+  font-family: inherit;
+  line-height: 1.4;
+}
+.adn-dash .adn-table th {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dash-text-3);
+  padding: 10px 16px;
+  background: var(--dash-muted-surface);
+  white-space: nowrap;
+}
+.adn-dash .adn-table td {
+  font-size: 13px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--dash-border);
+  white-space: nowrap;
+  color: var(--dash-text-2);
+  vertical-align: middle;
+}
+.adn-table tr:hover td { background: var(--dash-muted-surface); }
+.adn-table td.num,
+.adn-table th.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.adn-table a { font-weight: 600; color: var(--dash-blue); text-decoration: none; }
+.adn-table .route {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.adn-table .strong { color: var(--dash-text); font-weight: 600; }
+.adn-table-wrap { overflow-x: auto; }
+
+.adn-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--dash-muted-surface);
+  color: var(--dash-text-2);
+  border: 1px solid var(--dash-border);
+  white-space: nowrap;
+}
+.adn-overdue {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--dash-critical);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Payment status bar */
+.adn-split {
+  display: flex;
+  gap: 2px;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 8px 0 12px;
+}
+.adn-split > div { height: 100%; }
+.adn-legend {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+}
+.adn-legend li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  color: var(--dash-text-2);
+}
+.adn-legend li b {
+  color: var(--dash-text);
+  font-variant-numeric: tabular-nums;
+}
+.adn-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  margin-right: 8px;
+}
+
+/* Simple ranked list (top clients, enquiries) */
+.adn-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.adn-list li {
+  padding: 9px 0;
+  border-top: 1px solid var(--dash-border);
+  font-size: 13px;
+}
+.adn-list li:first-child { border-top: 0; }
+.adn-list__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--dash-text);
+}
+.adn-list__row span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.adn-list__meta {
+  font-size: 12px;
+  color: var(--dash-text-3);
+  margin-top: 2px;
+}
+.adn-meter {
+  height: 4px;
+  background: var(--dash-muted-surface);
+  border-radius: 2px;
+  margin-top: 6px;
+}
+.adn-meter > div {
+  height: 100%;
+  background: var(--dash-blue);
+  border-radius: 2px;
+}
+
+.adn-empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--dash-text-3);
+  font-size: 13px;
+}
+.adn-skeleton {
+  background: linear-gradient(90deg, var(--dash-muted-surface) 25%, var(--dash-border) 50%, var(--dash-muted-surface) 75%);
+  background-size: 200% 100%;
+  animation: adn-shimmer 1.4s infinite;
+  border-radius: 6px;
+}
+@keyframes adn-shimmer {
+  to { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adn-skeleton { animation: none; }
+  .adn-kpi { transition: none; }
+}
+.sr-only-table {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}

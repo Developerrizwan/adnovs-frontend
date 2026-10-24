@@ -1,1 +1,1 @@
-export const smartsightAPI = "https://api.adnovs.com";
+export const smartsightAPI = process.env.REACT_APP_BACKEND_URL || "https://api.adnovs.com";
